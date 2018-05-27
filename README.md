@@ -1,5 +1,5 @@
 # Phase
-A HTTP server framework based on PHP using the Swoole Async framework
+A HTTP server framework for PHP using the Swoole Async extension
 
 Based on the HTTP Web Server and PHP extension at https://www.swoole.co.uk/
 
