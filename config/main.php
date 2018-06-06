@@ -1,0 +1,7 @@
+<?php
+
+$config = [
+
+    "appName" => "Phase"
+
+];
