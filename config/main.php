@@ -2,6 +2,8 @@
 
 $config = [
 
-    "appName" => "Phase"
+    "appName" => "Phase",
+
+    "Title_Format" => ""
 
 ];
