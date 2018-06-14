@@ -9,6 +9,7 @@ $server->on("start", function ($server)
 
 $server->on("request", function ($request, $response)
 {
+    $response->header("Server", "Swoole-Phase");
     $response->header("Content-Type", "text/html");
     $response->end("Hello World\n");
 });
