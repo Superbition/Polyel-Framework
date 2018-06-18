@@ -1,6 +1,8 @@
 <?php
 
-$server = new swoole_http_server("127.0.0.1", 9501);
+require __DIR__ . "/core/autoload.php";
+
+$server = new swoole_http_server("192.168.1.182", 9501);
 
 $server->on("start", function ($server)
 {
