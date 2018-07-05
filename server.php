@@ -14,7 +14,9 @@ $server->on("request", function ($request, $response)
     $response->header("Server", "Swoole-Phase");
     $response->header("X-Powered-By", "Passion");
     $response->header("Content-Type", "text/html");
-    $response->end("Hello World\n");
+
+    Phase_Route::handle($request);
+    Phase_Route::deliver($response);
 });
 
 $server->start();
