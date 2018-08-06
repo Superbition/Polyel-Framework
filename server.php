@@ -2,7 +2,7 @@
 
 require __DIR__ . "/core/autoload.php";
 
-$server = new swoole_http_server("192.168.1.182", 9501);
+$server = new swoole_http_server("192.168.0.21", 9501);
 
 $server->on("start", function ($server)
 {
