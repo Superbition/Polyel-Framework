@@ -3,6 +3,7 @@
 cli_set_process_title("Phase");
 
 require __DIR__ . "/core/autoload.php";
+require __DIR__ . "/core/functions/helperFunctions.php";
 
 $server = new swoole_http_server("192.168.0.19", 9501);
 
