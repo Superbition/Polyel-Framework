@@ -9,6 +9,9 @@ class Phase_Route
     // Holds the main route name/ page
     private static $route;
 
+    // Holds the requested view template file name
+    private static $requestedView;
+
     public static function handle($request)
     {
         // Get the full URL from the clients request
@@ -32,21 +35,28 @@ class Phase_Route
             if(file_exists(__DIR__ . "/../../app/controllers/" . self::$route . ".php"))
             {
                 require __DIR__ . "/../../app/controllers/" . self::$route . ".php";
+
+                $controllerFound = true;
             }
 
             if(file_exists(__DIR__ . "/../../app/views/" . self::$route . ".html"))
             {
-
+                self::$requestedView = __DIR__ . "/../../app/views/" . self::$route . ".html";
+            }
+            else if(!isset($controllerFound))
+            {
+                self::$requestedView = __DIR__ . "/../../app/views/errors/404.html";
             }
         }
         else
         {
-
+            // Else the user has requested the home page.
+            self::$requestedView = __DIR__ . "/../../app/views/index.html";
         }
     }
 
     public static function deliver($response)
     {
-        $response->end("Hello World!");
+        $response->end(Phase_Template::render(self::$requestedView));
     }
 }
