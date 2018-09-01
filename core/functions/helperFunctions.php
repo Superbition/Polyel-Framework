@@ -1,6 +1,6 @@
 <?php
 
-function debug($input)
+function debug($input = NULL)
 {
-    return var_export($input, true);
+    Phase_Debug::dump($input);
 }
