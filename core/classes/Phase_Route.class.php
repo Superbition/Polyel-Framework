@@ -57,6 +57,13 @@ class Phase_Route
 
     public static function deliver($response)
     {
-        $response->end(Phase_Template::render(self::$requestedView));
+        if(Phase_Debug::doDumpsExist())
+        {
+            $response->end(Phase_Debug::getDumps() . Phase_Template::render(self::$requestedView));
+        }
+        else
+        {
+            $response->end(Phase_Template::render(self::$requestedView));
+        }
     }
 }
