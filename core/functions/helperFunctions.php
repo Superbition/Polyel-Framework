@@ -1,6 +1,6 @@
 <?php
 
-function debug($input = NULL)
+function dump($input = NULL)
 {
     Phase_Debug::dump($input);
 }
