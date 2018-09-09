@@ -11,7 +11,7 @@ $server = new swoole_http_server(Phase_Config::get("main.serverIP"), Phase_Confi
 
 $server->on("start", function($server)
 {
-    echo "Swoole http server is started at http://127.0.0.1:9501\n";
+    echo "Phase HTTP server started at http://" . Phase_Config::get("main.serverIP") . ":" . Phase_Config::get("main.serverPort");
 });
 
 $server->on("request", function($request, $response)
