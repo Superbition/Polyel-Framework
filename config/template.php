@@ -1,6 +1,6 @@
 <?php
 
-$config = [
+return [
 
     "mainTemplateTagFormat" => "@",
 

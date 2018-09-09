@@ -1,6 +1,6 @@
 <?php
 
-$config = [
+return [
 
     "SPL_Loader" => "scripts/php/PhaseFramework/SPLLoader/SPLLoader.php",
 

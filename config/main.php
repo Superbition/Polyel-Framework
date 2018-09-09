@@ -1,10 +1,10 @@
 <?php
 
-$config = [
+return [
 
     "appName" => "Phase",
 
-    "serverIP" => "127.0.0.1",
+    "serverIP" => "192.168.0.20",
 
     "serverPort" => "9501",
 
