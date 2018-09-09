@@ -7,7 +7,7 @@ require __DIR__ . "/core/functions/helperFunctions.php";
 
 Phase_Config::load();
 
-$server = new swoole_http_server(Phase_Config::get("main.serverIP"), 9501);
+$server = new swoole_http_server(Phase_Config::get("main.serverIP"), Phase_Config::get("main.serverPort"));
 
 $server->on("start", function($server)
 {
