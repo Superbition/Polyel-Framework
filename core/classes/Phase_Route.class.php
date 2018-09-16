@@ -59,9 +59,10 @@ class Phase_Route
     {
         if(Phase_Debug::doDumpsExist())
         {
-            $response->end(Phase_Debug::getDumps() . Phase_Template::render(self::$requestedView));
+            // The rendered response but with the debug dumps at the start.
+            $response->end(Phase_Debug::getDumps() . "<br>" . Phase_Template::render(self::$requestedView));
 
-            // Resets the last amount of dumps so duplicates are not shown upon next request
+            // Resets the last amount of dumps so duplicates are not shown upon next request.
             Phase_Debug::cleanup();
         }
         else

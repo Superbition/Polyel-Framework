@@ -20,8 +20,6 @@ $server->on("request", function($request, $response)
     $response->header("X-Powered-By", "Passion");
     $response->header("Content-Type", "text/html; charset=utf-8");
 
-    dump("test");
-
     Phase_Route::handle($request);
     Phase_Route::deliver($response);
 });
