@@ -2,16 +2,33 @@
 
 return [
 
-  "DB_Driver" => "",
+    "Main_Database" => [
 
-  "DB_Name" => "",
+        "driver" => "mysql",
 
-  "DB_Host" => "",
+        "database" => env("Main_Database.DATABASE", "phase1"),
 
-  "DB_Port" => "",
+        "host" => env("Main_Database.HOST", "127.0.0.1"),
 
-  "DB_Username" => "",
+        "port" => env("Main_Database.PORT", "3306"),
 
-  "DB_Password" => ""
+        "username" => env("Main_Database.USERNAME", "phase"),
 
+        "password" => env("Main_Database.PASSWORD", ""),
+    ],
+
+    "Second_Database" => [
+
+        "driver" => "mysql",
+
+        "database" => env("Second_Database.DATABASE", "phase2"),
+
+        "host" => env("Second_Database.HOST", "127.0.0.1"),
+
+        "port" => env("Second_Database.PORT", "3306"),
+
+        "username" => env("Second_Database.USERNAME", "phase"),
+
+        "password" => env("Second_Database.PASSWORD", ""),
+    ],
 ];

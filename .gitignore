@@ -1,2 +1,7 @@
 .idea
 .DS_Store
+
+# Environment Variables
+.env
+/config/env/*
+!/config/env/.env.example

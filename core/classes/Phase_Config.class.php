@@ -16,8 +16,12 @@ class Phase_Config
       "template" => 3,
     ];
 
+    private static $envConfig;
+
     public static function load()
     {
+        self::$envConfig = parse_ini_file(self::$configDir . "env/.env.example", true);
+
         self::$main = require self::$configDir . "main.php";
         self::$database = require self::$configDir . "database.php";
         self::$path = require self::$configDir . "path.php";
@@ -45,7 +49,7 @@ class Phase_Config
 
             case 1:
 
-                return self::$database[$configRequest[1]];
+                return self::$database[$configRequest[1]][$configRequest[2]];
 
                 break;
 
@@ -60,6 +64,20 @@ class Phase_Config
                 return self::$template[$configRequest[1]];
 
                 break;
+        }
+    }
+
+    public static function getEnv($envRequest, $defaultValue)
+    {
+        if(isset(self::$envConfig[$envRequest[0]][$envRequest[1]]) && !empty(self::$envConfig[$envRequest[0]][$envRequest[1]]))
+        {
+            $envRequest = explode(".", $envRequest);
+
+            return self::$envConfig[$envRequest[0]][$envRequest[1]];
+        }
+        else
+        {
+            return $defaultValue;
         }
     }
 }
