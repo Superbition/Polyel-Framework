@@ -67,7 +67,7 @@ class Phase_Config
         }
     }
 
-    public static function getEnv($envRequest, $defaultValue)
+    public static function env($envRequest, $defaultValue)
     {
         if(isset(self::$envConfig[$envRequest[0]][$envRequest[1]]) && !empty(self::$envConfig[$envRequest[0]][$envRequest[1]]))
         {

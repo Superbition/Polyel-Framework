@@ -7,5 +7,5 @@ function dump($input = NULL)
 
 function env($envRequest, $defaultValue)
 {
-    return Phase_Config::getEnv($envRequest, $defaultValue);
+    return Phase_Config::env($envRequest, $defaultValue);
 }
