@@ -1,5 +1,5 @@
 # Phase
-A PHP framework for building web applications
+A PHP framework for building beautiful web applications
 
 **Status: In Development; unstable**
 
