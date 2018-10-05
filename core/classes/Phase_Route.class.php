@@ -12,7 +12,7 @@ class Phase_Route
     // Holds the requested view template file name
     private static $requestedView;
 
-    public static function handle($request)
+    public static function handle(&$request)
     {
         // Get the full URL from the clients request
         self::$uri = $request->server["request_uri"];
@@ -55,7 +55,7 @@ class Phase_Route
         }
     }
 
-    public static function deliver($response)
+    public static function deliver(&$response)
     {
         if(Phase_Debug::doDumpsExist())
         {
