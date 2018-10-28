@@ -5,3 +5,6 @@
 .env
 /config/env/*
 !/config/env/.env.example
+
+# The PHP Phase debug file
+/debug.php

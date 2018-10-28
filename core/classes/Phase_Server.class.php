@@ -33,6 +33,8 @@ class Phase_Server
         {
             Phase_Server::setRequestHeaders($response);
 
+            $this->runDebug();
+
             Phase_Route::handle($request);
             Phase_Route::deliver($response);
         });
@@ -41,6 +43,11 @@ class Phase_Server
     public function run()
     {
         $this->server->start();
+    }
+
+    private function runDebug()
+    {
+        require __DIR__ . "/../../debug.php";
     }
 
     private static function setRequestHeaders(&$response)
