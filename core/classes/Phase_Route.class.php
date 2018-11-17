@@ -7,7 +7,9 @@ class Phase_Route
     private static $uri;
 
     // Holds the main route name/ page
-    private static $route;
+    private static $requestedRoute;
+
+    private static $getRoutes = [];
 
     // Holds the requested view template file name
     private static $requestedView;
@@ -15,7 +17,7 @@ class Phase_Route
     public static function handle(&$request)
     {
         // Get the full URL from the clients request
-        self::$uri = $request->server["request_uri"];
+        self::$requestedRoute = self::$uri = $request->server["request_uri"];
 
         // Split the URI into an array based on the delimiter
         self::$uri = explode("/", $request->server["request_uri"]);
@@ -26,32 +28,26 @@ class Phase_Route
         // Reindex the array back to 0
         self::$uri = array_values(self::$uri);
 
+        self::loadRoutes();
+
         // Continuing routing if there is a URL
-        if(!empty(self::$uri))
+        if(!empty(self::$requestedRoute))
         {
-            // Get the main page/ route name from the URI
-            self::$route = strtolower(self::$uri[0]);
-
-            if(file_exists(__DIR__ . "/../../app/controllers/" . self::$route . ".php"))
+            if(self::$getRoutes[self::$requestedRoute])
             {
-                require __DIR__ . "/../../app/controllers/" . self::$route . ".php";
+                $controller = self::$getRoutes[self::$requestedRoute];
 
-                $controllerFound = true;
-            }
+                $controller = __DIR__ . "/../../app/controllers/" . $controller . ".php";
 
-            if(file_exists(__DIR__ . "/../../app/views/" . self::$route . ".html"))
-            {
-                self::$requestedView = __DIR__ . "/../../app/views/" . self::$route . ".html";
-            }
-            else if(!isset($controllerFound))
-            {
-                self::$requestedView = __DIR__ . "/../../app/views/errors/404.html";
+                if(file_exists($controller))
+                {
+                    require $controller;
+                }
             }
         }
         else
         {
-            // Else the user has requested the home page.
-            self::$requestedView = __DIR__ . "/../../app/views/index.html";
+            self::$requestedView = __DIR__ . "/../../app/views/errors/404.html";
         }
     }
 
@@ -69,5 +65,15 @@ class Phase_Route
         {
             $response->end(Phase_Template::render(self::$requestedView));
         }
+    }
+
+    public static function get($route, $action)
+    {
+        self::$getRoutes[$route] = $action;
+    }
+
+    private static function loadRoutes()
+    {
+        require __DIR__ . "/../../app/routes.php";
     }
 }
