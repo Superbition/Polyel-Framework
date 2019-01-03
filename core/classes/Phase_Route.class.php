@@ -41,7 +41,7 @@ class Phase_Route
 
                 if(file_exists($controller))
                 {
-                    require $controller;
+                    require_once $controller;
                 }
             }
         }
