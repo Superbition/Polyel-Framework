@@ -1,3 +1,3 @@
 <?php
 
-Phase_Route::get("/", "welcome");
+Phase_Route::get("/", "Welcome");
