@@ -3,7 +3,7 @@ A PHP framework for building beautiful, expressive and fast web applications
 
 **Status: In Development; unstable** 🛠
 
-[![PHP Version](https://img.shields.io/badge/PHP-%3E=7.0-brightgreen.svg?maxAge=2592000)](https://secure.php.net/)
+[![PHP Version](https://img.shields.io/badge/PHP-%3E=7.1-brightgreen.svg?maxAge=2592000)](https://secure.php.net/)
 [![Swoole Version](https://img.shields.io/badge/swoole-%3E=4.2.1-brightgreen.svg?maxAge=2592000)](https://github.com/swoole/swoole-src)
 
 # ❓What is Phase?
