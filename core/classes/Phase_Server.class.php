@@ -31,7 +31,7 @@ class Phase_Server
 
         $this->server->on("request", function($request, $response)
         {
-            Phase_Server::setRequestHeaders($response);
+            Phase_Server::setResponseHeaders($response);
 
             $this->runDebug();
 
@@ -50,7 +50,7 @@ class Phase_Server
         require __DIR__ . "/../../debug.php";
     }
 
-    private static function setRequestHeaders(&$response)
+    private static function setResponseHeaders(&$response)
     {
         $response->header("Server", "Swoole-Phase");
         $response->header("X-Powered-By", "Passion");
