@@ -13,19 +13,20 @@ Phase brings everything together and provides features to make web development q
 
 Allowing web applications to be built using PHP that is highly scalable and implements support for WebSockets, concurrent connections, Task workers, Async-MySQL and non-blocking I/O programming and much more...
 
-# 🔥Planned Features
+# 🔥Planned Features & Roadmap
 The planned development feature list for the Phase framework:
 - Fast, easy to use Routing Engine
-- An async database ORM layer
-- A complete HTTP server with built in support for Ajax & web sockets
+- An async database query builder
+- A complete HTTP server with built-in support for Ajax & web sockets
 - Easy to use session management system
 - OOP MVC framework model built around a async paradigm
 - Quick, elegant and simple built in templating engine
 - Simple configuration management right from the start
 - Built in Coroutine support based on Swoole PHP
 - Redis client which supports different use cases
-- Powerful and flexible built in logger
+- Powerful and flexible built-in logger
 - Middleware system
-- Built in feature rich modules such as: Time processing, message system, markdown parser, email sending, data validation, pagination etc.
+- Built-in feature rich modules such as: Time processing, message system, flash messaging,markdown parser, email sending, data validation, pagination etc.
 - Automatic XSS filtering & CSRF protection
+- Automatic SSL assigning using Let's Encrypt
 - Element templates; handles rendering dynamic page components with logic and data
