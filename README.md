@@ -11,7 +11,7 @@ Phase is a PHP framework based on the Swoole networking framework which is a C/C
 
 Phase brings everything together and provides features to make web development quicker and more secure. Some features include built-in support for authentication and authorization, XSS filtering, CSRF protection, database wrapper support, email sending, input validation, time manipulation, built-in templating system, front end view support, message management and much more...
 
-Allowing web applications to be built using PHP that is highly scalable and implements support for WebSockets, concurrent connections, Task workers, Async-MySQL and non-blocking I/O programming and much more...
+Allowing web applications to be built using PHP that is highly scalable and implements support for WebSockets, concurrent connections, Task workers, Async-MySQL and non-blocking I/O programming.
 
 # Planned Features & Roadmap
 The planned development feature list for the Phase framework:
