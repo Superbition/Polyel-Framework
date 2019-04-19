@@ -38,7 +38,7 @@ while true; do
 
         DIR_HASH=$UPDATED_DIR_HASH
 
-        echo "Change"
+        echo "Code Change Detected"
 
         pkill -f "$PROCESS_NAME"
 
