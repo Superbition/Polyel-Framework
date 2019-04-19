@@ -30,3 +30,7 @@ The planned development feature list for the Phase framework:
 - Automatic XSS filtering & CSRF protection
 - Automatic SSL assigning using Let's Encrypt
 - Element templates; handles rendering dynamic page components with logic and data
+
+# Licence
+
+Apache License Version 2.0, see http://www.apache.org/licenses/LICENSE-2.0.html
