@@ -21,6 +21,12 @@ function clean_up
 
 trap clean_up SIGHUP SIGINT SIGTERM
 
+printf "\n-------------------------------------------------------------------\n"
+
+printf "Starting the Phase Server"
+
+printf "\n-------------------------------------------------------------------\n"
+
 php -f "$DIR/server.php" &
 
 DIR_HASH="$(tar cf - Phase/ | sha1sum)"
