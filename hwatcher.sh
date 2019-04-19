@@ -38,7 +38,11 @@ while true; do
 
         DIR_HASH=$UPDATED_DIR_HASH
 
-        echo "Code Change Detected"
+        printf "\n-------------------------------------------------------------------\n"
+
+        printf "Code Change Detected"
+
+        printf "\n-------------------------------------------------------------------\n"
 
         pkill -f "$PROCESS_NAME"
 
@@ -48,11 +52,13 @@ while true; do
 
 	    done
 
-	    printf "\n---\n"
+	    printf "\n-------------------------------------------------------------------\n"
+
+	    printf "Restarting the server..."
+
+	    printf "\n-------------------------------------------------------------------\n"
 
 	    php -f "$DIR/server.php" &
-
-	    printf "\n\n\n"
 
     fi
 
