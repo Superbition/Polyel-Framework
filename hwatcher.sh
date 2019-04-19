@@ -21,9 +21,10 @@ function clean_up
 
 trap clean_up SIGHUP SIGINT SIGTERM
 
+DATE="$(date +'%d-%m-%Y %T')"
 printf "\n-------------------------------------------------------------------\n"
 
-printf "Starting the Phase Server"
+printf "Starting the Phase Server [${DATE}]"
 
 printf "\n-------------------------------------------------------------------\n"
 
@@ -44,9 +45,10 @@ while true; do
 
         DIR_HASH=$UPDATED_DIR_HASH
 
+        DATE="$(date +'%d-%m-%Y %T')"
         printf "\n-------------------------------------------------------------------\n"
 
-        printf "Code Change Detected"
+        printf "Code Change Detected [${DATE}]"
 
         printf "\n-------------------------------------------------------------------\n"
 
@@ -58,9 +60,10 @@ while true; do
 
 	    done
 
+        DATE="$(date +'%d-%m-%Y %T')"
 	    printf "\n-------------------------------------------------------------------\n"
 
-	    printf "Restarting the server..."
+	    printf "Restarting the server... [${DATE}]"
 
 	    printf "\n-------------------------------------------------------------------\n"
 
