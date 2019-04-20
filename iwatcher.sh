@@ -14,7 +14,7 @@ ulimit -n 100000
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-printf $DIR
+printf ${DIR}
 
 PROCESS_NAME='Phase'
 
