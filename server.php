@@ -1,7 +1,7 @@
 <?php
 
-require __DIR__ . "/phase/autoload.php";
-require __DIR__ . "/phase/helperFunctions/helperFunctions.php";
+require __DIR__ . "/phase/src/autoload.php";
+require __DIR__ . "/phase/src/helperFunctions/helperFunctions.php";
 
 $server = new Phase_Server();
 

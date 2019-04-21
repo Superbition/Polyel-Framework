@@ -47,7 +47,7 @@ class Phase_Server
 
     private function runDebug()
     {
-        require __DIR__ . "/../../debug.php";
+        require __DIR__ . "/../../../debug.php";
     }
 
     private static function setRequestHeaders(&$response)

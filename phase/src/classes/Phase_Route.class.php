@@ -37,7 +37,7 @@ class Phase_Route
             {
                 $controller = self::$getRoutes[self::$requestedRoute];
 
-                $controller = __DIR__ . "/../../app/controllers/" . $controller . ".php";
+                $controller = __DIR__ . "/../../../app/controllers/" . $controller . ".php";
 
                 if(file_exists($controller))
                 {
@@ -47,7 +47,7 @@ class Phase_Route
         }
         else
         {
-            self::$requestedView = __DIR__ . "/../../app/views/errors/404.html";
+            self::$requestedView = __DIR__ . "/../../../app/views/errors/404.html";
         }
     }
 
@@ -74,6 +74,6 @@ class Phase_Route
 
     private static function loadRoutes()
     {
-        require __DIR__ . "/../../app/routes.php";
+        require __DIR__ . "/../../../app/routes.php";
     }
 }

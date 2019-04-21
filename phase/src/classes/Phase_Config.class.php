@@ -2,7 +2,7 @@
 
 class Phase_Config
 {
-    private static $configDir = __DIR__ . "/../../config/";
+    private static $configDir = __DIR__ . "/../../../config/";
 
     private static $main;
     private static $database;
