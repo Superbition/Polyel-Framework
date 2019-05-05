@@ -33,4 +33,4 @@ The planned development feature list for the Phase framework:
 
 # Licence
 
-Apache License Version 2.0, see http://www.apache.org/licenses/LICENSE-2.0.html
+Phase uses the [Apache License Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
