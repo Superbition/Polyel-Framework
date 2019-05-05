@@ -20,7 +20,7 @@ class Phase_Server
         );
     }
 
-    public function setupReactors()
+    public function registerReactors()
     {
         $this->server->on("start", function($server)
         {

@@ -6,6 +6,6 @@ $server = new Phase_Server();
 
 $server->boot();
 
-$server->setupReactors();
+$server->registerReactors();
 
 $server->run();
