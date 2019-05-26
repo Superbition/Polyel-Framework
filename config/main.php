@@ -4,9 +4,9 @@ return [
 
     "appName" => "Phase",
 
-    "serverIP" => "192.168.0.15",
+    "serverIP" => env("Server_Config.HOST", ""),
 
-    "serverPort" => "9501",
+    "serverPort" => (int)env("Server_Config.PORT", ""),
 
     "Title_Format" => ""
 
