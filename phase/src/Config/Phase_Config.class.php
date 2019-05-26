@@ -2,6 +2,7 @@
 
 class Phase_Config
 {
+    // Navigate to the app config directory.
     private static $configDir = __DIR__ . "/../../../config/";
 
     private static $main;
@@ -20,8 +21,10 @@ class Phase_Config
 
     public static function load()
     {
-        self::$envConfig = parse_ini_file(self::$configDir . "env/.env.example", true);
+        // Main env config file.
+        self::$envConfig = parse_ini_file(self::$configDir . "/env/.env", true);
 
+        // Non .env config files, standard .php files.
         self::$main = require self::$configDir . "main.php";
         self::$database = require self::$configDir . "database.php";
         self::$path = require self::$configDir . "path.php";
@@ -69,14 +72,17 @@ class Phase_Config
 
     public static function env($envRequest, $defaultValue)
     {
+        // Split the incoming env request in the format of: Category.Parameter
+        $envRequest = explode(".", $envRequest);
+
+        // Check to see if the requested parameter exists and return it if true.
         if(isset(self::$envConfig[$envRequest[0]][$envRequest[1]]) && !empty(self::$envConfig[$envRequest[0]][$envRequest[1]]))
         {
-            $envRequest = explode(".", $envRequest);
-
             return self::$envConfig[$envRequest[0]][$envRequest[1]];
         }
         else
         {
+            // Else return the default argument passed in.
             return $defaultValue;
         }
     }
