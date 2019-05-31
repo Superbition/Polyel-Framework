@@ -32,10 +32,17 @@ class Phase_Route
         // Continue routing if there is a URL
         if(!empty(self::$requestedRoute))
         {
+            // Check if the route matches any registered routes
             if(self::$getRoutes[self::$requestedRoute])
             {
-                $controller = self::$getRoutes[self::$requestedRoute];
+                // Each route will have a controller and func it wants to call
+                $routeAction = explode("@", self::$getRoutes[self::$requestedRoute]);
 
+                // Split both the controller and func into separate vars
+                $controller = $routeAction[0];
+                $controllerFunc = $routeAction[1];
+
+                // The path to the requested routes controller...
                 $controller = __DIR__ . "/../../../app/controllers/" . $controller . ".php";
 
                 if(file_exists($controller))
