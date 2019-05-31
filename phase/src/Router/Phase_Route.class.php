@@ -2,11 +2,10 @@
 
 class Phase_Route
 {
-
     // The URI pattern the route responds to.
     private static $uri;
 
-    // Holds the main route name/ page
+    // Holds the main route name/page
     private static $requestedRoute;
 
     private static $getRoutes = [];
