@@ -29,7 +29,7 @@ class Phase_Route
 
         self::loadRoutes();
 
-        // Continuing routing if there is a URL
+        // Continue routing if there is a URL
         if(!empty(self::$requestedRoute))
         {
             if(self::$getRoutes[self::$requestedRoute])
