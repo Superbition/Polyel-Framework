@@ -37,7 +37,8 @@ foreach ($phaseSourceFiles as $file)
     // Load each Phase Framework core PHP file to make them available using the class map.
     if (file_exists($file))
     {
-        echo "Loading " . $file . "\n";
+        // Use a green terminal colour.
+        echo "\e[32m Loading: " . $file . "\n";
         require $file;
     }
     else
@@ -45,3 +46,6 @@ foreach ($phaseSourceFiles as $file)
         throw new Exception("ERROR: Missing framework source file: " . $file);
     }
 }
+
+// Reset terminal colour back to normal.
+echo "\e[39m";
