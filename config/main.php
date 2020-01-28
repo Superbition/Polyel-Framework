@@ -2,7 +2,7 @@
 
 return [
 
-    "appName" => "Phase",
+    "appName" => "Polyel",
 
     "serverIP" => env("Server_Config.HOST", ""),
 

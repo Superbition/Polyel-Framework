@@ -1,6 +1,6 @@
 <?php
 
-class Phase_Debug
+class Debug
 {
     public static $lastDump = NULL;
 

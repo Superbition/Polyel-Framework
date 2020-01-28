@@ -6,7 +6,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 cd ${DIR}/../
 
-PROCESS_NAME='Phase'
+PROCESS_NAME='Polyel'
 
 #printf "$PROCESS_NAME\n"
 
@@ -24,7 +24,7 @@ trap clean_up SIGHUP SIGINT SIGTERM
 DATE="$(date +'%d-%m-%Y %T')"
 printf "\n-------------------------------------------------------------------\n"
 
-printf "Starting the Phase Server [${DATE}]"
+printf "Starting the Polyel Server [${DATE}]"
 
 printf "\n-------------------------------------------------------------------\n"
 

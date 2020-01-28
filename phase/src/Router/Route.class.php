@@ -1,6 +1,6 @@
 <?php
 
-class Phase_Route
+class Route
 {
     // The URI pattern the route responds to.
     private static $uri;
@@ -59,17 +59,17 @@ class Phase_Route
 
     public static function deliver(&$response)
     {
-        if(Phase_Debug::doDumpsExist())
+        if(Debug::doDumpsExist())
         {
             // The rendered response but with the debug dumps at the start.
-            $response->end(Phase_Debug::getDumps() . "<br>" . Phase_Template::render(self::$requestedView));
+            $response->end(Debug::getDumps() . "<br>" . Template::render(self::$requestedView));
 
             // Resets the last amount of dumps so duplicates are not shown upon next request.
-            Phase_Debug::cleanup();
+            Debug::cleanup();
         }
         else
         {
-            $response->end(Phase_Template::render(self::$requestedView));
+            $response->end(Template::render(self::$requestedView));
         }
     }
 

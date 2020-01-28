@@ -1,6 +1,6 @@
 <?php
 
-class Phase_Config
+class Config
 {
     // Navigate to the app config directory.
     private static $configDir = __DIR__ . "/../../../config/";
