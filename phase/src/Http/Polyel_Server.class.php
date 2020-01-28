@@ -1,22 +1,22 @@
 <?php
 
-class Phase_Server
+class Polyel_Server
 {
     // The Swoole server class variable
     private $server;
 
     public function __construct()
     {
-        cli_set_process_title("Phase");
+        cli_set_process_title("Polyel");
     }
 
     public function boot()
     {
-        Phase_Config::load();
+        Config::load();
 
         $this->server = new swoole_http_server(
-            Phase_Config::get("main.serverIP"),
-            Phase_Config::get("main.serverPort")
+            Config::get("main.serverIP"),
+            Config::get("main.serverPort")
         );
     }
 
@@ -24,19 +24,19 @@ class Phase_Server
     {
         $this->server->on("start", function($server)
         {
-            echo "Phase HTTP server started at http://" .
-                Phase_Config::get("main.serverIP") . ":" .
-                Phase_Config::get("main.serverPort");
+            echo "Polyel HTTP server started at http://" .
+                Config::get("main.serverIP") . ":" .
+                Config::get("main.serverPort");
         });
 
         $this->server->on("request", function($request, $response)
         {
-            Phase_Server::setRequestHeaders($response);
+            Polyel_Server::setRequestHeaders($response);
 
             $this->runDebug();
 
-            Phase_Route::handle($request);
-            Phase_Route::deliver($response);
+            Route::handle($request);
+            Route::deliver($response);
         });
     }
 
@@ -52,7 +52,7 @@ class Phase_Server
 
     private static function setRequestHeaders(&$response)
     {
-        $response->header("Server", "Swoole-Phase");
+        $response->header("Server", "Polyel-Swoole");
         $response->header("X-Powered-By", "Passion");
         $response->header("Content-Type", "text/html; charset=utf-8");
     }

@@ -1,6 +1,6 @@
 <?php
 
-class Phase_Template
+class Template
 {
     public static function render($requestedView)
     {

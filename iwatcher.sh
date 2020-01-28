@@ -16,7 +16,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 printf ${DIR}
 
-PROCESS_NAME='Phase'
+PROCESS_NAME='Polyel'
 
 # printf "$PROCESS_NAME\n"
 

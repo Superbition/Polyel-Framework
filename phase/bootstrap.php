@@ -6,14 +6,14 @@ $startingDirectory = new RecursiveDirectoryIterator(__DIR__ . "/src/");
 $pathIterator = new RecursiveIteratorIterator($startingDirectory);
 
 $traits = [];
-$phaseSourceFiles = [];
+$polyelSourceFiles = [];
 
-echo "Building Phase Framework source map\n";
+echo "Building Polyel Framework source map\n";
 foreach ($pathIterator as $file)
 {
     $currentFile = $file->getPathname();
 
-    // Build up a class/ source map of the Phase Framework. Don't load the autoloader file.
+    // Build up a class/ source map of the Polyel Framework. Don't load the autoloader file.
     if(preg_match('/^.+\.php$/i', $currentFile) && !stristr($currentFile, "autoload.php"))
     {
         // Traits need to be loaded first, so collect them separately
@@ -24,17 +24,17 @@ foreach ($pathIterator as $file)
             continue;
         }
 
-        $phaseSourceFiles[] = $currentFile;
+        $polyelSourceFiles[] = $currentFile;
     }
 }
 
 // Put all traits at the start of the source map so they are loaded first.
-$phaseSourceFiles = array_merge($traits, $phaseSourceFiles);
+$polyelSourceFiles = array_merge($traits, $polyelSourceFiles);
 
 // Loop through each source file and load them in.
-foreach ($phaseSourceFiles as $file)
+foreach ($polyelSourceFiles as $file)
 {
-    // Load each Phase Framework core PHP file to make them available using the class map.
+    // Load each Polyel Framework core PHP file to make them available using the class map.
     if (file_exists($file))
     {
         // Use a green terminal colour.

@@ -1,6 +1,6 @@
 <?php
 
-  class Phase_Time
+  class Time
   {
     // Default global class time format.
     private static $timeFormat = "Y-m-d H:i:s";
