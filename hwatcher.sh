@@ -2,13 +2,7 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-#echo $DIR
-
-cd ${DIR}/../
-
 PROCESS_NAME='Polyel'
-
-#printf "$PROCESS_NAME\n"
 
 pkill -f "$PROCESS_NAME"
 
@@ -30,15 +24,13 @@ printf "\n-------------------------------------------------------------------\n"
 
 php -f "$DIR/server.php" &
 
-DIR_HASH="$(tar cf - Phase/ | sha1sum)"
-
-#echo $DIR_HASH
+DIR_HASH="$(tar cf - Polyel/ | sha1sum)"
 
 while true; do
 
     sleep 1
 
-    UPDATED_DIR_HASH="$(tar cf - Phase/ | sha1sum)"
+    UPDATED_DIR_HASH="$(tar cf - Polyel/ | sha1sum)"
 
     if [ "$UPDATED_DIR_HASH" != "$DIR_HASH" ]
     then

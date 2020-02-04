@@ -3,7 +3,7 @@
 class Config
 {
     // Navigate to the app config directory.
-    private static $configDir = __DIR__ . "/../../../config/";
+    private static $configDir = __DIR__ . "/../../../config";
 
     private static $main;
     private static $database;
@@ -25,10 +25,10 @@ class Config
         self::$envConfig = parse_ini_file(self::$configDir . "/env/.env", true);
 
         // Non .env config files, standard .php files.
-        self::$main = require self::$configDir . "main.php";
-        self::$database = require self::$configDir . "database.php";
-        self::$path = require self::$configDir . "path.php";
-        self::$template = require self::$configDir . "template.php";
+        self::$main = require self::$configDir . "/main.php";
+        self::$database = require self::$configDir . "/database.php";
+        self::$path = require self::$configDir . "/path.php";
+        self::$template = require self::$configDir . "/template.php";
     }
 
     public static function reload()
