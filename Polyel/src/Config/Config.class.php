@@ -3,82 +3,87 @@
 class Config
 {
     // Navigate to the app config directory.
-    private static $configDir = __DIR__ . "/../../../config";
+    private $configDir = __DIR__ . "/../../../config";
 
-    private static $main;
-    private static $database;
-    private static $path;
-    private static $template;
+    private $main;
+    private $database;
+    private $path;
+    private $template;
 
-    private static $configMap = [
+    private $configMap = [
       "main" => 0,
       "database" => 1,
       "path" => 2,
       "template" => 3,
     ];
 
-    private static $envConfig;
+    private $envConfig;
 
-    public static function load()
+    public function __construct()
     {
-        // Main env config file.
-        self::$envConfig = parse_ini_file(self::$configDir . "/env/.env", true);
 
-        // Non .env config files, standard .php files.
-        self::$main = require self::$configDir . "/main.php";
-        self::$database = require self::$configDir . "/database.php";
-        self::$path = require self::$configDir . "/path.php";
-        self::$template = require self::$configDir . "/template.php";
     }
 
-    public static function reload()
+    public function load()
+    {
+        // Main env config file.
+        $this->envConfig = parse_ini_file($this->configDir . "/env/.env", true);
+
+        // Non .env config files, standard .php files.
+        $this->main = require $this->configDir . "/main.php";
+        $this->database = require $this->configDir . "/database.php";
+        $this->path = require $this->configDir . "/path.php";
+        $this->template = require $this->configDir . "/template.php";
+    }
+
+    public function reload()
     {
         self::load();
     }
 
-    public static function get($configRequest)
+    public function get($configRequest)
     {
         $configRequest = explode(".", $configRequest);
 
-        $configKey = self::$configMap[$configRequest[0]];
+        $configKey = $this->configMap[$configRequest[0]];
 
         switch($configKey)
         {
             case 0:
 
-                return self::$main[$configRequest[1]];
+                return $this->main[$configRequest[1]];
 
                 break;
 
             case 1:
 
-                return self::$database[$configRequest[1]][$configRequest[2]];
+                return $this->database[$configRequest[1]][$configRequest[2]];
 
                 break;
 
             case 2:
 
-                return self::$path[$configRequest[1]];
+                return $this->path[$configRequest[1]];
 
                 break;
 
             case 3:
 
-                return self::$template[$configRequest[1]];
+                return $this->template[$configRequest[1]];
 
                 break;
         }
     }
 
-    public static function env($envRequest, $defaultValue)
+    public function env($envRequest, $defaultValue)
     {
         // Split the incoming env request in the format of: Category.Parameter
         $envRequest = explode(".", $envRequest);
 
         // Check to see if the requested parameter exists and return it if true.
-        if(isset(self::$envConfig[$envRequest[0]][$envRequest[1]]) && !empty(self::$envConfig[$envRequest[0]][$envRequest[1]]))
+        if(isset($this->envConfig[$envRequest[0]][$envRequest[1]]) && !empty($this->envConfig[$envRequest[0]][$envRequest[1]]))
         {
-            return self::$envConfig[$envRequest[0]][$envRequest[1]];
+            return $this->envConfig[$envRequest[0]][$envRequest[1]];
         }
         else
         {
