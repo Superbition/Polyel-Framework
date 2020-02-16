@@ -1,6 +1,6 @@
 <?php
 
-class Polyel_Server
+class Server
 {
     // The Swoole server class variable
     private $server;
