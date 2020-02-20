@@ -1,6 +1,6 @@
 <?php
 
-namespace Phase\Container;
+namespace Polyel\Container;
 
 class Container
 {
