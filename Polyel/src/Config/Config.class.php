@@ -1,5 +1,7 @@
 <?php
 
+namespace Polyel\Config;
+
 class Config
 {
     // Navigate to the app config directory.

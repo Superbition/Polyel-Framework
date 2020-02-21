@@ -1,5 +1,9 @@
 <?php
 
+namespace Polyel\Http;
+
+use Polyel\Config\Config;
+
 class Server
 {
     // The Swoole server class variable
