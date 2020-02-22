@@ -1,14 +1,21 @@
 <?php
 
+namespace Polyel\Time;
+
   class Time
   {
     // Default global class time format.
-    private static $timeFormat = "Y-m-d H:i:s";
+    private $timeFormat = "Y-m-d H:i:s";
 
-    public static function now($timeFormatToUse = null)
+    public function __construct()
+    {
+
+    }
+
+    public function now($timeFormatToUse = null)
     {
       // Use the default time format if no time format is passed in.
-      $timeFormat = self::$timeFormat;
+      $timeFormat = $this->timeFormat;
       if(isset($timeFormatToUse))
       {
         $timeFormat = $timeFormatToUse;
@@ -19,16 +26,16 @@
       return $now->format($timeFormat);
     }
 
-    public static function validateDate($dateToCheck)
+    public function validateDate($dateToCheck)
     {
-      $d = DateTime::createFromFormat(self::$timeFormat, $dateToCheck);
-      return $d && $d->format(self::$timeFormat) === $dateToCheck;
+      $d = DateTime::createFromFormat($this->timeFormat, $dateToCheck);
+      return $d && $d->format($this->timeFormat) === $dateToCheck;
     }
 
-    public static function intervalCheck($dateTimeToCheck, $interval, $timeFormatToUse = null)
+    public function intervalCheck($dateTimeToCheck, $interval, $timeFormatToUse = null)
     {
       // Use the default time format if no time format is passed in.
-      $timeFormat = self::$timeFormat;
+      $timeFormat = $this->timeFormat;
       if(isset($timeFormatToUse))
       {
         $timeFormat = $timeFormatToUse;
@@ -51,7 +58,7 @@
       }
     }
 
-    public static function diff($startDate, $endDate = null)
+    public function diff($startDate, $endDate = null)
     {
       if(isset($endDate))
       {
@@ -60,11 +67,11 @@
           return false;
         }
 
-        $endDate = DateTime::createFromFormat(self::$timeFormat, $endDate);
+        $endDate = DateTime::createFromFormat($this->timeFormat, $endDate);
       }
       else
       {
-        $endDate = DateTime::createFromFormat(self::$timeFormat, self::now());
+        $endDate = DateTime::createFromFormat($this->timeFormat, self::now());
       }
 
       if(!self::validateDate($startDate))
@@ -72,7 +79,7 @@
         return false;
       }
 
-      $startDate = DateTime::createFromFormat(self::$timeFormat, $startDate);
+      $startDate = DateTime::createFromFormat($this->timeFormat, $startDate);
       $difference = $startDate->diff($endDate);
 
       $dateTimeElapsed = $difference->format('%y|%m|%a|%h|%i|%S');
@@ -102,11 +109,11 @@
       return $finalDateDiff;
     }
 
-    public static function addTimeToDate($dateToAddTo, $timeToAdd)
+    public function addTimeToDate($dateToAddTo, $timeToAdd)
     {
-      $dateTime = DateTime::createFromFormat(self::$timeFormat, $dateToAddTo);
+      $dateTime = DateTime::createFromFormat($this->timeFormat, $dateToAddTo);
       $dateTime->modify("+" . $timeToAdd);
-      return $dateTime->format(self::$timeFormat);
+      return $dateTime->format($this->timeFormat);
     }
 
     /*
@@ -116,7 +123,7 @@
       standard british time.
       The function will return a string.
     */
-    public static function convertUniversalDate($dateIn, $timeFormat = null)
+    public function convertUniversalDate($dateIn, $timeFormat = null)
     {
       // If the date passed in is a string
       if(gettype($dateIn) == "string")
