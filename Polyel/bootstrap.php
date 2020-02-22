@@ -49,3 +49,6 @@ foreach ($polyelSourceFiles as $file)
 
 // Reset terminal colour back to normal.
 echo "\e[39m";
+
+// Create the DIC and create a new Polyel HTTP Server instance
+$container = new Polyel\Container\Container(\Polyel\Http\Server::class);
