@@ -23,7 +23,7 @@ class Config
 
     public function __construct()
     {
-
+        $this->load();
     }
 
     public function load()
@@ -40,7 +40,7 @@ class Config
 
     public function reload()
     {
-        self::load();
+        $this->load();
     }
 
     public function get($configRequest)
