@@ -51,4 +51,4 @@ foreach ($polyelSourceFiles as $file)
 echo "\e[39m";
 
 // Create the DIC and create a new Polyel HTTP Server instance
-$container = new Polyel\Container\Container(\Polyel\Http\Server::class);
+$container = new Polyel\Container\Container(Polyel\Http\Server::class);
