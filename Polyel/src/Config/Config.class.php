@@ -28,8 +28,13 @@ class Config
 
     public function load()
     {
-        // Main env config file.
-        $this->envConfig = parse_ini_file($this->configDir . "/env/.env", true);
+        $envPath = $this->configDir . "/env/.env";
+
+        if(file_exists($envPath))
+        {
+            // Main env config file.
+            $this->envConfig = parse_ini_file($this->configDir . "/env/.env", true);
+        }
 
         // Non .env config files, standard .php files.
         $this->main = require $this->configDir . "/main.php";
