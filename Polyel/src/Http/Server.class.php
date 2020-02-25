@@ -10,18 +10,22 @@ class Server
     // The Swoole server class variable
     private $server;
 
-    public function __construct()
+    private $config;
+
+    public function __construct(Config $config)
     {
         cli_set_process_title("Polyel");
+
+        $this->config = $config;
     }
 
     public function boot()
     {
-        Config::load();
+        $this->config->load();
 
-        $this->server = new swoole_http_server(
-            Config::get("main.serverIP"),
-            Config::get("main.serverPort")
+        $this->server = new SwooleHTTPServer(
+            $this->config->get("main.serverIP"),
+            $this->config->get("main.serverPort")
         );
     }
 
@@ -30,8 +34,8 @@ class Server
         $this->server->on("start", function($server)
         {
             echo "Polyel HTTP server started at http://" .
-                Config::get("main.serverIP") . ":" .
-                Config::get("main.serverPort");
+                $this->config->get("main.serverIP") . ":" .
+                $this->config->get("main.serverPort");
         });
 
         $this->server->on("request", function($request, $response)
