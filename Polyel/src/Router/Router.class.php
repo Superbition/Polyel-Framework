@@ -5,40 +5,45 @@ namespace Polyel\Router;
 class Router
 {
     // The URI pattern the route responds to.
-    private static $uri;
+    private $uri;
 
     // Holds the main route name/page
-    private static $requestedRoute;
+    private $requestedRoute;
 
-    private static $getRoutes = [];
+    private $getRoutes = [];
 
     // Holds the requested view template file name
-    private static $requestedView;
+    private $requestedView;
 
-    public static function handle(&$request)
+    public function __construct()
+    {
+
+    }
+
+    public function handle(&$request)
     {
         // Get the full URL from the clients request
-        self::$requestedRoute = self::$uri = $request->server["request_uri"];
+        $this->requestedRoute = $this->uri = $request->server["request_uri"];
 
         // Split the URI into an array based on the delimiter
-        self::$uri = explode("/", $request->server["request_uri"]);
+        $this->uri = explode("/", $request->server["request_uri"]);
 
         // Remove empty array values from the URI because of the delimiters
-        self::$uri = array_filter(self::$uri);
+        $this->uri = array_filter($this->uri);
 
         // Reindex the array back to 0
-        self::$uri = array_values(self::$uri);
+        $this->uri = array_values($this->uri);
 
         self::loadRoutes();
 
         // Continue routing if there is a URL
-        if(!empty(self::$requestedRoute))
+        if(!empty($this->requestedRoute))
         {
             // Check if the route matches any registered routes
-            if(self::$getRoutes[self::$requestedRoute])
+            if($this->getRoutes[$this->requestedRoute])
             {
                 // Each route will have a controller and func it wants to call
-                $routeAction = explode("@", self::$getRoutes[self::$requestedRoute]);
+                $routeAction = explode("@", $this->getRoutes[$this->requestedRoute]);
 
                 // Split both the controller and func into separate vars
                 $controller = $routeAction[0];
@@ -55,32 +60,32 @@ class Router
         }
         else
         {
-            self::$requestedView = __DIR__ . "/../../../app/views/errors/404.html";
+            $this->requestedView = __DIR__ . "/../../../app/views/errors/404.html";
         }
     }
 
-    public static function deliver(&$response)
+    public function deliver(&$response)
     {
         if(Debug::doDumpsExist())
         {
             // The rendered response but with the debug dumps at the start.
-            $response->end(Debug::getDumps() . "<br>" . Template::render(self::$requestedView));
+            $response->end(Debug::getDumps() . "<br>" . Template::render($this->requestedView));
 
             // Resets the last amount of dumps so duplicates are not shown upon next request.
             Debug::cleanup();
         }
         else
         {
-            $response->end(Template::render(self::$requestedView));
+            $response->end(Template::render($this->requestedView));
         }
     }
 
-    public static function get($route, $action)
+    public function get($route, $action)
     {
-        self::$getRoutes[$route] = $action;
+        $this->getRoutes[$route] = $action;
     }
 
-    private static function loadRoutes()
+    private function loadRoutes()
     {
         require __DIR__ . "/../../../app/routes.php";
     }
