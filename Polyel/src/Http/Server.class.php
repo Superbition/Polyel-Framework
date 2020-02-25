@@ -2,6 +2,7 @@
 
 namespace Polyel\Http;
 
+use Polyel\Router\Router;
 use Polyel\Config\Config;
 use Swoole\HTTP\Server as SwooleHTTPServer;
 
@@ -12,11 +13,14 @@ class Server
 
     private $config;
 
-    public function __construct(Config $config)
+    private $router;
+
+    public function __construct(Config $config, Router $router)
     {
         cli_set_process_title("Polyel");
 
         $this->config = $config;
+        $this->router = $router;
     }
 
     public function boot()
@@ -44,8 +48,8 @@ class Server
 
             $this->runDebug();
 
-            Route::handle($request);
-            Route::deliver($response);
+            $this->router->handle($request);
+            $this->router->deliver($response);
         });
     }
 
