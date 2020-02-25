@@ -2,6 +2,7 @@
 
 namespace Polyel\Router;
 
+use Polyel\View\View;
 use Polyel\Debug\Debug;
 
 class Router
@@ -16,11 +17,14 @@ class Router
 
     // Holds the requested view template file name
     private $requestedView;
-    
+
+    private $view;
+
     private $debug;
 
-    public function __construct(Debug $debug)
+    public function __construct(View $view, Debug $debug)
     {
+        $this->view = $view;
         $this->debug = $debug;
     }
 
@@ -80,7 +84,7 @@ class Router
         }
         else
         {
-            $response->end(Template::render($this->requestedView));
+            $response->end($this->view->render($this->requestedView));
         }
     }
 
