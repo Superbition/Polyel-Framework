@@ -2,6 +2,8 @@
 
 namespace Polyel\Router;
 
+use Polyel\Debug\Debug;
+
 class Router
 {
     // The URI pattern the route responds to.
@@ -14,10 +16,12 @@ class Router
 
     // Holds the requested view template file name
     private $requestedView;
+    
+    private $debug;
 
-    public function __construct()
+    public function __construct(Debug $debug)
     {
-
+        $this->debug = $debug;
     }
 
     public function handle(&$request)
@@ -66,13 +70,13 @@ class Router
 
     public function deliver(&$response)
     {
-        if(Debug::doDumpsExist())
+        if($this->debug->doDumpsExist())
         {
             // The rendered response but with the debug dumps at the start.
-            $response->end(Debug::getDumps() . "<br>" . Template::render($this->requestedView));
+            $response->end($this->debug->getDumps() . "<br>" . Template::render($this->requestedView));
 
             // Resets the last amount of dumps so duplicates are not shown upon next request.
-            Debug::cleanup();
+            $this->debug->cleanup();
         }
         else
         {
