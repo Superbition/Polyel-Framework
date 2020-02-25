@@ -56,7 +56,12 @@ class Server
 
     private function runDebug()
     {
-        require __DIR__ . "/../../../debug.php";
+        $debugFile = __DIR__ . "/../../../debug.php";
+
+        if(file_exists($debugFile))
+        {
+            require $debugFile;
+        }
     }
 
     private function setRequestHeaders(&$response)
