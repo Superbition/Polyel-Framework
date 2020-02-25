@@ -3,6 +3,7 @@
 namespace Polyel\Http;
 
 use Polyel\Config\Config;
+use Swoole\HTTP\Server as SwooleHTTPServer;
 
 class Server
 {
