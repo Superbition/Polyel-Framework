@@ -23,7 +23,7 @@ class Config
 
     public function __construct()
     {
-        $this->load();
+
     }
 
     public function load()
