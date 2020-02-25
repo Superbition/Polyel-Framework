@@ -2,7 +2,7 @@
 
 require __DIR__ . "/Polyel/bootstrap.php";
 
-$server = new Polyel_Server();
+$server = Polyel::call(Polyel\Http\Server::class);
 
 $server->boot();
 
