@@ -1,5 +1,7 @@
 <?php
 
+namespace Polyel\Route;
+
 class Route
 {
     // The URI pattern the route responds to.
