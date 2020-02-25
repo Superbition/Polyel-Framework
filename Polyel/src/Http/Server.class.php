@@ -40,7 +40,7 @@ class Server
 
         $this->server->on("request", function($request, $response)
         {
-            Polyel_Server::setRequestHeaders($response);
+            $this->setRequestHeaders($response);
 
             $this->runDebug();
 
@@ -59,7 +59,7 @@ class Server
         require __DIR__ . "/../../../debug.php";
     }
 
-    private static function setRequestHeaders(&$response)
+    private function setRequestHeaders(&$response)
     {
         $response->header("Server", "Polyel-Swoole");
         $response->header("X-Powered-By", "Passion");
