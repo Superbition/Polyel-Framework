@@ -50,6 +50,8 @@ class Router
             // Check if the route matches any registered routes
             if(array_key_exists($this->requestedRoute, $this->getRoutes))
             {
+                $this->requestedView = null;
+
                 // Each route will have a controller and func it wants to call
                 $routeAction = explode("@", $this->getRoutes[$this->requestedRoute]);
 
@@ -65,10 +67,10 @@ class Router
                     require_once $controller;
                 }
             }
-        }
-        else
-        {
-            $this->requestedView = __DIR__ . "/../../../app/views/errors/404.html";
+            else
+            {
+                $this->requestedView = __DIR__ . "/../../../app/views/errors/404.html";
+            }
         }
     }
 
