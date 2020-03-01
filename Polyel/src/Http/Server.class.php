@@ -41,9 +41,13 @@ class Server
     {
         $this->server->on("start", function($server)
         {
+            echo "\n";
+
             echo "Polyel HTTP server started at http://" .
                 $this->config->get("main.serverIP") . ":" .
                 $this->config->get("main.serverPort");
+
+            echo "\n\n";
         });
 
         $this->server->on("request", function($request, $response)
