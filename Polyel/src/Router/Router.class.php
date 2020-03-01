@@ -48,7 +48,7 @@ class Router
         if(!empty($this->requestedRoute))
         {
             // Check if the route matches any registered routes
-            if($this->getRoutes[$this->requestedRoute])
+            if(array_key_exists($this->requestedRoute, $this->getRoutes))
             {
                 // Each route will have a controller and func it wants to call
                 $routeAction = explode("@", $this->getRoutes[$this->requestedRoute]);
