@@ -42,7 +42,7 @@ class Router
         // Reindex the array back to 0
         $this->uri = array_values($this->uri);
 
-        self::loadRoutes();
+        $this->loadRoutes();
 
         // Continue routing if there is a URL
         if(!empty($this->requestedRoute))
