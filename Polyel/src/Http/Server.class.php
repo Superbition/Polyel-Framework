@@ -11,8 +11,10 @@ class Server
     // The Swoole server class variable
     private $server;
 
+    // The config instance from the container
     private $config;
 
+    // The Route instance from the container
     private $router;
 
     public function __construct(Config $config, Router $router)
@@ -25,8 +27,10 @@ class Server
 
     public function boot()
     {
+        // Load all configuration files
         $this->config->load();
 
+        // Create a new Swoole HTTP server and set server IP and listening port
         $this->server = new SwooleHTTPServer(
             $this->config->get("main.serverIP"),
             $this->config->get("main.serverPort")
