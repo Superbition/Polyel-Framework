@@ -13,6 +13,7 @@ class Router
     // Holds the main route name/page
     private $requestedRoute;
 
+    // Holds all GET request routes
     private $getRoutes = [];
 
     // Holds the requested view template file name
@@ -69,6 +70,7 @@ class Router
             }
             else
             {
+                // Error 404 route not found
                 $this->requestedView = __DIR__ . "/../../../app/views/errors/404.html";
             }
         }
