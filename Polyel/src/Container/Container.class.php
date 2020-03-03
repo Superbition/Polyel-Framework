@@ -91,6 +91,6 @@ class Container
         }
 
         // For when the requested class does not exist inside the container...
-        return false;
+        return null;
     }
 }
