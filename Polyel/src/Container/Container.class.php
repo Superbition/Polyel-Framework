@@ -74,6 +74,7 @@ class Container
         $this->container[$dependencyToResolve] = $newClassInstance;
     }
 
+    // Public facing function to externally resolve a class
     public function resolveClass($classToResolve)
     {
         $this->checkForDependencies($classToResolve);
