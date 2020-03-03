@@ -74,6 +74,13 @@ class Container
         $this->container[$dependencyToResolve] = $newClassInstance;
     }
 
+    public function resolveClass($classToResolve)
+    {
+        $this->checkForDependencies($classToResolve);
+
+        return $this->get($classToResolve);
+    }
+
     // Used to retrieve class instances from the container.
     public function get($className)
     {
