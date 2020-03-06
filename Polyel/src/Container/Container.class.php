@@ -27,7 +27,7 @@ class Container
         // Get the class constructor method...
         $constructor = $classReflection->getConstructor();
 
-        // Making sure the class is not static.
+        // A constructor is required to perform constructor dependency injection.
         if(isset($constructor))
         {
             // Collect all the constructor parameters, then we know the class requirements...
@@ -52,13 +52,19 @@ class Container
                 // Using the constructors parameters, we store all the required dependencies here.
                 $dependencyList[] = $this->get($dependencyToCheck);
             }
-
-            /*
-             * Finally, we resolve the class, passing in any arguments the constructor requires.
-             * The $dependencyList contains the class arguments in the form of a array.
-             */
-            $this->resolveClassDependency($classToResolve, $dependencyList);
         }
+        else
+        {
+            // No constructor means we don't need any class arguments/ dependencies to create a new instance
+            $dependencyList = null;
+        }
+
+        /*
+         * Finally, we resolve the class, passing in any arguments (or not) to the
+         * constructor with what it requires in order to initiate a new class.
+         * The $dependencyList contains the class arguments in the form of a array.
+         */
+        $this->resolveClassDependency($classToResolve, $dependencyList);
     }
 
     // Resolve a single class dependency and store it in the container
@@ -67,8 +73,16 @@ class Container
         // Using Reflection, load the class up...
         $classDependency = new ReflectionClass($dependencyToResolve);
 
-        // Crate an instance using and pass in any constructor arguments.
-        $newClassInstance = $classDependency->newInstanceArgs($classArgs);
+        if(isset($classArgs))
+        {
+            // Crate an instance using and passing in any constructor arguments.
+            $newClassInstance = $classDependency->newInstanceArgs($classArgs);
+        }
+        else
+        {
+            // No constructor, means no constructor dependency injection.
+            $newClassInstance = $classDependency->newInstanceWithoutConstructor();
+        }
 
         // Finally store the newly created instance inside the container.
         $this->container[$dependencyToResolve] = $newClassInstance;
