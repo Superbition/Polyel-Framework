@@ -18,6 +18,11 @@ class Polyel
         self::$container = new Container($baseClass);
     }
 
+    public static function resolveClass($classToResolve)
+    {
+        return self::$container->resolveClass($classToResolve);
+    }
+
     public static function call($requestedClass)
     {
         return self::$container->get($requestedClass);
