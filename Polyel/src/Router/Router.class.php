@@ -43,8 +43,6 @@ class Router
         // Reindex the array back to 0
         $this->uri = array_values($this->uri);
 
-        $this->loadRoutes();
-
         // Continue routing if there is a URL
         if(!empty($this->requestedRoute))
         {
@@ -97,7 +95,7 @@ class Router
         $this->getRoutes[$route] = $action;
     }
 
-    private function loadRoutes()
+    public function loadRoutes()
     {
         require __DIR__ . "/../../../app/routes.php";
     }

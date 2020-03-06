@@ -30,6 +30,9 @@ class Server
         // Load all configuration files
         $this->config->load();
 
+        // Preload all application routes
+        $this->router->loadRoutes();
+
         // Create a new Swoole HTTP server and set server IP and listening port
         $this->server = new SwooleHTTPServer(
             $this->config->get("main.serverIP"),
