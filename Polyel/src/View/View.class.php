@@ -4,6 +4,8 @@ namespace Polyel\View;
 
 class View
 {
+    private $view;
+
     public function __construct()
     {
 
@@ -11,6 +13,13 @@ class View
 
     public function render($requestedView)
     {
-        return "Hello World!";
+        $this->view = null;
+
+        if(file_exists($requestedView))
+        {
+            $this->view = file_get_contents($requestedView);
+        }
+
+        return $this->view;
     }
 }
