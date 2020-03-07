@@ -28,6 +28,11 @@ class Polyel
         return self::$container->get($requestedClass);
     }
 
+    public static function resolveMethod($class, $method)
+    {
+        return self::$container->resolveMethodInjection($class, $method);
+    }
+
     public static function containerList()
     {
         return self::$container->list();

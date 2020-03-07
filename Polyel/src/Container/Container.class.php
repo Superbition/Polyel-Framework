@@ -96,6 +96,53 @@ class Container
         return $this->get($classToResolve);
     }
 
+    // Used to perform method injection within a class
+    public function resolveMethodInjection($class, $methodToResolve)
+    {
+        // Get the class we want to perform method injection on
+        $class = $this->get($class);
+
+        // Check that the class does exist...
+        if(isset($class))
+        {
+            // Reflect the class...
+            $class = new ReflectionClass($class);
+
+            // Check the class has the method we want to inject on
+            if($class->hasMethod($methodToResolve))
+            {
+                // Get the methods parameters, if any...
+                $methodParams = $class->getMethod($methodToResolve)->getParameters();
+
+                // Loop through each method param and resolve them if needed
+                $methodDependencyList = [];
+                foreach($methodParams as $param)
+                {
+                    // Getting the name gets the full namespace
+                    $methodDependencyName = $param->getType()->getName();
+                    $methodDependency = $this->get($methodDependencyName);
+
+                    // Sometimes the method param dependency might not exist yet, try to resolve it...
+                    if(!isset($methodDependency))
+                    {
+                        // Try to resolve a class that may not have been initiated
+                        $this->checkForDependencies($methodDependencyName);
+                        $methodDependency = $this->get($methodDependencyName);
+                    }
+
+                    // Once the method dependency has been resolve, add it to the list to return later...
+                    $methodDependencyList[] = $methodDependency;
+                }
+
+                // Return any method dependencies
+                return $methodDependencyList;
+            }
+        }
+
+        // Return false when the class we want to perform method inject on does not exist
+        return false;
+    }
+
     // Used to retrieve class instances from the container.
     public function get($className)
     {
