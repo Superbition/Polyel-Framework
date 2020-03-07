@@ -2,6 +2,8 @@
 
 namespace Polyel\Time;
 
+use DateTime;
+
   class Time
   {
     // Default global class time format.
