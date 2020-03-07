@@ -4,6 +4,7 @@ namespace Polyel\Http;
 
 use Polyel\Router\Router;
 use Polyel\Config\Config;
+use Polyel\Controller\Controller;
 use Swoole\HTTP\Server as SwooleHTTPServer;
 
 class Server
@@ -17,12 +18,16 @@ class Server
     // The Route instance from the container
     private $router;
 
-    public function __construct(Config $config, Router $router)
+    // The Controller instance from the container
+    private $controller;
+
+    public function __construct(Config $config, Router $router, Controller $controller)
     {
         cli_set_process_title("Polyel");
 
         $this->config = $config;
         $this->router = $router;
+        $this->controller = $controller;
     }
 
     public function boot()
@@ -32,6 +37,9 @@ class Server
 
         // Preload all application routes
         $this->router->loadRoutes();
+
+        // Preload all applications Controllers
+        $this->controller->loadAllControllers();
 
         // Create a new Swoole HTTP server and set server IP and listening port
         $this->server = new SwooleHTTPServer(
