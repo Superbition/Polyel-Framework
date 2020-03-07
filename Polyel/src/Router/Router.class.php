@@ -2,6 +2,7 @@
 
 namespace Polyel\Router;
 
+use Polyel;
 use Polyel\View\View;
 use Polyel\Debug\Debug;
 
@@ -54,16 +55,20 @@ class Router
                 // Each route will have a controller and func it wants to call
                 $routeAction = explode("@", $this->getRoutes[$this->requestedRoute]);
 
-                // Split both the controller and func into separate vars
+                // Split both the controller and func into separate vars from controller@Action
                 $controller = $routeAction[0];
-                $controllerFunc = $routeAction[1];
+                $controllerAction = $routeAction[1];
 
-                // The path to the requested routes controller...
-                $controller = __DIR__ . "/../../../app/controllers/" . $controller . ".php";
+                //The controller namespace and getting its instance from the container using ::call
+                $controllerName = "App\Controllers\\" . $controller;
+                $controller = Polyel::call($controllerName);
 
-                if(file_exists($controller))
+                // Check that the controller exists
+                if(isset($controller) && !empty($controller))
                 {
-                    require_once $controller;
+                    // Resolve and perform method injection when calling the controller action
+                    $methodDependencies = Polyel::resolveMethod($controllerName, $controllerAction);
+                    $controller->$controllerAction(...$methodDependencies);
                 }
             }
             else
