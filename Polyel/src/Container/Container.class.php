@@ -108,4 +108,17 @@ class Container
         // For when the requested class does not exist inside the container...
         return null;
     }
+
+    // A function to return all the names of the classes inside the container, full namespace is returned.
+    public function list()
+    {
+        // Loop through to get all the FQNS for each item inside the container.
+        $containerList = [];
+        foreach ($this->container as $className => $object)
+        {
+            $containerList[] = $className;
+        }
+
+        return $containerList;
+    }
 }

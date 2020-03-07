@@ -27,4 +27,9 @@ class Polyel
     {
         return self::$container->get($requestedClass);
     }
+
+    public static function containerList()
+    {
+        return self::$container->list();
+    }
 }
