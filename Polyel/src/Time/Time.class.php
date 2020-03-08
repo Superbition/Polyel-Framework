@@ -18,7 +18,7 @@ class Time
     {
         // Use the default time format if no time format is passed in.
         $timeFormat = $this->timeFormat;
-        if (isset($timeFormatToUse))
+        if(isset($timeFormatToUse))
         {
             $timeFormat = $timeFormatToUse;
         }
@@ -38,7 +38,7 @@ class Time
     {
         // Use the default time format if no time format is passed in.
         $timeFormat = $this->timeFormat;
-        if (isset($timeFormatToUse))
+        if(isset($timeFormatToUse))
         {
             $timeFormat = $timeFormatToUse;
         }
@@ -48,7 +48,7 @@ class Time
         $now = DateTime::createFromFormat($timeFormat, self::now($timeFormat));
 
         // Check to see if the dateTime to check has passed or is equal to the current dateTime.
-        if ($dateTimeToCheck <= $now)
+        if($dateTimeToCheck <= $now)
         {
             // True if the dateTime to check has passed or is equal to the current dateTime.
             return true;
@@ -62,9 +62,9 @@ class Time
 
     public function diff($startDate, $endDate = null)
     {
-        if (isset($endDate))
+        if(isset($endDate))
         {
-            if (!self::validateDate($endDate))
+            if(!self::validateDate($endDate))
             {
                 return false;
             }
@@ -76,7 +76,7 @@ class Time
             $endDate = DateTime::createFromFormat($this->timeFormat, self::now());
         }
 
-        if (!self::validateDate($startDate))
+        if(!self::validateDate($startDate))
         {
             return false;
         }
@@ -95,11 +95,11 @@ class Time
         $dateTimeElapsed = array_combine($outPuts, $explodedDateString);
 
         $finalDateDiff = 0;
-        foreach ($dateTimeElapsed as $string => $value)
+        foreach($dateTimeElapsed as $string => $value)
         {
-            if ($value > 0)
+            if($value > 0)
             {
-                if ($value == 1)
+                if($value == 1)
                 {
                     $string = substr($string, 0, -1);
                 }
@@ -128,13 +128,13 @@ class Time
     public function convertUniversalDate($dateIn, $timeFormat = null)
     {
         // If the date passed in is a string
-        if (gettype($dateIn) == "string")
+        if(gettype($dateIn) == "string")
         {
             // Convert the string to a date datatype
             $date = strtotime($dateIn);
 
             // If the format has been set, use it
-            if (isset($timeFormat))
+            if(isset($timeFormat))
             {
                 return (string)date($timeFormat, $date);
             }
@@ -146,7 +146,7 @@ class Time
         else // else it is a date and it doesn't need converting first
         {
             // If the format has been set, use it
-            if (isset($timeFormat))
+            if(isset($timeFormat))
             {
                 return (string)date($timeFormat, $dateIn);
             }
