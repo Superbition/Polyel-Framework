@@ -39,8 +39,17 @@ class Container
             // Loop through each constructor parameter and check if it exists in the container already.
             foreach($constructorParameters as $param)
             {
+                // Get the parameter type, returns NULL on not type
+                $dependencyToCheck = $param->getType();
+
+                // Pass onto the next paramater if the type is not defined e.g. could be a normal variable
+                if(!isset($dependencyToCheck))
+                {
+                    continue;
+                }
+
                 // Only get the class name and not the type.
-                $dependencyToCheck = $param->getType()->getName();
+                $dependencyToCheck = $dependencyToCheck->getName();
 
                 // For when the class has a dependency that does not exist yet.
                 if(!$this->get($dependencyToCheck))
