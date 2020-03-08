@@ -1,3 +1,5 @@
 <?php
 
-Route::get("/", "Welcome@sayHello");
+use Polyel\Router\Route;
+
+Route::get("/", "WelcomeController@sayHello");

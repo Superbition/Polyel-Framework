@@ -1,26 +1,33 @@
 <?php
 
+namespace Polyel\Debug;
+
 class Debug
 {
-    public static $lastDump = NULL;
+    public $lastDump = NULL;
 
-    public static function dump($input = NULL)
+    public function __construct()
+    {
+
+    }
+
+    public function dump($input = NULL)
     {
         // Add a break line when there is already a dump.
-        if(!empty(self::$lastDump))
+        if(!empty($this->lastDump))
         {
             // Used to help break up when multiple dumps exist
-            self::$lastDump .= "<br>";
+            $this->lastDump .= "<br>";
         }
 
         // Export the dump into a variable. This is basically var_dump().
-        self::$lastDump .= var_export($input, True);
+        $this->lastDump .= var_export($input, True);
     }
 
-    public static function doDumpsExist()
+    public function doDumpsExist()
     {
         // Check if dumps exist and return true or false
-        if(!empty(self::$lastDump))
+        if(!empty($this->lastDump))
         {
             return True;
         }
@@ -30,14 +37,14 @@ class Debug
         }
     }
 
-    public static function getDumps()
+    public function getDumps()
     {
-        return self::$lastDump;
+        return $this->lastDump;
     }
 
-    public static function cleanup()
+    public function cleanup()
     {
         // Resets the last amount of dumps so duplicates are not shown upon next request
-        self::$lastDump = NULL;
+        $this->lastDump = NULL;
     }
 }

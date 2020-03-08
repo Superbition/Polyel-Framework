@@ -13,8 +13,8 @@ foreach ($pathIterator as $file)
 {
     $currentFile = $file->getPathname();
 
-    // Build up a class/ source map of the Polyel Framework. Don't load the autoloader file.
-    if(preg_match('/^.+\.php$/i', $currentFile) && !stristr($currentFile, "autoload.php"))
+    // Build up a class/ source map of the Polyel Framework.
+    if(preg_match('/^.+\.php$/i', $currentFile))
     {
         // Traits need to be loaded first, so collect them separately
         if(preg_match("/.trait.php/", strtolower($currentFile)))
@@ -49,3 +49,6 @@ foreach ($polyelSourceFiles as $file)
 
 // Reset terminal colour back to normal.
 echo "\e[39m";
+
+// Create the DIC and create a new Polyel HTTP Server instance as the base class
+Polyel::createContainer(Polyel\Http\Server::class);

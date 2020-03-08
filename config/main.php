@@ -6,7 +6,7 @@ return [
 
     "serverIP" => env("Server_Config.HOST", ""),
 
-    "serverPort" => (int)env("Server_Config.PORT", ""),
+    "serverPort" => env("Server_Config.PORT", ""),
 
     "Title_Format" => ""
 

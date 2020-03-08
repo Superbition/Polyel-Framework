@@ -7,5 +7,5 @@ function dump($input = NULL)
 
 function env($envRequest, $defaultValue)
 {
-    return Config::env($envRequest, $defaultValue);
+    return Polyel::call(Polyel\Config\Config::class)->env($envRequest, $defaultValue);
 }

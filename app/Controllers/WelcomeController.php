@@ -1,8 +1,8 @@
 <?php
 
-namespace app\controllers;
+namespace App\Controllers;
 
-class Welcome
+class WelcomeController
 {
     public function sayHello()
     {
