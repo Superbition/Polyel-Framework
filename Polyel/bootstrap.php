@@ -1,6 +1,9 @@
 <?php
 
-echo "Bootstrap process started...\n";
+echo "Creating Root Directory constant\n";
+define("ROOT_DIR", __DIR__);
+
+echo "Bootstrap process started...\n\n";
 
 $startingDirectory = new RecursiveDirectoryIterator(__DIR__ . "/src/");
 $pathIterator = new RecursiveIteratorIterator($startingDirectory);
