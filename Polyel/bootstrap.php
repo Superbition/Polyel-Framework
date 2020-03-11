@@ -50,5 +50,7 @@ foreach ($polyelSourceFiles as $file)
 // Reset terminal colour back to normal.
 echo "\e[39m";
 
-// Create the DIC and create a new Polyel HTTP Server instance as the base class
-Polyel::createContainer(Polyel\Http\Server::class);
+$coreServices = require ROOT_DIR . "/Polyel/src/services.php";
+
+// Create the DIC and pass in an array of core services to be resolved
+Polyel::createContainer($coreServices);

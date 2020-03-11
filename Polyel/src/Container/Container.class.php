@@ -9,18 +9,30 @@ class Container
     // Holds all the registered class instances
     private $container = [];
 
-    // Container Constructor. Can be passed a starting class to resolve as a base class.
-    public function __construct($baseClass = null)
+    // Can be passed an array of starting classes to resolve and be placed in the container
+    public function __construct($classesToResolve = null)
     {
-        if(isset($baseClass))
+        if(isset($classesToResolve))
         {
-            $this->checkForDependencies($baseClass);
+            // Resolve each class inside the array that was passed in
+            foreach($classesToResolve as $class)
+            {
+                // Each class is then stored inside the container
+                $this->checkForDependencies($class);
+            }
         }
     }
 
     // Recursively checks for class dependencies, resolves them and creates class instances.
     private function checkForDependencies($classToResolve)
     {
+        // Return when the class already exists inside the container
+        if($this->get($classToResolve))
+        {
+            // Stops classes being overwritten again if called to be resolved
+            return;
+        }
+
         // Using Reflection, load the class up...
         $classReflection = new ReflectionClass($classToResolve);
 
