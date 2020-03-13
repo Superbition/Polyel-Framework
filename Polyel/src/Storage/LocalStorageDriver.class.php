@@ -21,6 +21,9 @@ class LocalStorage
     // Used to set a common directory link
     private $fromLink;
 
+    // Used to store the file write mode, default is overwrite
+    private $writeMode = "c";
+
     public function __construct()
     {
 
@@ -59,5 +62,70 @@ class LocalStorage
 
         // Return the file contents as a string
         return $file;
+    }
+
+    // Prepend to a file using php:://temp
+    public function prepend($filePath, $contents)
+    {
+        $filePath = ROOT_DIR . $filePath;
+
+        // Make sure the file we want to write to exists beforehand
+        if(!file_exists($filePath))
+        {
+            // Create the file because the read and write modes later will not do it for us
+            touch($filePath);
+        }
+
+        /*
+         * Create both the source and destination handles for our file and temp buffer
+         * https://www.php.net/manual/en/wrappers.php.php
+         */
+        $srcHandle = fopen($filePath, "r+");
+        $destHandle = fopen("php://temp", "w");
+
+        // Using a Swoole Coroutine to defer blocking I/O
+        Swoole::create(function() use($srcHandle, $destHandle, $contents)
+        {
+            // Write the contents we want to prepend first into the php://temp stream
+            Swoole::fwrite($destHandle, $contents);
+
+            /*
+             * First copy the source contents into the end of the destination stream.
+             * Then set both the source and destination file pointers to the beginning so
+             * that the prepended stream can be copied to the source file.
+             */
+            stream_copy_to_stream($srcHandle, $destHandle);
+            rewind($destHandle);
+            rewind($srcHandle);
+            stream_copy_to_stream($destHandle, $srcHandle);
+
+            // Finally close both resource handles.
+            fclose($srcHandle);
+            fclose($destHandle);
+        });
+    }
+
+    public function append($filePath, $contents)
+    {
+        // Set the write mode to append to the end of the file
+        $this->writeMode = "a+";
+        $this->write($filePath, $contents);
+    }
+
+    // Main writing function for overwrite and appending
+    public function write($filePath, $contents = "")
+    {
+        $filePath = ROOT_DIR . $filePath;
+
+        // Open a resource handle and use a Swoole Coroutine to defer blocking I/O
+        $handle = fopen($filePath, $this->writeMode);
+        Swoole::create(function() use ($handle, $contents)
+        {
+            Swoole::fwrite($handle, $contents);
+            fclose($handle);
+        });
+
+        // Reset the write mode back to the default
+        $this->writeMode = "c";
     }
 }
