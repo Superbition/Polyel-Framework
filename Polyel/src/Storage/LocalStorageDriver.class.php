@@ -128,4 +128,26 @@ class LocalStorage
         // Reset the write mode back to the default
         $this->writeMode = "c";
     }
+
+    public function copy($source, $dest)
+    {
+        $source = ROOT_DIR . $source;
+        $dest = ROOT_DIR . $dest;
+
+        Swoole::create(function() use ($source, $dest)
+        {
+            copy($source, $dest);
+        });
+    }
+
+    public function move($oldName, $newName)
+    {
+        $oldName = ROOT_DIR . $oldName;
+        $newName = ROOT_DIR . $newName;
+
+        Swoole::create(function() use ($oldName, $newName)
+        {
+            rename($oldName, $newName);
+        });
+    }
 }
