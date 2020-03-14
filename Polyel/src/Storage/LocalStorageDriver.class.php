@@ -150,4 +150,25 @@ class LocalStorage
             rename($oldName, $newName);
         });
     }
+
+    public function delete($filePath)
+    {
+        // Defer the delete process
+        Swoole::create(function() use ($filePath)
+        {
+            // When the filePath is a single string
+            if(!is_array($filePath))
+            {
+                unlink(ROOT_DIR . $filePath);
+            }
+            else
+            {
+                // For when an array of filePaths are passed in for deletion
+                foreach ($filePath as $path)
+                {
+                    unlink(ROOT_DIR . $path);
+                }
+            }
+        });
+    }
 }
