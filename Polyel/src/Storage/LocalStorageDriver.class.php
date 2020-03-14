@@ -171,4 +171,16 @@ class LocalStorage
             }
         });
     }
+
+    public function makeDir($dirPath, $mode = 0777)
+    {
+        // Recursively create the directory path given using the mode that was set
+        return mkdir(ROOT_DIR . $dirPath, $mode, true);
+    }
+
+    public function removeDir($dirPath)
+    {
+        // Only deletes a directory that is empty
+        return rmdir(ROOT_DIR . $dirPath);
+    }
 }
