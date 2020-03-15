@@ -36,6 +36,28 @@ class LocalStorage
         return $this;
     }
 
+    // Send back the file size in a human readable format
+    public function size($filePath)
+    {
+        $filePath = ROOT_DIR . $filePath;
+
+        // Don't continue if the file does not exist
+        if(!file_exists($filePath))
+        {
+            throw new Exception("ERROR: Cannot get file size, file does not exist: " . $filePath);
+        }
+
+        // Remove cached information so that filesize() is accurate
+        clearstatcache();
+        $bytes = filesize($filePath);
+
+        // Convert bytes to a human readable format and return the final value with its unit
+        $units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
+        for ($i = 0; $bytes > 1024; $i++) $bytes /= 1024;
+
+        return round($bytes, 2) . $units[$i];
+    }
+
     // Read a file and return the raw string content
     public function read($filePath)
     {
