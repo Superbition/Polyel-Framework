@@ -46,6 +46,10 @@ class Server
             $this->config->get("main.serverIP"),
             $this->config->get("main.serverPort")
         );
+
+        $this->server->set([
+            'worker_num' => swoole_cpu_num(),
+            ]);
     }
 
     public function registerReactors()
