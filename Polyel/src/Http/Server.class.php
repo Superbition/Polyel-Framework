@@ -93,8 +93,8 @@ class Server
 
     private function setResponseHeaders(&$response)
     {
-        $response->header("Server", "Polyel-Swoole");
-        $response->header("X-Powered-By", "Passion");
+        $response->header("Server", "Polyel/Swoole-HTTP-Server");
+        $response->header("X-Powered-By", "Polyel-PHP");
         $response->header("Content-Type", "text/html; charset=utf-8");
     }
 }
