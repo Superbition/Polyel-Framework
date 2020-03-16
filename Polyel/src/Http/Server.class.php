@@ -23,7 +23,7 @@ class Server
 
     public function __construct(Config $config, Router $router, Controller $controller)
     {
-        cli_set_process_title("Polyel");
+        cli_set_process_title("Polyel-HTTP-Server");
 
         $this->config = $config;
         $this->router = $router;
