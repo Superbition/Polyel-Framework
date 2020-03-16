@@ -67,7 +67,7 @@ class Server
 
         $this->server->on("request", function($request, $response)
         {
-            $this->setRequestHeaders($response);
+            $this->setResponseHeaders($response);
 
             $this->runDebug();
 
@@ -91,7 +91,7 @@ class Server
         }
     }
 
-    private function setRequestHeaders(&$response)
+    private function setResponseHeaders(&$response)
     {
         $response->header("Server", "Polyel-Swoole");
         $response->header("X-Powered-By", "Passion");
