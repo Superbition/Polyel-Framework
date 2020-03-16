@@ -44,7 +44,8 @@ class Server
         // Create a new Swoole HTTP server and set server IP and listening port
         $this->server = new SwooleHTTPServer(
             $this->config->get("main.serverIP"),
-            $this->config->get("main.serverPort")
+            $this->config->get("main.serverPort"),
+            SWOOLE_PROCESS
         );
 
         $this->server->set([
