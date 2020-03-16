@@ -55,6 +55,11 @@ class Server
 
     public function registerReactors()
     {
+        $this->server->on("WorkerStart", function($server, $workerId)
+        {
+
+        });
+
         $this->server->on("start", function($server)
         {
             echo "\n";
