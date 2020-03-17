@@ -131,6 +131,13 @@ class Router
         return $routeAction = explode("@", $this->routes[$requestMethod][$requestedRoute]);
     }
 
+    public function middleware($middlewareKey)
+    {
+        $requestMethod = array_key_first($this->lastAddedRoute);
+        $routeUri = $this->lastAddedRoute[$requestMethod];
+        $this->middleware->register($requestMethod, $routeUri, $middlewareKey);
+    }
+
     public function loadRoutes()
     {
         require __DIR__ . "/../../../app/routes.php";
