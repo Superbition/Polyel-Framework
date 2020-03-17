@@ -15,6 +15,9 @@ class Router
     // Holds the main route name/page
     private $requestedRoute;
 
+    // Holds the request method sent by the client
+    private $requestMethod;
+
     // Holds all GET request routes
     private $getRoutes = [];
 
@@ -47,6 +50,9 @@ class Router
 
         // Reindex the array back to 0
         $this->uri = array_values($this->uri);
+
+        // Detect the request method: GET, POST, PUT etc.
+        $this->requestMethod = $request->server["request_method"];
 
         // Continue routing if there is a URL
         if(!empty($this->requestedRoute))
