@@ -20,8 +20,8 @@ class Router
     // Holds the request method sent by the client
     private $requestMethod;
 
-    // Holds all GET request routes
-    private $getRoutes = [];
+    // Holds all the request routes to respond to
+    private $routes;
 
     // Holds the requested view template file name
     private $requestedView;
@@ -60,12 +60,12 @@ class Router
         if(!empty($this->requestedRoute))
         {
             // Check if the route matches any registered routes
-            if(array_key_exists($this->requestedRoute, $this->getRoutes))
+            if($this->routeExists($this->requestMethod, $this->requestedRoute))
             {
                 $this->requestedView = null;
 
-                // Each route will have a controller and func it wants to call
-                $routeAction = explode("@", $this->getRoutes[$this->requestedRoute]);
+                // Get the action of the route split based on controller@Action
+                $routeAction = $this->getRouteAction($this->requestMethod, $this->requestedRoute);
 
                 // Split both the controller and func into separate vars from controller@Action
                 $controller = $routeAction[0];
@@ -107,9 +107,25 @@ class Router
         }
     }
 
-    public function get($route, $action)
+    public function addRoute($method, $uri, $action)
     {
-        $this->getRoutes[$route] = $action;
+        $this->routes[$method][$uri] = $action;
+    }
+
+    public function routeExists($requestMethod, $requestedRoute)
+    {
+        if(array_key_exists($requestedRoute, $this->routes[$requestMethod]))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function getRouteAction($requestMethod, $requestedRoute)
+    {
+        // Each route will have a controller and func it wants to call
+        return $routeAction = explode("@", $this->routes[$requestMethod][$requestedRoute]);
     }
 
     public function loadRoutes()
