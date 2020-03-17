@@ -23,6 +23,8 @@ class Router
     // Holds all the request routes to respond to
     private $routes;
 
+    private $lastAddedRoute;
+
     // Holds the requested view template file name
     private $requestedView;
 
@@ -107,9 +109,10 @@ class Router
         }
     }
 
-    public function addRoute($method, $uri, $action)
+    public function addRoute($requestMethod, $uri, $action)
     {
-        $this->routes[$method][$uri] = $action;
+        $this->routes[$requestMethod][$uri] = $action;
+        $this->lastAddedRoute[$requestMethod] = $uri;
     }
 
     public function routeExists($requestMethod, $requestedRoute)
