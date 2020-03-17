@@ -4,6 +4,7 @@ namespace Polyel\Http;
 
 use Polyel\Router\Router;
 use Polyel\Config\Config;
+use Swoole\Coroutine as Swoole;
 use Polyel\Controller\Controller;
 use Swoole\HTTP\Server as SwooleHTTPServer;
 
@@ -91,12 +92,15 @@ class Server
 
     private function runDebug()
     {
-        $debugFile = __DIR__ . "/../../../debug.php";
-
-        if(file_exists($debugFile))
+        Swoole::create(function ()
         {
-            require $debugFile;
-        }
+            $debugFile = __DIR__ . "/../../../debug.php";
+
+            if(file_exists($debugFile))
+            {
+                require $debugFile;
+            }
+        });
     }
 
     private function setResponseHeaders(&$response)
