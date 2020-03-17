@@ -5,6 +5,7 @@ namespace Polyel\Router;
 use Polyel;
 use Polyel\View\View;
 use Polyel\Debug\Debug;
+use Polyel\Middleware\Middleware;
 
 class Router
 {
@@ -24,10 +25,13 @@ class Router
 
     private $debug;
 
-    public function __construct(View $view, Debug $debug)
+    private $middleware;
+
+    public function __construct(View $view, Debug $debug, Middleware $middleware)
     {
         $this->view = $view;
         $this->debug = $debug;
+        $this->middleware = $middleware;
     }
 
     public function handle(&$request)
