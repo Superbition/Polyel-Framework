@@ -9,6 +9,8 @@ use Polyel\Middleware\Middleware;
 
 class Router
 {
+    use RouteVerbs;
+
     // The URI pattern the route responds to.
     private $uri;
 
