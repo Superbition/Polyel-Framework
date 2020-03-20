@@ -28,6 +28,7 @@ The planned development feature list for the Polyel framework:
 - Powerful and flexible built-in logger ☐
 - Middleware system ☐
 - Built-in feature rich modules such as: Time processing, message system, flash messaging, markdown parser, email sending, data validation, pagination etc. ☐
+- File storage service (Planned support for FTP and cloud storage) 🗹
 - Automatic XSS filtering & CSRF protection ☐
 - Automatic SSL assigning using Let's Encrypt ☐
 - Element templates; handles rendering dynamic page components with logic and data ☐
