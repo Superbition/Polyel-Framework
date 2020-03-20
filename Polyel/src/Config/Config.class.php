@@ -12,13 +12,6 @@ class Config
     private $path;
     private $template;
 
-    private $configMap = [
-      "main" => 0,
-      "database" => 1,
-      "path" => 2,
-      "template" => 3,
-    ];
-
     private $envConfig;
 
     public function __construct()
