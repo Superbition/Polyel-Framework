@@ -49,38 +49,22 @@ class Config
         $this->load();
     }
 
-    public function get($configRequest)
+    // Used to dynamically access all configuration values based on the dot syntax
+    public function get($configDotRequest)
     {
-        $configRequest = explode(".", $configRequest);
+        // Split up the do syntax request
+        $configDotRequest = explode(".", $configDotRequest);
 
-        $configKey = $this->configMap[$configRequest[0]];
-
-        switch($configKey)
+        // Get the main configuration array as a temp variable
+        $config = $this->config;
+        foreach ($configDotRequest as $configDot)
         {
-            case 0:
-
-                return $this->main[$configRequest[1]];
-
-                break;
-
-            case 1:
-
-                return $this->database[$configRequest[1]][$configRequest[2]];
-
-                break;
-
-            case 2:
-
-                return $this->path[$configRequest[1]];
-
-                break;
-
-            case 3:
-
-                return $this->template[$configRequest[1]];
-
-                break;
+            // Loop through until we get a final value based on the dot syntax
+            $config = $config[$configDot];
         }
+
+        // Return the requested configuration level/value
+        return $config;
     }
 
     public function env($envRequest, $defaultValue)
