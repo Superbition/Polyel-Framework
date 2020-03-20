@@ -4,8 +4,8 @@ namespace Polyel\Config;
 
 class Config
 {
-    // Navigate to the app config directory.
-    private $configDir = __DIR__ . "/../../../config";
+    // Navigate to the config directory.
+    private $configDir = ROOT_DIR . "/config/";
 
     private $main;
     private $database;
