@@ -13,6 +13,7 @@ class Config
     private $template;
 
     private $envConfig;
+    private $envPath = ROOT_DIR . "/env/.env";
 
     public function __construct()
     {
@@ -21,9 +22,7 @@ class Config
 
     public function load()
     {
-        $envPath = $this->configDir . "/env/.env";
-
-        if(file_exists($envPath))
+        if(file_exists($this->envPath))
         {
             // Main env config file.
             $this->envConfig = parse_ini_file($this->configDir . "/env/.env", true);
