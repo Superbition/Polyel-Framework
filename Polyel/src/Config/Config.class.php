@@ -10,7 +10,7 @@ class Config
 
     // env config holds the whole env configuration
     private $envConfig;
-    private $envPath = ROOT_DIR . "/env/.env";
+    private $envPath = ROOT_DIR . "/config/env/.env";
 
     public function __construct()
     {
@@ -23,7 +23,7 @@ class Config
         if(file_exists($this->envPath))
         {
             // Parse the main env config file.
-            $this->envConfig = parse_ini_file($this->configDirPath . "/env/.env", true);
+            $this->envConfig = parse_ini_file($this->envPath, true);
         }
 
         // Scan the config directory and get all the files in there
