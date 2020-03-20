@@ -23,7 +23,7 @@ class Config
         if(file_exists($this->envPath))
         {
             // Parse the main env config file.
-            $this->envConfig = parse_ini_file($this->envPath, true);
+            $this->envConfig = parse_ini_file($this->envPath, true, INI_SCANNER_TYPED);
         }
 
         // Scan the config directory and get all the files in there
