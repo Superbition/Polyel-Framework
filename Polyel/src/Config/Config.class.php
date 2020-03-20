@@ -4,14 +4,11 @@ namespace Polyel\Config;
 
 class Config
 {
-    // Navigate to the config directory.
-    private $configDir = ROOT_DIR . "/config/";
+    // Config holds the whole application configuration values
+    private $config;
+    private $configDirPath = ROOT_DIR . "/config/";
 
-    private $main;
-    private $database;
-    private $path;
-    private $template;
-
+    // env config holds the whole env configuration
     private $envConfig;
     private $envPath = ROOT_DIR . "/env/.env";
 
@@ -22,17 +19,29 @@ class Config
 
     public function load()
     {
+        // Only load the .env file if it has been created
         if(file_exists($this->envPath))
         {
-            // Main env config file.
-            $this->envConfig = parse_ini_file($this->configDir . "/env/.env", true);
+            // Parse the main env config file.
+            $this->envConfig = parse_ini_file($this->configDirPath . "/env/.env", true);
         }
 
-        // Non .env config files, standard .php files.
-        $this->main = require $this->configDir . "/main.php";
-        $this->database = require $this->configDir . "/database.php";
-        $this->path = require $this->configDir . "/path.php";
-        $this->template = require $this->configDir . "/template.php";
+        // Scan the config directory and get all the files in there
+        $configFiles = scandir($this->configDirPath);
+
+        // Loop through and load each config file dynamically based on the file name
+        foreach ($configFiles as $configFile)
+        {
+            // Each config file must be a .php file and is split based on the dot to get the name of the config
+            if(preg_match('/^.+\.php$/i', $configFile))
+            {
+                // Split on the dot to get the name of the config, the file would be file.php and config would be "file"
+                $configName = explode(".", $configFile)[0];
+
+                // Dynamically load the configuration and use the file name as the config name
+                $this->config[strtolower($configName)] = require $this->configDirPath . $configFile;
+            }
+        }
     }
 
     public function reload()
