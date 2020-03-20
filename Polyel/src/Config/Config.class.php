@@ -6,7 +6,7 @@ class Config
 {
     // Config holds the whole application configuration values
     private $config;
-    private $configDirPath = ROOT_DIR . "/config/";
+    private $configDirPath = ROOT_DIR . "/config";
 
     // env config holds the whole env configuration
     private $envConfig;
@@ -39,7 +39,7 @@ class Config
                 $configName = explode(".", $configFile)[0];
 
                 // Dynamically load the configuration and use the file name as the config name
-                $this->config[strtolower($configName)] = require $this->configDirPath . $configFile;
+                $this->config[strtolower($configName)] = require_once $this->configDirPath . "/" . $configFile;
             }
         }
     }
