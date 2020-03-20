@@ -6,7 +6,9 @@ use Polyel\Middleware\Middleware;
 
 class {{ DefaultMiddleware }} extends Middleware
 {
-    public function process($request, $response)
+    public $middlewareType = "{{ MiddlewareType }}";
+
+    public function process({{ ProcessArgs }})
     {
 
     }
