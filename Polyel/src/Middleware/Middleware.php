@@ -47,4 +47,41 @@ class Middleware
     {
         $this->middlewares[$requestMethod][$uri] = $middleware;
     }
+
+    private function runMiddleware($type, $requestMethod, $route)
+    {
+        // Check if a middleware exists for the request method, GET, POST etc.
+        if(array_key_exists($requestMethod, $this->middlewares))
+        {
+            // Then check for a middleware inside that request method...
+            if(array_key_exists($route, $this->middlewares[$requestMethod]))
+            {
+                /*
+                 * Get the middleware key set for this request method and route
+                 * Then use config() to get the full namespace based on the middleware key
+                 * Finally call Polyel and get the middleware class from the container
+                 */
+                $middleware = $this->middlewares[$requestMethod][$route];
+                $middleware = config("middleware.keys." . $middleware);
+                $middlewareToRun = Polyel::call($middleware);
+
+                // Based on the passed in middleware type, execute if both types match
+                if($middlewareToRun->middlewareType == $type)
+                {
+                    // Process the middleware if the request types match up
+                    $middlewareToRun->process();
+                }
+            }
+        }
+    }
+
+    public function runAnyBefore($requestMethod, $route)
+    {
+        $this->runMiddleware("before", $requestMethod, $route);
+    }
+
+    public function runAnyAfter($requestMethod, $route)
+    {
+        $this->runMiddleware("after", $requestMethod, $route);
+    }
 }

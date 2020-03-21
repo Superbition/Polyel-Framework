@@ -80,9 +80,13 @@ class Router
                 // Check that the controller exists
                 if(isset($controller) && !empty($controller))
                 {
+                    $this->middleware->runAnyBefore($this->requestMethod, $this->requestedRoute);
+
                     // Resolve and perform method injection when calling the controller action
                     $methodDependencies = Polyel::resolveMethod($controllerName, $controllerAction);
                     $controller->$controllerAction(...$methodDependencies);
+
+                    $this->middleware->runAnyAfter($this->requestMethod, $this->requestedRoute);
                 }
             }
             else
