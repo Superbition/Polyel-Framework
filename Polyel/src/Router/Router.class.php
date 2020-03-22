@@ -135,11 +135,11 @@ class Router
         return $routeAction = explode("@", $this->routes[$requestMethod][$requestedRoute]);
     }
 
-    public function middleware($middlewareKey)
+    public function middleware($middlewareKeys)
     {
         $requestMethod = array_key_first($this->lastAddedRoute);
         $routeUri = $this->lastAddedRoute[$requestMethod];
-        $this->middleware->register($requestMethod, $routeUri, $middlewareKey);
+        $this->middleware->register($requestMethod, $routeUri, $middlewareKeys);
     }
 
     public function loadRoutes()

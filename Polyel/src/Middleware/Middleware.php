@@ -53,23 +53,34 @@ class Middleware
         // Check if a middleware exists for the request method, GET, POST etc.
         if(array_key_exists($requestMethod, $this->middlewares))
         {
-            // Then check for a middleware inside that request method...
+            // Then check for a middleware inside that request method, for a route...
             if(array_key_exists($route, $this->middlewares[$requestMethod]))
             {
-                /*
-                 * Get the middleware key set for this request method and route
-                 * Then use config() to get the full namespace based on the middleware key
-                 * Finally call Polyel and get the middleware class from the container
-                 */
-                $middleware = $this->middlewares[$requestMethod][$route];
-                $middleware = config("middleware.keys." . $middleware);
-                $middlewareToRun = Polyel::call($middleware);
+                // Get the middleware key(s) set for this request method and route
+                $middlewareKeys = $this->middlewares[$requestMethod][$route];
 
-                // Based on the passed in middleware type, execute if both types match
-                if($middlewareToRun->middlewareType == $type)
+                // Turn the middleware key into a array if its only one middleware
+                if(!is_array($middlewareKeys))
                 {
-                    // Process the middleware if the request types match up
-                    $middlewareToRun->process();
+                    // An array makes it easier to process single and multiple middlewares, no duplicate code...
+                    $middlewareKeys = [$middlewareKeys];
+                }
+
+                // Process each middleware and run process() from each middleware
+                foreach($middlewareKeys as $middlewareKey)
+                {
+                    // Use config() to get the full namespace based on the middleware key
+                    $middleware = config("middleware.keys." . $middlewareKey);
+
+                    // Call Polyel and get the middleware class from the container
+                    $middlewareToRun = Polyel::call($middleware);
+
+                    // Based on the passed in middleware type, execute if both types match
+                    if($middlewareToRun->middlewareType == $type)
+                    {
+                        // Process the middleware if the request types match up
+                        $middlewareToRun->process();
+                    }
                 }
             }
         }
