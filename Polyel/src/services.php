@@ -10,6 +10,8 @@ return [
     Polyel\Controller\Controller::class,
     Polyel\Debug\Debug::class,
     Polyel\Http\Server::class,
+    Polyel\Http\Request::class,
+    Polyel\Http\Response::class,
     Polyel\Middleware\Middleware::class,
     Polyel\Router\Router::class,
     Polyel\Storage\Storage::class,
