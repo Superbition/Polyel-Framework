@@ -5,6 +5,8 @@ namespace Polyel\Router;
 use Polyel;
 use Polyel\View\View;
 use Polyel\Debug\Debug;
+use Polyel\Http\Request;
+use Polyel\Http\Response;
 use Polyel\Middleware\Middleware;
 
 class Router
@@ -34,11 +36,17 @@ class Router
 
     private $middleware;
 
-    public function __construct(View $view, Debug $debug, Middleware $middleware)
+    private $request;
+
+    private $response;
+
+    public function __construct(View $view, Debug $debug, Middleware $middleware, Request $request, Response $response)
     {
         $this->view = $view;
         $this->debug = $debug;
         $this->middleware = $middleware;
+        $this->request = $request;
+        $this->response = $response;
     }
 
     public function handle(&$request)
@@ -80,13 +88,13 @@ class Router
                 // Check that the controller exists
                 if(isset($controller) && !empty($controller))
                 {
-                    $this->middleware->runAnyBefore($this->requestMethod, $this->requestedRoute);
+                    $this->middleware->runAnyBefore($this->request, $this->requestMethod, $this->requestedRoute);
 
                     // Resolve and perform method injection when calling the controller action
                     $methodDependencies = Polyel::resolveMethod($controllerName, $controllerAction);
                     $controller->$controllerAction(...$methodDependencies);
 
-                    $this->middleware->runAnyAfter($this->requestMethod, $this->requestedRoute);
+                    $this->middleware->runAnyAfter($this->response, $this->requestMethod, $this->requestedRoute);
                 }
             }
             else

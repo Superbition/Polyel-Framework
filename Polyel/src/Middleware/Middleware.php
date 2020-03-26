@@ -48,7 +48,12 @@ class Middleware
         $this->middlewares[$requestMethod][$uri] = $middleware;
     }
 
-    private function runMiddleware($type, $requestMethod, $route)
+    /*
+     * Runs any middleware based on the type passed in and processes the stage of the application,
+     * before or after. $applicationStage is the request or response service that gets passed in to
+     * allow a middleware to process its correct type.
+     */
+    private function runMiddleware($applicationStage, $type, $requestMethod, $route)
     {
         // Check if a middleware exists for the request method, GET, POST etc.
         if(array_key_exists($requestMethod, $this->middlewares))
@@ -79,20 +84,20 @@ class Middleware
                     if($middlewareToRun->middlewareType == $type)
                     {
                         // Process the middleware if the request types match up
-                        $middlewareToRun->process();
+                        $middlewareToRun->process($applicationStage);
                     }
                 }
             }
         }
     }
 
-    public function runAnyBefore($requestMethod, $route)
+    public function runAnyBefore($request, $requestMethod, $route)
     {
-        $this->runMiddleware("before", $requestMethod, $route);
+        $this->runMiddleware($request, "before", $requestMethod, $route);
     }
 
-    public function runAnyAfter($requestMethod, $route)
+    public function runAnyAfter($response, $requestMethod, $route)
     {
-        $this->runMiddleware("after", $requestMethod, $route);
+        $this->runMiddleware($response, "after", $requestMethod, $route);
     }
 }
