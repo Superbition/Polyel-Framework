@@ -10,6 +10,7 @@ class Middleware
 {
     private $middlewareDirectory = ROOT_DIR . "/app/Middleware/";
 
+    // Holds all registered Middlewares, in the format of [requestMethod][uri] = middleware
     private $middlewares = [];
 
     public function __construct()
@@ -22,10 +23,12 @@ class Middleware
         $middlewareDir = new RecursiveDirectoryIterator($this->middlewareDirectory);
         $pathIterator = new RecursiveIteratorIterator($middlewareDir);
 
+        // Search through the Middleware directory for .php files to preload as Middleware
         foreach($pathIterator as $middleware)
         {
             $middlewareFilePath = $middleware->getPathname();
 
+            // Only match .php files
             if(preg_match('/^.+\.php$/i', $middlewareFilePath))
             {
                 // Make the class available by declaring it
@@ -38,6 +41,7 @@ class Middleware
                 $definedClass = explode("\\", end($listOfDefinedClasses));
                 $definedClass = end($definedClass);
 
+                // Calling the Container to resolve the class into the container
                 Polyel::resolveClass("App\Middleware\\" . $definedClass);
             }
         }
