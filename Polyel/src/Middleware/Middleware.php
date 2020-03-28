@@ -52,6 +52,27 @@ class Middleware
         $this->middlewares[$requestMethod][$uri] = $middleware;
     }
 
+    public function runGlobalMiddleware($applicationStage, $middlewareType)
+    {
+        $globalBeforeMiddleware = config("middleware.global." . $middlewareType);
+
+        foreach($globalBeforeMiddleware as $middleware)
+        {
+            // Use config() to get the full namespace based on the middleware key
+            $middleware = config("middleware.keys." . $middleware);
+
+            // Call Polyel and get the middleware class from the container
+            $middlewareToRun = Polyel::call($middleware);
+
+            // Based on the passed in middleware type, execute if both types match
+            if($middlewareToRun->middlewareType == $middlewareType)
+            {
+                // Process the middleware if the request types match up
+                $middlewareToRun->process($applicationStage);
+            }
+        }
+    }
+
     /*
      * Runs any middleware based on the type passed in and processes the stage of the application,
      * before or after. $applicationStage is the request or response service that gets passed in to
@@ -97,11 +118,15 @@ class Middleware
 
     public function runAnyBefore($request, $requestMethod, $route)
     {
+        $this->runGlobalMiddleware($request, "before");
+
         $this->runMiddleware($request, "before", $requestMethod, $route);
     }
 
     public function runAnyAfter($response, $requestMethod, $route)
     {
+        $this->runGlobalMiddleware($response, "after");
+
         $this->runMiddleware($response, "after", $requestMethod, $route);
     }
 }
