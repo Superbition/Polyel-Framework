@@ -5,17 +5,27 @@ namespace Polyel\Router;
 use Polyel;
 use Polyel\View\View;
 use Polyel\Debug\Debug;
+use Polyel\Http\Request;
+use Polyel\Http\Response;
+use Polyel\Middleware\Middleware;
 
 class Router
 {
+    use RouteVerbs;
+
     // The URI pattern the route responds to.
     private $uri;
 
     // Holds the main route name/page
     private $requestedRoute;
 
-    // Holds all GET request routes
-    private $getRoutes = [];
+    // Holds the request method sent by the client
+    private $requestMethod;
+
+    // Holds all the request routes to respond to
+    private $routes;
+
+    private $lastAddedRoute;
 
     // Holds the requested view template file name
     private $requestedView;
@@ -24,10 +34,19 @@ class Router
 
     private $debug;
 
-    public function __construct(View $view, Debug $debug)
+    private $middleware;
+
+    private $request;
+
+    private $response;
+
+    public function __construct(View $view, Debug $debug, Middleware $middleware, Request $request, Response $response)
     {
         $this->view = $view;
         $this->debug = $debug;
+        $this->middleware = $middleware;
+        $this->request = $request;
+        $this->response = $response;
     }
 
     public function handle(&$request)
@@ -44,16 +63,19 @@ class Router
         // Reindex the array back to 0
         $this->uri = array_values($this->uri);
 
+        // Detect the request method: GET, POST, PUT etc.
+        $this->requestMethod = $request->server["request_method"];
+
         // Continue routing if there is a URL
         if(!empty($this->requestedRoute))
         {
             // Check if the route matches any registered routes
-            if(array_key_exists($this->requestedRoute, $this->getRoutes))
+            if($this->routeExists($this->requestMethod, $this->requestedRoute))
             {
                 $this->requestedView = null;
 
-                // Each route will have a controller and func it wants to call
-                $routeAction = explode("@", $this->getRoutes[$this->requestedRoute]);
+                // Get the action of the route split based on controller@Action
+                $routeAction = $this->getRouteAction($this->requestMethod, $this->requestedRoute);
 
                 // Split both the controller and func into separate vars from controller@Action
                 $controller = $routeAction[0];
@@ -66,9 +88,13 @@ class Router
                 // Check that the controller exists
                 if(isset($controller) && !empty($controller))
                 {
+                    $this->middleware->runAnyBefore($this->request, $this->requestMethod, $this->requestedRoute);
+
                     // Resolve and perform method injection when calling the controller action
                     $methodDependencies = Polyel::resolveMethod($controllerName, $controllerAction);
                     $controller->$controllerAction(...$methodDependencies);
+
+                    $this->middleware->runAnyAfter($this->response, $this->requestMethod, $this->requestedRoute);
                 }
             }
             else
@@ -95,9 +121,33 @@ class Router
         }
     }
 
-    public function get($route, $action)
+    public function addRoute($requestMethod, $uri, $action)
     {
-        $this->getRoutes[$route] = $action;
+        $this->routes[$requestMethod][$uri] = $action;
+        $this->lastAddedRoute[$requestMethod] = $uri;
+    }
+
+    public function routeExists($requestMethod, $requestedRoute)
+    {
+        if(array_key_exists($requestedRoute, $this->routes[$requestMethod]))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function getRouteAction($requestMethod, $requestedRoute)
+    {
+        // Each route will have a controller and func it wants to call
+        return $routeAction = explode("@", $this->routes[$requestMethod][$requestedRoute]);
+    }
+
+    public function middleware($middlewareKeys)
+    {
+        $requestMethod = array_key_first($this->lastAddedRoute);
+        $routeUri = $this->lastAddedRoute[$requestMethod];
+        $this->middleware->register($requestMethod, $routeUri, $middlewareKeys);
     }
 
     public function loadRoutes()
