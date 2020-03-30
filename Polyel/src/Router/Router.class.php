@@ -14,10 +14,10 @@ class Router
     use RouteVerbs;
 
     // The URI pattern the route responds to.
-    private $uri;
+    private $uriSplit;
 
     // Holds the main route name/page
-    private $requestedRoute;
+    private $requestedRawRoute;
 
     // Holds the request method sent by the client
     private $requestMethod;
@@ -52,30 +52,30 @@ class Router
     public function handle(&$request)
     {
         // Get the full URL from the clients request
-        $this->requestedRoute = $this->uri = $request->server["request_uri"];
+        $this->requestedRawRoute = $this->uriSplit = $request->server["request_uri"];
 
-        // Split the URI into an array based on the delimiter
-        $this->uri = explode("/", $request->server["request_uri"]);
+        /*
+         * Split the URI into an array based on the delimiter
+         * Remove empty array values from the URI because of the delimiters
+         * Reindex the array back to 0
+         */
+        $this->uriSplit = explode("/", $request->server["request_uri"]);
+        $this->uriSplit = array_filter($this->uriSplit);
+        $this->uriSplit = array_values($this->uriSplit);
 
-        // Remove empty array values from the URI because of the delimiters
-        $this->uri = array_filter($this->uri);
-
-        // Reindex the array back to 0
-        $this->uri = array_values($this->uri);
-
-        // Detect the request method: GET, POST, PUT etc.
+        // Get the request method: GET, POST, PUT etc.
         $this->requestMethod = $request->server["request_method"];
 
         // Continue routing if there is a URL
-        if(!empty($this->requestedRoute))
+        if(!empty($this->requestedRawRoute))
         {
             // Check if the route matches any registered routes
-            if($this->routeExists($this->requestMethod, $this->requestedRoute))
+            if($this->routeExists($this->requestMethod, $this->requestedRawRoute))
             {
                 $this->requestedView = null;
 
                 // Get the action of the route split based on controller@Action
-                $routeAction = $this->getRouteAction($this->requestMethod, $this->requestedRoute);
+                $routeAction = $this->getRouteAction($this->requestMethod, $this->requestedRawRoute);
 
                 // Split both the controller and func into separate vars from controller@Action
                 $controller = $routeAction[0];
@@ -88,13 +88,13 @@ class Router
                 // Check that the controller exists
                 if(isset($controller) && !empty($controller))
                 {
-                    $this->middleware->runAnyBefore($this->request, $this->requestMethod, $this->requestedRoute);
+                    $this->middleware->runAnyBefore($this->request, $this->requestMethod, $this->requestedRawRoute);
 
                     // Resolve and perform method injection when calling the controller action
                     $methodDependencies = Polyel::resolveMethod($controllerName, $controllerAction);
                     $controller->$controllerAction(...$methodDependencies);
 
-                    $this->middleware->runAnyAfter($this->response, $this->requestMethod, $this->requestedRoute);
+                    $this->middleware->runAnyAfter($this->response, $this->requestMethod, $this->requestedRawRoute);
                 }
             }
             else
