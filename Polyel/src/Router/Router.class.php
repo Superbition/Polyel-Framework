@@ -124,10 +124,24 @@ class Router
         }
     }
 
-    public function addRoute($requestMethod, $uri, $action)
+    public function addRoute($requestMethod, $route, $action)
     {
-        $this->routes[$requestMethod][$uri] = $action;
-        $this->lastAddedRoute[$requestMethod] = $uri;
+        /*
+         * Split the route into segments based on a '/'
+         * The URL is split into segments so route params can be processed.
+         * array_filter is used to remove the first empty '/'
+         * array_values is used to reindex the array back to 0 from previous step
+         * array_pack, a Polyel helper, is used to pack the segments into one single multidimensional array
+         * The outcome of array_pack is for example: /blog/user/{post_id} = controller@Action
+         */
+        $routeSegments = explode("/", $route);
+        $routeSegments = array_filter($routeSegments);
+        $routeSegments = array_values($routeSegments);
+        $routeSegments = array_pack($routeSegments, $action);
+
+        // Finally the single multidimensional route array is merged into the main routes array
+        $this->routes[$requestMethod] = array_merge_recursive($routeSegments, $this->routes[$requestMethod]);
+        $this->lastAddedRoute[$requestMethod] = $route;
     }
 
     public function routeExists($requestMethod, $requestedRoute)
