@@ -19,6 +19,8 @@ class Router
     // Holds the main route name/page
     private $requestedRawRoute;
 
+    private $currentRouteAction;
+
     // Holds the request method sent by the client
     private $requestMethod;
 
@@ -80,6 +82,7 @@ class Router
                 // Split both the controller and func into separate vars from controller@Action
                 $controller = $routeAction[0];
                 $controllerAction = $routeAction[1];
+                $this->currentRouteAction = $controllerAction;
 
                 //The controller namespace and getting its instance from the container using ::call
                 $controllerName = "App\Controllers\\" . $controller;
@@ -137,10 +140,15 @@ class Router
         return false;
     }
 
-    public function getRouteAction($requestMethod, $requestedRoute)
+    private function getRouteAction($requestMethod, $requestedRoute)
     {
         // Each route will have a controller and func it wants to call
-        return $routeAction = explode("@", $this->routes[$requestMethod][$requestedRoute]);
+        return explode("@", $this->routes[$requestMethod][$requestedRoute]);
+    }
+
+    public function getCurrentRouteAction()
+    {
+        return $this->currentRouteAction;
     }
 
     public function middleware($middlewareKeys)
