@@ -12,6 +12,7 @@ use Polyel\Middleware\Middleware;
 class Router
 {
     use RouteVerbs;
+    use RouteUtilities;
 
     // The URI pattern the route responds to.
     private $uriSplit;
@@ -127,20 +128,13 @@ class Router
     public function addRoute($requestMethod, $route, $action)
     {
         /*
-         * Split the route into segments based on a '/'
-         * The URL is split into segments so route params can be processed.
-         * array_filter is used to remove the first empty '/'
-         * array_values is used to reindex the array back to 0 from previous step
-         * array_pack, a Polyel helper, is used to pack the segments into one single multidimensional array
-         * The outcome of array_pack is for example: /blog/user/{post_id} = controller@Action
+         * Convert a route into a single multidimensional array, making it easier to handle parameters later...
+         * The route becomes the multidimensional array where the action is stored.
          */
-        $routeSegments = explode("/", $route);
-        $routeSegments = array_filter($routeSegments);
-        $routeSegments = array_values($routeSegments);
-        $routeSegments = array_pack($routeSegments, $action);
+        $packedRoute = $this->packRoute($route, $action);
 
         // Finally the single multidimensional route array is merged into the main routes array
-        $this->routes[$requestMethod] = array_merge_recursive($routeSegments, $this->routes[$requestMethod]);
+        $this->routes[$requestMethod] = array_merge_recursive($packedRoute, $this->routes[$requestMethod]);
         $this->lastAddedRoute[$requestMethod] = $route;
     }
 
