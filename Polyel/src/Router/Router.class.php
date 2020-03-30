@@ -165,6 +165,8 @@ class Router
 
     public function loadRoutes()
     {
+        $this->initialiseHttpVerbs();
+
         require __DIR__ . "/../../../app/routes.php";
     }
 }

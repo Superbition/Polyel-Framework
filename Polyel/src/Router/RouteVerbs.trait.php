@@ -4,6 +4,15 @@ namespace Polyel\Router;
 
 trait RouteVerbs
 {
+    public function initialiseHttpVerbs()
+    {
+        $this->routes["GET"] = [];
+        $this->routes["POST"] = [];
+        $this->routes["PUT"] = [];
+        $this->routes["PATCH"] = [];
+        $this->routes["DELETE"] = [];
+    }
+
     public function get($route, $action)
     {
         $this->addRoute("GET", $route, $action);
