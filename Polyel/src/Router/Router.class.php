@@ -146,6 +146,11 @@ class Router
         return explode("@", $this->routes[$requestMethod][$requestedRoute]);
     }
 
+    public function getCurrentRawRoute()
+    {
+        return $this->requestedRawRoute;
+    }
+
     public function getCurrentRouteAction()
     {
         return $this->currentRouteAction;
