@@ -127,11 +127,20 @@ class Router
 
     public function addRoute($requestMethod, $route, $action)
     {
-        /*
-         * Convert a route into a single multidimensional array, making it easier to handle parameters later...
-         * The route becomes the multidimensional array where the action is stored.
-         */
-        $packedRoute = $this->packRoute($route, $action);
+        // Only pack the route when it has more than one parameter
+        if(strlen($route) > 1)
+        {
+            /*
+             * Convert a route into a single multidimensional array, making it easier to handle parameters later...
+             * The route becomes the multidimensional array where the action is stored.
+             */
+            $packedRoute = $this->packRoute($route, $action);
+        }
+        else
+        {
+            // Support the single index route `/`
+            $packedRoute[$route] = $action;
+        }
 
         // Finally the single multidimensional route array is merged into the main routes array
         $this->routes[$requestMethod] = array_merge_recursive($packedRoute, $this->routes[$requestMethod]);
