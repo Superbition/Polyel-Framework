@@ -144,6 +144,7 @@ class Router
 
         // Finally the single multidimensional route array is merged into the main routes array
         $this->routes[$requestMethod] = array_merge_recursive($packedRoute, $this->routes[$requestMethod]);
+        $this->shiftAllParamsToTheEnd($this->routes[$requestMethod]);
         $this->lastAddedRoute[$requestMethod] = $route;
     }
 
