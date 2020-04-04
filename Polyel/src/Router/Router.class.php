@@ -20,6 +20,10 @@ class Router
     // Holds the main route name/page
     private $requestedRawRoute;
 
+    // Holds the current matched controller from the registered route
+    private $currentController;
+
+    // Holds the current matched route action for the controller
     private $currentRouteAction;
 
     // Holds the request method sent by the client
@@ -77,13 +81,9 @@ class Router
             {
                 $this->requestedView = null;
 
-                // Get the action of the route split based on controller@Action
-                $routeAction = $this->getRouteAction($this->requestMethod, $this->requestedRawRoute);
-
-                // Split both the controller and func into separate vars from controller@Action
-                $controller = $routeAction[0];
-                $controllerAction = $routeAction[1];
-                $this->currentRouteAction = $controllerAction;
+                // Get the current matched controller and route action
+                $controller = $this->currentController;
+                $controllerAction = $this->currentRouteAction;
 
                 //The controller namespace and getting its instance from the container using ::call
                 $controllerName = "App\Controllers\\" . $controller;
@@ -178,17 +178,16 @@ class Router
         // If a route is found, the controller and action is returned, along with any set params
         if(isset($routeRequested))
         {
+            // Extract the controller and action and set them so the class has access to them
+            $routeRequested["controller"] = explode("@", $routeRequested["controller"]);
+            $this->currentController = $routeRequested["controller"][0];
+            $this->currentRouteAction = $routeRequested["controller"][1];
+
             return true;
         }
 
         // If no route can be matched to a registered route
         return false;
-    }
-
-    private function getRouteAction($requestMethod, $requestedRoute)
-    {
-        // Each route will have a controller and func it wants to call
-        return explode("@", $this->routes[$requestMethod][$requestedRoute]);
     }
 
     public function getCurrentRawRoute()
