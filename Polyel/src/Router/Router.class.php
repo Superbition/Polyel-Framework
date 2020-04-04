@@ -176,7 +176,7 @@ class Router
         $routeRequested = $this->matchRoute($this->routes[$requestMethod], $segmentedRequestedRoute);
 
         // If a route is found, the controller and action is returned, along with any set params
-        if(isset($routeRequested))
+        if($routeRequested)
         {
             // Extract the controller and action and set them so the class has access to them
             $routeRequested["controller"] = explode("@", $routeRequested["controller"]);
