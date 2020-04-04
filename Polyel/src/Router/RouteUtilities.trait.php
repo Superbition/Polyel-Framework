@@ -4,6 +4,107 @@ namespace Polyel\Router;
 
 trait RouteUtilities
 {
+    /*
+     * Used to find and make a match with a registered route from Route::<method>
+     * Processes static and dynamic route requests recursively and collects any URL route parameters to send back
+     * once and if a route match is found.
+     *
+     * When no route match can be found, false is returned. This function expects an array of routes to be
+     * passed in, only the actual routes from the method type of GET, POST etc. And with the requested route in
+     * a segmented format.
+     */
+    private function matchRoute($routes, $requestedSegmentedRoute, $currentDepth = null, $maxDepth = null, $params = null)
+    {
+        // Don't want to overwrite the depth variables...
+        if(!isset($currentDepth) && !isset($maxDepth))
+        {
+            // Keeps track of the current depth when processing the segmented route
+            $currentDepth = 1;
+            $maxDepth = count($requestedSegmentedRoute);
+        }
+
+        // Don't want to overwrite the parameter collection array...
+        if(!isset($params))
+        {
+            // Store collected parameters from the route URI
+            $params = [];
+        }
+
+        // Loop through all the routes found in this level of the $routes array
+        foreach($routes as $routeKey => $routeValue)
+        {
+            // By default parameters have to be matched by their surrounding characters like {param}...
+            $paramFound = false;
+            if(preg_match_all("/(\{[a-zA-Z_0-9]*\})/", $routeKey))
+            {
+                /*
+                 * If a parameter is found at the current depth, we set the paramFound flag to true
+                 * Also collect the parameters so we can return them later, if a match is found
+                 */
+                $params[] = $requestedSegmentedRoute[$currentDepth - 1];
+                $paramFound = true;
+            }
+
+            // If the route key matches the requested route key or if a parameter was found
+            if($routeKey === $requestedSegmentedRoute[$currentDepth - 1] || $paramFound)
+            {
+                // And if the current array depth matches the desired depth
+                if($currentDepth === $maxDepth)
+                {
+                    // And the route is valid and has a value
+                    if(isset($routeValue))
+                    {
+                        // And if the route value is an array
+                        if(is_array($routeValue))
+                        {
+                            // And if the route has a default value
+                            if(isset($routeValue[0]))
+                            {
+                                // A match was found, return the controller and parameters if there are any
+                                $routeMatched["controller"] = $routeValue[0];
+                                $routeMatched["params"] = $params;
+                                return $routeMatched;
+                            }
+                            else
+                            {
+                                // Else it does not, and the route doesn't exist
+                                return false;
+                            }
+                        }
+                        else
+                        {
+                            /*
+                             * Else route value is not an array, return route value
+                             * A match was found, return the controller and parameters if there are any
+                             */
+                            $routeMatched["controller"] = $routeValue;
+                            $routeMatched["params"] = $params;
+                            return $routeMatched;
+                        }
+                    }
+                }
+                else
+                {
+                    // Else the desired route depth has not been reached yet
+                    if(is_array($routeValue))
+                    {
+                        /*
+                         * Go through the next level of the array looking for the next element of requested route
+                         * Passing through the depth levels and parameters if any were collected.
+                         */
+                        return $this->matchRoute($routeValue, $requestedSegmentedRoute, ++$currentDepth, $maxDepth, $params);
+                    }
+                }
+            }
+        }
+
+        /*
+         * If the code reaches this stage, false is returned due to no other arrays being found, likely because the
+         * requested route was deeper than the maximum depth of the routes array
+         */
+        return false;
+    }
+
     // Pack a route into a single multidimensional array making it easier to handle parameters
     private function packRoute($routeToPack, $finalValue)
     {

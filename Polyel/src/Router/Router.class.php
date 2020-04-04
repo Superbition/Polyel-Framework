@@ -150,11 +150,38 @@ class Router
 
     public function routeExists($requestMethod, $requestedRoute)
     {
-        if(array_key_exists($requestedRoute, $this->routes[$requestMethod]))
+        // For when the route requested is more than one char, meaning its not the index `/` route
+        if(strlen($requestedRoute) > 1)
+        {
+            /*
+             * Because the route requested is more than one char, it means we have a route that is not the
+             * index `route` so it needs to be processed and matched to a registered route in order to
+             * process further into the application. Here we prepare the requested route into segments and trim any
+             * left or right `/` chars which would cause an empty element in an array during the matching process of
+             * the matching logic. The requested route is segmented so its easy to loop through and find a match...
+             */
+            $segmentedRequestedRoute = explode("/", rtrim(ltrim($requestedRoute, "/"), "/"));
+        }
+        else
+        {
+            // Else we check if the index route has been requested
+            if($requestedRoute === "/")
+            {
+                // Index route requested, no need process a one char route, perform it manually instead
+                $segmentedRequestedRoute[] = "/";
+            }
+        }
+
+        // Try and match the requested route to a registered route, false is returned when no match is found
+        $routeRequested = $this->matchRoute($this->routes[$requestMethod], $segmentedRequestedRoute);
+
+        // If a route is found, the controller and action is returned, along with any set params
+        if(isset($routeRequested))
         {
             return true;
         }
 
+        // If no route can be matched to a registered route
         return false;
     }
 
