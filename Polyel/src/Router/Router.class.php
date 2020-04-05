@@ -62,7 +62,7 @@ class Router
     public function handle(&$request)
     {
         // Get the full URL from the clients request
-        $this->requestedRawRoute = $this->uriSplit = $request->server["request_uri"];
+        $this->requestedRawRoute = $request->server["request_uri"];
 
         /*
          * Split the URI into an array based on the delimiter
