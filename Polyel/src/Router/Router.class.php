@@ -26,6 +26,9 @@ class Router
     // Holds the current matched route action for the controller
     private $currentRouteAction;
 
+    // Holds the current parameters matched from a registered route
+    private $currentRouteParams;
+
     // Holds the request method sent by the client
     private $requestMethod;
 
@@ -96,7 +99,9 @@ class Router
 
                     // Resolve and perform method injection when calling the controller action
                     $methodDependencies = Polyel::resolveMethod($controllerName, $controllerAction);
-                    $controller->$controllerAction(...$methodDependencies);
+
+                    // Method injection for any services first, then route parameters
+                    $controller->$controllerAction(...$methodDependencies, ...$this->currentRouteParams);
 
                     $this->middleware->runAnyAfter($this->response, $this->requestMethod, $this->requestedRawRoute);
                 }
@@ -182,6 +187,9 @@ class Router
             $routeRequested["controller"] = explode("@", $routeRequested["controller"]);
             $this->currentController = $routeRequested["controller"][0];
             $this->currentRouteAction = $routeRequested["controller"][1];
+
+            // Give the class access to any route parameters if they were found
+            $this->currentRouteParams = $routeRequested["params"];
 
             return true;
         }
