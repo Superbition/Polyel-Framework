@@ -13,7 +13,7 @@ trait RouteUtilities
      * passed in, only the actual routes from the method type of GET, POST etc. And with the requested route in
      * a segmented format.
      */
-    private function matchRoute($routes, $requestedSegmentedRoute, $currentDepth = null, $maxDepth = null, $params = null)
+    private function matchRoute($routes, $requestedSegmentedRoute, $currentDepth = null, $maxDepth = null, $params = null, $regURL = "")
     {
         // Don't want to overwrite the depth variables...
         if(!isset($currentDepth) && !isset($maxDepth))
@@ -48,6 +48,9 @@ trait RouteUtilities
             // If the route key matches the requested route key or if a parameter was found
             if($routeKey === $requestedSegmentedRoute[$currentDepth - 1] || $paramFound)
             {
+                // Build up the registered URL which gets sent back if a match is found
+                $regURL .= "/" . $routeKey;
+
                 // And if the current array depth matches the desired depth
                 if($currentDepth === $maxDepth)
                 {
@@ -63,6 +66,7 @@ trait RouteUtilities
                                 // A match was found, return the controller and parameters if there are any
                                 $routeMatched["controller"] = $routeValue[0];
                                 $routeMatched["params"] = $params;
+                                $routeMatched["regURL"] = $regURL;
                                 return $routeMatched;
                             }
                             else
@@ -79,6 +83,7 @@ trait RouteUtilities
                              */
                             $routeMatched["controller"] = $routeValue;
                             $routeMatched["params"] = $params;
+                            $routeMatched["regURL"] = $regURL;
                             return $routeMatched;
                         }
                     }
@@ -92,7 +97,7 @@ trait RouteUtilities
                          * Go through the next level of the array looking for the next element of requested route
                          * Passing through the depth levels and parameters if any were collected.
                          */
-                        return $this->matchRoute($routeValue, $requestedSegmentedRoute, ++$currentDepth, $maxDepth, $params);
+                        return $this->matchRoute($routeValue, $requestedSegmentedRoute, ++$currentDepth, $maxDepth, $params, $regURL);
                     }
                 }
             }

@@ -21,6 +21,9 @@ class Router
     // Holds the main route name/page
     private $requestedRawRoute;
 
+    // Holds the current matched registered URL str
+    private $currentRegURL;
+
     // Holds the current matched controller from the registered route
     private $currentController;
 
@@ -98,7 +101,7 @@ class Router
                 // Check that the controller exists
                 if(isset($controller) && !empty($controller))
                 {
-                    $this->middleware->runAnyBefore($this->request, $this->requestMethod, $this->requestedRawRoute);
+                    $this->middleware->runAnyBefore($this->request, $this->requestMethod, $this->currentRegURL);
 
                     // Resolve and perform method injection when calling the controller action
                     $methodDependencies = Polyel::resolveMethod($controllerName, $controllerAction);
@@ -106,7 +109,7 @@ class Router
                     // Method injection for any services first, then route parameters
                     $controller->$controllerAction(...$methodDependencies, ...$this->currentRouteParams);
 
-                    $this->middleware->runAnyAfter($this->response, $this->requestMethod, $this->requestedRawRoute);
+                    $this->middleware->runAnyAfter($this->response, $this->requestMethod, $this->currentRegURL);
                 }
             }
             else
@@ -200,6 +203,9 @@ class Router
         // If a route is found, the controller and action is returned, along with any set params
         if($routeRequested)
         {
+            // Get the built up registered URL that was matched
+            $this->currentRegURL = $routeRequested["regURL"];
+
             // Extract the controller and action and set them so the class has access to them
             $routeRequested["controller"] = explode("@", $routeRequested["controller"]);
             $this->currentController = $routeRequested["controller"][0];
