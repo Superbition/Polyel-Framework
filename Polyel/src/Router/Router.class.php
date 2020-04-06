@@ -3,6 +3,7 @@
 namespace Polyel\Router;
 
 use Polyel;
+use Exception;
 use Polyel\View\View;
 use Polyel\Debug\Debug;
 use Polyel\Http\Request;
@@ -36,6 +37,8 @@ class Router
     private $routes;
 
     private $lastAddedRoute;
+
+    private $listOfAddedRoutes;
 
     // Holds the requested view template file name
     private $requestedView;
@@ -132,6 +135,12 @@ class Router
 
     public function addRoute($requestMethod, $route, $action)
     {
+        // Throw an error if trying to add a route that already exists...
+        if(in_array($route, $this->listOfAddedRoutes[$requestMethod]))
+        {
+            throw new Exception("\e[41m Trying to add a route that already exists: " . $route . " \e[0m");
+        }
+
         // Only pack the route when it has more than one parameter
         if(strlen($route) > 1)
         {
@@ -151,6 +160,7 @@ class Router
         $this->routes[$requestMethod] = array_merge_recursive($packedRoute, $this->routes[$requestMethod]);
         $this->shiftAllParamsToTheEnd($this->routes[$requestMethod]);
         $this->lastAddedRoute[$requestMethod] = $route;
+        $this->listOfAddedRoutes[$requestMethod][] = $route;
     }
 
     public function routeExists($requestMethod, $requestedRoute)

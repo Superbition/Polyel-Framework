@@ -11,6 +11,12 @@ trait RouteVerbs
         $this->routes["PUT"] = [];
         $this->routes["PATCH"] = [];
         $this->routes["DELETE"] = [];
+
+        $this->listOfAddedRoutes["GET"] = [];
+        $this->listOfAddedRoutes["POST"] = [];
+        $this->listOfAddedRoutes["PUT"] = [];
+        $this->listOfAddedRoutes["PATCH"] = [];
+        $this->listOfAddedRoutes["DELETE"] = [];
     }
 
     public function get($route, $action)
