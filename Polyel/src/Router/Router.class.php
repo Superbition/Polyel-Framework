@@ -18,8 +18,8 @@ class Router
     // The URI pattern the route responds to.
     private $uriSplit;
 
-    // Holds the main route name/page
-    private $requestedRawRoute;
+    // Holds the main requested route from the client
+    private $requestedRoute;
 
     // Holds the current matched registered URL str
     private $currentRegURL;
@@ -75,7 +75,7 @@ class Router
     public function handle(&$request)
     {
         // Get the full URL from the clients request
-        $this->requestedRawRoute = $request->server["request_uri"];
+        $this->requestedRoute = $request->server["request_uri"];
 
         /*
          * Split the URI into an array based on the delimiter
@@ -90,10 +90,10 @@ class Router
         $this->requestMethod = $request->server["request_method"];
 
         // Continue routing if there is a URL
-        if(!empty($this->requestedRawRoute))
+        if(!empty($this->requestedRoute))
         {
             // Check if the route matches any registered routes
-            if($this->routeExists($this->requestMethod, $this->requestedRawRoute))
+            if($this->routeExists($this->requestMethod, $this->requestedRoute))
             {
                 $this->requestedView = null;
 
@@ -231,7 +231,7 @@ class Router
 
     public function getCurrentRawRoute()
     {
-        return $this->requestedRawRoute;
+        return $this->requestedRoute;
     }
 
     public function getCurrentRouteAction()
