@@ -115,7 +115,7 @@ class Router
             else
             {
                 // Error 404 route not found
-                $this->requestedView = __DIR__ . "/../../../app/views/errors/404.html";
+                $this->requestedView = ROOT_DIR . "/app/views/errors/404.html";
             }
         }
     }
@@ -242,6 +242,6 @@ class Router
     {
         $this->initialiseHttpVerbs();
 
-        require __DIR__ . "/../../../app/routes.php";
+        require ROOT_DIR . "/app/routes.php";
     }
 }
