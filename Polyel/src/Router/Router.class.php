@@ -242,6 +242,6 @@ class Router
     {
         $this->initialiseHttpVerbs();
 
-        require ROOT_DIR . "/app/routes.php";
+        require ROOT_DIR . "/app/routing/web.php";
     }
 }
