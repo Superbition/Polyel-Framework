@@ -39,21 +39,28 @@ class Router
     // Holds all the request routes to respond to
     private $routes;
 
+    // The last added registered route and its request method
     private $lastAddedRoute;
 
+    // Full list of registered routes that were added
     private $listOfAddedRoutes;
 
     // Holds the requested view template file name
     private $requestedView;
 
+    // The View service
     private $view;
 
+    // The Debug service
     private $debug;
 
+    // The Middleware service
     private $middleware;
 
+    // The Request object
     private $request;
 
+    // The Response object
     private $response;
 
     public function __construct(View $view, Debug $debug, Middleware $middleware, Request $request, Response $response)
@@ -214,6 +221,7 @@ class Router
             // Give the class access to any route parameters if they were found
             $this->currentRouteParams = $routeRequested["params"];
 
+            // A route match was made...
             return true;
         }
 
