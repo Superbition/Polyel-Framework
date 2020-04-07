@@ -82,7 +82,7 @@ class Server
 
         $this->server->on("request", function($request, $response)
         {
-            $this->setResponseHeaders($response);
+            $this->setDefaultResponseHeaders($response);
 
             $this->runDebug();
 
@@ -109,7 +109,7 @@ class Server
         });
     }
 
-    private function setResponseHeaders(&$response)
+    private function setDefaultResponseHeaders(&$response)
     {
         $response->header("Server", "Polyel/Swoole-HTTP-Server");
         $response->header("X-Powered-By", "Polyel-PHP");
