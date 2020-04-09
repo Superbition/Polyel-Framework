@@ -26,6 +26,12 @@ class Request
 
     private $getQueries;
 
+    private $cookies;
+
+    private $files;
+
+    private $postData;
+
     public function __construct()
     {
 
@@ -45,5 +51,11 @@ class Request
         $this->method = $request->server["request_method"];
         $this->fullQueryString = $request->server["query_string"] ?? null;
         $this->getQueries = $request->get;
+
+        $this->cookies = $request->cookie;
+
+        $this->files = $request->files;
+
+        $this->postData = $request->post;
     }
 }
