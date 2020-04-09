@@ -20,6 +20,8 @@ class Request
 
     private $path;
 
+    private $method;
+
     public function __construct()
     {
 
@@ -36,5 +38,6 @@ class Request
         $this->serverProtocol = $request->server["server_protocol"];
         $this->uri = $request->server["request_uri"];
         $this->path = $request->server["path_info"];
+        $this->method = $request->server["request_method"];
     }
 }
