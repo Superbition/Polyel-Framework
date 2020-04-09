@@ -43,7 +43,7 @@ class Request
         $this->uri = $request->server["request_uri"];
         $this->path = $request->server["path_info"];
         $this->method = $request->server["request_method"];
-        $this->fullQueryString = $request->server["query_string"];
+        $this->fullQueryString = $request->server["query_string"] ?? null;
         $this->getQueries = $request->get;
     }
 }
