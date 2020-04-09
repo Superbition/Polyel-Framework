@@ -92,6 +92,8 @@ class Router
         // Continue routing if there is a URL
         if(!empty($this->requestedRoute))
         {
+            $this->request->capture($request);
+
             // Check if the route matches any registered routes
             if($this->routeExists($this->requestMethod, $this->requestedRoute))
             {
