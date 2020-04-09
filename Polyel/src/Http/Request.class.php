@@ -22,6 +22,10 @@ class Request
 
     private $method;
 
+    private $fullQueryString;
+
+    private $getQueries;
+
     public function __construct()
     {
 
@@ -39,5 +43,7 @@ class Request
         $this->uri = $request->server["request_uri"];
         $this->path = $request->server["path_info"];
         $this->method = $request->server["request_method"];
+        $this->fullQueryString = $request->server["query_string"];
+        $this->getQueries = $request->get;
     }
 }
