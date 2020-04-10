@@ -45,12 +45,6 @@ class Router
     // Full list of registered routes that were added
     private $listOfAddedRoutes;
 
-    // Holds the requested view template file name
-    private $requestedView;
-
-    // The View service
-    private $view;
-
     // The Debug service
     private $debug;
 
@@ -63,9 +57,8 @@ class Router
     // The Response object
     private $response;
 
-    public function __construct(View $view, Debug $debug, Middleware $middleware, Request $request, Response $response)
+    public function __construct(Debug $debug, Middleware $middleware, Request $request, Response $response)
     {
-        $this->view = $view;
         $this->debug = $debug;
         $this->middleware = $middleware;
         $this->request = $request;
@@ -97,8 +90,6 @@ class Router
             // Check if the route matches any registered routes
             if($this->routeExists($this->requestMethod, $this->requestedRoute))
             {
-                $this->requestedView = null;
-
                 // Get the current matched controller and route action
                 $controller = $this->currentController;
                 $controllerAction = $this->currentRouteAction;
@@ -141,7 +132,7 @@ class Router
         }
         else
         {
-            $response->end($this->view->render($this->requestedView));
+            $this->response->send($response);
         }
     }
 

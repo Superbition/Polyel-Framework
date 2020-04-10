@@ -2,10 +2,19 @@
 
 namespace Polyel\Http;
 
+use Polyel\View\View;
+
 class Response
 {
-    public function __construct()
-    {
+    private $view;
 
+    public function __construct(View $view)
+    {
+        $this->view = $view;
+    }
+
+    public function send($response)
+    {
+        $response->end($this->view->render(""));
     }
 }
