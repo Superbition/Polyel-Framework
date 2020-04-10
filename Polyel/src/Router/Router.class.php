@@ -72,7 +72,7 @@ class Router
         $this->response = $response;
     }
 
-    public function handle(&$request)
+    public function handle($request)
     {
         // Get the full URL from the clients request
         $this->requestedRoute = $request->server["request_uri"];
@@ -129,7 +129,7 @@ class Router
         }
     }
 
-    public function deliver(&$response)
+    public function deliver($response)
     {
         if($this->debug->doDumpsExist())
         {
