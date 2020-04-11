@@ -50,6 +50,7 @@ class Request
         $this->path = $request->server["path_info"];
         $this->method = $request->server["request_method"];
         $this->fullQueryString = $request->server["query_string"] ?? null;
+
         $this->getQueries = $request->get;
 
         $this->cookies = $request->cookie;
