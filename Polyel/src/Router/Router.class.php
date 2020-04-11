@@ -194,6 +194,13 @@ class Router
                 // Index route requested, no need process a one char route, perform it manually instead
                 $segmentedRequestedRoute[] = "/";
             }
+
+            // Catch undefined requests
+            if(!isset($requestedRoute))
+            {
+                // The requested route is null
+                return false;
+            }
         }
 
         // Try and match the requested route to a registered route, false is returned when no match is found
