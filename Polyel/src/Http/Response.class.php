@@ -8,6 +8,8 @@ class Response
 {
     private $view;
 
+    private $httpStatusCode;
+
     public function __construct(View $view)
     {
         $this->view = $view;
@@ -15,6 +17,12 @@ class Response
 
     public function send($response)
     {
+        $response->status($this->httpStatusCode);
         $response->end($this->view->render(""));
+    }
+
+    public function setStatusCode(int $code)
+    {
+        $this->httpStatusCode = $code;
     }
 }

@@ -96,6 +96,9 @@ class Router
             // Check if the route matches any registered routes
             if($this->routeExists($this->requestMethod, $this->requestedRoute))
             {
+                // Set the default HTTP status code, might change throughout the request cycle
+                $this->response->setStatusCode(200);
+
                 // Get the current matched controller and route action
                 $controller = $this->currentController;
                 $controllerAction = $this->currentRouteAction;
@@ -121,7 +124,7 @@ class Router
             else
             {
                 // Error 404 route not found
-                $this->requestedView = ROOT_DIR . "/app/views/errors/404.html";
+                $this->response->setStatusCode(404);
             }
         }
     }
