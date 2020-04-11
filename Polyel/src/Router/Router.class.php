@@ -4,7 +4,6 @@ namespace Polyel\Router;
 
 use Polyel;
 use Exception;
-use Polyel\View\View;
 use Polyel\Debug\Debug;
 use Polyel\Http\Request;
 use Polyel\Http\Response;
