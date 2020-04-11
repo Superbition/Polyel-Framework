@@ -40,11 +40,11 @@ class Server
         // Load all configuration files
         $this->config->load();
 
-        // Preload all application routes
-        $this->router->loadRoutes();
-
         // Run initial Routing setup tasks
         $this->router->setup();
+
+        // Preload all application routes
+        $this->router->loadRoutes();
 
         // Preload all applications Controllers
         $this->controller->loadAllControllers();
