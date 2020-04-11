@@ -189,6 +189,8 @@ class Router
         // For when the route requested is more than one char, meaning its not the index `/` route
         if(strlen($requestedRoute) > 1)
         {
+            $requestedRoute = urldecode($requestedRoute);
+
             /*
              * Because the route requested is more than one char, it means we have a route that is not the
              * index `route` so it needs to be processed and matched to a registered route in order to
