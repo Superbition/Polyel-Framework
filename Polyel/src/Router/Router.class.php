@@ -81,6 +81,13 @@ class Router
         // Get the request method: GET, POST, PUT etc.
         $this->requestMethod = $request->server["request_method"];
 
+        // Check for a HEAD request
+        if($this->requestMethod === "HEAD")
+        {
+            // Because HEAD and GET are basically the same, switch a HEAD to act like a GET request
+            $this->requestMethod = "GET";
+        }
+
         // Continue routing if there is a URL
         if(!empty($this->requestedRoute))
         {
