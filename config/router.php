@@ -9,7 +9,9 @@ return [
      * For example, a route of /blog/post/{id}
      *
      * You can change the tag used to detect these arguments but you must put a space
-     * between the delimiter you configure, for example, the default is { }.
+     * between to act as a delimiter, for example, the default is { }
+     *
+     * NOTE: It is not recommended to change this value from the default.
      */
     "routeParameterTag" => "{ }",
 

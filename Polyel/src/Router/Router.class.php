@@ -56,6 +56,8 @@ class Router
     // The Response object
     private $response;
 
+    private $routeParamPattern;
+
     public function __construct(Debug $debug, Middleware $middleware, Request $request, Response $response)
     {
         $this->debug = $debug;
@@ -260,5 +262,12 @@ class Router
         $this->initialiseHttpVerbs();
 
         require ROOT_DIR . "/app/routing/web.php";
+    }
+
+    public function setup()
+    {
+        // Use the param tag from the Router config file, used when detecting params in routes
+        $paramTag = explode(" ", config("router.routeParameterTag"));
+        $this->routeParamPattern = "/(\\" . $paramTag[0] . "[a-zA-Z_0-9]*\\" . $paramTag[1] . ")/";
     }
 }

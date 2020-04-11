@@ -35,7 +35,7 @@ trait RouteUtilities
         {
             // By default parameters have to be matched by their surrounding characters like {param}...
             $paramFound = false;
-            if(preg_match_all("/(\{[a-zA-Z_0-9]*\})/", $routeKey))
+            if(preg_match_all($this->routeParamPattern, $routeKey))
             {
                 /*
                  * If a parameter is found at the current depth, we set the paramFound flag to true
@@ -143,7 +143,7 @@ trait RouteUtilities
                If the key is a parameter and isn't the last element in the array.
                If it's the last element it doesn't need to be moved to the end.
              */
-            if(preg_match_all("/(\{[a-zA-Z_0-9]*\})/", $routeKey) && array_key_last($routes) !== $routeKey)
+            if(preg_match_all($this->routeParamPattern, $routeKey) && array_key_last($routes) !== $routeKey)
             {
                 // Remove the parameter from the array
                 unset($routes[$routeKey]);
