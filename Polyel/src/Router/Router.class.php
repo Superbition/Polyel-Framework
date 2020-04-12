@@ -93,6 +93,17 @@ class Router
         // Continue routing if there is a URL
         if(!empty($this->requestedRoute))
         {
+            // Check if a redirection has been set...
+            if(isset($this->routes["REDIRECT"][$this->requestedRoute]))
+            {
+                // Set a redirection to happen when responding
+                $redirection = $this->routes["REDIRECT"][$this->requestedRoute];
+                $this->response->redirect($redirection["url"], $redirection["statusCode"]);
+
+                // Returning progresses the request to skip to responding directly
+                return;
+            }
+
             $this->request->capture($request);
 
             // Check if the route matches any registered routes
@@ -257,6 +268,13 @@ class Router
         $requestMethod = array_key_first($this->lastAddedRoute);
         $routeUri = $this->lastAddedRoute[$requestMethod];
         $this->middleware->register($requestMethod, $routeUri, $middlewareKeys);
+    }
+
+    public function redirect($src, $des, $statusCode = 302)
+    {
+        // Register a new redirection with its URL and status code
+        $this->routes["REDIRECT"][$src]["url"] = $des;
+        $this->routes["REDIRECT"][$src]["statusCode"] = $statusCode;
     }
 
     public function loadRoutes()
