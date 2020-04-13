@@ -253,7 +253,7 @@ class Router
         return false;
     }
 
-    public function getCurrentRawRoute()
+    public function getCurrentRoute()
     {
         return $this->requestedRoute;
     }
