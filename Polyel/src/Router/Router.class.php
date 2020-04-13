@@ -195,7 +195,7 @@ class Router
         $this->listOfAddedRoutes[$requestMethod][] = $route;
     }
 
-    public function routeExists($requestMethod, $requestedRoute)
+    private function routeExists($requestMethod, $requestedRoute)
     {
         // For when the route requested is more than one char, meaning its not the index `/` route
         if(strlen($requestedRoute) > 1)
