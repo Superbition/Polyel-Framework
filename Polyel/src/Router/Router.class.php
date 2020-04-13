@@ -258,6 +258,11 @@ class Router
         return $this->requestedRoute;
     }
 
+    public function getCurrentRouteSplit()
+    {
+        return $this->uriSplit;
+    }
+
     public function getCurrentRouteAction()
     {
         return $this->currentRouteAction;
