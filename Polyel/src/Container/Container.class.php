@@ -139,6 +139,13 @@ class Container
                 $methodDependencyList = [];
                 foreach($methodParams as $param)
                 {
+                    // Cannot process a parameter if it does not have a type
+                    if(!$param->hasType())
+                    {
+                        // Skip current param because it does not have a type thus, cannot check what class it is
+                        continue;
+                    }
+
                     // Getting the name gets the full namespace
                     $methodDependencyName = $param->getType()->getName();
                     $methodDependency = $this->get($methodDependencyName);
