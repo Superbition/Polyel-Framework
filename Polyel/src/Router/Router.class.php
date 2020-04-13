@@ -158,7 +158,7 @@ class Router
         }
     }
 
-    public function addRoute($requestMethod, $route, $action)
+    private function addRoute($requestMethod, $route, $action)
     {
         // Throw an error if trying to add a route that already exists...
         if(in_array($route, $this->listOfAddedRoutes[$requestMethod]))
