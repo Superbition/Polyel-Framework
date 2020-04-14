@@ -59,4 +59,9 @@ class Request
 
         $this->postData = $request->post;
     }
+
+    public function path()
+    {
+        return $this->path;
+    }
 }
