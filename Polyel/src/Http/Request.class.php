@@ -60,6 +60,26 @@ class Request
         $this->postData = $request->post;
     }
 
+    public function data($inputName = null, $default = null)
+    {
+        if(exists($inputName))
+        {
+            if(exists($this->postData[$inputName]))
+            {
+                return $this->postData[$inputName];
+            }
+
+            if(exists($default))
+            {
+                return $default;
+            }
+
+            return false;
+        }
+
+        return $this->postData;
+    }
+
     public function path()
     {
         return $this->path;
