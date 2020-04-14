@@ -119,4 +119,14 @@ class Request
 
         return $this->headers;
     }
+
+    public function hasHeader($headerToFind)
+    {
+        if(exists($this->headers[$headerToFind]))
+        {
+            return true;
+        }
+
+        return false;
+    }
 }
