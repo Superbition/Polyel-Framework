@@ -15,6 +15,16 @@ function config($configRequest)
     return Polyel::call(Polyel\Config\Config::class)->get($configRequest);
 }
 
+function exists(&$var)
+{
+    if(isset($var) && !empty($var))
+    {
+        return true;
+    }
+
+    return false;
+}
+
 /*
  * Packs a single dimensional array into one, multidimensional array and
  * sets the final value to the default of null or whatever is passed in as
