@@ -65,6 +65,11 @@ class Request
         return $this->path;
     }
 
+    public function url()
+    {
+        return $this->uri . "?" . $this->fullQueryString;
+    }
+
     public function method()
     {
         return $this->method;
