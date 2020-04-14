@@ -64,4 +64,19 @@ class Request
     {
         return $this->path;
     }
+
+    public function method()
+    {
+        return $this->method;
+    }
+
+    public function isMethod($isMethodType)
+    {
+        if($this->method === $isMethodType)
+        {
+            return true;
+        }
+
+        return false;
+    }
 }
