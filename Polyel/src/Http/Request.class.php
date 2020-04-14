@@ -104,4 +104,19 @@ class Request
 
         return false;
     }
+
+    public function headers($header = null)
+    {
+        if(exists($header))
+        {
+            if(exists($this->headers[$header]))
+            {
+                return $this->headers[$header];
+            }
+
+            return false;
+        }
+
+        return $this->headers;
+    }
 }
