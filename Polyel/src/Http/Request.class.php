@@ -24,7 +24,7 @@ class Request
 
     private $fullQueryString;
 
-    private $getQueries;
+    private $queries;
 
     private $cookies;
 
@@ -51,7 +51,7 @@ class Request
         $this->method = $request->server["request_method"];
         $this->fullQueryString = $request->server["query_string"] ?? null;
 
-        $this->getQueries = $request->get;
+        $this->queries = $request->get;
 
         $this->cookies = $request->cookie;
 
@@ -78,6 +78,26 @@ class Request
         }
 
         return $this->postData;
+    }
+
+    public function query($queryName = null, $queryDefault = null)
+    {
+        if(exists($queryName))
+        {
+            if(exists($this->queries[$queryName]))
+            {
+                return $this->queries[$queryName];
+            }
+
+            if(exists($queryDefault))
+            {
+                return $queryDefault;
+            }
+
+            return false;
+        }
+
+        return $this->queries;
     }
 
     public function path()
