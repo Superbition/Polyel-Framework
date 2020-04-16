@@ -110,8 +110,17 @@ class Request
                 // The main loop for finding
                 foreach ($inputArray as $inputItem)
                 {
-                    // Loop until we get a final value based on the dot syntax
-                    $postDataArr = $postDataArr[$inputItem];
+                    // Only continue if the dot syntax matches an array element
+                    if(array_key_exists($inputItem, $postDataArr))
+                    {
+                        // Loop until we get a final value based on the dot syntax
+                        $postDataArr = $postDataArr[$inputItem];
+                    }
+                    else
+                    {
+                        // Return when an undefined index is found
+                        return false;
+                    }
                 }
 
                 // Return data selected from the main loop based on the input name to search with
