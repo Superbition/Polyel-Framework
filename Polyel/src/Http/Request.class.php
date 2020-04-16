@@ -140,10 +140,22 @@ class Request
         return $this->headers;
     }
 
-    public function hasHeader($headerToFind)
+    public function hasHeader($headerToFind, $headerEquals = null)
     {
         if(exists($this->headers[$headerToFind]))
         {
+            if(exists($headerEquals))
+            {
+                if($this->headers[$headerToFind] === $headerEquals)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
             return true;
         }
 
