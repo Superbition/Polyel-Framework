@@ -15,7 +15,7 @@ function config($configRequest)
     return Polyel::call(Polyel\Config\Config::class)->get($configRequest);
 }
 
-function exists(&$var)
+function exists($var)
 {
     if(isset($var) && !empty($var))
     {
