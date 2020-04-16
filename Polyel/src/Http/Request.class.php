@@ -66,6 +66,7 @@ class Request
 
     public function data($inputName = null, $default = null)
     {
+        // If not exists, then return either normal $POST or rawContent()...
         if(exists($inputName))
         {
             if(exists($this->postData) && array_key_exists($inputName, $this->postData))
@@ -105,7 +106,24 @@ class Request
             return false;
         }
 
-        return $this->postData;
+        // Return normal $POST data if it is not null
+        if(exists($this->postData))
+        {
+            // Normal form POST data, whole array returned
+            return $this->postData;
+        }
+        else
+        {
+            // Else return rawContent if it is not null
+            if(exists($this->postRawContent))
+            {
+                // raw request content from body of request
+                return $this->postRawContent;
+            }
+        }
+
+        // Fallback for when normal POST and rawContent data are both null
+        return null;
     }
 
     public function query($queryName = null, $queryDefault = null)
