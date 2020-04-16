@@ -144,7 +144,7 @@ class Request
         }
 
         // Fallback for when normal POST and rawContent data are both null
-        return null;
+        return false;
     }
 
     public function query($queryName = null, $queryDefault = null)
