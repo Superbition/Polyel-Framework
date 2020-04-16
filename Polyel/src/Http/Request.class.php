@@ -32,6 +32,8 @@ class Request
 
     private $postData;
 
+    private $postRawContent;
+
     public function __construct()
     {
 
@@ -58,6 +60,8 @@ class Request
         $this->files = $request->files;
 
         $this->postData = $request->post;
+
+        $this->postRawContent = $request->rawContent();
     }
 
     public function data($inputName = null, $default = null)
