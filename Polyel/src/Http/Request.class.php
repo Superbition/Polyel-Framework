@@ -68,9 +68,33 @@ class Request
     {
         if(exists($inputName))
         {
-            if(exists($this->postData[$inputName]))
+            if(exists($this->postData) && array_key_exists($inputName, $this->postData))
             {
                 return $this->postData[$inputName];
+            }
+
+            $inputArray = explode(".", $inputName);
+            if(is_array($inputArray) && exists($inputArray))
+            {
+                $postDataArr = $this->postData;
+
+                if($this->hasHeader("content-type", "application/json"))
+                {
+                    $postDataArr = json_decode($this->postRawContent, true);
+                }
+
+                if(!exists($postDataArr))
+                {
+                    return false;
+                }
+
+                foreach ($inputArray as $inputItem)
+                {
+                    // Loop until we get a final value based on the dot syntax
+                    $postDataArr = $postDataArr[$inputItem];
+                }
+
+                return $postDataArr;
             }
 
             if(exists($default))
