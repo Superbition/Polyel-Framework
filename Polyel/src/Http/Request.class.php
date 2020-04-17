@@ -244,4 +244,26 @@ class Request
 
         return false;
     }
+
+    public function bool($boolInputName)
+    {
+        // POST data is not null and the bool name exists inside the POST request data
+        if(exists($this->postData) && array_key_exists($boolInputName, $this->postData))
+        {
+            // The bool value from the input element
+            $boolToCheck = $this->postData[$boolInputName];
+
+            $boolTruthList = [1, "1", true, "true", "on", "yes"];
+
+            // Check that the bool value from the client matches something from the truth list
+            if(in_array($boolToCheck, $boolTruthList))
+            {
+                // Input value is true...
+                return true;
+            }
+        }
+
+        // No data or no bool matches
+        return false;
+    }
 }
