@@ -4,6 +4,8 @@ namespace Polyel\Http;
 
 class Request
 {
+    use CookieHandler;
+
     private $headers;
 
     private $hostIP;
@@ -338,5 +340,10 @@ class Request
 
         // No data or no bool matches
         return false;
+    }
+
+    public function cookie($name)
+    {
+        return $this->requestGetCookie($name);
     }
 }
