@@ -166,7 +166,7 @@ class Request
             foreach($inputToCheck as $input)
             {
                 // If one value is not found or is not set, return false
-                if($this->data($input) == false)
+                if($this->data($input) === false)
                 {
                     return false;
                 }
@@ -178,7 +178,7 @@ class Request
         else
         {
             // For when only a single string value is sent in to check
-            if($this->data($inputToCheck) != false)
+            if($this->data($inputToCheck) !== false)
             {
                 // Value was found and is set
                 return true;
