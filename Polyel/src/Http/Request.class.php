@@ -157,6 +157,38 @@ class Request
         return false;
     }
 
+    public function has($inputToCheck)
+    {
+        // Detect an array of values that the POST request must have present
+        if(is_array($inputToCheck))
+        {
+            // Check if all the values are present in the POST request data
+            foreach($inputToCheck as $input)
+            {
+                // If one value is not found or is not set, return false
+                if($this->data($input) == false)
+                {
+                    return false;
+                }
+            }
+
+            // All data is present
+            return true;
+        }
+        else
+        {
+            // For when only a single string value is sent in to check
+            if($this->data($inputToCheck) != false)
+            {
+                // Value was found and is set
+                return true;
+            }
+        }
+
+        // False, single value is not present in POST data
+        return false;
+    }
+
     public function query($queryName = null, $queryDefault = null)
     {
         // Proceed to find query if a name to search for is set...
