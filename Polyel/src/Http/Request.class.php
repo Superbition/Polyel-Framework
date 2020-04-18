@@ -197,7 +197,7 @@ class Request
             // If any values are found in the POST data, return true
             foreach($inputToCheck as $input)
             {
-                if($this->has($input) != false)
+                if($this->has($input) !== false)
                 {
                     return true;
                 }
