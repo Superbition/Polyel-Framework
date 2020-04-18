@@ -17,7 +17,7 @@ function config($configRequest)
 
 function exists($var)
 {
-    if(isset($var) && !empty($var))
+    if(isset($var) && !empty($var) || is_numeric($var))
     {
         return true;
     }
