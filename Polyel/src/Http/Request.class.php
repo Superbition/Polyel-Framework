@@ -208,6 +208,28 @@ class Request
         return false;
     }
 
+    public function isFilled($inputToCheck)
+    {
+        $value = $this->data($inputToCheck);
+
+        if(exists($value))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isMissing($inputToCheck)
+    {
+        if($this->has($inputToCheck))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
     public function query($queryName = null, $queryDefault = null)
     {
         // Proceed to find query if a name to search for is set...
