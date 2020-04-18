@@ -189,6 +189,25 @@ class Request
         return false;
     }
 
+    public function hasAny($inputToCheck)
+    {
+        // Only processes an array to check for present values in a POST request
+        if(is_array($inputToCheck))
+        {
+            // If any values are found in the POST data, return true
+            foreach($inputToCheck as $input)
+            {
+                if($this->has($input) != false)
+                {
+                    return true;
+                }
+            }
+        }
+
+        // Otherwise no keys were found...
+        return false;
+    }
+
     public function query($queryName = null, $queryDefault = null)
     {
         // Proceed to find query if a name to search for is set...
