@@ -138,4 +138,9 @@ class UploadedFile extends SplFileInfo
     {
         return $this->getRealPath();
     }
+
+    public function extension()
+    {
+        return $this->extension;
+    }
 }
