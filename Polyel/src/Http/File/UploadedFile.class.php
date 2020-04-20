@@ -66,7 +66,7 @@ class UploadedFile extends SplFileInfo
      * can be used further with this class/service. Gets data from the upload and processes
      * it.
      */
-    public function process($uploadedFiles, $fileName)
+    private function process($uploadedFiles, $fileName)
     {
         // Making sure the file we want actually exists in the uploads
         if(array_key_exists($fileName, $uploadedFiles) && exists($uploadedFiles[$fileName]["tmp_name"]))
