@@ -60,6 +60,7 @@ class Server
 
         $this->server->set([
             'worker_num' => swoole_cpu_num(),
+            'package_max_length' => 5000000
             ]);
     }
 
