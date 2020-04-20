@@ -33,6 +33,8 @@ class UploadedFile extends SplFileInfo
     // Bool used to set if the file uploaded is valid and without any errors
     private $isValid;
 
+    private $errors;
+
     public function __construct($uploadedFiles, $fileName)
     {
         // Make sure both the uploadedFiles array is set and the fileName is not empty
@@ -40,6 +42,7 @@ class UploadedFile extends SplFileInfo
         {
             // The file upload failed...
             $this->isValid = false;
+            $this->addError(0, "No uploaded files exist or file name is missing");
         }
         else
         {
@@ -85,6 +88,7 @@ class UploadedFile extends SplFileInfo
 
         // The uploaded file does not exists or was not uploaded
         $this->isValid = false;
+        $this->addError(1, "Failed processing uploaded temp file, no file info");
         return $this->isValid;
     }
 
@@ -97,6 +101,7 @@ class UploadedFile extends SplFileInfo
         if($this->errorCode !== 0)
         {
             $this->isValid = false;
+            $this->addError(2, "File upload failed, PHP error code " . $this->errorCode . " given");
         }
 
         // Check that both the Swoole and Polyel Mime types are the same
@@ -106,10 +111,21 @@ class UploadedFile extends SplFileInfo
             if($this->polyelType !== "application/x-empty")
             {
                 $this->isValid = false;
+                $this->addError(3, "Type mismatch found, file not valid for processing");
             }
         }
 
         // Return the file validity status
         return $this->isValid;
+    }
+
+    public function errors()
+    {
+        return $this->errors;
+    }
+
+    private function addError($errorCode, $errorMsg)
+    {
+        $this->errors[$errorCode] = $errorMsg;
     }
 }
