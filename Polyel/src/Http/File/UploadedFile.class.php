@@ -128,4 +128,14 @@ class UploadedFile extends SplFileInfo
     {
         $this->errors[$errorCode] = $errorMsg;
     }
+
+    public function path()
+    {
+        return $this->getPath();
+    }
+
+    public function fullPath()
+    {
+        return $this->getRealPath();
+    }
 }
