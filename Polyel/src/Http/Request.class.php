@@ -353,4 +353,14 @@ class Request
     {
         return new UploadedFile($this->files, $fileName);
     }
+
+    public function hasFile($fileName)
+    {
+        if(exists($this->files) && array_key_exists($fileName, $this->files))
+        {
+            return true;
+        }
+
+        return false;
+    }
 }
