@@ -2,6 +2,8 @@
 
 namespace Polyel\Http;
 
+use Polyel\Http\File\UploadedFile;
+
 class Request
 {
     use CookieHandler;
@@ -345,5 +347,10 @@ class Request
     public function cookie($name)
     {
         return $this->requestGetCookie($name);
+    }
+
+    public function file($fileName)
+    {
+        return new UploadedFile($this->files, $fileName);
     }
 }
