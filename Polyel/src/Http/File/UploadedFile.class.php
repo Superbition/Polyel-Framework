@@ -3,6 +3,7 @@
 namespace Polyel\Http\File;
 
 use SplFileInfo;
+use Polyel\Storage\Facade\Storage;
 
 class UploadedFile extends SplFileInfo
 {
@@ -35,6 +36,9 @@ class UploadedFile extends SplFileInfo
 
     private $errors;
 
+    // Used to know when and when not to generate unique file names
+    private $storeAsFlag;
+
     public function __construct($uploadedFiles, $fileName)
     {
         // Make sure both the uploadedFiles array is set and the fileName is not empty
@@ -57,6 +61,9 @@ class UploadedFile extends SplFileInfo
 
                 // Using SplFileInfo set the ext of the file
                 $this->extension = $this->getExtension();
+
+                // Used to detect when to generate a unique file name when saving uploaded files, this is the default
+                $this->storeAsFlag = false;
             }
         }
     }
@@ -142,5 +149,49 @@ class UploadedFile extends SplFileInfo
     public function extension()
     {
         return $this->extension;
+    }
+
+    public function store($newFilePath, $diskToSaveTo)
+    {
+        // Check that the file is valid before trying to move it
+        if($this->isValid())
+        {
+            // Trim off any supplied forward slashes which will interfere with file paths
+            $newFilePath = ltrim($newFilePath, "/");
+            $newFilePath = rtrim($newFilePath, "/");
+
+            // When storeAsFlag is true we use the provided file name instead of a unique name
+            if($this->storeAsFlag === false)
+            {
+                $ranPrefix = random_int(1, 100) . "-";
+                $uniqueFileID = uniqid($ranPrefix, true);
+                $ranSuffix = "-" . random_int(1, 100);
+                $uniqueFileID .= $ranSuffix;
+                $uniqueFileID = str_replace(".", "-", $uniqueFileID);
+
+                $newFilePath .= "/" . $uniqueFileID;
+            }
+
+            // Reset the storeAsFlag
+            $this->storeAsFlag = false;
+
+            // Using the storage service, move the file into its new saved location
+            $newSavedPath = Storage::access($diskToSaveTo)->move($this->tmpName, "/" . $newFilePath, true);
+
+            return $newSavedPath;
+        }
+
+        return false;
+    }
+
+    public function storeAs($newFilePath, $newFileName, $diskToSaveTo)
+    {
+        // Set the storeAsFlag so that the file will be saved with the provided file name
+        $this->storeAsFlag = true;
+
+        // Create the full file path with its provided file name
+        $newFilePathAndName = $newFilePath . "/" . $newFileName;
+
+        return $this->store($newFilePathAndName, $diskToSaveTo);
     }
 }
