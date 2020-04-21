@@ -175,6 +175,8 @@ class LocalStorage
         {
             rename($oldName, $newName);
         });
+
+        return $newName;
     }
 
     public function delete($filePath)
