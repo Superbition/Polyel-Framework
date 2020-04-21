@@ -162,9 +162,13 @@ class LocalStorage
         });
     }
 
-    public function move($oldName, $newName)
+    public function move($oldName, $newName, $absoluteOldPath = false)
     {
-        $oldName = ROOT_DIR . $oldName;
+        if($absoluteOldPath === false)
+        {
+            $oldName = ROOT_DIR . $oldName;
+        }
+
         $newName = ROOT_DIR . $newName;
 
         Swoole::create(function() use ($oldName, $newName)
