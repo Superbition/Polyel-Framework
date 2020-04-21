@@ -10,5 +10,7 @@ trait CookieHandler
         {
             return $this->cookies[$cookieName];
         }
+
+        return false;
     }
 }
