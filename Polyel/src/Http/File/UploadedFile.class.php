@@ -151,7 +151,7 @@ class UploadedFile extends SplFileInfo
         return $this->extension;
     }
 
-    public function store($newFilePath, $diskToSaveTo)
+    public function save($newFilePath, $diskToSaveTo)
     {
         // Check that the file is valid before trying to move it
         if($this->isValid())
@@ -184,7 +184,7 @@ class UploadedFile extends SplFileInfo
         return false;
     }
 
-    public function storeAs($newFilePath, $newFileName, $diskToSaveTo)
+    public function saveAs($newFilePath, $newFileName, $diskToSaveTo)
     {
         // Set the storeAsFlag so that the file will be saved with the provided file name
         $this->storeAsFlag = true;
@@ -192,6 +192,6 @@ class UploadedFile extends SplFileInfo
         // Create the full file path with its provided file name
         $newFilePathAndName = $newFilePath . "/" . $newFileName;
 
-        return $this->store($newFilePathAndName, $diskToSaveTo);
+        return $this->save($newFilePathAndName, $diskToSaveTo);
     }
 }
