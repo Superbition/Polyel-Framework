@@ -128,10 +128,13 @@ class Router
                     // Resolve and perform method injection when calling the controller action
                     $methodDependencies = Polyel::resolveMethod($controllerName, $controllerAction);
 
-                    // Method injection for any services first, then route parameters
-                    $controller->$controllerAction(...$methodDependencies, ...$this->currentRouteParams);
+                    // Method injection for any services first, then route parameters and get the response to send
+                    $response = $controller->$controllerAction(...$methodDependencies, ...$this->currentRouteParams);
 
                     $this->middleware->runAnyAfter($this->response, $this->requestMethod, $this->currentRegURL);
+
+                    // Give the response service the response the controller wants to send back to the client
+                    $this->response->build($response);
                 }
             }
             else
