@@ -30,6 +30,9 @@ class Response
             return;
         }
 
+        // Set all response headers before returning a response to client
+        $this->setAllHeadersFor($response);
+
         $response->status($this->httpStatusCode);
         $response->end($this->view->render(""));
     }
@@ -37,6 +40,19 @@ class Response
     public function setStatusCode(int $code)
     {
         $this->httpStatusCode = $code;
+    }
+
+    private function setAllHeadersFor($response)
+    {
+        // All headers that were set during the request being handled...
+        foreach($this->headers as $header => $value)
+        {
+            // Set headers for this request only
+            $response->header($header, $value);
+        }
+
+        // Reset headers so they don't show up on other/next requests
+        $this->headers = [];
     }
 
     public function chainHeader($headerName, $headerValue)
