@@ -8,6 +8,8 @@ class Response
 {
     private $view;
 
+    private $headers;
+
     private $httpStatusCode;
 
     // Used to store a redirect
@@ -35,6 +37,11 @@ class Response
     public function setStatusCode(int $code)
     {
         $this->httpStatusCode = $code;
+    }
+
+    public function chainHeader($headerName, $headerValue)
+    {
+        $this->headers[] = $headerName . ":" . $headerValue;
     }
 
     public function redirect($url, $statusCode = 302)
