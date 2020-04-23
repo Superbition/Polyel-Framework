@@ -114,7 +114,7 @@ class Server
         });
     }
 
-    private function setDefaultResponseHeaders(&$response)
+    private function setDefaultResponseHeaders($response)
     {
         $response->header("Server", "Polyel/Swoole-HTTP-Server");
         $response->header("X-Powered-By", "Polyel-PHP");
