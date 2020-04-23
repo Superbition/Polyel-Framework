@@ -8,6 +8,8 @@ class Response
 {
     private $view;
 
+    private $response;
+
     private $headers;
 
     private $httpStatusCode;
@@ -34,7 +36,7 @@ class Response
         $this->setAllHeadersFor($response);
 
         $response->status($this->httpStatusCode);
-        $response->end($this->view->render(""));
+        $response->end($this->response);
     }
 
     public function setStatusCode(int $code)
@@ -69,5 +71,32 @@ class Response
         // Setup a redirection happen when send() is called
         $this->redirection = $url;
         $this->httpStatusCode = $statusCode;
+    }
+
+    /*
+     * Builds up the response to send back to the client, based on the response type
+     * sent over to this build function. Supports a raw string, converts PHP arrays into JSON.
+     */
+    public function build($responseType)
+    {
+        // Make sure a response type is set
+        if(exists($responseType))
+        {
+            // Send back a raw string response
+            if(is_string($responseType))
+            {
+                $this->response = $responseType;
+                return;
+            }
+
+            // Convert a PHP array into a JSON formatted response for the client
+            if(is_array($responseType))
+            {
+                $jsonOptions = JSON_INVALID_UTF8_SUBSTITUTE;
+                $this->response = json_encode($responseType, $jsonOptions, 1024);
+                $this->queueHeader("Content-Type", "application/json");
+                return;
+            }
+        }
     }
 }
