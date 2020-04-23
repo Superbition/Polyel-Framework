@@ -55,8 +55,9 @@ class Response
         $this->headers = [];
     }
 
-    public function chainHeader($headerName, $headerValue)
+    private function queueHeader($headerName, $headerValue)
     {
+        // Queue headers, they will be set later just before sending the response to the client
         $this->headers[$headerName] = $headerValue;
     }
 
