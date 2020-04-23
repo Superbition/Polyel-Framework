@@ -15,6 +15,11 @@ function config($configRequest)
     return Polyel::call(Polyel\Config\Config::class)->get($configRequest);
 }
 
+function response($content, $status)
+{
+    return new Polyel\Http\ResponseBuilder($content, $status);
+}
+
 function exists($var)
 {
     if(isset($var) && !empty($var) || is_numeric($var))
