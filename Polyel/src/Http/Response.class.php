@@ -44,11 +44,17 @@ class Response
 
     private function setAllHeadersFor($response)
     {
-        // All headers that were set during the request being handled...
-        foreach($this->headers as $header => $value)
+        if(is_array($this->headers) && count($this->headers))
         {
-            // Set headers for this request only
-            $response->header($header, $value);
+            // All headers that were set during the request being handled...
+            foreach($this->headers as $header => $value)
+            {
+                // Set headers for this request only
+                $response->header($header, $value);
+            }
+
+            // Reset headers so they don't show up on other/next requests
+            $this->headers = [];
         }
 
         // Reset headers so they don't show up on other/next requests
