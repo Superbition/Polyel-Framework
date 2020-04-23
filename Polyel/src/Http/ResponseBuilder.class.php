@@ -11,7 +11,7 @@ class ResponseBuilder
 
     private $headers;
 
-    public function __construct($content, $status)
+    public function __construct($content, $status = 200)
     {
         $this->content = $content;
         $this->status = $status;
