@@ -77,23 +77,23 @@ class Response
      * Builds up the response to send back to the client, based on the response type
      * sent over to this build function. Supports a raw string, converts PHP arrays into JSON.
      */
-    public function build($responseType)
+    public function build($response)
     {
         // Make sure a response type is set
-        if(exists($responseType))
+        if(exists($response))
         {
             // Send back a raw string response
-            if(is_string($responseType))
+            if(is_string($response))
             {
-                $this->response = $responseType;
+                $this->response = $response;
                 return;
             }
 
             // Convert a PHP array into a JSON formatted response for the client
-            if(is_array($responseType))
+            if(is_array($response))
             {
                 $jsonOptions = JSON_INVALID_UTF8_SUBSTITUTE;
-                $this->response = json_encode($responseType, $jsonOptions, 1024);
+                $this->response = json_encode($response, $jsonOptions, 1024);
                 $this->queueHeader("Content-Type", "application/json");
                 return;
             }
