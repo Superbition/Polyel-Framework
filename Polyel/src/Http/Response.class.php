@@ -54,10 +54,10 @@ class Response
                 // Set headers for this request only
                 $response->header($header, $value);
             }
-
-            // Reset headers so they don't show up on other/next requests
-            $this->headers = [];
         }
+
+        // Reset headers so they don't show up on other/next requests
+        $this->headers = [];
     }
 
     private function queueHeader($headerName, $headerValue)
