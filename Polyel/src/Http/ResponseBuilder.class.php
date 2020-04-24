@@ -20,11 +20,15 @@ class ResponseBuilder
     public function status(int $code)
     {
         $this->status = $code;
+
+        return $this;
     }
 
     public function header($name, $value)
     {
         $this->headers[$name] = $value;
+
+        return $this;
     }
 
     public function usingHeaders($headers)
@@ -36,5 +40,7 @@ class ResponseBuilder
                 $this->header($key, $value);
             }
         }
+
+        return $this;
     }
 }
