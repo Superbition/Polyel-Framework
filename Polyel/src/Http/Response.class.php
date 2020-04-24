@@ -3,9 +3,12 @@
 namespace Polyel\Http;
 
 use Polyel\View\View;
+use Polyel\Http\Utilities\ResponseUtilities;
 
 class Response
 {
+    use ResponseUtilities;
+
     // The View service object
     private $view;
 
@@ -96,8 +99,7 @@ class Response
             // Convert a PHP array into a JSON formatted response for the client
             if(is_array($response))
             {
-                $jsonOptions = JSON_INVALID_UTF8_SUBSTITUTE;
-                $this->response = json_encode($response, $jsonOptions, 1024);
+                $this->response = $this->convertArrayToJson($response);
                 $this->queueHeader("Content-Type", "application/json");
                 return;
             }
