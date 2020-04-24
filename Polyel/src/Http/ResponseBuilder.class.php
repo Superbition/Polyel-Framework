@@ -7,7 +7,7 @@ class ResponseBuilder
 {
     public $content;
 
-    private $status;
+    public $contentType;
 
     private $headers;
 
@@ -39,6 +39,29 @@ class ResponseBuilder
             {
                 $this->header($key, $value);
             }
+        }
+
+        return $this;
+    }
+
+    public function setContentType($contentType)
+    {
+        if($contentType === "json")
+        {
+            $this->contentType = "json";
+            $this->header("Content-Type", "application/json");
+        }
+
+        if($contentType === "xml")
+        {
+            $this->contentType = "xml";
+            $this->header("Content-Type", "application/xml");
+        }
+
+        if($contentType === "text")
+        {
+            $this->contentType = "text";
+            $this->header("Content-Type", "text/plain");
         }
 
         return $this;
