@@ -5,7 +5,7 @@ namespace Polyel\Http;
 
 class ResponseBuilder
 {
-    private $content;
+    public $content;
 
     private $status;
 
