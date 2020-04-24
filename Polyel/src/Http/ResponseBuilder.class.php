@@ -9,7 +9,9 @@ class ResponseBuilder
 
     public $contentType;
 
-    private $headers;
+    public $status;
+
+    public $headers;
 
     public function __construct($content, $status = 200)
     {
