@@ -6,12 +6,16 @@ use Polyel\View\View;
 
 class Response
 {
+    // The View service object
     private $view;
 
+    // Holds the final response content for the request
     private $response;
 
+    // Holds the headers which need to be set for the response before replying to client
     private $headers;
 
+    // Holds the HTTP status code for the response
     private $httpStatusCode;
 
     // Used to store a redirect
