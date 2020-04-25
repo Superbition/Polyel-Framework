@@ -103,6 +103,44 @@ class Response
                 $this->queueHeader("Content-Type", "application/json");
                 return;
             }
+
+            if(is_object($response) && $response instanceof \Polyel\Http\ResponseBuilder)
+            {
+                if(exists($response->content))
+                {
+                    $this->response = $this->construct($response);
+                    return;
+                }
+            }
+        }
+    }
+
+    private function construct($response)
+    {
+        // Set the status code from the ResponseBuilder instance
+        $this->setStatusCode($response->status);
+
+        // Set any headers requested by the ResponseBuilder instance
+        if(is_array($response->headers) && count($response->headers) > 0)
+        {
+            foreach($response->headers as $name => $value)
+            {
+                // Will be set just before the response is sent
+                $this->queueHeader($name, $value);
+            }
+        }
+
+        // If the content is just a string, return the content to be sent back
+        if(is_string($response->content))
+        {
+            return $response->content;
+        }
+
+        // Automatically convert PHP arrays to JSON formatted responses
+        if(is_array($response->content))
+        {
+            $this->queueHeader("Content-Type", "application/json");
+            return $this->convertArrayToJson($response->content);
         }
     }
 }
