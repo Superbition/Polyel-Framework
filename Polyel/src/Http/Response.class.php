@@ -135,6 +135,15 @@ class Response
                     return;
                 }
             }
+
+            if(is_object($response) && $response instanceof \Polyel\Http\RedirectBuilder)
+            {
+                if(exists($response->url))
+                {
+                    $this->redirect($response->url, $response->status);
+                    return;
+                }
+            }
         }
     }
 

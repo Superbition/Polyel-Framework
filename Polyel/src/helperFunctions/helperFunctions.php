@@ -20,6 +20,11 @@ function response($content, $status = 200)
     return new Polyel\Http\ResponseBuilder($content, $status);
 }
 
+function redirect($url, $status = 302)
+{
+    return new Polyel\Http\RedirectBuilder($url, $status);
+}
+
 function exists($var)
 {
     if(isset($var) && !empty($var) || is_numeric($var))
