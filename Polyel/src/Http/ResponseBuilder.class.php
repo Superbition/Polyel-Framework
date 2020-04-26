@@ -117,6 +117,18 @@ class ResponseBuilder
             $this->header("Content-Type", "image/gif");
         }
 
+        if($contentType === "ico")
+        {
+            $this->contentType = "ico";
+            $this->header("Content-Type", "image/x-icon");
+        }
+
+        if($contentType === "svg")
+        {
+            $this->contentType = "ico";
+            $this->header("Content-Type", "image/svg+xml");
+        }
+
         return $this;
     }
 }
