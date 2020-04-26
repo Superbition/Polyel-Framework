@@ -13,6 +13,9 @@ class ResponseBuilder
 
     public $headers;
 
+    // Holds cookies that need to be added to the final response
+    public $cookies;
+
     public function __construct($content, $status = 200)
     {
         $this->content = $content;
@@ -43,6 +46,24 @@ class ResponseBuilder
             }
         }
 
+        return $this;
+    }
+
+    public function addCookie($name, $value, $expire = 86400, $path = "/", $domain = "", $secure = false, $httpOnly = true, $sameSite = "None")
+    {
+        // Setup the cookie array and store it in $cookies, ready to be attached to the response later
+        $this->cookies[] = [
+            $name,
+            $value,
+            $expire = (time() + $expire),
+            $path,
+            $domain,
+            $secure,
+            $httpOnly,
+            $sameSite
+        ];
+
+        // Return back the ResponseBuilder instance
         return $this;
     }
 

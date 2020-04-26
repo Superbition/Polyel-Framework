@@ -7,6 +7,7 @@ use Polyel\Http\Utilities\ResponseUtilities;
 
 class Response
 {
+    use CookieHandler;
     use ResponseUtilities;
 
     // The View service object
@@ -42,6 +43,8 @@ class Response
         // Set all response headers before returning a response to client
         $this->setAllHeadersFor($response);
 
+        $this->setCookiesFor($response);
+
         $response->status($this->httpStatusCode);
         $response->end($this->response);
     }
@@ -65,6 +68,22 @@ class Response
 
         // Reset headers so they don't show up on other/next requests
         $this->headers = [];
+    }
+
+    private function setCookiesFor($response)
+    {
+        // Check for any queued cookies waiting to be sent out
+        if(exists($this->queuedCookies))
+        {
+            foreach($this->queuedCookies as $cookie)
+            {
+                // Calling the Swoole cookie function to set them
+                $response->cookie(...$cookie);
+            }
+        }
+
+        // Reset the cookie queue
+        $this->queuedCookies = [];
     }
 
     private function queueHeader($headerName, $headerValue)
@@ -128,6 +147,12 @@ class Response
                 // Will be set just before the response is sent
                 $this->queueHeader($name, $value);
             }
+        }
+
+        if(exists($response->cookies))
+        {
+            // If cookies exist, queue them for the response
+            $this->queueCookieForResponse($response->cookies);
         }
 
         // If the content is just a string, return the content to be sent back
