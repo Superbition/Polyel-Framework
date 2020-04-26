@@ -12,5 +12,10 @@ class Cookie
         {
             return Polyel::call(Polyel\Http\Request::class)->cookie(...$arguments);
         }
+
+        if($method === "queue")
+        {
+            return Polyel::call(Polyel\Http\Response::class)->queueCookie(...$arguments);
+        }
     }
 }
