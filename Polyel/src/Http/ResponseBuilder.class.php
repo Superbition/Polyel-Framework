@@ -87,6 +87,36 @@ class ResponseBuilder
             $this->header("Content-Type", "text/plain");
         }
 
+        if($contentType === "pdf")
+        {
+            $this->contentType = "pdf";
+            $this->header("Content-Type", "application/pdf");
+        }
+
+        if($contentType === "zip")
+        {
+            $this->contentType = "zip";
+            $this->header("Content-Type", "application/zip");
+        }
+
+        if($contentType === "jpeg")
+        {
+            $this->contentType = "jpeg";
+            $this->header("Content-Type", "image/jpeg");
+        }
+
+        if($contentType === "png")
+        {
+            $this->contentType = "png";
+            $this->header("Content-Type", "image/png");
+        }
+
+        if($contentType === "gif")
+        {
+            $this->contentType = "gif";
+            $this->header("Content-Type", "image/gif");
+        }
+
         return $this;
     }
 }
