@@ -37,6 +37,10 @@ class Response
         {
             // Call a redirect and end the response
             $response->redirect($this->redirection, $this->httpStatusCode);
+
+            // Clear the redirection url so an infinite redirect does not happen
+            $this->redirection = null;
+
             return;
         }
 
