@@ -129,11 +129,8 @@ class Response
 
             if(is_object($response) && $response instanceof \Polyel\Http\ResponseBuilder)
             {
-                if(exists($response->content))
-                {
-                    $this->response = $this->construct($response);
-                    return;
-                }
+                $this->response = $this->construct($response);
+                return;
             }
 
             if(is_object($response) && $response instanceof \Polyel\Http\RedirectBuilder)
@@ -168,10 +165,20 @@ class Response
             $this->queueCookieForResponse($response->cookies);
         }
 
-        // If the content is just a string, return the content to be sent back
-        if(is_string($response->content))
+        if(exists($response->content))
         {
-            return $response->content;
+            // If the content is just a string, return the content to be sent back
+            if(is_string($response->content))
+            {
+                return $response->content;
+            }
+
+            // Automatically convert PHP arrays to JSON formatted responses
+            if(is_array($response->content))
+            {
+                $this->queueHeader("Content-Type", "application/json");
+                return $this->convertArrayToJson($response->content);
+            }
         }
 
         // Automatically convert PHP arrays to JSON formatted responses
