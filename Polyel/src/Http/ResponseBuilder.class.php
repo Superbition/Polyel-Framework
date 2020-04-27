@@ -16,6 +16,9 @@ class ResponseBuilder
     // Holds cookies that need to be added to the final response
     public $cookies;
 
+    // Holds the path to a file which will get sent back to the client if set
+    public $file;
+
     public function __construct($content = "", $status = 200)
     {
         $this->content = $content;
@@ -129,6 +132,49 @@ class ResponseBuilder
             $this->header("Content-Type", "image/svg+xml");
         }
 
+        return $this;
+    }
+
+    public function sendFile($filePath, $name = null, $type = null)
+    {
+        // Only send a file if no main content has been set
+        if(!exists($this->content))
+        {
+            // If no given name is set, use the file name and extension from the file path given
+            if(!exists($name))
+            {
+                // Split based on '/' and use the last element to get the file name and ext: example.txt
+                $name = explode("/", $filePath);
+                $name = end($name);
+            }
+
+            // Trim off any slashes to prevent file path errors
+            $filePath = ltrim($filePath, "/");
+            $filePath = rtrim($filePath, "/");
+
+            // Build up the file path
+            $filePath = ROOT_DIR . "/storage/" . $filePath;
+
+            // Perform an early return if the file cannot be found
+            if(!file_exists($filePath))
+            {
+                return $this;
+            }
+
+            // If a file type is set...
+            if(exists($type))
+            {
+                $this->setContentType($type);
+            }
+
+            // Set the appropriate header needed to force a client download
+            $this->header("Content-Disposition", "attachment;filename=$name");
+
+            // Set the file property to indicate a file should be sent with the response
+            $this->file = $filePath;
+        }
+
+        // Return back the ResponseBuilder instance
         return $this;
     }
 }

@@ -25,6 +25,9 @@ class Response
     // Used to store a redirect
     private $redirection;
 
+    // Holds a filepath and if set, the file will be sent back to the client
+    private $file;
+
     public function __construct(View $view)
     {
         $this->view = $view;
@@ -50,7 +53,23 @@ class Response
         $this->setCookiesFor($response);
 
         $response->status($this->httpStatusCode);
-        $response->end($this->response);
+
+        /*
+         * Main response is ended here!
+         * Either send back a file or end the response with content.
+         * A response cannot contain a file and content at the same time!
+         */
+        if(exists($this->file))
+        {
+            // Send back a file using a local file path and reset the file queue
+            $response->sendfile($this->file);
+            $this->file = null;
+        }
+        else
+        {
+            // End with content from the application
+            $response->end($this->response);
+        }
     }
 
     public function setStatusCode(int $code)
@@ -181,11 +200,12 @@ class Response
             }
         }
 
-        // Automatically convert PHP arrays to JSON formatted responses
-        if(is_array($response->content))
+        // Detect if a file has been queued to be sent
+        if(exists($response->file))
         {
-            $this->queueHeader("Content-Type", "application/json");
-            return $this->convertArrayToJson($response->content);
+            // A file has been queued for the response. Return null because no $content will be sent, only a file
+            $this->file = $response->file;
+            return null;
         }
     }
 }
