@@ -113,7 +113,7 @@ class Response
         if(exists($response))
         {
             // Send back a raw string response
-            if(is_string($response))
+            if(is_string($response) || is_numeric($response))
             {
                 $this->response = $response;
                 return;
