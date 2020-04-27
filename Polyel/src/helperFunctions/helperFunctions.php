@@ -15,7 +15,7 @@ function config($configRequest)
     return Polyel::call(Polyel\Config\Config::class)->get($configRequest);
 }
 
-function response($content, $status = 200)
+function response($content = "", $status = 200)
 {
     return new Polyel\Http\ResponseBuilder($content, $status);
 }

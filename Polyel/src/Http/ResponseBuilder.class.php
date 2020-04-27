@@ -16,7 +16,7 @@ class ResponseBuilder
     // Holds cookies that need to be added to the final response
     public $cookies;
 
-    public function __construct($content, $status = 200)
+    public function __construct($content = "", $status = 200)
     {
         $this->content = $content;
         $this->status = $status;
