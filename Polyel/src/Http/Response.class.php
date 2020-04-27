@@ -168,7 +168,7 @@ class Response
         if(exists($response->content))
         {
             // If the content is just a string, return the content to be sent back
-            if(is_string($response->content))
+            if(is_string($response->content) || is_numeric($response->content))
             {
                 return $response->content;
             }
