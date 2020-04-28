@@ -19,10 +19,16 @@ class ResponseBuilder
     // Holds the path to a file which will get sent back to the client if set
     public $file;
 
+    // Used to set when to show a file instead of force a download to client
+    private $showFileFlag;
+
     public function __construct($content = "", $status = 200)
     {
         $this->content = $content;
         $this->status = $status;
+
+        // Default is to not show files without using showFile()
+        $this->showFileFlag = false;
     }
 
     public function status(int $code)
@@ -167,8 +173,15 @@ class ResponseBuilder
                 $this->setContentType($type);
             }
 
-            // Set the appropriate header needed to force a client download
-            $this->header("Content-Disposition", "attachment;filename=$name");
+            // When show file is set, don't force a download, instead just show the file
+            if(!$this->showFileFlag)
+            {
+                // Set the appropriate header needed to force a client download
+                $this->header("Content-Disposition", "attachment;filename=$name");
+
+                // Reset show file flag, ready for the next request
+                $this->showFileFlag = false;
+            }
 
             // Set the file property to indicate a file should be sent with the response
             $this->file = $filePath;
@@ -176,5 +189,14 @@ class ResponseBuilder
 
         // Return back the ResponseBuilder instance
         return $this;
+    }
+
+    public function showFile($filePath, $type)
+    {
+        // Setting show file flag enables the response to display the file rather than force a download
+        $this->showFileFlag = true;
+
+        // Using the normal send file function but with the show file flag set...
+        return $this->sendFile($filePath, null, $type);
     }
 }
