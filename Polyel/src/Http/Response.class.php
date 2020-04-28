@@ -109,7 +109,7 @@ class Response
         $this->queuedCookies = [];
     }
 
-    private function queueHeader($headerName, $headerValue)
+    public function queueHeader($headerName, $headerValue)
     {
         // Queue headers, they will be set later just before sending the response to the client
         $this->headers[$headerName] = $headerValue;
