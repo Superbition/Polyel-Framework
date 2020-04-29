@@ -52,7 +52,7 @@ class Middleware
         $this->middlewares[$requestMethod][$uri] = $middleware;
     }
 
-    public function runGlobalMiddleware($applicationStage, $middlewareType)
+    public function runGlobalMiddleware($middlewareType, $request, $response = null)
     {
         $globalBeforeMiddleware = config("middleware.global." . $middlewareType);
 
@@ -67,8 +67,17 @@ class Middleware
             // Based on the passed in middleware type, execute if both types match
             if($middlewareToRun->middlewareType == $middlewareType)
             {
-                // Process the middleware if the request types match up
-                $response = $middlewareToRun->process($applicationStage);
+                // Only the after Middleware type can use the $response service
+                if(!exists($response))
+                {
+                    // Process the middleware if the request types match up
+                    $response = $middlewareToRun->process($request);
+                }
+                else
+                {
+                    // Process the middleware if the request types match up
+                    $response = $middlewareToRun->process($request, $response);
+                }
 
                 // If a Middleware wants to return a response early, halt and send it back
                 if(exists($response))
@@ -85,7 +94,7 @@ class Middleware
      * before or after. $applicationStage is the request or response service that gets passed in to
      * allow a middleware to process its correct type.
      */
-    private function runMiddleware($applicationStage, $type, $requestMethod, $route)
+    private function runMiddleware($type, $requestMethod, $route, $request, $response = null)
     {
         // Check if a middleware exists for the request method, GET, POST etc.
         if(array_key_exists($requestMethod, $this->middlewares))
@@ -115,8 +124,17 @@ class Middleware
                     // Based on the passed in middleware type, execute if both types match
                     if($middlewareToRun->middlewareType == $type)
                     {
-                        // Process the middleware if the request types match up
-                        $response = $middlewareToRun->process($applicationStage);
+                        // Only the after Middleware type can use the $response service
+                        if(!exists($response))
+                        {
+                            // Process the middleware if the request types match up
+                            $response = $middlewareToRun->process($request);
+                        }
+                        else
+                        {
+                            // Process the middleware if the request types match up
+                            $response = $middlewareToRun->process($request, $response);
+                        }
 
                         // If a Middleware wants to return a response early, halt and send it back
                         if(exists($response))
@@ -132,7 +150,7 @@ class Middleware
 
     public function runAnyBefore($request, $requestMethod, $route)
     {
-        $globalResponse = $this->runGlobalMiddleware($request, "before");
+        $globalResponse = $this->runGlobalMiddleware("before", $request);
 
         if(exists($globalResponse))
         {
@@ -140,7 +158,7 @@ class Middleware
             return $globalResponse;
         }
 
-        $beforeResponse = $this->runMiddleware($request, "before", $requestMethod, $route);
+        $beforeResponse = $this->runMiddleware("before", $requestMethod, $route, $request);
 
         if(exists($beforeResponse))
         {
@@ -152,9 +170,9 @@ class Middleware
         return null;
     }
 
-    public function runAnyAfter($response, $requestMethod, $route)
+    public function runAnyAfter($request, $response, $requestMethod, $route)
     {
-        $globalResponse = $this->runGlobalMiddleware($response, "after");
+        $globalResponse = $this->runGlobalMiddleware("after", $request, $response);
 
         if(exists($globalResponse))
         {
@@ -162,7 +180,7 @@ class Middleware
             return $globalResponse;
         }
 
-        $afterResponse = $this->runMiddleware($response, "after", $requestMethod, $route);
+        $afterResponse = $this->runMiddleware("after", $requestMethod, $route, $request, $response);
 
         if(exists($afterResponse))
         {

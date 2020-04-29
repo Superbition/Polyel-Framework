@@ -141,7 +141,7 @@ class Router
                     $controllerResponse = $controller->$controllerAction(...$methodDependencies, ...$this->currentRouteParams);
 
                     // Capture a response returned from any after middleware if one returns a response...
-                    $afterMiddlewareResponse = $this->middleware->runAnyAfter($this->response, $this->requestMethod, $this->currentRegURL);
+                    $afterMiddlewareResponse = $this->middleware->runAnyAfter($this->request, $this->response, $this->requestMethod, $this->currentRegURL);
 
                     // After middleware takes priority over the controller when returning a response
                     if(exists($afterMiddlewareResponse))

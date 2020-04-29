@@ -8,7 +8,7 @@ class AfterExampleMiddleware extends Middleware
 {
     public $middlewareType = "after";
 
-    public function process($response)
+    public function process($request, $response)
     {
 
     }
