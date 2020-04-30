@@ -58,7 +58,7 @@ class ResponseBuilder
         return $this;
     }
 
-    public function addCookie($name, $value, $expire = 86400, $path = "/", $domain = "", $secure = false, $httpOnly = true, $sameSite = "None")
+    public function withCookie($name, $value, $expire = 86400, $path = "/", $domain = "", $secure = false, $httpOnly = true, $sameSite = "None")
     {
         // Setup the cookie array and store it in $cookies, ready to be attached to the response later
         $this->cookies[] = [
