@@ -134,7 +134,7 @@ class ResponseBuilder
 
         if($contentType === "svg")
         {
-            $this->contentType = "ico";
+            $this->contentType = "svg";
             $this->header("Content-Type", "image/svg+xml");
         }
 
