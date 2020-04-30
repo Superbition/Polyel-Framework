@@ -47,6 +47,9 @@ class Response
             return;
         }
 
+        // Queue any global headers for every response
+        $this->queueGlobalHeaders();
+
         // Set all response headers before returning a response to client
         $this->setAllHeadersFor($response);
 
