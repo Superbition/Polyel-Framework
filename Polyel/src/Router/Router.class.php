@@ -123,15 +123,41 @@ class Router
                 // Check that the controller exists
                 if(isset($controller) && !empty($controller))
                 {
-                    $this->middleware->runAnyBefore($this->request, $this->requestMethod, $this->currentRegURL);
+                    // Capture a response from a before middleware if one returns a response
+                    $beforeMiddlewareResponse = $this->middleware->runAnyBefore($this->request, $this->requestMethod, $this->currentRegURL);
+
+                    // If a before middleware wants to return a response early in the app process...
+                    if(exists($beforeMiddlewareResponse))
+                    {
+                        // Build the response from a before middleware and return to halt execution of the app
+                        $this->response->build($beforeMiddlewareResponse);
+                        return;
+                    }
 
                     // Resolve and perform method injection when calling the controller action
                     $methodDependencies = Polyel::resolveMethod($controllerName, $controllerAction);
 
-                    // Method injection for any services first, then route parameters
-                    $controller->$controllerAction(...$methodDependencies, ...$this->currentRouteParams);
+                    // Method injection for any services first, then route parameters and get the controller response
+                    $controllerResponse = $controller->$controllerAction(...$methodDependencies, ...$this->currentRouteParams);
 
-                    $this->middleware->runAnyAfter($this->response, $this->requestMethod, $this->currentRegURL);
+                    // Capture a response returned from any after middleware if one returns a response...
+                    $afterMiddlewareResponse = $this->middleware->runAnyAfter($this->request, $this->response, $this->requestMethod, $this->currentRegURL);
+
+                    // After middleware takes priority over the controller when returning a response
+                    if(exists($afterMiddlewareResponse))
+                    {
+                        // If a after middleware wants to return a response, send it off to get built...
+                        $this->response->build($afterMiddlewareResponse);
+                    }
+                    else
+                    {
+                        /*
+                         * Execution reaches this level when no before or after middleware wants to return a response,
+                         * meaning the controller action can return its response for the request that was sent.
+                         * Give the response service the response the controller wants to send back to the client
+                         */
+                        $this->response->build($controllerResponse);
+                    }
                 }
             }
             else

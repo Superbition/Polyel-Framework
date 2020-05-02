@@ -60,6 +60,8 @@ class Server
 
         $this->server->set([
             'worker_num' => swoole_cpu_num(),
+            'package_max_length' => config("server.maxUploadSize"),
+            'upload_tmp_dir' => config("server.uploadDir"),
             ]);
     }
 
@@ -112,7 +114,7 @@ class Server
         });
     }
 
-    private function setDefaultResponseHeaders(&$response)
+    private function setDefaultResponseHeaders($response)
     {
         $response->header("Server", "Polyel/Swoole-HTTP-Server");
         $response->header("X-Powered-By", "Polyel-PHP");

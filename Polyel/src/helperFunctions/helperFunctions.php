@@ -15,6 +15,26 @@ function config($configRequest)
     return Polyel::call(Polyel\Config\Config::class)->get($configRequest);
 }
 
+function response($content = "", $status = 200)
+{
+    return new Polyel\Http\ResponseBuilder($content, $status);
+}
+
+function redirect($url, $status = 302)
+{
+    return new Polyel\Http\RedirectBuilder($url, $status);
+}
+
+function exists($var)
+{
+    if(isset($var) && !empty($var) || is_numeric($var))
+    {
+        return true;
+    }
+
+    return false;
+}
+
 /*
  * Packs a single dimensional array into one, multidimensional array and
  * sets the final value to the default of null or whatever is passed in as
