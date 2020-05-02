@@ -76,13 +76,13 @@ class Server
         {
             echo "\n";
 
-            echo "######################################################################\n";
+            echo "------------------------------------------------------------------------\n";
             echo " Swoole: " . swoole_version() . "\n";
             echo " PHP Version: " . phpversion() . "\n";
             echo " \e[36mPolyel HTTP server started at http://" .
                 $this->config->get("main.serverIP") . ":" .
                 $this->config->get("main.serverPort") . "\e[30m\e[0m";
-            echo "\n######################################################################\n";
+            echo "\n------------------------------------------------------------------------\n";
         });
 
         $this->server->on("request", function($request, $response)
