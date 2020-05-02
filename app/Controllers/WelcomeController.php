@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-class WelcomeController
+class WelcomeController extends Controller
 {
     public function sayHello()
     {
