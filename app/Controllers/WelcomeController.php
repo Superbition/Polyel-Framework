@@ -6,6 +6,6 @@ class WelcomeController
 {
     public function sayHello()
     {
-        echo "Hello, welcome.";
+        return "Hello World!";
     }
 }
