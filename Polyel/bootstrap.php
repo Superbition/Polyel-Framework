@@ -37,8 +37,8 @@ foreach ($polyelSourceFiles as $file)
     // Load each Polyel Framework core PHP file to make them available using the class map.
     if (file_exists($file))
     {
-        // Use a green terminal colour.
-        echo "\e[32m Loading: " . $file . "\n";
+        // Use a green terminal colour. Reset the terminal style at the end
+        echo "\e[32m Loading: " . $file . "\n" . "\e[39m";
         require $file;
     }
     else
