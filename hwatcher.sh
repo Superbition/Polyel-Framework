@@ -24,13 +24,15 @@ printf "\n-------------------------------------------------------------------\n"
 
 php -f "$DIR/server.php" &
 
-DIR_HASH="$(tar cfP - ${DIR} | sha1sum)"
+DIR_EXCLUDES="--exclude=.git --exclude=.idea"
+
+DIR_HASH="$(tar ${DIR_EXCLUDES} -cf - ${DIR} -P | sha1sum)"
 
 while true; do
 
     sleep 1
 
-    UPDATED_DIR_HASH="$(tar cfP - ${DIR} | sha1sum)"
+    UPDATED_DIR_HASH="$(tar ${DIR_EXCLUDES} -cf - ${DIR} -P | sha1sum)"
 
     if [ "$UPDATED_DIR_HASH" != "$DIR_HASH" ]
     then
