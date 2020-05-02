@@ -24,13 +24,13 @@ printf "\n-------------------------------------------------------------------\n"
 
 php -f "$DIR/server.php" &
 
-DIR_HASH="$(tar cf - Polyel/ | sha1sum)"
+DIR_HASH="$(tar cfP - ${DIR} | sha1sum)"
 
 while true; do
 
     sleep 1
 
-    UPDATED_DIR_HASH="$(tar cf - Polyel/ | sha1sum)"
+    UPDATED_DIR_HASH="$(tar cfP - ${DIR} | sha1sum)"
 
     if [ "$UPDATED_DIR_HASH" != "$DIR_HASH" ]
     then
