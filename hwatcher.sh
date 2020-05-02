@@ -2,7 +2,7 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-PROCESS_NAME='Polyel'
+PROCESS_NAME='Polyel-HTTP-Server'
 
 pkill -f "$PROCESS_NAME"
 
