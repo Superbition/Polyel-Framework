@@ -50,7 +50,8 @@ foreach ($polyelSourceFiles as $file)
 // Reset terminal colour back to normal.
 echo "\e[39m";
 
-$coreServices = require ROOT_DIR . "/Polyel/src/services.php";
-
-// Create the DIC and pass in an array of core services to be resolved
+/*
+ * Create the DIC and pass in an array of core services to be resolved.
+ * Core services are loaded from the services.php file and used here.
+ */
 Polyel::createContainer($coreServices);

@@ -8,7 +8,7 @@
  * that are not directly defined inside a constructor, meaning they won't get
  * resolved for use.
  */
-return [
+$coreServices = [
 
     Polyel\Config\Config::class,
     Polyel\Controller\Controller::class,
