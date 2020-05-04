@@ -15,6 +15,11 @@ function config($configRequest)
     return Polyel::call(Polyel\Config\Config::class)->get($configRequest);
 }
 
+function view($resource, $data = null)
+{
+    return new Polyel\View\ViewBuilder($resource, $data);
+}
+
 function response($content = "", $status = 200)
 {
     return new Polyel\Http\ResponseBuilder($content, $status);
