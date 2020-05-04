@@ -11,7 +11,7 @@ $pathIterator = new RecursiveIteratorIterator($startingDirectory);
 $traits = [];
 $polyelSourceFiles = [];
 
-echo "Building Polyel Framework source map\n";
+echo "Building Polyel Framework source map:";
 foreach ($pathIterator as $file)
 {
     $currentFile = $file->getPathname();
@@ -30,6 +30,7 @@ foreach ($pathIterator as $file)
         $polyelSourceFiles[] = $currentFile;
     }
 }
+echo " Done.\n";
 
 // Put all traits at the start of the source map so they are loaded first.
 $polyelSourceFiles = array_merge($traits, $polyelSourceFiles);
@@ -102,8 +103,11 @@ foreach ($polyelSourceFiles as $file)
 // Reset terminal colour back to normal.
 echo "\e[39m";
 
+echo "Completed framework file loading\n";
+
 /*
  * Create the DIC and pass in an array of core services to be resolved.
  * Core services are loaded from the services.php file and used here.
  */
+echo "Preparing to startup HTTP server\n";
 Polyel::createContainer($coreServices);
