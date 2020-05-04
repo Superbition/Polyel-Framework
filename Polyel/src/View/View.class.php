@@ -6,6 +6,8 @@ class View
 {
     private $view;
 
+    private $resourceDir = ROOT_DIR . "/app/resources";
+
     public function __construct()
     {
 
