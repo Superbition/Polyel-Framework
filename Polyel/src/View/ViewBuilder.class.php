@@ -20,6 +20,8 @@ class ViewBuilder
         $this->resource = $resourceAndType[0];
         $this->type = $resourceAndType[1];
 
+        $this->resource = str_replace(".", "/", $this->resource);
+
         if($this->type === 'view' && file_exists($this->resourceDir . '/views/' . $this->resource . '.view.html'))
         {
             $this->valid = true;
