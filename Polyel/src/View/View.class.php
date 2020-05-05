@@ -2,7 +2,7 @@
 
 namespace Polyel\View;
 
-use Polyel\Storage\Storage;
+use Polyel\Storage\Facade\Storage;
 
 class View
 {
@@ -10,11 +10,9 @@ class View
 
     private $resourceDir = ROOT_DIR . "/app/resources";
 
-    private $storage;
-
-    public function __construct(Storage $storage)
+    public function __construct()
     {
-        $this->storage = $storage;
+
     }
 
     public function render($requestedView)
