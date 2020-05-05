@@ -8,7 +8,7 @@ class ViewBuilder
 
     private $resourceDir = ROOT_DIR . '/app/resources';
 
-    public $valid = false;
+    private $valid = false;
 
     public $type;
 
@@ -35,5 +35,10 @@ class ViewBuilder
         {
             $this->data = $data;
         }
+    }
+
+    public function isValid(): bool
+    {
+        return $this->valid;
     }
 }
