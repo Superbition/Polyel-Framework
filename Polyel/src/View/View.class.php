@@ -6,7 +6,9 @@ use Polyel\Storage\Facade\Storage;
 
 class View
 {
-    private $view;
+    private $resource;
+
+    private $data;
 
     private $resourceDir = ROOT_DIR . "/app/resources";
 
@@ -15,15 +17,19 @@ class View
 
     }
 
-    public function render($requestedView)
+    public function render(ViewBuilder $resource)
     {
-        $this->view = null;
+        $this->resource = $resource->resource;
+        $this->data = $resource->data;
 
-        if(file_exists($requestedView))
+        if($resource->isValid())
         {
-            $this->view = file_get_contents($requestedView);
+            $type = $resource->type;
+            $this->resource = Storage::access('local')->read($this->resourceDir . "/${type}s/" . $this->resource . ".${type}.html");
+
+            return $this->resource;
         }
 
-        return $this->view;
+        return null;
     }
 }
