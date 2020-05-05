@@ -8,7 +8,7 @@ class ViewBuilder
 
     private $resourceDir = ROOT_DIR . '/app/resources';
 
-    public $validResource = false;
+    public $valid = false;
 
     public $type;
 
@@ -22,11 +22,11 @@ class ViewBuilder
 
         if($this->type === 'view' && file_exists($this->resourceDir . '/views/' . $this->resource . '.view.html'))
         {
-            $this->validResource = true;
+            $this->valid = true;
         }
         else if($this->type === 'error' && file_exists($this->resourceDir . '/errors/' . $this->resource . '.error.html'))
         {
-            $this->validResource = true;
+            $this->valid = true;
         }
 
         if(exists($data) && is_array($data))
