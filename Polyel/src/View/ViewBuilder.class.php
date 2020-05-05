@@ -20,11 +20,11 @@ class ViewBuilder
         $this->resource = $resourceAndType[0];
         $this->type = $resourceAndType[1];
 
-        if($this->type === 'view' && file($this->resourceDir . '/views/' . $this->resource . '.view.html'))
+        if($this->type === 'view' && file_exists($this->resourceDir . '/views/' . $this->resource . '.view.html'))
         {
             $this->validResource = true;
         }
-        else if($this->type === 'error' && file($this->resourceDir . '/errors/' . $this->resource . '.error.html'))
+        else if($this->type === 'error' && file_exists($this->resourceDir . '/errors/' . $this->resource . '.error.html'))
         {
             $this->validResource = true;
         }
