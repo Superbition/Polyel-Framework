@@ -9,6 +9,9 @@ class View
     // Holds the template name and eventually the file path
     private $resource;
 
+    // Holds the found tags from a template
+    private $resourceTags;
+
     // Holds the template data to be added
     private $data;
 
@@ -36,6 +39,9 @@ class View
             $viewLocation = $this->resourceDir . "/${type}s/" . $this->resource . ".${type}.html";
             $this->resource = Storage::access('local')->read($viewLocation);
 
+            // Get all the tags from the resource template
+            $this->resourceTags = $this->getResourceTags($this->resource, "{{", "}}");
+
             if(exists($this->data))
             {
                 // If data has been passed in, inject that into the resource
@@ -51,10 +57,7 @@ class View
 
     private function injectDataToView()
     {
-        // Get all the tags from the resource template
-        $resourceTags = $this->getResourceTags($this->resource, "{{", "}}");
-
-        if(!exists($resourceTags))
+        if(!exists($this->resourceTags))
         {
             // Return early if no tags are found in the resource
             return;
@@ -62,7 +65,7 @@ class View
 
         foreach($this->data as $key => $value)
         {
-            if(in_array($key, $resourceTags, true))
+            if(in_array($key, $this->resourceTags, true))
             {
                 $this->resource = str_replace("{{ $key }}", $value, $this->resource);
             }
