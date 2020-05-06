@@ -2,6 +2,8 @@
 
 namespace Polyel\View;
 
+use Exception;
+
 class ViewBuilder
 {
     // The template name, which is also the location and type
@@ -22,8 +24,21 @@ class ViewBuilder
     {
         // Get the type from the resource name and set the name and type to the class
         $resourceAndType = explode(":", $resource);
-        $this->resource = $resourceAndType[0];
-        $this->type = $resourceAndType[1];
+
+        try
+        {
+            if(!array_key_exists(1, $resourceAndType))
+            {
+                throw new Exception("\n \e[41mResource type not set when using view(), you need to set a type like :view or :error\e[0m\n");
+            }
+
+            $this->resource = $resourceAndType[0];
+            $this->type = $resourceAndType[1];
+        }
+        catch(Exception $e)
+        {
+            echo $e->getMessage();
+        }
 
         // Using the dot notation convert dots to directory slashes in the resource name
         $this->resource = str_replace(".", "/", $this->resource);
