@@ -54,6 +54,12 @@ class View
         // Get all the tags from the resource template
         $resourceTags = $this->getResourceTags($this->resource, "{{", "}}");
 
+        if(!exists($resourceTags))
+        {
+            // Return early if no tags are found in the resource
+            return;
+        }
+
         foreach($this->data as $key => $value)
         {
             if(in_array($key, $resourceTags, true))
