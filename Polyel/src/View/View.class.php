@@ -40,7 +40,7 @@ class View
             $this->resource = Storage::access('local')->read($viewLocation);
 
             // Get all the tags from the resource template
-            $this->resourceTags = $this->getResourceTags($this->resource, "{{", "}}");
+            $this->resourceTags = $this->getStringBetween($this->resource, "{{", "}}");
 
             if(exists($this->data))
             {
@@ -72,27 +72,27 @@ class View
         }
     }
 
-    private function getResourceTags($resource, $startDelimiter, $endDelimiter): array
+    private function getStringBetween($string, $startDelimiter, $endDelimiter): array
     {
-        $tags = [];
+        $matches = [];
         $startDelimiterLength = strlen($startDelimiter);
         $endDelimiterLength = strlen($endDelimiter);
-        $startFrom = $resourceStart = $resourceEnd = 0;
+        $startFrom = $stringStart = $stringEnd = 0;
 
-        while (false !== ($resourceStart = strpos($resource, $startDelimiter, $startFrom)))
+        while (false !== ($stringStart = strpos($string, $startDelimiter, $startFrom)))
         {
-            $resourceStart += $startDelimiterLength;
-            $resourceEnd = strpos($resource, $endDelimiter, $resourceStart);
+            $stringStart += $startDelimiterLength;
+            $stringEnd = strpos($string, $endDelimiter, $stringStart);
 
-            if (false === $resourceEnd)
+            if (false === $stringEnd)
             {
                 break;
             }
 
-            $tags[] = trim(substr($resource, $resourceStart, $resourceEnd - $resourceStart));
-            $startFrom = $resourceEnd + $endDelimiterLength;
+            $matches[] = trim(substr($string, $stringStart, $stringEnd - $stringStart));
+            $startFrom = $stringEnd + $endDelimiterLength;
         }
 
-        return $tags;
+        return $matches;
     }
 }
