@@ -48,7 +48,7 @@ class View
             if(exists($this->data))
             {
                 // If data has been passed in, inject that into the resource
-                $this->injectDataToView();
+                $this->injectDataToView($this->resource, $this->resourceTags, $this->data);
             }
 
             return $this->resource;
@@ -116,19 +116,19 @@ class View
         }
     }
 
-    private function injectDataToView()
+    private function injectDataToView(&$resourceContent, &$resourceTags, $data)
     {
-        if(!exists($this->resourceTags))
+        if(!exists($resourceTags))
         {
             // Return early if no tags are found in the resource
             return;
         }
 
-        foreach($this->data as $key => $value)
+        foreach($data as $key => $value)
         {
-            if(in_array($key, $this->resourceTags, true))
+            if(in_array($key, $resourceTags, true))
             {
-                $this->resource = str_replace("{{ $key }}", $value, $this->resource);
+                $resourceContent = str_replace("{{ $key }}", $value, $resourceContent);
             }
         }
     }
