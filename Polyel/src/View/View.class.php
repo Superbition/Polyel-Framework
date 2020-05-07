@@ -35,7 +35,10 @@ class View
             // Set the template type
             $type = $resource->type;
 
-            // Format the resource file path and get the resource from the local disk
+            /*
+             * Format the resource file path and get the resource from the local disk
+             * NOTE: The $this->resource file/path name is already converted from dot syntax in ViewBuilder
+             */
             $viewLocation = $this->resourceDir . "/${type}s/" . $this->resource . ".${type}.html";
             $this->resource = Storage::access('local')->read($viewLocation);
 
