@@ -42,6 +42,9 @@ class View
             // Get all the tags from the resource template
             $this->resourceTags = $this->getStringBetween($this->resource, "{{", "}}");
 
+            // Process @include() calls for the main request view
+            $this->processIncludes($this->resource, $this->resourceTags);
+
             if(exists($this->data))
             {
                 // If data has been passed in, inject that into the resource
@@ -53,6 +56,64 @@ class View
 
         // Return because the resource was not found or is invalid from the ViewBuilder
         return null;
+    }
+
+    private function processIncludes(&$resourceContent, &$resourceTags)
+    {
+        // Sort all the @includes into a single string for processing
+        $includesAsString = '';
+        foreach($resourceTags as $key => $tag)
+        {
+            // Grab only the @include tags
+            if(strpos($tag, '@include') !== false)
+            {
+                // Sort the @include tags into a single string for easier processing
+                $includesAsString .= ' ' . $tag;
+
+                // Delete the @include tag because it will be processed here
+                unset($resourceTags[$key]);
+            }
+        }
+
+        if(!exists($includesAsString))
+        {
+            // Return early if there are no includes to process
+            return;
+        }
+
+        // Reset the array index for resource tags
+        $resourceTags = array_values($resourceTags);
+
+        // Based on the string of includes, grab all the values from the include call between the ()
+        $includes = $this->getStringBetween($includesAsString, '@include(', ')');
+
+        // Process each include value and inject any resource into the main template
+        foreach($includes as $include)
+        {
+            // Split based on the resource name/path and the type, for example: header:view or common.header:view
+            $resourceAndType = explode(":", $include);
+            $resourceName = $resourceAndType[0];
+            $includeType = $resourceAndType[1];
+
+            // Using the dot notation convert dots to directory slashes in the resource name
+            $resourceFileNamePath = str_replace('.', '/', $resourceName);
+
+            // Build the include file location to check...
+            $includeLocation = $this->resourceDir . "/${includeType}s/" . $resourceFileNamePath . '.view.html';
+
+            // Check if the include exists on local disk
+            if(file_exists($includeLocation))
+            {
+                // Get the resource content include from file and inject it into the main template
+                $includeContent = Storage::access('local')->read($includeLocation);
+                $resourceContent = str_replace("{{ @include($resourceName:$includeType) }}", $includeContent, $resourceContent);
+            }
+            else
+            {
+                // Else if no include resource is found, remove the include tags and replace them with nothing
+                $resourceContent = str_replace("{{ @include($resourceName:$includeType) }}", '', $resourceContent);
+            }
+        }
     }
 
     private function injectDataToView()
