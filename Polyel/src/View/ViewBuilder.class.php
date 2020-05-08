@@ -11,6 +11,12 @@ class ViewBuilder
 
     private $resourceDir = ROOT_DIR . '/app/resources';
 
+    // If set, will hold the extending view name
+    public $extendingView = false;
+
+    // Holds any extending view data waiting to be injected
+    public $extendingViewData;
+
     // Used to set if the view requested is valid
     private $valid = false;
 
@@ -61,6 +67,30 @@ class ViewBuilder
         {
             $this->data = $data;
         }
+    }
+
+    public function extending($extendingView, $extendingViewData = null)
+    {
+        if(exists($extendingView))
+        {
+            // Sort the extending view name and type as they are stored like viewName:viewType
+            list($extViewName, $extType) = explode(":", $extendingView);
+
+            // Convert dot syntax to file slashes, build a full file path to the extending view, using the type as well
+            $extViewName = str_replace(".", "/", $extViewName);
+            $extViewFilePath = $this->resourceDir . "/${extType}s/" . $extViewName . ".$extType.html";
+
+            // Check if the extending view actually exists
+            if(file_exists($extViewFilePath))
+            {
+                // The extending view exists, so we set the name and data
+                $this->extendingView = $extendingView;
+                $this->extendingViewData = $extendingViewData;
+            }
+        }
+
+        // Return back the instance of this class
+        return $this;
     }
 
     public function isValid(): bool

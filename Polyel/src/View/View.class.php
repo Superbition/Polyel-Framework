@@ -12,6 +12,12 @@ class View
     // Holds the found tags from a template
     private $resourceTags;
 
+    // Holds the extending view content if a main view is extending
+    private $extendingView;
+
+    // Holds the extending view tags from the template
+    private $extendingViewTags;
+
     // Holds the template data to be added
     private $data;
 
@@ -52,6 +58,13 @@ class View
             {
                 // If data has been passed in, inject that into the resource
                 $this->injectDataToView($this->resource, $this->resourceTags, $this->data);
+            }
+
+            // Check if an extending view has been set
+            if(exists($resource->extendingView))
+            {
+                // Using the main view, inject it into the content tag from the view to extend...
+                $this->resource = $this->extendView($resource->extendingView, $resource->extendingViewData, $this->resource);
             }
 
             return $this->resource;
@@ -134,6 +147,34 @@ class View
                 $resourceContent = str_replace("{{ $key }}", $value, $resourceContent);
             }
         }
+    }
+
+    private function extendView($resourceToExtend, $extendingViewData, $resourceContent)
+    {
+        // Sort the view name and type into single variables
+        list($extViewName, $extType) = explode(":", $resourceToExtend);
+
+        // Convert dot syntax into file slashes
+        $extViewName = str_replace(".", "/", $extViewName);
+
+        // Build up the extending view file path and grab the content from disk
+        $extViewFilePath = $this->resourceDir . "/${extType}s/" . $extViewName . ".$extType.html";
+        $this->extendingView = Storage::access('local')->read($extViewFilePath);
+
+        // Collect any extending view tags
+        $this->extendingViewTags = $this->getStringBetween($this->extendingView, "{{", "}}");
+
+        // First, process any includes from the extending view
+        $this->processIncludes($this->extendingView, $this->extendingViewTags);
+
+        // If data exists, process and inject it into the extending view
+        if(exists($extendingViewData))
+        {
+            $this->injectDataToView($this->extendingView, $this->extendingViewTags, $extendingViewData);
+        }
+
+        // Finally, replace the content tag in the extending view with the content from the main view and return it
+        return str_replace("{{ content }}", $resourceContent, $this->extendingView);
     }
 
     private function getStringBetween($string, $startDelimiter, $endDelimiter): array
