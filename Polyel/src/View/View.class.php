@@ -181,7 +181,7 @@ class View
         }
 
         // Finally, replace the content tag in the extending view with the content from the main view and return it
-        return str_replace("{{ content }}", $resourceContent, $this->extendingView);
+        return str_replace("{{ @content }}", $resourceContent, $this->extendingView);
     }
 
     private function getStringBetween($string, $startDelimiter, $endDelimiter): array
