@@ -57,7 +57,7 @@ class ViewBuilder
         }
 
         // If data is passed and not empty and is of type array
-        if(exists($data) && is_array($data))
+        if(is_array($data) && exists($data))
         {
             $this->data = $data;
         }
