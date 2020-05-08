@@ -144,7 +144,14 @@ class View
         {
             if(in_array($key, $resourceTags, true))
             {
-                $resourceContent = str_replace("{{ $key }}", $value, $resourceContent);
+                // Automatically filter data tags for XSS prevention
+                $xssEscapedData = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+                $resourceContent = str_replace("{{ $key }}", $xssEscapedData, $resourceContent);
+            }
+            else if(in_array("!$key!", $resourceTags, true))
+            {
+                // Else raw input has been requested by using {{ !data! }}
+                $resourceContent = str_replace("{{ !$key! }}", $value, $resourceContent);
             }
         }
     }
