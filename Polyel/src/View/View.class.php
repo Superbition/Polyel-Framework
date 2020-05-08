@@ -107,9 +107,7 @@ class View
         foreach($includes as $include)
         {
             // Split based on the resource name/path and the type, for example: header:view or common.header:view
-            $resourceAndType = explode(":", $include);
-            $resourceName = $resourceAndType[0];
-            $includeType = $resourceAndType[1];
+            list($resourceName, $includeType) = explode(":", $include);
 
             // Using the dot notation convert dots to directory slashes in the resource name
             $resourceFileNamePath = str_replace('.', '/', $resourceName);
