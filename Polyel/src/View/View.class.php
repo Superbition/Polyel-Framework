@@ -200,4 +200,21 @@ class View
 
         return $matches;
     }
+
+    public function exists($viewNameAndType): bool
+    {
+        // Sort the view name and type as they are stored like viewName:viewType
+        list($viewName, $viewType) = explode(":", $viewNameAndType);
+
+        // Convert dot syntax to file slashes, build a full file path to the view, using the type as well
+        $viewName = str_replace(".", "/", $viewName);
+        $viewFilePath = $this->resourceDir . "/${viewType}s/" . $viewName . ".$viewType.html";
+
+        if(file_exists($viewFilePath))
+        {
+            return true;
+        }
+
+        return false;
+    }
 }
