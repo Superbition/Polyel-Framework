@@ -71,6 +71,9 @@ class View
                 $this->resource = $this->extendView($resource->extendingView, $resource->extendingViewData, $this->resource);
             }
 
+            $elementTags = $this->getStringBetween($this->resource, "{{ @addElement(", ") }}");
+            $this->element->processElementsFor($this->resource, $elementTags);
+
             return $this->resource;
         }
 

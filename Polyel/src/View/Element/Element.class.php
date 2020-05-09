@@ -15,6 +15,21 @@ class Element
 
     }
 
+    public function processElementsFor(&$mainResource, $elementTags)
+    {
+        if(exists($elementTags))
+        {
+            foreach($elementTags as $element)
+            {
+                $elementClass = Polyel::call("App\View\Elements\\" . $element);
+
+                $renderedElement = $elementClass->render();
+
+                $mainResource = str_replace("{{ @addElement($element) }}", $renderedElement, $mainResource);
+            }
+        }
+    }
+
     public function loadClassElements()
     {
         $elementClassDir = new RecursiveDirectoryIterator($this->elementClassDir);
