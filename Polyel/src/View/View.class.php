@@ -2,6 +2,7 @@
 
 namespace Polyel\View;
 
+use Polyel\View\Element\Element;
 use Polyel\Storage\Facade\Storage;
 
 class View
@@ -21,11 +22,14 @@ class View
     // Holds the template data to be added
     private $data;
 
+    // Holds the Element service class
+    private $element;
+
     private $resourceDir = ROOT_DIR . "/app/resources";
 
-    public function __construct()
+    public function __construct(Element $element)
     {
-
+        $this->element = $element;
     }
 
     // The main function used to perform the view rendering and data to template exchange
@@ -221,5 +225,10 @@ class View
         }
 
         return false;
+    }
+
+    public function loadClassElements()
+    {
+        $this->element->loadClassElements();
     }
 }

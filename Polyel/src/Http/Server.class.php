@@ -4,6 +4,7 @@ namespace Polyel\Http;
 
 use Polyel\Router\Router;
 use Polyel\Config\Config;
+use Polyel\View\Facade\View;
 use Swoole\Coroutine as Swoole;
 use Polyel\Controller\Controller;
 use Polyel\Middleware\Middleware;
@@ -50,6 +51,9 @@ class Server
         $this->controller->loadAllControllers();
 
         $this->middleware->loadAllMiddleware();
+
+        // Preload all element logic classes into the container
+        View::loadClassElements();
 
         // Create a new Swoole HTTP server and set server IP and listening port
         $this->server = new SwooleHTTPServer(
