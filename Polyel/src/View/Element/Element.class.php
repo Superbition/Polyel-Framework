@@ -10,8 +10,6 @@ class Element
 {
     private $elementClassDir = ROOT_DIR . "/app/View/Elements";
 
-    private $elementTemplateDir = ROOT_DIR . "/app/resources/elements";
-
     public function __construct()
     {
 

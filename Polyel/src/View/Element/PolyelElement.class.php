@@ -9,6 +9,8 @@ class PolyelElement
 
     private $data;
 
+    private $elementTemplateDir = ROOT_DIR . "/app/resources/elements";
+
     public function __construct()
     {
 
