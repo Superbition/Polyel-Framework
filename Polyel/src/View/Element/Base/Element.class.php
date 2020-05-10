@@ -21,6 +21,11 @@ class Element
 
     }
 
+    public function reset()
+    {
+        $this->element = '';
+    }
+
     protected function setData($tag, $data = null)
     {
         if(is_array($tag))
