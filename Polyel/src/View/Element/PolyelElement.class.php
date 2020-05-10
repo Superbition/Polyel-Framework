@@ -2,8 +2,12 @@
 
 namespace Polyel\View\Element;
 
+use Polyel\View\ViewTools;
+
 class PolyelElement
 {
+    use ViewTools;
+
     // Holds the final rendered element content
     private $element = '';
 

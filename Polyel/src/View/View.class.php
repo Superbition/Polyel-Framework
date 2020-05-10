@@ -7,6 +7,8 @@ use Polyel\Storage\Facade\Storage;
 
 class View
 {
+    use ViewTools;
+
     // Holds the template name and eventually the file path
     private $resource;
 
@@ -187,30 +189,6 @@ class View
 
         // Finally, replace the content tag in the extending view with the content from the main view and return it
         return str_replace("{{ @content }}", $resourceContent, $this->extendingView);
-    }
-
-    protected function getStringsBetween($string, $startDelimiter, $endDelimiter): array
-    {
-        $matches = [];
-        $startDelimiterLength = strlen($startDelimiter);
-        $endDelimiterLength = strlen($endDelimiter);
-        $startFrom = $stringStart = $stringEnd = 0;
-
-        while (false !== ($stringStart = strpos($string, $startDelimiter, $startFrom)))
-        {
-            $stringStart += $startDelimiterLength;
-            $stringEnd = strpos($string, $endDelimiter, $stringStart);
-
-            if (false === $stringEnd)
-            {
-                break;
-            }
-
-            $matches[] = trim(substr($string, $stringStart, $stringEnd - $stringStart));
-            $startFrom = $stringEnd + $endDelimiterLength;
-        }
-
-        return $matches;
     }
 
     public function exists($viewNameAndType): bool
