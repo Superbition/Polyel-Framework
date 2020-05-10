@@ -3,6 +3,7 @@
 namespace Polyel\View\Element;
 
 use Polyel\View\ViewTools;
+use Polyel\Storage\Facade\Storage;
 
 class PolyelElement
 {
@@ -45,5 +46,35 @@ class PolyelElement
         $append = $start . $data . $end;
 
         $this->element .= $append;
+    }
+
+    protected function renderElement()
+    {
+        $elementLocation = $this->elementTemplateDir . '/' . $this->elementTemplate . ".html";
+        $elementTemplate = Storage::access('local')->read($elementLocation);
+
+        $elementTags = $this->getStringsBetween($elementTemplate, '{{', '}}');
+
+        if(exists($this->data))
+        {
+            foreach($this->data as $key => $value)
+            {
+                if(in_array($key, $elementTags, true))
+                {
+                    // Automatically filter data tags for XSS prevention
+                    $xssEscapedData = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+                    $elementTemplate = str_replace("{{ $key }}", $xssEscapedData, $elementTemplate);
+                }
+                else if(in_array("!$key!", $elementTags, true))
+                {
+                    // Else raw input has been requested by using {{ !data! }}
+                    $elementTemplate = str_replace("{{ !$key! }}", $value, $elementTemplate);
+                }
+            }
+        }
+
+        $elementTemplate = str_replace('{{ @elementContent }}', $this->element, $elementTemplate);
+
+        return $elementTemplate;
     }
 }
