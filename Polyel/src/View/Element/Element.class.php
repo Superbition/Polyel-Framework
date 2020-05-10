@@ -23,7 +23,7 @@ class Element
             {
                 $elementClass = Polyel::call("App\View\Elements\\" . $element);
 
-                $renderedElement = $elementClass->render();
+                $renderedElement = $elementClass->build();
 
                 $mainResource = str_replace("{{ @addElement($element) }}", $renderedElement, $mainResource);
             }
