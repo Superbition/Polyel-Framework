@@ -1,11 +1,11 @@
 <?php
 
-namespace Polyel\View\Element;
+namespace Polyel\View\Element\Base;
 
 use Polyel\View\ViewTools;
 use Polyel\Storage\Facade\Storage;
 
-class PolyelElement
+class Element
 {
     use ViewTools;
 

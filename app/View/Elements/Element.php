@@ -2,9 +2,9 @@
 
 namespace App\View\Elements;
 
-use Polyel\View\Element\PolyelElement;
+use Polyel\View\Element\Base\Element as BaseElement;
 
-class Element extends PolyelElement
+class Element extends BaseElement
 {
     // Set the element template relative to /app/resources/elements/
     public $elementTemplate = 'element';
