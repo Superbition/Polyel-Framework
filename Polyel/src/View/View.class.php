@@ -53,7 +53,7 @@ class View
             $this->resource = Storage::access('local')->read($viewLocation);
 
             // Get all the tags from the resource template
-            $this->resourceTags = $this->getStringBetween($this->resource, "{{", "}}");
+            $this->resourceTags = $this->getStringsBetween($this->resource, "{{", "}}");
 
             // Process @include() calls for the main request view
             $this->processIncludes($this->resource, $this->resourceTags);
@@ -71,7 +71,7 @@ class View
                 $this->resource = $this->extendView($resource->extendingView, $resource->extendingViewData, $this->resource);
             }
 
-            $elementTags = $this->getStringBetween($this->resource, "{{ @addElement(", ") }}");
+            $elementTags = $this->getStringsBetween($this->resource, "{{ @addElement(", ") }}");
             $this->element->processElementsFor($this->resource, $elementTags);
 
             return $this->resource;
@@ -108,7 +108,7 @@ class View
         $resourceTags = array_values($resourceTags);
 
         // Based on the string of includes, grab all the values from the include call between the ()
-        $includes = $this->getStringBetween($includesAsString, '@include(', ')');
+        $includes = $this->getStringsBetween($includesAsString, '@include(', ')');
 
         // Process each include value and inject any resource into the main template
         foreach($includes as $include)
@@ -174,7 +174,7 @@ class View
         $this->extendingView = Storage::access('local')->read($extViewFilePath);
 
         // Collect any extending view tags
-        $this->extendingViewTags = $this->getStringBetween($this->extendingView, "{{", "}}");
+        $this->extendingViewTags = $this->getStringsBetween($this->extendingView, "{{", "}}");
 
         // First, process any includes from the extending view
         $this->processIncludes($this->extendingView, $this->extendingViewTags);
@@ -189,7 +189,7 @@ class View
         return str_replace("{{ @content }}", $resourceContent, $this->extendingView);
     }
 
-    private function getStringBetween($string, $startDelimiter, $endDelimiter): array
+    protected function getStringsBetween($string, $startDelimiter, $endDelimiter): array
     {
         $matches = [];
         $startDelimiterLength = strlen($startDelimiter);
