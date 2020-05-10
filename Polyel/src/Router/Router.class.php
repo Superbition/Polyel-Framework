@@ -164,6 +164,8 @@ class Router
             {
                 // Error 404 route not found
                 $this->response->setStatusCode(404);
+
+                $this->response->build(response(view('404:error')));
             }
         }
     }
