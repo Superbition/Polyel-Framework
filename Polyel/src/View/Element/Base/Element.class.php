@@ -14,11 +14,22 @@ class Element
 
     private $data;
 
+    private $elementTemplate;
+
     private $elementTemplateDir = ROOT_DIR . "/app/resources/elements";
 
     public function __construct()
     {
 
+    }
+
+    private function getElementTemplate()
+    {
+        if(!exists($this->elementTemplate))
+        {
+            $elementLocation = $this->elementTemplateDir . '/' . $this->element . ".html";
+            $this->elementTemplate = Storage::access('local')->read($elementLocation);
+        }
     }
 
     public function reset()
@@ -55,10 +66,9 @@ class Element
 
     protected function renderElement()
     {
-        $elementLocation = $this->elementTemplateDir . '/' . $this->element . ".html";
-        $elementTemplate = Storage::access('local')->read($elementLocation);
+        $this->getElementTemplate();
 
-        $elementTags = $this->getStringsBetween($elementTemplate, '{{', '}}');
+        $elementTags = $this->getStringsBetween($this->elementTemplate, '{{', '}}');
 
         if(exists($this->data))
         {
@@ -68,18 +78,18 @@ class Element
                 {
                     // Automatically filter data tags for XSS prevention
                     $xssEscapedData = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
-                    $elementTemplate = str_replace("{{ $key }}", $xssEscapedData, $elementTemplate);
+                    $this->elementTemplate = str_replace("{{ $key }}", $xssEscapedData, $this->elementTemplate);
                 }
                 else if(in_array("!$key!", $elementTags, true))
                 {
                     // Else raw input has been requested by using {{ !data! }}
-                    $elementTemplate = str_replace("{{ !$key! }}", $value, $elementTemplate);
+                    $this->elementTemplate = str_replace("{{ !$key! }}", $value, $this->elementTemplate);
                 }
             }
         }
 
-        $elementTemplate = str_replace('{{ @elementContent }}', $this->elementContent, $elementTemplate);
+        $this->elementTemplate = str_replace('{{ @elementContent }}', $this->elementContent, $this->elementTemplate);
 
-        return $elementTemplate;
+        return $this->elementTemplate;
     }
 }
