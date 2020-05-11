@@ -37,7 +37,7 @@ class Element
         $this->elementContent = '';
     }
 
-    protected function setData($tag, $data = null)
+    protected function setElementData($tag, $data = null)
     {
         if(is_array($tag))
         {
@@ -52,7 +52,7 @@ class Element
         }
     }
 
-    protected function appendLine($start, $data, $end, $xssFilter = true)
+    protected function appendToContent($start, $data, $end, $xssFilter = true)
     {
         if($xssFilter)
         {
