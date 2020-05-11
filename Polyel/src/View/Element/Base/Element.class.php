@@ -10,7 +10,7 @@ class Element
     use ViewTools;
 
     // Holds the final rendered element content
-    private $element = '';
+    private $elementContent = '';
 
     private $data;
 
@@ -23,7 +23,7 @@ class Element
 
     public function reset()
     {
-        $this->element = '';
+        $this->elementContent = '';
     }
 
     protected function setData($tag, $data = null)
@@ -50,12 +50,12 @@ class Element
 
         $append = $start . $data . $end;
 
-        $this->element .= $append;
+        $this->elementContent .= $append;
     }
 
     protected function renderElement()
     {
-        $elementLocation = $this->elementTemplateDir . '/' . $this->elementTemplate . ".html";
+        $elementLocation = $this->elementTemplateDir . '/' . $this->element . ".html";
         $elementTemplate = Storage::access('local')->read($elementLocation);
 
         $elementTags = $this->getStringsBetween($elementTemplate, '{{', '}}');
@@ -78,7 +78,7 @@ class Element
             }
         }
 
-        $elementTemplate = str_replace('{{ @elementContent }}', $this->element, $elementTemplate);
+        $elementTemplate = str_replace('{{ @elementContent }}', $this->elementContent, $elementTemplate);
 
         return $elementTemplate;
     }
