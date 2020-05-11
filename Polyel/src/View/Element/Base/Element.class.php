@@ -74,17 +74,7 @@ class Element
         {
             foreach($this->data as $key => $value)
             {
-                if(in_array($key, $elementTags, true))
-                {
-                    // Automatically filter data tags for XSS prevention
-                    $xssEscapedData = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
-                    $this->elementTemplate = str_replace("{{ $key }}", $xssEscapedData, $this->elementTemplate);
-                }
-                else if(in_array("!$key!", $elementTags, true))
-                {
-                    // Else raw input has been requested by using {{ !data! }}
-                    $this->elementTemplate = str_replace("{{ !$key! }}", $value, $this->elementTemplate);
-                }
+                $this->replaceTag($key, $value, $elementTags, $this->elementTemplate);
             }
         }
 
