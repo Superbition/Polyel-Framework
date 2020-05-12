@@ -44,6 +44,8 @@ class Element
     public function reset()
     {
         $this->elementContent = '';
+        $this->data = null;
+        $this->elementTemplate = null;
         $this->elementBlockData = [];
     }
 
