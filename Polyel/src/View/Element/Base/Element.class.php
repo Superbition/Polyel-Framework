@@ -52,11 +52,11 @@ class Element
         }
     }
 
-    protected function appendToContent($start, $data, $end, $xssFilter = true)
+    protected function appendHtmlTag($start, $data, $end, $xssFilter = true)
     {
-        if($xssFilter)
+        if($xssFilter === true)
         {
-            $data = htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
+            $data = $this->xssFilter($data);
         }
 
         $append = $start . $data . $end;
