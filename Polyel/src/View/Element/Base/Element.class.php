@@ -31,7 +31,11 @@ class Element
         if(!exists($this->elementTemplate))
         {
             $elementLocation = $this->elementTemplateDir . '/' . $this->element . ".html";
-            $this->elementTemplate = Storage::access('local')->read($elementLocation);
+
+            if(file_exists($elementLocation))
+            {
+                $this->elementTemplate = Storage::access('local')->read($elementLocation);
+            }
         }
     }
 
