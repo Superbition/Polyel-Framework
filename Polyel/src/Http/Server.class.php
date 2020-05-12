@@ -65,6 +65,8 @@ class Server
         $this->server->set([
             'worker_num' => swoole_cpu_num(),
             'package_max_length' => config("server.maxUploadSize"),
+            'document_root' => config("server.publicRoot"),
+            'enable_static_handler' => true,
             'upload_tmp_dir' => config("server.uploadDir"),
             ]);
     }
