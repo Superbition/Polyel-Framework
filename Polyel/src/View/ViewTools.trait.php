@@ -47,4 +47,9 @@ trait ViewTools
             }
         }
     }
+
+    private function xssFilter($data)
+    {
+        return htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
+    }
 }
