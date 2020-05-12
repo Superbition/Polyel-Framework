@@ -16,6 +16,9 @@ class Element
 
     private $elementTemplate;
 
+    // When a new element is created, its data is stored here for rendering later
+    private $elementBlockData;
+
     private $elementTemplateDir = ROOT_DIR . "/app/resources/elements";
 
     public function __construct()
@@ -35,6 +38,7 @@ class Element
     public function reset()
     {
         $this->elementContent = '';
+        $this->elementBlockData = [];
     }
 
     protected function setElementData($tag, $data = null)
@@ -62,6 +66,48 @@ class Element
         $append = $start . $data . $end;
 
         $this->elementContent .= $append;
+    }
+
+    protected function newElement($tag, $data = null)
+    {
+        if(is_array($tag))
+        {
+            $elementBlock = [];
+            foreach($tag as $key => $value)
+            {
+                $elementBlock[$key] = $value;
+            }
+
+            $this->elementBlockData[] = $elementBlock;
+        }
+        else if(exists($tag) && exists($data))
+        {
+            $this->elementBlockData[][$tag] = $data;
+        }
+    }
+
+    protected function renderElements()
+    {
+        $this->getElementTemplate();
+
+        $elementBlockTags = $this->getStringsBetween($this->elementTemplate, '{{', '}}');
+
+        if(exists($this->elementBlockData))
+        {
+            foreach($this->elementBlockData as $block)
+            {
+                $elementBlock = $this->elementTemplate;
+
+                foreach($block as $key => $value)
+                {
+                    $this->replaceTag($key, $value, $elementBlockTags, $elementBlock);
+                }
+
+                $this->elementContent .= $elementBlock;
+            }
+        }
+
+        return $this->elementContent;
     }
 
     protected function renderElement()
