@@ -74,6 +74,18 @@ class Element
         $this->elementContent .= $append;
     }
 
+    protected function appendHtmlBlock($block, $data): void
+    {
+        $blockTags = $this->getStringsBetween($block, "{{", "}}");
+
+        foreach($data as $key => $value)
+        {
+            $this->replaceTag($key, $value, $blockTags, $block);
+        }
+
+        $this->elementContent .= $block;
+    }
+
     protected function newElement($tag, $data = null)
     {
         if(is_array($tag))
