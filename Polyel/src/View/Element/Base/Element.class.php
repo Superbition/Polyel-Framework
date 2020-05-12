@@ -30,7 +30,9 @@ class Element
     {
         if(!exists($this->elementTemplate))
         {
-            $elementLocation = $this->elementTemplateDir . '/' . $this->element . ".html";
+            // Convert file name from dot syntax to a real file path if they are used
+            $elementFilePath = str_replace(".", "/", $this->element);
+            $elementLocation = $this->elementTemplateDir . '/' . $elementFilePath . ".html";
 
             if(file_exists($elementLocation))
             {
