@@ -73,6 +73,14 @@ class View
                 $this->resource = $this->extendView($resource->extendingView, $resource->extendingViewData, $this->resource);
             }
 
+            // Search for any CSS file includes and insert any CSS links where the @css placeholder is
+            $cssTags = $this->getStringsBetween($this->resource, "{{ @includeCss(", ") }}");
+            $this->processCssIncludes($cssTags);
+
+            // Search for any JS file includes and insert any JS links where the @js placeholder is
+            $jsTags = $this->getStringsBetween($this->resource, "{{ @includeJs(", ") }}");
+            $this->processJsIncludes($jsTags);
+
             $elementTags = $this->getStringsBetween($this->resource, "{{ @addElement(", ") }}");
             $this->element->processElementsFor($this->resource, $elementTags);
 
@@ -137,6 +145,50 @@ class View
                 $resourceContent = str_replace("{{ @include($resourceName:$includeType) }}", '', $resourceContent);
             }
         }
+    }
+
+    private function processCssIncludes($cssTags)
+    {
+        // Foreach CSS include, build up the link, collect it and then insert them into @css
+        $cssLinks = '';
+        foreach($cssTags as $cssFileName)
+        {
+            // Convert dot syntax and build the full file path
+            $cssFilePath = str_replace(".", "/", $cssFileName);
+            $cssLocation = config('view.cssDirectory') . '/' . $cssFilePath . '.css';
+
+            // Only include CSS link if the file actually exists
+            if(file_exists(ROOT_DIR . '/public' . $cssLocation))
+            {
+                $cssLinks .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"${cssLocation}\">";
+            }
+
+            $this->resource = str_replace("{{ @includeCss($cssFileName) }}", '', $this->resource);
+        }
+
+        $this->resource = str_replace("{{ @css }}", $cssLinks, $this->resource);
+    }
+
+    private function processJsIncludes($jsTags)
+    {
+        // Foreach JS include, build up the link, collect it and then insert them into @js
+        $jsLinks = '';
+        foreach($jsTags as $jsFileName)
+        {
+            // Convert dot syntax and build the full file path
+            $jsFilePath = str_replace(".", "/", $jsFileName);
+            $jsLocation = config('view.jsDirectory') . '/' . $jsFilePath . '.js';
+
+            // Only include JS link if the file actually exists
+            if(file_exists(ROOT_DIR . '/public' . $jsLocation))
+            {
+                $jsLinks .= "<script src=\"${jsLocation}\"></script>";
+            }
+
+            $this->resource = str_replace("{{ @includeJs($jsFileName) }}", '', $this->resource);
+        }
+
+        $this->resource = str_replace("{{ @js }}", $jsLinks, $this->resource);
     }
 
     private function injectDataToView(&$resourceContent, &$resourceTags, $data)
