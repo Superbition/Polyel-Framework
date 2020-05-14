@@ -74,11 +74,11 @@ class View
             }
 
             // Search for any CSS file includes and insert any CSS links where the @css placeholder is
-            $cssTags = $this->getStringsBetween($this->resource, "{{ @includeCss(", ") }}");
+            $cssTags = $this->getStringsBetween($this->resource, "{{ @includeCSS(", ") }}");
             $this->processCssIncludes($cssTags);
 
             // Search for any JS file includes and insert any JS links where the @js placeholder is
-            $jsTags = $this->getStringsBetween($this->resource, "{{ @includeJs(", ") }}");
+            $jsTags = $this->getStringsBetween($this->resource, "{{ @includeJS(", ") }}");
             $this->processJsIncludes($jsTags);
 
             $elementTags = $this->getStringsBetween($this->resource, "{{ @addElement(", ") }}");
@@ -163,10 +163,10 @@ class View
                 $cssLinks .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"${cssLocation}\">";
             }
 
-            $this->resource = str_replace("{{ @includeCss($cssFileName) }}", '', $this->resource);
+            $this->resource = str_replace("{{ @includeCSS($cssFileName) }}", '', $this->resource);
         }
 
-        $this->resource = str_replace("{{ @css }}", $cssLinks, $this->resource);
+        $this->resource = str_replace("{{ @CSS }}", $cssLinks, $this->resource);
     }
 
     private function processJsIncludes($jsTags)
@@ -185,10 +185,10 @@ class View
                 $jsLinks .= "<script src=\"${jsLocation}\"></script>";
             }
 
-            $this->resource = str_replace("{{ @includeJs($jsFileName) }}", '', $this->resource);
+            $this->resource = str_replace("{{ @includeJS($jsFileName) }}", '', $this->resource);
         }
 
-        $this->resource = str_replace("{{ @js }}", $jsLinks, $this->resource);
+        $this->resource = str_replace("{{ @JS }}", $jsLinks, $this->resource);
     }
 
     private function injectDataToView(&$resourceContent, &$resourceTags, $data)
