@@ -24,7 +24,7 @@ printf "\n-------------------------------------------------------------------\n"
 
 php -f "$DIR/server.php" &
 
-DIR_EXCLUDES="--exclude=.git --exclude=.idea"
+DIR_EXCLUDES="--exclude=.git --exclude=.idea --exclude=app/resources"
 
 DIR_HASH="$(tar ${DIR_EXCLUDES} -cf - ${DIR} -P | sha1sum)"
 
