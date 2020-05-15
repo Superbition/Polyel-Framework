@@ -1,0 +1,19 @@
+<?php
+
+namespace App\View\Elements;
+
+class {{ elementClassName }} extends Element
+{
+    // Set the element template relative to /app/resources/elements/
+    public $element = '';
+
+    public function __construct()
+    {
+
+    }
+
+    public function build()
+    {
+
+    }
+}
