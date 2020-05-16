@@ -59,7 +59,7 @@ class Request
 
         $this->queries = $request->get;
 
-        $this->cookies = $request->cookie;
+        $this->cookies = $request->cookie ?? [];
 
         $this->files = $request->files;
 
