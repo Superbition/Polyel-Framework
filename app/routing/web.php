@@ -2,4 +2,4 @@
 
 use Polyel\Router\Facade\Route;
 
-Route::get("/", "WelcomeController@sayHello");
+Route::get("/", "WelcomeController@welcome");
