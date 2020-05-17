@@ -8,6 +8,7 @@ use Polyel\Debug\Debug;
 use Polyel\Http\Request;
 use Polyel\Http\Response;
 use Polyel\Middleware\Middleware;
+use Polyel\Session\SessionManager;
 
 class Router
 {
@@ -44,6 +45,9 @@ class Router
     // Full list of registered routes that were added
     private $listOfAddedRoutes;
 
+    // The Session Manager service
+    private $sessionManager;
+
     // The Debug service
     private $debug;
 
@@ -58,8 +62,9 @@ class Router
 
     private $routeParamPattern;
 
-    public function __construct(Debug $debug, Middleware $middleware, Request $request, Response $response)
+    public function __construct(SessionManager $sessionManager, Debug $debug, Middleware $middleware, Request $request, Response $response)
     {
+        $this->sessionManager = $sessionManager;
         $this->debug = $debug;
         $this->middleware = $middleware;
         $this->request = $request;
@@ -109,6 +114,10 @@ class Router
             // Check if the route matches any registered routes
             if($this->routeExists($this->requestMethod, $this->requestedRoute))
             {
+                // Grab the session cookie and check for a valid session, create one if one doesn't exist
+                $sessionCookie = $this->request->cookie(config('session.cookieName'));
+                $this->sessionManager->startSession($sessionCookie);
+
                 // Set the default HTTP status code, might change throughout the request cycle
                 $this->response->setStatusCode(200);
 
