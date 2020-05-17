@@ -79,7 +79,7 @@ return [
     │ if a secure HTTP connection can be made when this option is set to true.
     │
     */
-    'secure' => true,
+    'secure' => false,
 
     /*
     │▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
