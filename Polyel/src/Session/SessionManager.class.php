@@ -9,9 +9,16 @@ class SessionManager
 {
     private $sessionFileStorage = ROOT_DIR . '/storage/polyel/sessions/';
 
+    private $driver;
+
     public function __construct()
     {
 
+    }
+
+    public function setDriver($driver)
+    {
+        $this->driver = $driver;
     }
 
     public function startSession($sessionCookie)
