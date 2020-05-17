@@ -12,9 +12,9 @@ class Request
 
     private $hostIP;
 
-    private $clientIP;
+    public $clientIP;
 
-    private $userAgent;
+    public $userAgent;
 
     private $serverPort;
 
