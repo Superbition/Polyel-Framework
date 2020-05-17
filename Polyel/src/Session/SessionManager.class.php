@@ -2,6 +2,7 @@
 
 namespace Polyel\Session;
 
+use Polyel\Http\Request;
 use Polyel\Http\Facade\Cookie;
 use Polyel\Storage\Facade\Storage;
 
@@ -11,9 +12,11 @@ class SessionManager
 
     private $driver;
 
-    public function __construct()
-    {
+    private $request;
 
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
     }
 
     public function setDriver($driver)
@@ -76,8 +79,17 @@ class SessionManager
 
     private function createNewSession($sessionID)
     {
+        $sessionData['id'] = $sessionID;
+        $sessionData['user_id'] = null;
+        $sessionData['ip_addr'] = $this->request->clientIP;
+        $sessionData['user_agent'] = $this->request->userAgent;
+        $sessionData['last_active'] = date("Y-m-d H:i:s");
+
+        $jsonOptions = JSON_INVALID_UTF8_SUBSTITUTE | JSON_PRETTY_PRINT;
+        $sessionData = json_encode($sessionData, $jsonOptions, 1024);
+
         $sessionFilePath = '/storage/polyel/sessions/' . $sessionID;
-        Storage::access('local')->write($sessionFilePath, '');
+        Storage::access('local')->write($sessionFilePath, $sessionData);
     }
 
     private function queueSessionCookie($sessionID)
