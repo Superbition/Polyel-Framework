@@ -16,7 +16,8 @@ class SessionManager
 
     public function startSession($sessionCookie)
     {
-        if(!exists($sessionCookie))
+        // Either cookie does not exist or the session is missing on the server
+        if(!exists($sessionCookie) || $this->isValid($sessionCookie) === false)
         {
             $prefix = config('session.prefix');
 
@@ -29,6 +30,16 @@ class SessionManager
             $this->createNewSession($sessionID);
             $this->queueSessionCookie($sessionID);
         }
+    }
+
+    private function isValid($sessionID)
+    {
+        if(file_exists($this->sessionFileStorage . $sessionID) === false)
+        {
+            return false;
+        }
+
+        return true;
     }
 
     private function generateSessionID($prefix, $length): string
