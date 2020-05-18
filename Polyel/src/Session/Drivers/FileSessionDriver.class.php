@@ -13,13 +13,41 @@ class FileSessionDriver implements SessionDriver
 
     }
 
-    public function isValid($sessionID)
+    /*
+     * SessionID is the ID from the cookie data.
+     * SessionData is what is found from the session file, the default has to be false and not null
+     * because if it is null, it would mean no data was found but checking session data is optional.
+     */
+    public function isValid($sessionID, $sessionData = false)
     {
+        // Check to see if the session file exists
         if(file_exists($this->sessionFileStorage . $sessionID) === false)
         {
+            // False when no file is found matching the session ID
             return false;
         }
 
+        // Check that the session data exists
+        if(exists($sessionData))
+        {
+            // Make sure the session ID from the cookie matches the session ID inside the session file
+            if(!array_key_exists('id', $sessionData) || $sessionData['id'] !== $sessionID)
+            {
+                // False when the session ID does not match the ID in the file, not just the name of the session file
+                return false;
+            }
+        }
+        else
+        {
+            // If the data passed in is null, it means the session file was empty or the data was missing
+            if($sessionData === null)
+            {
+                // False when no session data exists but the file does
+                return false;
+            }
+        }
+
+        // If nothing fails within this function, the session is deemed valid
         return true;
     }
 

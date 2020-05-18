@@ -34,13 +34,13 @@ class SessionManager
 
     public function startSession($sessionCookieData)
     {
+        $sessionData = $this->driver->getSessionData($sessionCookieData);
+
         // Either cookie does not exist or the session is missing on the server
-        if(!exists($sessionCookieData) || $this->driver->isValid($sessionCookieData) === false)
+        if(!exists($sessionCookieData) || $this->driver->isValid($sessionCookieData, $sessionData) === false)
         {
             $this->regenerateSession();
         }
-
-        $sessionData = $this->driver->getSessionData($sessionCookieData);
     }
 
     private function regenerateSession()
