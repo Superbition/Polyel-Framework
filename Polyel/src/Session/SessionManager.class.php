@@ -2,32 +2,40 @@
 
 namespace Polyel\Session;
 
+use Polyel;
 use Polyel\Http\Request;
 use Polyel\Http\Facade\Cookie;
-use Polyel\Storage\Facade\Storage;
 
 class SessionManager
 {
-    private $sessionFileStorage = ROOT_DIR . '/storage/polyel/sessions/';
-
     private $driver;
+
+    private $availableDrivers;
 
     private $request;
 
     public function __construct(Request $request)
     {
         $this->request = $request;
+
+        $this->availableDrivers = [
+          'file' => Polyel\Session\Drivers\FileSessionDriver::class,
+        ];
     }
 
     public function setDriver($driver)
     {
-        $this->driver = $driver;
+        if(array_key_exists($driver, $this->availableDrivers))
+        {
+            $driver = $this->availableDrivers[$driver];
+            $this->driver = Polyel::resolveClass($driver);
+        }
     }
 
     public function startSession($sessionCookie)
     {
         // Either cookie does not exist or the session is missing on the server
-        if(!exists($sessionCookie) || $this->isValid($sessionCookie) === false)
+        if(!exists($sessionCookie) || $this->driver->isValid($sessionCookie) === false)
         {
             $prefix = config('session.prefix');
 
@@ -35,21 +43,11 @@ class SessionManager
 
                 $sessionID = $this->generateSessionID($prefix, 42);
 
-            } while($this->collisionCheckID($sessionID) === true);
+            } while($this->driver->collisionCheckID($sessionID) === true);
 
-            $this->createNewSession($sessionID);
+            $this->driver->createNewSession($sessionID, $this->request);
             $this->queueSessionCookie($sessionID);
         }
-    }
-
-    private function isValid($sessionID)
-    {
-        if(file_exists($this->sessionFileStorage . $sessionID) === false)
-        {
-            return false;
-        }
-
-        return true;
     }
 
     private function generateSessionID($prefix, $length): string
@@ -65,31 +63,6 @@ class SessionManager
         }
 
         return $sessionID;
-    }
-
-    private function collisionCheckID($sessionID)
-    {
-        if(file_exists($this->sessionFileStorage . $sessionID))
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    private function createNewSession($sessionID)
-    {
-        $sessionData['id'] = $sessionID;
-        $sessionData['user_id'] = null;
-        $sessionData['ip_addr'] = $this->request->clientIP;
-        $sessionData['user_agent'] = $this->request->userAgent;
-        $sessionData['last_active'] = date("Y-m-d H:i:s");
-
-        $jsonOptions = JSON_INVALID_UTF8_SUBSTITUTE | JSON_PRETTY_PRINT;
-        $sessionData = json_encode($sessionData, $jsonOptions, 1024);
-
-        $sessionFilePath = '/storage/polyel/sessions/' . $sessionID;
-        Storage::access('local')->write($sessionFilePath, $sessionData);
     }
 
     private function queueSessionCookie($sessionID)
