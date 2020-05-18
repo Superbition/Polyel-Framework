@@ -37,19 +37,24 @@ class SessionManager
         // Either cookie does not exist or the session is missing on the server
         if(!exists($sessionCookieData) || $this->driver->isValid($sessionCookieData) === false)
         {
-            $prefix = config('session.prefix');
-
-            do {
-
-                $sessionID = $this->generateSessionID($prefix, 42);
-
-            } while($this->driver->collisionCheckID($sessionID) === true);
-
-            $this->driver->createNewSession($sessionID, $this->request);
-            $this->queueSessionCookie($sessionID);
+            $this->regenerateSession();
         }
 
         $sessionData = $this->driver->getSessionData($sessionCookieData);
+    }
+
+    private function regenerateSession()
+    {
+        $prefix = config('session.prefix');
+
+        do {
+
+            $sessionID = $this->generateSessionID($prefix, 42);
+
+        } while($this->driver->collisionCheckID($sessionID) === true);
+
+        $this->driver->createNewSession($sessionID, $this->request);
+        $this->queueSessionCookie($sessionID);
     }
 
     private function generateSessionID($prefix, $length): string
