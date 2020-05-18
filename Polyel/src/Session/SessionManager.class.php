@@ -32,10 +32,10 @@ class SessionManager
         }
     }
 
-    public function startSession($sessionCookie)
+    public function startSession($sessionCookieData)
     {
         // Either cookie does not exist or the session is missing on the server
-        if(!exists($sessionCookie) || $this->driver->isValid($sessionCookie) === false)
+        if(!exists($sessionCookieData) || $this->driver->isValid($sessionCookieData) === false)
         {
             $prefix = config('session.prefix');
 
