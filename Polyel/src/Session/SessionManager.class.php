@@ -48,6 +48,8 @@ class SessionManager
             $this->driver->createNewSession($sessionID, $this->request);
             $this->queueSessionCookie($sessionID);
         }
+
+        $sessionData = $this->driver->getSessionData($sessionCookieData);
     }
 
     private function generateSessionID($prefix, $length): string

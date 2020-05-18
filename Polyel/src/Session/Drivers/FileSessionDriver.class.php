@@ -47,4 +47,19 @@ class FileSessionDriver implements SessionDriver
         $sessionFilePath = '/storage/polyel/sessions/' . $sessionID;
         Storage::access('local')->write($sessionFilePath, $sessionData);
     }
+
+    public function getSessionData($sessionID)
+    {
+        if(file_exists($this->sessionFileStorage . $sessionID))
+        {
+            $jsonData = Storage::access('local')->read($this->sessionFileStorage . $sessionID);
+
+            $jsonOptions = JSON_INVALID_UTF8_SUBSTITUTE | JSON_PRETTY_PRINT;
+            $jsonData = json_decode($jsonData, $jsonOptions, 1024);
+
+            return $jsonData;
+        }
+
+        return null;
+    }
 }

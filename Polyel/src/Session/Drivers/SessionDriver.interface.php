@@ -9,4 +9,6 @@ interface SessionDriver
     public function collisionCheckID($sessionID);
 
     public function createNewSession($sessionID, $request);
+
+    public function getSessionData($sessionID);
 }
