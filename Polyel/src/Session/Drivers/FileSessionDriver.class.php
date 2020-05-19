@@ -93,8 +93,7 @@ class FileSessionDriver implements SessionDriver
         {
             $jsonData = Storage::access('local')->read($this->sessionFileStorage . $sessionID);
 
-            $jsonOptions = JSON_INVALID_UTF8_SUBSTITUTE | JSON_PRETTY_PRINT;
-            $jsonData = json_decode($jsonData, $this->jsonOptions, 1024);
+            $jsonData = json_decode($jsonData, true, $this->jsonOptions, 1024);
 
             return $jsonData;
         }
