@@ -14,6 +14,9 @@ class SessionManager
 
     private $request;
 
+    // Holds the current request session ID so the session service has access to it
+    private $currentRequestSessionID;
+
     public function __construct(Request $request)
     {
         $this->request = $request;
@@ -34,12 +37,14 @@ class SessionManager
 
     public function startSession($sessionCookieID)
     {
+        $this->currentRequestSessionID = $sessionCookieID;
+
         $sessionData = $this->driver->getSessionData($sessionCookieID);
 
         // Either cookie does not exist or the session is missing on the server
         if(!exists($sessionCookieID) || $this->driver->isValid($sessionCookieID, $sessionData) === false)
         {
-            $newSessionID = $this->regenerateSession();
+            $this->currentRequestSessionID = $this->regenerateSession();
         }
     }
 
@@ -95,5 +100,10 @@ class SessionManager
         ];
 
         Cookie::queue(...$sessionCookie);
+    }
+
+    public function getCurrentRequestSessionID()
+    {
+        return $this->currentRequestSessionID;
     }
 }
