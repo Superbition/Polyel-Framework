@@ -69,6 +69,7 @@ class FileSessionDriver implements SessionDriver
         $sessionData['ip_addr'] = $request->clientIP;
         $sessionData['user_agent'] = $request->userAgent;
         $sessionData['last_active'] = date("Y-m-d H:i:s");
+        $sessionData['data'] = null;
 
         $jsonOptions = JSON_INVALID_UTF8_SUBSTITUTE | JSON_PRETTY_PRINT;
         $sessionData = json_encode($sessionData, $jsonOptions, 1024);
