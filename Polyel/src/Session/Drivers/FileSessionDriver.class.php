@@ -79,6 +79,14 @@ class FileSessionDriver implements SessionDriver
         Storage::access('local')->write($sessionFilePath, $sessionData);
     }
 
+    public function saveSessionData($sessionID, $sessionData)
+    {
+        $sessionData = json_encode($sessionData, $this->jsonOptions, 1024);
+
+        $sessionFilePath = '/storage/polyel/sessions/' . $sessionID;
+        Storage::access('local')->write($sessionFilePath, $sessionData);
+    }
+
     public function getSessionData($sessionID)
     {
         if(file_exists($this->sessionFileStorage . $sessionID))
