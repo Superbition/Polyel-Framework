@@ -15,4 +15,6 @@ interface SessionDriver
     public function getSessionData($sessionID);
 
     public function destroySession($sessionID);
+
+    public function clear($sessionID);
 }
