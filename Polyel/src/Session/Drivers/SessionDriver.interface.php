@@ -11,4 +11,6 @@ interface SessionDriver
     public function createNewSession($sessionID, $request);
 
     public function getSessionData($sessionID);
+
+    public function destroySession($sessionID);
 }

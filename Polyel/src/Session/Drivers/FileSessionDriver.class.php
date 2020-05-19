@@ -2,6 +2,7 @@
 
 namespace Polyel\Session\Drivers;
 
+use Polyel\Http\Facade\Cookie;
 use Polyel\Storage\Facade\Storage;
 
 class FileSessionDriver implements SessionDriver
@@ -89,5 +90,26 @@ class FileSessionDriver implements SessionDriver
         }
 
         return null;
+    }
+
+    public function destroySession($sessionID)
+    {
+        if(exists($sessionID) && file_exists($this->sessionFileStorage . $sessionID))
+        {
+            unlink($this->sessionFileStorage . $sessionID);
+        }
+
+        $sessionCookie = [
+            $name = config('session.cookieName'),
+            $value = null,
+            $expire = -1,
+            $path = config('session.cookiePath'),
+            $domain = config('session.domain'),
+            $secure = config('session.secure'),
+            $httpOnly = config('session.httpOnly'),
+            $sameSite = 'None',
+        ];
+
+        Cookie::queue(...$sessionCookie);
     }
 }
