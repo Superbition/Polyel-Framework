@@ -22,7 +22,7 @@ class LocalStorage
     private $fromLink;
 
     // Used to store the file write mode, default is overwrite
-    private $writeMode = "c";
+    private $writeMode = "w+";
 
     public function __construct()
     {
@@ -148,7 +148,7 @@ class LocalStorage
         });
 
         // Reset the write mode back to the default
-        $this->writeMode = "c";
+        $this->writeMode = "w+";
     }
 
     public function copy($source, $dest)
