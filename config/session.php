@@ -21,7 +21,7 @@ return [
     │▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
     │ Set the cookie lifetime in minutes used to identify a session
     │ by Polyel. You may set this option to 0 to specify that the cookie shall
-    │ expire upon session close. The default is 7 days in minutes.
+    │ expire upon session close. The default is 7 days in minutes (10080).
     │
     */
     'lifetime' => 10080,
