@@ -106,4 +106,9 @@ class SessionManager
     {
         return $this->currentRequestSessionID;
     }
+
+    public function clearCurrentRequestSessionID()
+    {
+        $this->currentRequestSessionID = null;
+    }
 }
