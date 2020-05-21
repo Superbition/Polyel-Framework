@@ -76,7 +76,7 @@ class LocalStorage
         $handle = fopen(realpath($filePath), "rb");
 
         // Read the entire file and close the handle afterwards
-        $file = Swoole::fread($handle, filesize($filePath));
+        $file = Swoole::fread($handle, 0);
         fclose($handle);
 
         // Reset the from link
