@@ -9,7 +9,9 @@ class FileSessionDriver implements SessionDriver
 {
     private $sessionFileStorage = ROOT_DIR . '/storage/polyel/sessions/';
 
-    private $jsonOptions = JSON_INVALID_UTF8_SUBSTITUTE | JSON_PRETTY_PRINT;
+    private $jsonEncodeOptions = JSON_INVALID_UTF8_SUBSTITUTE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES;
+
+    private $jsonDecodeOptions = JSON_INVALID_UTF8_SUBSTITUTE;
 
     public function __construct()
     {
@@ -73,7 +75,7 @@ class FileSessionDriver implements SessionDriver
         $sessionData['last_active'] = date("Y-m-d H:i:s");
         $sessionData['data'] = null;
 
-        $sessionData = json_encode($sessionData, $this->jsonOptions, 1024);
+        $sessionData = json_encode($sessionData, $this->jsonEncodeOptions, 1024);
 
         $sessionFilePath = '/storage/polyel/sessions/' . $sessionID;
         Storage::access('local')->write($sessionFilePath, $sessionData);
@@ -81,7 +83,7 @@ class FileSessionDriver implements SessionDriver
 
     public function saveSessionData($sessionID, $sessionData)
     {
-        $sessionData = json_encode($sessionData, $this->jsonOptions, 1024);
+        $sessionData = json_encode($sessionData, $this->jsonEncodeOptions, 1024);
 
         $sessionFilePath = '/storage/polyel/sessions/' . $sessionID;
         Storage::access('local')->write($sessionFilePath, $sessionData);
@@ -93,7 +95,7 @@ class FileSessionDriver implements SessionDriver
         {
             $jsonData = Storage::access('local')->read($this->sessionFileStorage . $sessionID);
 
-            $jsonData = json_decode($jsonData, true, $this->jsonOptions, 1024);
+            $jsonData = json_decode($jsonData, true, 1024, $this->jsonDecodeOptions);
 
             return $jsonData;
         }
