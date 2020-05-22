@@ -113,4 +113,9 @@ class SessionManager
     {
         $this->currentRequestSessionID = null;
     }
+
+    public function driver()
+    {
+        return $this->driver;
+    }
 }
