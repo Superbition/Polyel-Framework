@@ -103,25 +103,28 @@ class FileSessionDriver implements SessionDriver
         return null;
     }
 
-    public function destroySession($sessionID)
+    public function destroySession($sessionID, $destroyCookie = true)
     {
         if(exists($sessionID) && file_exists($this->sessionFileStorage . $sessionID))
         {
             unlink(realpath($this->sessionFileStorage . $sessionID));
         }
 
-        $sessionCookie = [
-            $name = config('session.cookieName'),
-            $value = null,
-            $expire = -1,
-            $path = config('session.cookiePath'),
-            $domain = config('session.domain'),
-            $secure = config('session.secure'),
-            $httpOnly = config('session.httpOnly'),
-            $sameSite = 'None',
-        ];
+        if($destroyCookie)
+        {
+            $sessionCookie = [
+                $name = config('session.cookieName'),
+                $value = null,
+                $expire = -1,
+                $path = config('session.cookiePath'),
+                $domain = config('session.domain'),
+                $secure = config('session.secure'),
+                $httpOnly = config('session.httpOnly'),
+                $sameSite = 'None',
+            ];
 
-        Cookie::queue(...$sessionCookie);
+            Cookie::queue(...$sessionCookie);
+        }
     }
 
     public function clear($sessionID)
