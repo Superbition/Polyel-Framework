@@ -107,7 +107,7 @@ class FileSessionDriver implements SessionDriver
     {
         if(exists($sessionID) && file_exists($this->sessionFileStorage . $sessionID))
         {
-            unlink($this->sessionFileStorage . $sessionID);
+            unlink(realpath($this->sessionFileStorage . $sessionID));
         }
 
         $sessionCookie = [
