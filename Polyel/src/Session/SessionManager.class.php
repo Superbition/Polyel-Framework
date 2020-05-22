@@ -44,7 +44,7 @@ class SessionManager
         // Either cookie does not exist or the session is missing on the server
         if(!exists($sessionCookieID) || $this->driver->isValid($sessionCookieID, $sessionData) === false)
         {
-            $this->currentRequestSessionID = $this->regenerateSession();
+            $this->regenerateSession();
         }
     }
 
@@ -60,6 +60,8 @@ class SessionManager
 
         $this->driver->createNewSession($sessionID, $this->request);
         $this->queueSessionCookie($sessionID);
+
+        $this->currentRequestSessionID = $sessionID;
 
         return $sessionID;
     }
