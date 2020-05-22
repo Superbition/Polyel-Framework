@@ -48,7 +48,7 @@ class SessionManager
         }
     }
 
-    private function regenerateSession()
+    public function regenerateSession()
     {
         $prefix = config('session.prefix');
 
