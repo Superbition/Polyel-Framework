@@ -56,6 +56,17 @@ class FileSessionDriver implements SessionDriver
         return true;
     }
 
+    public function updateSession($sessionID, $request)
+    {
+        $sessionData = $this->getSessionData($sessionID);
+
+        $sessionData['ip_addr'] = $request->clientIP;
+        $sessionData['user_agent'] = $request->userAgent;
+        $sessionData['last_active'] = date("Y-m-d H:i:s");
+
+        $this->saveSessionData($sessionID, $sessionData);
+    }
+
     public function collisionCheckID($sessionID)
     {
         if(file_exists($this->sessionFileStorage . $sessionID))

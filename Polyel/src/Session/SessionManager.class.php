@@ -46,6 +46,9 @@ class SessionManager
         {
             $this->regenerateSession();
         }
+
+        // Update session ip, agent and last active time
+        $this->driver->updateSession($this->currentRequestSessionID, $this->request);
     }
 
     public function regenerateSession()

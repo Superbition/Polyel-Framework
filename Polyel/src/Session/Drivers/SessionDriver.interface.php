@@ -6,6 +6,8 @@ interface SessionDriver
 {
     public function isValid($sessionID, $sessionData = false);
 
+    public function updateSession($sessionID, $request);
+
     public function collisionCheckID($sessionID);
 
     public function createNewSession($sessionID, $request);
