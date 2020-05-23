@@ -4,6 +4,7 @@ namespace Polyel\Session;
 
 use Polyel;
 use Polyel\Http\Request;
+use Swoole\Timer as Timer;
 use Polyel\Http\Facade\Cookie;
 
 class SessionManager
@@ -13,6 +14,8 @@ class SessionManager
     private $availableDrivers;
 
     private $request;
+
+    private $gcStarted = false;
 
     // Holds the current request session ID so the session service has access to it
     private $currentRequestSessionID;
@@ -35,6 +38,22 @@ class SessionManager
         }
     }
 
+    public function startGc()
+    {
+        /*
+         * Register a Swoole timer to gc sessions every 30 minutes.
+         * Pass in access to the session driver that is configured so it can
+         * run the gc function.
+         */
+        Timer::tick(1800000, function($timerID, $sessionDriver)
+        {
+            $sessionDriver->gc();
+        }, $this->driver);
+
+        // Mark the session gc as started
+        $this->gcStarted = true;
+    }
+
     public function startSession($sessionCookieID)
     {
         $this->currentRequestSessionID = $sessionCookieID;
@@ -49,6 +68,13 @@ class SessionManager
 
         // Update session ip, agent and last active time
         $this->driver->updateSession($this->currentRequestSessionID, $this->request);
+
+        // The session gc is started on the first request once the server is booted
+        if($this->gcStarted == false)
+        {
+            // Register the non-blocking session gc timer task
+            $this->startGc();
+        }
     }
 
     public function regenerateSession()

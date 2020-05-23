@@ -8,6 +8,8 @@ interface SessionDriver
 
     public function updateSession($sessionID, $request);
 
+    public function gc();
+
     public function collisionCheckID($sessionID);
 
     public function createNewSession($sessionID, $request);

@@ -67,6 +67,31 @@ class FileSessionDriver implements SessionDriver
         $this->saveSessionData($sessionID, $sessionData);
     }
 
+    public function gc()
+    {
+        // Get all the session files but remove the first 3 elements as they are dot files
+        $sessions = array_slice(scandir($this->sessionFileStorage), 3);
+
+        // Using only the session file names, which is the session ID also, run a gc on them...
+        foreach($sessions as $session)
+        {
+            // First get the session data
+            $sessionData = $this->getSessionData($session);
+
+            // Session max lifetime before being deemed expired
+            $lifetime = config('session.lifetime');
+
+            // Setup the expired date format
+            $expiredTime = strtotime("-$lifetime minutes");
+
+            // If the session has passed the lifetime timestamp, it is invalid and old, delete it
+            if($expiredTime > strtotime($sessionData['last_active']))
+            {
+                unlink($this->sessionFileStorage . $session);
+            }
+        }
+    }
+
     public function collisionCheckID($sessionID)
     {
         if(file_exists($this->sessionFileStorage . $sessionID))
