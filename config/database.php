@@ -2,11 +2,13 @@
 
 return [
 
+    "default" => env("Database.Default_DB_Name", "DefaultDatabase"),
+
     "connections" => [
 
         "mysql" => [
 
-            "MainDatabase" => [
+            "DefaultDatabase" => [
 
                 "driver" => "mysql",
                 "database" => env("Main_Database.DATABASE", "polyel1"),
