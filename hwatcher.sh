@@ -48,7 +48,7 @@ while true; do
 
         pkill -f "$PROCESS_NAME"
 
-	    while pkill -0 -f "$PROCESS_NAME"; do
+	    while pkill -f -15 "$PROCESS_NAME"; do
 
 		    sleep 0.5
 
