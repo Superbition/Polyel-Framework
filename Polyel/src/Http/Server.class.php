@@ -7,6 +7,7 @@ use Polyel\Config\Config;
 use Swoole\Coroutine as Swoole;
 use Polyel\Controller\Controller;
 use Polyel\Middleware\Middleware;
+use Polyel\Database\DatabaseManager;
 use Swoole\HTTP\Server as SwooleHTTPServer;
 
 class Server
@@ -25,7 +26,9 @@ class Server
 
     private $middleware;
 
-    public function __construct(Config $config, Router $router, Controller $controller, Middleware $middleware)
+    private $databaseManager;
+
+    public function __construct(Config $config, Router $router, Controller $controller, Middleware $middleware, DatabaseManager $databaseManager)
     {
         cli_set_process_title("Polyel-HTTP-Server");
 
@@ -33,6 +36,7 @@ class Server
         $this->router = $router;
         $this->controller = $controller;
         $this->middleware = $middleware;
+        $this->databaseManager = $databaseManager;
     }
 
     public function boot()
@@ -50,6 +54,8 @@ class Server
         $this->controller->loadAllControllers();
 
         $this->middleware->loadAllMiddleware();
+
+        $this->databaseManager->createPools();
 
         // Create a new Swoole HTTP server and set server IP and listening port
         $this->server = new SwooleHTTPServer(
