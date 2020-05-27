@@ -12,6 +12,8 @@ abstract class ConnectionPool implements ConnectionCreation
 
     private $max;
 
+    private $openConnections;
+
     public function __construct(int $min, int $max)
     {
         $this->min = $min;
@@ -24,8 +26,7 @@ abstract class ConnectionPool implements ConnectionCreation
     {
         for($i=1; $i<=$this->min; $i++)
         {
-            $newConn = $this->createConnection();
-            $this->push($newConn);
+            $this->new();
         }
     }
 
@@ -58,6 +59,8 @@ abstract class ConnectionPool implements ConnectionCreation
 
     public function new()
     {
-
+        $newConn = new DatabaseConnection($this->createConnection());
+        $this->push($newConn);
+        $this->openConnections++;
     }
 }
