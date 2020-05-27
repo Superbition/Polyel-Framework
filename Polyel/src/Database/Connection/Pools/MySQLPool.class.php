@@ -2,6 +2,8 @@
 
 namespace Polyel\Database\Connection\Pools;
 
+use PDO;
+use PDOException;
 use Polyel\Database\Connection\ConnectionPool;
 
 class MySQLPool extends ConnectionPool
@@ -17,6 +19,28 @@ class MySQLPool extends ConnectionPool
 
     public function createConnection()
     {
+        $host = config("database.connections.mysql.databases.$this->dbName.host");
+        $db = config("database.connections.mysql.databases.$this->dbName.database");
+        $charset = config("database.connections.mysql.databases.$this->dbName.charset");
 
+        $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+
+        $user = config("database.connections.mysql.databases.$this->dbName.username");
+        $pass = config("database.connections.mysql.databases.$this->dbName.password");
+
+        $options = [
+            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES   => false,
+        ];
+
+        try
+        {
+            return new PDO($dsn, $user, $pass, $options);
+        }
+        catch(PDOException $e)
+        {
+            throw new PDOException($e->getMessage(), (int)$e->getCode());
+        }
     }
 }
