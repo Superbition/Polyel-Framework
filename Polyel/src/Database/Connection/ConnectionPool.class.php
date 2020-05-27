@@ -22,7 +22,7 @@ abstract class ConnectionPool implements ConnectionCreation
 
     public function open()
     {
-        for($i=0; $i<=$this->min; $i++)
+        for($i=1; $i<=$this->min; $i++)
         {
             $newConn = $this->createConnection();
             $this->push($newConn);
