@@ -16,13 +16,16 @@ abstract class ConnectionPool implements ConnectionCreation
     {
         $this->min = $min;
         $this->max = $max;
+
+        $this->pool = [];
     }
 
     public function open()
     {
         for($i=0; $i<=$this->min; $i++)
         {
-            $this->push($this->createConnection());
+            $newConn = $this->createConnection();
+            $this->push($newConn);
         }
     }
 
@@ -36,9 +39,16 @@ abstract class ConnectionPool implements ConnectionCreation
 
     }
 
-    public function push($conn)
+    public function push(&$conn)
     {
-        $this->pool[] = $conn;
+        if(count($this->pool) <= $this->max)
+        {
+            $this->pool[] = $conn;
+        }
+        else
+        {
+            $conn = null;
+        }
     }
 
     public function remove()
