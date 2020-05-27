@@ -15,6 +15,8 @@ class DatabaseManager
 
     public function createPools(): void
     {
+        echo "Attempting to create database pools... ";
+
         $mysqlDatabases = config('database.connections.mysql.databases');
         foreach($mysqlDatabases as $dbName => $poolConfig)
         {
@@ -29,5 +31,7 @@ class DatabaseManager
                 $this->mysqlPools[$dbName]->open();
             }
         }
+
+        echo "Done.\n";
     }
 }
