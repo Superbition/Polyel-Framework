@@ -18,11 +18,16 @@ class DatabaseManager
         $mysqlDatabases = config('database.connections.mysql.databases');
         foreach($mysqlDatabases as $dbName => $poolConfig)
         {
-            $minConn = $poolConfig['pool']['minConnections'];
-            $maxConn = $poolConfig['pool']['maxConnections'];
-            $this->mysqlPools[$dbName] = new MySQLPool($dbName, $minConn, $maxConn);
+            $dbStatus = config("database.connections.mysql.databases.$dbName.active");
 
-            $this->mysqlPools[$dbName]->open();
+            if($dbStatus)
+            {
+                $minConn = $poolConfig['pool']['minConnections'];
+                $maxConn = $poolConfig['pool']['maxConnections'];
+                $this->mysqlPools[$dbName] = new MySQLPool($dbName, $minConn, $maxConn);
+
+                $this->mysqlPools[$dbName]->open();
+            }
         }
     }
 }
