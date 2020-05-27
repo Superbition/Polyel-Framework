@@ -20,10 +20,11 @@ class MySQLPool extends ConnectionPool
     public function createConnection()
     {
         $host = config("database.connections.mysql.databases.$this->dbName.host");
+        $port = config("database.connections.mysql.databases.$this->dbName.port");
         $db = config("database.connections.mysql.databases.$this->dbName.database");
         $charset = config("database.connections.mysql.databases.$this->dbName.charset");
 
-        $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+        $dsn = "mysql:host=$host;port=$port;dbname=$db;charset=$charset";
 
         $user = config("database.connections.mysql.databases.$this->dbName.username");
         $pass = config("database.connections.mysql.databases.$this->dbName.password");
