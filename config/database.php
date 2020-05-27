@@ -16,6 +16,9 @@ return [
                 "port" => env("Main_Database.PORT", "3306"),
                 "username" => env("Main_Database.USERNAME", "polyel"),
                 "password" => env("Main_Database.PASSWORD", ""),
+                "charset" => "utf8mb4",
+                "collation" => "utf8mb4_unicode_ci",
+                "prefix" => "",
 
             ],
 
@@ -27,6 +30,9 @@ return [
                 "port" => env("Second_Database.PORT", "3306"),
                 "username" => env("Second_Database.USERNAME", "polyel"),
                 "password" => env("Second_Database.PASSWORD", ""),
+                "charset" => "utf8mb4",
+                "collation" => "utf8mb4_unicode_ci",
+                "prefix" => "",
 
             ],
 
