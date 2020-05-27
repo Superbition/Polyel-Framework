@@ -40,6 +40,14 @@ return [
 
             ],
 
+            "pool" => [
+
+                "minConnections" => 5,
+                "maxConnections" => 80,
+                "maxConnectionIdle" => "1 minute",
+
+            ]
+
         ],
 
     ],
