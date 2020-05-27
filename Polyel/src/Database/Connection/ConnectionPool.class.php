@@ -41,7 +41,7 @@ abstract class ConnectionPool implements ConnectionCreation
 
     public function push(&$conn)
     {
-        if(count($this->pool) <= $this->max)
+        if(count($this->pool) <= $this->max && exists($conn))
         {
             $this->pool[] = $conn;
         }
