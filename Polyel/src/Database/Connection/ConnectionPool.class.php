@@ -20,7 +20,10 @@ abstract class ConnectionPool implements ConnectionCreation
 
     public function open()
     {
-
+        for($i=0; $i<=$this->min; $i++)
+        {
+            $this->push($this->createConnection());
+        }
     }
 
     public function close()
@@ -33,9 +36,9 @@ abstract class ConnectionPool implements ConnectionCreation
 
     }
 
-    public function push()
+    public function push($conn)
     {
-
+        $this->pool[] = $conn;
     }
 
     public function remove()
