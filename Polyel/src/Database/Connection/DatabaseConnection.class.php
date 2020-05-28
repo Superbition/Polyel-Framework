@@ -15,7 +15,7 @@ class DatabaseConnection
         $this->lastActive = time();
     }
 
-    public function get()
+    public function use()
     {
         $this->lastActive = time();
 
