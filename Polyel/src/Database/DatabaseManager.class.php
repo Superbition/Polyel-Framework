@@ -34,4 +34,45 @@ class DatabaseManager
 
         echo "Done.\n";
     }
+
+    public function getConnection($type, $database = null)
+    {
+        if(is_null($database))
+        {
+            $database = config("database.default");
+        }
+
+        switch($database)
+        {
+            case 'mysql':
+
+                $dbServers = config("database.connections.$database.$type");
+                $dbServer = $dbServers[array_rand($dbServers)];
+
+                $connection = [];
+
+                $connection['driver'] = 'mysql';
+                $connection['database'] = $dbServer;
+                $connection['connection'] = $this->mysqlPools[$dbServer]->pull();
+
+                return $connection;
+
+            break;
+        }
+    }
+
+    public function putConnection($connection)
+    {
+        if(is_array($connection) && !array_diff(['driver', 'database', 'connection'], array_keys($connection)))
+        {
+            switch($connection['driver'])
+            {
+                case 'mysql':
+
+                    $this->mysqlPools[$connection['database']]->push($connection['connection']);
+
+                break;
+            }
+        }
+    }
 }
