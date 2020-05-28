@@ -6,6 +6,8 @@ use PDO;
 
 abstract class ConnectionPool implements ConnectionCreation
 {
+    private $status;
+
     private $pool;
 
     private $min;
@@ -19,6 +21,7 @@ abstract class ConnectionPool implements ConnectionCreation
         $this->min = $min;
         $this->max = $max;
 
+        $this->status = false;
         $this->pool = [];
     }
 
@@ -28,12 +31,20 @@ abstract class ConnectionPool implements ConnectionCreation
         {
             $this->new();
         }
+
+        $this->status = true;
+    }
+
+    public function status()
+    {
+        return $this->status;
     }
 
     public function close()
     {
         $this->pool = [];
         $this->openConnections = 0;
+        $this->status = false;
     }
 
     public function pull()
