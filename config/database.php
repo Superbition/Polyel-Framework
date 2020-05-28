@@ -2,7 +2,7 @@
 
 return [
 
-    "default" => env("Database.Default_DB_Name", "DefaultDatabase"),
+    "default" => env("Database.Default_Connection", "DefaultDatabase"),
 
     "connections" => [
 
