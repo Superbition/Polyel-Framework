@@ -8,6 +8,18 @@ return [
 
         "mysql" => [
 
+            "read" => [
+
+                "DefaultDatabase",
+
+            ],
+
+            "write" => [
+
+                "DefaultDatabase",
+
+            ],
+
             "databases" => [
 
                 "DefaultDatabase" => [
