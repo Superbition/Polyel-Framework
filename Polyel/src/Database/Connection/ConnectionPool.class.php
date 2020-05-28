@@ -40,6 +40,12 @@ abstract class ConnectionPool implements ConnectionCreation
         return $this->status;
     }
 
+    public function reset()
+    {
+        $this->close();
+        $this->open();
+    }
+
     public function close()
     {
         $this->pool = [];
