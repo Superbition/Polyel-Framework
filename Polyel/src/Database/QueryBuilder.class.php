@@ -2,8 +2,12 @@
 
 namespace Polyel\Database;
 
+use Polyel\Database\Support\SqlCompile;
+
 class QueryBuilder
 {
+    use SqlCompile;
+
     private $dbManager;
 
     private $from;
