@@ -61,6 +61,21 @@ class DatabaseManager
         }
     }
 
+    public function execute($type, $query, $data = null, $database = null)
+    {
+        $db = $this->getConnection($type, $database);
+
+        $statement = $db['connection']->use()->prepare($query);
+
+        $result = $statement->execute($data);
+
+        $result = $result->fetch();
+
+        $this->putConnection($db);
+
+        return $result;
+    }
+
     public function putConnection($connection)
     {
         if(is_array($connection) && !array_diff(['driver', 'database', 'connection'], array_keys($connection)))
