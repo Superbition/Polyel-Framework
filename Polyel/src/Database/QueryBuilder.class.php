@@ -12,6 +12,9 @@ class QueryBuilder
 
     private $from;
 
+    // The type of query that will be executed: read or write
+    private $type = 'read';
+
     public function __construct(DatabaseManager $dbManager)
     {
         $this->dbManager = $dbManager;
@@ -22,5 +25,14 @@ class QueryBuilder
         $this->from = $table;
 
         return $this;
+    }
+
+    public function get()
+    {
+        $query = $this->compileSql();
+
+        $result = $this->dbManager->execute($this->type, $query);
+
+        return $result;
     }
 }
