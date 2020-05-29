@@ -59,6 +59,8 @@ class DatabaseManager
 
             break;
         }
+
+        return null;
     }
 
     public function execute($type, $query, $data = null, $database = null)
