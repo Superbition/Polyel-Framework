@@ -19,6 +19,11 @@ class Database
         return $this->dbManager->execute($type, $query, $data);
     }
 
+    public function select($query, $data = null)
+    {
+        return $this->execute("read", $query, $data);
+    }
+
     public function table($table)
     {
         return $this->queryBuilder->from($table);
