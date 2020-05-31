@@ -71,7 +71,7 @@ class DatabaseManager
 
         $statement->execute($data);
 
-        $result = $statement->fetch();
+        $result = $statement->fetchAll();
 
         $this->putConnection($db);
 
