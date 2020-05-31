@@ -10,10 +10,10 @@ class QueryBuilder
 
     private $dbManager;
 
-    private $from;
-
     // The type of query that will be executed: read or write
     private $type = 'read';
+
+    private $from;
 
     public function __construct(DatabaseManager $dbManager)
     {
