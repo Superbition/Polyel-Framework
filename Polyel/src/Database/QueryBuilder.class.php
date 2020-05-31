@@ -88,6 +88,13 @@ class QueryBuilder
         return $this;
     }
 
+    public function crossJoin($table)
+    {
+        $this->joins .= " CROSS JOIN $table";
+
+        return $this;
+    }
+
     public function distinct()
     {
         $this->distinct = true;
