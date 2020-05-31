@@ -15,6 +15,8 @@ class QueryBuilder
 
     private $from;
 
+    private $selects;
+
     public function __construct(DatabaseManager $dbManager)
     {
         $this->dbManager = $dbManager;
