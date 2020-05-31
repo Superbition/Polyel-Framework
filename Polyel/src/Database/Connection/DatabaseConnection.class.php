@@ -6,11 +6,15 @@ class DatabaseConnection
 {
     private $connection;
 
+    public $transaction;
+
     private $lastActive;
 
     public function __construct($conn)
     {
         $this->connection = $conn;
+
+        $this->transaction = false;
 
         $this->lastActive = time();
     }
@@ -20,5 +24,10 @@ class DatabaseConnection
         $this->lastActive = time();
 
         return $this->connection;
+    }
+
+    public function transaction($status)
+    {
+        $this->transaction = $status;
     }
 }
