@@ -2,6 +2,7 @@
 
 namespace Polyel\Database;
 
+use PDOException;
 use Polyel\Database\Connection\Pools\MySQLPool;
 
 class DatabaseManager
@@ -69,7 +70,14 @@ class DatabaseManager
 
         $statement = $db['connection']->use()->prepare($query);
 
-        $statement->execute($data);
+        try
+        {
+            $statement->execute($data);
+        }
+        catch(PDOException $message)
+        {
+            echo $message->getMessage();
+        }
 
         if($type === 'write')
         {
