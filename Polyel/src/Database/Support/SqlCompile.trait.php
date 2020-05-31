@@ -8,6 +8,11 @@ trait SqlCompile
     {
         $query = 'SELECT ';
 
+        if($this->distinct)
+        {
+            $query .= 'DISTINCT ';
+        }
+
         if(!exists($this->selects))
         {
             $this->selects = '*';

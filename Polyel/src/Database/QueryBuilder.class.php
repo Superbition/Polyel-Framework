@@ -17,6 +17,8 @@ class QueryBuilder
 
     private $selects;
 
+    private $distinct = false;
+
     public function __construct(DatabaseManager $dbManager)
     {
         $this->dbManager = $dbManager;
@@ -57,6 +59,13 @@ class QueryBuilder
                 $this->selects .= ', ';
             }
         }
+
+        return $this;
+    }
+
+    public function distinct()
+    {
+        $this->distinct = true;
 
         return $this;
     }
