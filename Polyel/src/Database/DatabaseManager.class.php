@@ -69,9 +69,9 @@ class DatabaseManager
 
         $statement = $db['connection']->use()->prepare($query);
 
-        $result = $statement->execute($data);
+        $statement->execute($data);
 
-        $result = $result->fetch();
+        $result = $statement->fetch();
 
         $this->putConnection($db);
 
