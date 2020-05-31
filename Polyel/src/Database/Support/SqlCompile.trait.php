@@ -6,14 +6,17 @@ trait SqlCompile
 {
     private function compileSql()
     {
-        $query = '';
+        $query = 'SELECT ';
 
         if(!exists($this->selects))
         {
-            $this->selects = 'SELECT * ';
+            $this->selects = '*';
+            $query .= $this->selects;
         }
-
-        $query .= $this->selects;
+        else
+        {
+            $query .= $this->selects;
+        }
 
         $query .= ' FROM ' . $this->from;
 
