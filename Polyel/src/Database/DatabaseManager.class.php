@@ -71,7 +71,15 @@ class DatabaseManager
 
         $statement->execute($data);
 
-        $result = $statement->fetchAll();
+        if($type === 'write')
+        {
+            $result = $statement->rowCount();
+        }
+        else
+        {
+
+            $result = $statement->fetchAll();
+        }
 
         $this->putConnection($db);
 
