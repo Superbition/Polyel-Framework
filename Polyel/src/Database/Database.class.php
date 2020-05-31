@@ -14,6 +14,11 @@ class Database
         $this->queryBuilder = $queryBuilder;
     }
 
+    private function execute($type, $query, $data)
+    {
+        return $this->dbManager->execute($type, $query, $data);
+    }
+
     public function table($table)
     {
         return $this->queryBuilder->from($table);
