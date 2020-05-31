@@ -39,9 +39,9 @@ class Database
         return $this->execute("write", $query, $data);
     }
 
-    public function raw($statement, $type = 'write')
+    public function raw($statement, $data = null, $type = 'write')
     {
-        return $this->execute($type, $statement, null);
+        return $this->execute($type, $statement, $data);
     }
 
     public function table($table)
