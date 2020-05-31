@@ -74,6 +74,20 @@ class QueryBuilder
         return $this;
     }
 
+    public function leftJoin($table, $column1, $operator, $column2)
+    {
+        $this->join($table, $column1, $operator, $column2, 'LEFT');
+
+        return $this;
+    }
+
+    public function rightJoin($table, $column1, $operator, $column2)
+    {
+        $this->join($table, $column1, $operator, $column2, 'RIGHT');
+
+        return $this;
+    }
+
     public function distinct()
     {
         $this->distinct = true;
