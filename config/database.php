@@ -20,6 +20,8 @@ return [
 
             ],
 
+            "sticky" => true,
+
             "databases" => [
 
                 "DefaultDatabase" => [
