@@ -19,6 +19,8 @@ class QueryBuilder
 
     private $distinct = false;
 
+    private $joins;
+
     public function __construct(DatabaseManager $dbManager)
     {
         $this->dbManager = $dbManager;
@@ -59,6 +61,15 @@ class QueryBuilder
                 $this->selects .= ', ';
             }
         }
+
+        return $this;
+    }
+
+    public function join($table, $column1, $operator, $column2, $type = 'INNER')
+    {
+        $join = "$type JOIN " . $table . " ON " . $column1 . " $operator " . $column2;
+
+        $this->joins .= " $join";
 
         return $this;
     }

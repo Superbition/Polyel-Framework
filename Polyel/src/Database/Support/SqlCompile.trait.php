@@ -25,6 +25,11 @@ trait SqlCompile
 
         $query .= ' FROM ' . $this->from;
 
+        if(exists($this->joins))
+        {
+            $query .= $this->joins;
+        }
+
         return $query;
     }
 }
