@@ -34,6 +34,11 @@ class Database
         return $this->execute("write", $query, $data);
     }
 
+    public function delete($query, $data = null)
+    {
+        return $this->execute("write", $query, $data);
+    }
+
     public function table($table)
     {
         return $this->queryBuilder->from($table);
