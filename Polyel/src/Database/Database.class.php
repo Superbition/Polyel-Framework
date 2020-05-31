@@ -24,6 +24,11 @@ class Database
         return $this->execute("read", $query, $data);
     }
 
+    public function insert($query, $data = null)
+    {
+        return $this->execute("write", $query, $data);
+    }
+
     public function table($table)
     {
         return $this->queryBuilder->from($table);
