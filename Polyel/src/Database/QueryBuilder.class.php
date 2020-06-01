@@ -13,6 +13,8 @@ class QueryBuilder
     // The type of query that will be executed: read or write
     private $type = 'read';
 
+    private $data;
+
     private $selects;
 
     private $distinct = false;
@@ -106,7 +108,7 @@ class QueryBuilder
     {
         $query = $this->compileSql();
 
-        $result = $this->dbManager->execute($this->type, $query);
+        $result = $this->dbManager->execute($this->type, $query, $this->data);
 
         return $result;
     }
