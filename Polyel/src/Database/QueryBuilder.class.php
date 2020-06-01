@@ -14,6 +14,13 @@ class QueryBuilder
     // The type of query that will be executed: read or write
     private $type = 'read';
 
+    /*
+     * The compile mode used to render the final SQL query
+     * 0 = Render the query as normal, used for when the builder is used from DB::table()
+     * 1 = Only compile the actual set statements, used when the builder is operated inside a Closure
+     */
+    private $compileMode;
+
     private $data;
 
     private $selects;
@@ -26,9 +33,10 @@ class QueryBuilder
 
     private $wheres;
 
-    public function __construct(DatabaseManager $dbManager)
+    public function __construct(DatabaseManager $dbManager = null, $compileMode = 0)
     {
         $this->dbManager = $dbManager;
+        $this->compileMode = $compileMode;
     }
 
     public function from($table)
@@ -409,6 +417,11 @@ class QueryBuilder
     public function get()
     {
         $query = $this->compileSql();
+
+        if($this->compileMode === 1)
+        {
+            return $query;
+        }
 
         $result = $this->dbManager->execute($this->type, $query, $this->data);
 

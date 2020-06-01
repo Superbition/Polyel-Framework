@@ -8,12 +8,12 @@ trait SqlCompile
     {
         $query = '';
 
-        if(!exists($this->selects))
+        if(!exists($this->selects) && $this->compileMode === 0)
         {
             $this->selects = 'SELECT *';
             $query .= $this->selects;
         }
-        else
+        else if($this->compileMode === 0)
         {
             $query .= 'SELECT ' . $this->selects;
         }
@@ -35,7 +35,14 @@ trait SqlCompile
 
         if(exists($this->wheres))
         {
-            $query .= ' WHERE ' . $this->wheres;
+            if($this->compileMode === 0)
+            {
+                $query .= ' WHERE ' . $this->wheres;
+            }
+            else if ($this->compileMode === 1)
+            {
+                $query .= $this->wheres;
+            }
         }
 
         return $query;
