@@ -100,16 +100,23 @@ class QueryBuilder
         return $this;
     }
 
-    public function where($column, $operator = null, $value = null, $type = ' AND ')
+    public function where($column, $operator = null, $value = null, $type = ' AND ', $prepareData = true)
     {
         if(is_array($column))
         {
             return $this->wheres($column, $type);
         }
 
-        $where = $column . " $operator " . '?';
+        if($prepareData)
+        {
+            $where = $column . " $operator " . '?';
 
-        $this->data[] = $value;
+            $this->data[] = $value;
+        }
+        else
+        {
+            $where = $column . " $operator " . $value;
+        }
 
         if(exists($this->wheres))
         {
