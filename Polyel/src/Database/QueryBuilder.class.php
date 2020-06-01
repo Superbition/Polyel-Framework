@@ -137,6 +137,16 @@ class QueryBuilder
         return $this;
     }
 
+    public function orWhere($column, $operator = null, $value = null)
+    {
+        if(is_array($column))
+        {
+            return $this->wheres($column, ' OR ');
+        }
+
+        return $this->where($column, $operator, $value, ' OR ');
+    }
+
     public function distinct()
     {
         $this->distinct = true;
