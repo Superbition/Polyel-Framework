@@ -23,6 +23,8 @@ class QueryBuilder
 
     private $joins;
 
+    private $wheres;
+
     public function __construct(DatabaseManager $dbManager)
     {
         $this->dbManager = $dbManager;
@@ -93,6 +95,44 @@ class QueryBuilder
     public function crossJoin($table)
     {
         $this->joins .= " CROSS JOIN $table";
+
+        return $this;
+    }
+
+    public function where($column, $operator = null, $value = null, $type = ' AND ')
+    {
+        if(is_array($column))
+        {
+            return $this->wheres($column, $type);
+        }
+
+        $where = $column . " $operator " . '?';
+
+        $this->data[] = $value;
+
+        if(exists($this->wheres))
+        {
+            $where = $type . $where;
+
+            $this->wheres .= $where;
+        }
+        else
+        {
+            $this->wheres = $where;
+        }
+
+        return $this;
+    }
+
+    /*
+     * Used to process an array of where statements
+     */
+    private function wheres($wheres, $type)
+    {
+        foreach($wheres as $where)
+        {
+            $this->where($where[0], $where[1], $where[2], $type);
+        }
 
         return $this;
     }

@@ -33,6 +33,11 @@ trait SqlCompile
             $query .= $this->joins;
         }
 
+        if(exists($this->wheres))
+        {
+            $query .= ' WHERE ' . $this->wheres;
+        }
+
         return $query;
     }
 }
