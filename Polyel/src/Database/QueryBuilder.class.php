@@ -242,6 +242,47 @@ class QueryBuilder
         return $this->whereIn($column, $values, ' OR ', true);
     }
 
+    public function whereNull($column, $bool = ' AND ', $not = false)
+    {
+        if($not)
+        {
+            $not = ' NOT ';
+        }
+        else
+        {
+            $not = ' ';
+        }
+
+        $whereNull = $column . ' IS' . $not . 'NULL';
+
+        if(exists($this->wheres))
+        {
+            $whereNull = $bool . $whereNull;
+            $this->wheres .= $whereNull;
+        }
+        else
+        {
+            $this->wheres .= $whereNull;
+        }
+
+        return $this;
+    }
+
+    public function whereNotNull($column)
+    {
+        return $this->whereNull($column, ' AND ', true);
+    }
+
+    public function orWhereNull($column)
+    {
+        return $this->whereNull($column, ' OR ');
+    }
+
+    public function orWhereNotNull($column)
+    {
+        return $this->whereNull($column, ' OR ', true);
+    }
+
     public function distinct()
     {
         $this->distinct = true;
