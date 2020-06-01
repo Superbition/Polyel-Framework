@@ -2,6 +2,7 @@
 
 namespace Polyel\Database;
 
+use DateTimeInterface;
 use Polyel\Database\Support\SqlCompile;
 
 class QueryBuilder
@@ -281,6 +282,104 @@ class QueryBuilder
     public function orWhereNotNull($column)
     {
         return $this->whereNull($column, ' OR ', true);
+    }
+
+    private function whereDateTime($column, $operator, $value, $bool = ' AND ', $type = 'DATE')
+    {
+        if($value instanceof DateTimeInterface && $type === 'DATE')
+        {
+            $value = $value->format('Y-m-d');
+        }
+        else if($value instanceof DateTimeInterface && $type === 'TIME')
+        {
+            $value = $value->format('H:i:s');
+        }
+
+        $whereDate = "$type($column)" . " $operator " . '?';
+
+        $this->data[] = $value;
+
+        if(exists($this->wheres))
+        {
+            $whereDate = $bool . $whereDate;
+            $this->wheres .= $whereDate;
+        }
+        else
+        {
+            $this->wheres .= $whereDate;
+        }
+
+        return $this;
+    }
+
+    public function whereDate($column, $operator, $value)
+    {
+        return $this->whereDateTime($column, $operator, $value);
+    }
+
+    public function orWhereDate($column, $operator, $value)
+    {
+        return $this->whereDateTime($column, $operator, $value, ' OR ');
+    }
+
+    public function whereTime($column, $operator, $value)
+    {
+        return $this->whereDateTime($column, $operator, $value, ' AND ', 'TIME');
+    }
+
+    public function orWhereTime($column, $operator, $value)
+    {
+        return $this->whereDateTime($column, $operator, $value, ' OR ', 'TIME');
+    }
+
+    public function whereYear($column, $operator, $value)
+    {
+        return $this->whereDateTime($column, $operator, $value, ' AND ', 'YEAR');
+    }
+
+    public function orWhereYear($column, $operator, $value)
+    {
+        return $this->whereDateTime($column, $operator, $value, ' OR ', 'YEAR');
+    }
+
+    public function whereMonth($column, $operator, $value)
+    {
+        return $this->whereDateTime($column, $operator, $value, ' AND ', 'MONTH');
+    }
+
+    public function orWhereMonth($column, $operator, $value)
+    {
+        return $this->whereDateTime($column, $operator, $value, ' OR ', 'MONTH');
+    }
+
+    public function whereDay($column, $operator, $value)
+    {
+        return $this->whereDateTime($column, $operator, $value, ' AND ', 'DAY');
+    }
+
+    public function orWhereDay($column, $operator, $value)
+    {
+        return $this->whereDateTime($column, $operator, $value, ' OR ', 'DAY');
+    }
+
+    public function whereWeekOfYear($column, $operator, $value)
+    {
+        return $this->whereDateTime($column, $operator, $value, ' AND ', 'WEEKOFYEAR');
+    }
+
+    public function orWhereWeekOfYear($column, $operator, $value)
+    {
+        return $this->whereDateTime($column, $operator, $value, ' OR ', 'WEEKOFYEAR');
+    }
+
+    public function whereDayOfYear($column, $operator, $value)
+    {
+        return $this->whereDateTime($column, $operator, $value, ' AND ', 'DAYOFYEAR');
+    }
+
+    public function orWhereDayOfYear($column, $operator, $value)
+    {
+        return $this->whereDateTime($column, $operator, $value, ' OR ', 'DAYOFYEAR');
     }
 
     public function distinct()
