@@ -389,6 +389,16 @@ class QueryBuilder
         return $this->whereDateTime($column, $operator, $value, ' OR ', 'DAYOFYEAR');
     }
 
+    public function whereColumn($columnOne, $operator, $columnTwo, $bool = ' AND ')
+    {
+        return $this->where($columnOne, $operator, $columnTwo, ' AND ', false);
+    }
+
+    public function orWhereColumn($columnOne, $operator, $columnTwo)
+    {
+        return $this->where($columnOne, $operator, $columnTwo, ' OR ', false);
+    }
+
     public function distinct()
     {
         $this->distinct = true;
