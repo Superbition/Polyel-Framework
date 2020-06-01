@@ -188,6 +188,60 @@ class QueryBuilder
         return $this->whereBetween($column, $range, ' OR ', true);
     }
 
+    public function whereIn($column, $values, $bool = ' AND ', $not = false)
+    {
+        if($not)
+        {
+            $not = ' NOT';
+        }
+        else
+        {
+            $not = '';
+        }
+
+        $inValues = '';
+        foreach($values as $key => $value)
+        {
+            $inValues .= '?';
+
+            $this->data[] = $value;
+
+            if($key < array_key_last($values))
+            {
+                $inValues .= ', ';
+            }
+        }
+
+        $whereIn = $column . $not . ' IN (' . $inValues . ')';
+
+        if(exists($this->wheres))
+        {
+            $whereIn = $bool . $whereIn;
+            $this->wheres .= $whereIn;
+        }
+        else
+        {
+            $this->wheres .= $whereIn;
+        }
+
+        return $this;
+    }
+
+    public function whereNotIn($column, $values)
+    {
+        return $this->whereIn($column, $values, ' AND ', true);
+    }
+
+    public function orWhereIn($column, $values)
+    {
+        return $this->whereIn($column, $values, ' OR ');
+    }
+
+    public function orWhereNotIn($column, $values)
+    {
+        return $this->whereIn($column, $values, ' OR ', true);
+    }
+
     public function distinct()
     {
         $this->distinct = true;
