@@ -6,21 +6,21 @@ trait SqlCompile
 {
     private function compileSql()
     {
-        $query = 'SELECT ';
-
-        if($this->distinct)
-        {
-            $query .= 'DISTINCT ';
-        }
+        $query = '';
 
         if(!exists($this->selects))
         {
-            $this->selects = '*';
+            $this->selects = 'SELECT *';
             $query .= $this->selects;
         }
         else
         {
-            $query .= $this->selects;
+            $query .= 'SELECT ' . $this->selects;
+        }
+
+        if($this->distinct)
+        {
+            $query .= 'DISTINCT ';
         }
 
         if(exists($this->from))
