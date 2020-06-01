@@ -13,11 +13,11 @@ class QueryBuilder
     // The type of query that will be executed: read or write
     private $type = 'read';
 
-    private $from;
-
     private $selects;
 
     private $distinct = false;
+
+    private $from;
 
     private $joins;
 
