@@ -151,12 +151,14 @@ class QueryBuilder
     {
         if($not)
         {
-            $whereBetween = $column . " NOT BETWEEN " . $range[0] . " AND " . $range[1];
+            $not = ' NOT';
         }
         else
         {
-            $whereBetween = $column . " BETWEEN " . $range[0] . " AND " . $range[1];
+            $not = '';
         }
+
+        $whereBetween = $column . $not . " BETWEEN " . $range[0] . " AND " . $range[1];
 
         if(exists($this->wheres))
         {
