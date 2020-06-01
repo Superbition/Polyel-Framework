@@ -23,7 +23,10 @@ trait SqlCompile
             $query .= $this->selects;
         }
 
-        $query .= ' FROM ' . $this->from;
+        if(exists($this->from))
+        {
+            $query .= ' FROM ' . $this->from;
+        }
 
         if(exists($this->joins))
         {
