@@ -147,6 +147,45 @@ class QueryBuilder
         return $this->where($column, $operator, $value, ' OR ');
     }
 
+    public function whereBetween($column, $range, $bool = ' AND ', $not = false)
+    {
+        if($not)
+        {
+            $whereBetween = $column . " NOT BETWEEN " . $range[0] . " AND " . $range[1];
+        }
+        else
+        {
+            $whereBetween = $column . " BETWEEN " . $range[0] . " AND " . $range[1];
+        }
+
+        if(exists($this->wheres))
+        {
+            $whereBetween = $bool . $whereBetween;
+            $this->wheres .= $whereBetween;
+        }
+        else
+        {
+            $this->wheres .= $whereBetween;
+        }
+
+        return $this;
+    }
+
+    public function orWhereBetween($column, $range)
+    {
+        return $this->whereBetween($column, $range, ' OR ');
+    }
+
+    public function whereNotBetween($column, $range)
+    {
+        return $this->whereBetween($column, $range, ' AND ', true);
+    }
+
+    public function orWhereNotBetween($column, $range)
+    {
+        return $this->whereBetween($column, $range, ' OR ', true);
+    }
+
     public function distinct()
     {
         $this->distinct = true;
