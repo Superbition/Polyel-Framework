@@ -174,7 +174,10 @@ class QueryBuilder
             $not = '';
         }
 
-        $whereBetween = $column . $not . " BETWEEN " . $range[0] . " AND " . $range[1];
+        $whereBetween = $column . $not . " BETWEEN " . '?' . " AND " . '?';
+
+        $this->data[] = $range[0];
+        $this->data[] = $range[1];
 
         if(exists($this->wheres))
         {
