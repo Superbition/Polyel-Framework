@@ -427,6 +427,47 @@ class QueryBuilder
         return $this->where($columnOne, $operator, $columnTwo, ' OR ', false);
     }
 
+    public function whereExists(Closure $callback, $bool = ' AND ', $not = false)
+    {
+        if($callback instanceof Closure)
+        {
+            if($not)
+            {
+                $not = 'NOT ';
+            }
+            else
+            {
+                $not = '';
+            }
+
+            $whereExistsClosureQuery = $not . 'EXISTS ' . $this->processClosure($callback);
+
+            if(exists($this->wheres))
+            {
+                $this->wheres .= $bool;
+            }
+
+            $this->wheres .= $whereExistsClosureQuery;
+        }
+
+        return $this;
+    }
+
+    public function orWhereExists(Closure $callback)
+    {
+        return $this->whereExists($callback, ' OR ');
+    }
+
+    public function whereNotExists(Closure $callback)
+    {
+        return $this->whereExists($callback, ' AND ', true);
+    }
+
+    public function orWhereNotExists(Closure $callback)
+    {
+        return $this->whereExists($callback, ' OR ', true);
+    }
+
     public function distinct()
     {
         $this->distinct = true;
