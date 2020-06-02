@@ -21,7 +21,7 @@ class QueryBuilder
      */
     private $compileMode;
 
-    private $data;
+    private $data = [];
 
     private $selects;
 
