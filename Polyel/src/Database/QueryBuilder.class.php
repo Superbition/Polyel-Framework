@@ -118,6 +118,20 @@ class QueryBuilder
             return $this->wheres($column, $type);
         }
 
+        if($column instanceof Closure)
+        {
+            $whereClosureQuery = $this->processClosure($column);
+
+            if(exists($this->wheres))
+            {
+                $this->wheres .= $type;
+            }
+
+            $this->wheres .= $whereClosureQuery;
+
+            return $this;
+        }
+
         if($prepareData)
         {
             $where = $column . " $operator " . '?';
