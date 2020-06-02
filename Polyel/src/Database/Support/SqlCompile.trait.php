@@ -13,7 +13,7 @@ trait SqlCompile
             $this->selects = 'SELECT *';
             $query .= $this->selects;
         }
-        else if($this->compileMode === 0)
+        else if(exists($this->selects))
         {
             $query .= 'SELECT ' . $this->selects;
         }
