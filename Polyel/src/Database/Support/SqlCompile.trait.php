@@ -35,7 +35,7 @@ trait SqlCompile
 
         if(exists($this->wheres))
         {
-            if($this->compileMode === 0)
+            if($this->compileMode === 0 || (exists($this->selects) && exists($this->from)))
             {
                 $query .= ' WHERE ' . $this->wheres;
             }
