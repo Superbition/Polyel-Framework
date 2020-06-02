@@ -2,12 +2,15 @@
 
 namespace Polyel\Database;
 
+use Closure;
 use DateTimeInterface;
 use Polyel\Database\Support\SqlCompile;
+use Polyel\Database\Support\ClosureSupport;
 
 class QueryBuilder
 {
     use SqlCompile;
+    use ClosureSupport;
 
     private $dbManager;
 
