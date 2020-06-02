@@ -423,7 +423,11 @@ class QueryBuilder
 
         if($this->compileMode === 1)
         {
-            return $query;
+            $queryResult = [];
+            $queryResult['query'] = $query;
+            $queryResult['data'] = $this->data;
+
+            return $queryResult;
         }
 
         $result = $this->dbManager->execute($this->type, $query, $this->data);
