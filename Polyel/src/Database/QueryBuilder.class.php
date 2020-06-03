@@ -42,6 +42,10 @@ class QueryBuilder
 
     private $order;
 
+    private $limit;
+
+    private $offset;
+
     public function __construct(DatabaseManager $dbManager = null, $compileMode = 0)
     {
         $this->dbManager = $dbManager;
@@ -648,6 +652,25 @@ class QueryBuilder
     public function orderByRandom($seed = '')
     {
         $this->order = "RAND($seed)";
+
+        return $this;
+    }
+
+    public function limit($value)
+    {
+        if($value >= 0)
+        {
+            $this->limit = $value;
+        }
+
+        return $this;
+    }
+
+    public function offset($value)
+    {
+        $value = max(0, $value);
+
+        $this->offset = $value;
 
         return $this;
     }

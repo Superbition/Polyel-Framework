@@ -60,6 +60,16 @@ trait SqlCompile
             $query .= " ORDER BY $this->order";
         }
 
+        if(exists($this->limit))
+        {
+            $query .= " LIMIT $this->limit";
+        }
+
+        if(exists($this->offset))
+        {
+            $query .= " OFFSET $this->offset";
+        }
+
         return $query;
     }
 }
