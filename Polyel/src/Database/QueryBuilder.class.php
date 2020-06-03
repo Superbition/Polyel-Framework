@@ -666,6 +666,11 @@ class QueryBuilder
         return $this;
     }
 
+    public function take($value)
+    {
+        return $this->limit($value);
+    }
+
     public function offset($value)
     {
         $value = max(0, $value);
@@ -673,6 +678,11 @@ class QueryBuilder
         $this->offset = $value;
 
         return $this;
+    }
+
+    public function skip($value)
+    {
+        return $this->offset($value);
     }
 
     public function get()
@@ -687,6 +697,9 @@ class QueryBuilder
 
             return $queryResult;
         }
+
+        var_dump($query);
+        echo "\n\n";
 
         $result = $this->dbManager->execute($this->type, $query, $this->data);
 
