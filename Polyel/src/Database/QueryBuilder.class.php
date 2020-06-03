@@ -468,6 +468,32 @@ class QueryBuilder
         return $this->whereExists($callback, ' OR ', true);
     }
 
+    public function whereJson($column, $operator = null, $value = null, $bool = ' AND ')
+    {
+        $column = explode('->', $column);
+
+        $whereJsonColumn = array_shift($column) . '->>"$.';
+
+        foreach($column as $key => $jsonPath)
+        {
+            $whereJsonColumn .= $jsonPath;
+
+            if($key < array_key_last($column))
+            {
+                $whereJsonColumn .= '.';
+            }
+        }
+
+        $whereJsonColumn .= '"';
+
+        return $this->where($whereJsonColumn, $operator, $value, $bool);
+    }
+
+    public function orWhereJson($column, $operator = null, $value = null)
+    {
+        return $this->whereJson($column, $operator, $value, ' OR ');
+    }
+
     public function distinct()
     {
         $this->distinct = true;
