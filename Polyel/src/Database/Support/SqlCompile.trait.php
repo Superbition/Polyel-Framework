@@ -8,7 +8,7 @@ trait SqlCompile
     {
         $query = '';
 
-        if(!exists($this->selects) && $this->compileMode === 0)
+        if($this->compileMode === 0 && !exists($this->selects))
         {
             $this->selects = 'SELECT *';
             $query .= $this->selects;
