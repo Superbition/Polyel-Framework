@@ -45,6 +45,16 @@ trait SqlCompile
             }
         }
 
+        if(exists($this->groups))
+        {
+            $query .= " GROUP BY $this->groups";
+        }
+
+        if(exists($this->havings))
+        {
+            $query .= " HAVING $this->havings";
+        }
+
         if(exists($this->order))
         {
             $query .= " ORDER BY $this->order";

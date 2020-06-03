@@ -36,6 +36,10 @@ class QueryBuilder
 
     private $wheres;
 
+    private $groups;
+
+    private $havings;
+
     private $order;
 
     public function __construct(DatabaseManager $dbManager = null, $compileMode = 0)
@@ -516,6 +520,83 @@ class QueryBuilder
     public function orWhereJson($column, $operator = null, $value = null)
     {
         return $this->whereJson($column, $operator, $value, ' OR ');
+    }
+
+    public function groupBy(...$columns)
+    {
+        foreach($columns as $key => $groupByColumn)
+        {
+            $this->groups .= $groupByColumn;
+
+            if($key < array_key_last($columns))
+            {
+                $this->groups .= ', ';
+            }
+        }
+
+        return $this;
+    }
+
+    public function having($column, $operator, $value, $bool = ' AND ')
+    {
+        $having = $column . " $operator " . '?';
+
+        $this->data[] = $value;
+
+        if(exists($this->havings))
+        {
+            $having = $bool . $having;
+        }
+
+        $this->havings .= $having;
+
+        return $this;
+    }
+
+    public function orHaving($column, $operator, $value)
+    {
+        return $this->having($column, $operator, $value, ' OR ');
+    }
+
+    public function havingBetween($column, $values, $bool = ' AND ', $not = false)
+    {
+        if($not)
+        {
+            $not = ' NOT ';
+        }
+        else
+        {
+            $not = ' ';
+        }
+
+        $havingBetween = $column . $not . 'BETWEEN ? AND ?';
+
+        if(exists($this->havings))
+        {
+            $havingBetween = $bool . $havingBetween;
+        }
+
+        $this->data[] = $values[0];
+        $this->data[] = $values[1];
+
+        $this->havings .= $havingBetween;
+
+        return $this;
+    }
+
+    public function orHavingBetween($column, $values)
+    {
+        return $this->havingBetween($column, $values, ' OR ');
+    }
+
+    public function havingNotBteween($column, $values)
+    {
+        return $this->havingBetween($column, $values, ' AND ', true);
+    }
+
+    public function orHavingNotBteween($column, $values)
+    {
+        return $this->havingBetween($column, $values, ' OR ', true);
     }
 
     public function distinct()
