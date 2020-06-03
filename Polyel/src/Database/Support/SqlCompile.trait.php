@@ -45,6 +45,11 @@ trait SqlCompile
             }
         }
 
+        if(exists($this->order))
+        {
+            $query .= " ORDER BY $this->order";
+        }
+
         return $query;
     }
 }

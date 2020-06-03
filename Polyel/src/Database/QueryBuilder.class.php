@@ -36,6 +36,8 @@ class QueryBuilder
 
     private $wheres;
 
+    private $order;
+
     public function __construct(DatabaseManager $dbManager = null, $compileMode = 0)
     {
         $this->dbManager = $dbManager;
@@ -519,6 +521,52 @@ class QueryBuilder
     public function distinct()
     {
         $this->distinct = true;
+
+        return $this;
+    }
+
+    public function orderBy($column, $direction = 'ASC')
+    {
+        if(is_array($column))
+        {
+            foreach($column as $key => $orderBy)
+            {
+                if(array_key_exists(1, $orderBy))
+                {
+                    $direction = $orderBy[1];
+                }
+
+                $this->order .= $orderBy[0] . ' ' . $direction;
+
+                $direction = 'ASC';
+
+                if($key < array_key_last($orderBy))
+                {
+                    $this->order .= ', ';
+                }
+            }
+
+            return $this;
+        }
+
+        $this->order = $column . " $direction";
+
+        return $this;
+    }
+
+    public function latest($column)
+    {
+        return $this->orderBy($column, 'DESC');
+    }
+
+    public function oldest($column)
+    {
+        return $this->orderBy($column, 'ASC');
+    }
+
+    public function orderByRandom($seed = '')
+    {
+        $this->order = "RAND($seed)";
 
         return $this;
     }
