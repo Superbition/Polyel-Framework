@@ -68,6 +68,28 @@ class QueryBuilder
                 return $this;
             }
 
+            // Support converting JSON paths in select statements using the -> operator
+            if(strpos($column, '->') !== false)
+            {
+                $column = explode('->', $column);
+
+                $jsonSelectColumn = array_shift($column) . '->>"$.';
+
+                foreach($column as $pathKey => $jsonPath)
+                {
+                    $jsonSelectColumn .= $jsonPath;
+
+                    if($pathKey < array_key_last($column))
+                    {
+                        $jsonSelectColumn .= '.';
+                    }
+                }
+
+                $jsonSelectColumn .= '"';
+
+                $column = $jsonSelectColumn;
+            }
+
             // Add the column to the select statement
             $this->selects .= $column;
 
