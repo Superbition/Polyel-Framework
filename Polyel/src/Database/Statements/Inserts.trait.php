@@ -62,12 +62,12 @@ trait Inserts
         }
     }
 
-    public function insertAndGetId($inserts)
+    public function insertAndGetId(array $inserts): int
     {
-        return $this->insert($inserts, true);
+        return (int)$this->insert($inserts, true);
     }
 
-    public function deferAndInsert(array $inserts)
+    public function deferAndInsert(array $inserts): void
     {
         \Swoole\Event::defer(function() use ($inserts) {
 
