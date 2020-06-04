@@ -11,6 +11,8 @@ trait Inserts
             $inserts = [$inserts];
         }
 
+        $results = [];
+
         foreach($inserts as $insert)
         {
             $insertQuery = 'INSERT INTO ' . $this->from;
@@ -41,11 +43,21 @@ trait Inserts
 
             $insertQuery .= $insertColumns . ')' . $insertValues . ')';
 
-            $result = $this->dbManager->execute('write', $insertQuery, $insertData, $getInsertId);
+            $results[] = $this->dbManager->execute('write', $insertQuery, $insertData, $getInsertId);
+        }
 
-            if($returnResult)
+        // No return on defer inserts, run a check here, otherwise, return the outcome for an insert(s)
+        if($returnResult)
+        {
+            // Return an array of insert results
+            if(count($results) > 1)
             {
-                return $result;
+                return $results;
+            }
+            else
+            {
+                // Else only return the first insert result
+                return $results[0];
             }
         }
     }
