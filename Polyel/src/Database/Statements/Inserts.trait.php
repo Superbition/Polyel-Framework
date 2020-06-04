@@ -4,7 +4,7 @@ namespace Polyel\Database\Statements;
 
 trait Inserts
 {
-    public function insert($inserts, $getInsertId = false)
+    public function insert(array $inserts, bool $getInsertId = false)
     {
         if(!is_array(reset($inserts)))
         {
