@@ -4,7 +4,7 @@ namespace Polyel\Database\Statements;
 
 trait Inserts
 {
-    public function insert(array $inserts, bool $getInsertId = false)
+    public function insert(array $inserts, bool $getInsertId = false, $returnResult = true)
     {
         if(!is_array(reset($inserts)))
         {
@@ -43,12 +43,24 @@ trait Inserts
 
             $result = $this->dbManager->execute('write', $insertQuery, $insertData, $getInsertId);
 
-            return $result;
+            if($returnResult)
+            {
+                return $result;
+            }
         }
     }
 
     public function insertAndGetId($inserts)
     {
         return $this->insert($inserts, true);
+    }
+
+    public function deferAndInsert(array $inserts)
+    {
+        \Swoole\Event::defer(function() use ($inserts) {
+
+           $this->insert($inserts, false, false);
+
+        });
     }
 }
