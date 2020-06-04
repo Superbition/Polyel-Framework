@@ -64,7 +64,7 @@ class DatabaseManager
         return null;
     }
 
-    public function execute($type, $query, $data = null, $database = null)
+    public function execute($type, $query, $data = null, $insert = false, $database = null)
     {
         $db = $this->getConnection($type, $database);
 
@@ -79,7 +79,11 @@ class DatabaseManager
             echo $message->getMessage();
         }
 
-        if($type === 'write')
+        if($insert)
+        {
+            $result = $db['connection']->use()->lastInsertId();
+        }
+        else if($type === 'write')
         {
             $result = $statement->rowCount();
         }
