@@ -62,7 +62,6 @@ abstract class ConnectionPool implements ConnectionCreation
 
         if($this->openConnections < $this->max)
         {
-            $this->openConnections++;
             $this->new();
             return array_pop($this->pool);
         }
