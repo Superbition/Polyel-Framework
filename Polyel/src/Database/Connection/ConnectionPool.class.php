@@ -22,6 +22,7 @@ abstract class ConnectionPool implements ConnectionCreation
         $this->max = $max;
 
         $this->status = false;
+        $this->openConnections = 0;
         $this->pool = [];
     }
 
