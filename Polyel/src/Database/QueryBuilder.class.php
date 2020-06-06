@@ -5,10 +5,16 @@ namespace Polyel\Database;
 use Closure;
 use DateTimeInterface;
 use Polyel\Database\Support\SqlCompile;
+use Polyel\Database\Statements\Inserts;
+use Polyel\Database\Statements\Updates;
+use Polyel\Database\Statements\Deletes;
 use Polyel\Database\Support\ClosureSupport;
 
 class QueryBuilder
 {
+    use Inserts;
+    use Updates;
+    use Deletes;
     use SqlCompile;
     use ClosureSupport;
 
