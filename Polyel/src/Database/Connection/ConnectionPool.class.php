@@ -51,7 +51,8 @@ abstract class ConnectionPool implements ConnectionCreation
 
     public function close()
     {
-        $this->pool = [];
+        $this->pool->close();
+        $this->pool = null;
         $this->openConnections = 0;
         $this->status = false;
     }
