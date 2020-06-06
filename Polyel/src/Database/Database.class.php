@@ -6,12 +6,9 @@ class Database
 {
     private $dbManager;
 
-    private $queryBuilder;
-
-    public function __construct(DatabaseManager $dbManager, QueryBuilder $queryBuilder)
+    public function __construct(DatabaseManager $dbManager)
     {
         $this->dbManager = $dbManager;
-        $this->queryBuilder = $queryBuilder;
     }
 
     private function execute($type, $query, $data)
