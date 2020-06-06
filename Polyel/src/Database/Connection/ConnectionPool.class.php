@@ -28,6 +28,14 @@ abstract class ConnectionPool implements ConnectionCreation
         $this->pool = new Channel($max);
     }
 
+    public function debug()
+    {
+        echo "\n";
+        echo "\e[100m\e[30mOPEN POOL CONNECTIONS\e[49m\e[39m: " . $this->openConnections . "\n";
+        echo "\e[100m\e[30mCURRENT POOL NUM\e[49m\e[39m: " . $this->pool->length() . "\n";
+        echo "\n";
+    }
+
     public function open()
     {
         for($i=1; $i<=$this->min; $i++)
