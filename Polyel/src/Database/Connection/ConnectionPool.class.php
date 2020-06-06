@@ -16,12 +16,15 @@ abstract class ConnectionPool implements ConnectionCreation
 
     private $max;
 
+    private $popTimeout;
+
     private $openConnections;
 
-    public function __construct(int $min, int $max)
+    public function __construct(int $min, int $max, float $waitTimeout)
     {
         $this->min = $min;
         $this->max = $max;
+        $this->popTimeout = $waitTimeout;
 
         $this->status = false;
         $this->openConnections = 0;
@@ -77,7 +80,7 @@ abstract class ConnectionPool implements ConnectionCreation
             $this->new();
         }
 
-        return $this->pool->pop();
+        return $this->pool->pop($this->popTimeout);
     }
 
     public function push($conn)
