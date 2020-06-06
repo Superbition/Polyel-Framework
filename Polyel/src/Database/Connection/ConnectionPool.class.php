@@ -3,6 +3,7 @@
 namespace Polyel\Database\Connection;
 
 use PDO;
+use http\Exception\RuntimeException;
 
 abstract class ConnectionPool implements ConnectionCreation
 {
@@ -56,18 +57,17 @@ abstract class ConnectionPool implements ConnectionCreation
 
     public function pull()
     {
-        if(count($this->pool) >= 1)
+        if(is_null($this->pool))
         {
-            return array_pop($this->pool);
+            throw new RuntimeException('Connection pool was closed');
         }
 
-        if($this->openConnections < $this->max)
+        if(count($this->pool) === 0 && $this->openConnections < $this->max)
         {
             $this->new();
-            return array_pop($this->pool);
         }
 
-        return null;
+        return array_pop($this->pool);
     }
 
     public function push($conn)
