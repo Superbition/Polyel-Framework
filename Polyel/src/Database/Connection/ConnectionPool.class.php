@@ -8,16 +8,22 @@ use http\Exception\RuntimeException;
 
 abstract class ConnectionPool implements ConnectionCreation
 {
+    // The status of the pool, open = true or closed = false
     private $status;
 
+    // The pool itself where the connections are held, in a Swoole channel
     private $pool;
 
+    // Minimum  number of DB connections in the pool
     private $min;
 
+    // Maximum number of DB connections in the pool
     private $max;
 
+    // The Swoole channel pop timeout
     private $popTimeout;
 
+    // Counter to track the number of open connections, not the total in the pool
     private $openConnections;
 
     public function __construct(int $min, int $max, float $waitTimeout)

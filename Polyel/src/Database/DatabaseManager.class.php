@@ -7,6 +7,7 @@ use Polyel\Database\Connection\Pools\MySQLPool;
 
 class DatabaseManager
 {
+    // Holds all the connection pools for all MySQL configured databases and thei connections
     private $mysqlPools;
 
     public function __construct()
@@ -39,6 +40,7 @@ class DatabaseManager
 
     public function getConnection($type, $database = null)
     {
+        // Use the default set database if one is not provided
         if(is_null($database))
         {
             $database = config("database.default");
@@ -62,6 +64,7 @@ class DatabaseManager
             break;
         }
 
+        // Null, no database or pool found
         return null;
     }
 
