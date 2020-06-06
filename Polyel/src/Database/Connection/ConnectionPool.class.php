@@ -78,7 +78,7 @@ abstract class ConnectionPool implements ConnectionCreation
         }
         else
         {
-            $conn = null;
+            $this->openConnections--;
         }
     }
 
