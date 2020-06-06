@@ -71,8 +71,10 @@ trait Inserts
     {
         \Swoole\Event::defer(function() use ($inserts) {
 
-           $this->insert($inserts, false, false);
-
+            go(function() use ($inserts)
+            {
+                $this->insert($inserts, false, false);
+            });
         });
     }
 }
