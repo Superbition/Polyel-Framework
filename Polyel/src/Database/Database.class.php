@@ -46,7 +46,6 @@ class Database
 
     public function table($table)
     {
-
         $queryBuilder = new QueryBuilder($this->dbManager);
 
         return $queryBuilder->from($table);
