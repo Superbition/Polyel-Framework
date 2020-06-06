@@ -93,12 +93,12 @@ class DatabaseManager
             $result = $statement->fetchAll();
         }
 
-        $this->putConnection($db);
+        $this->returnConnection($db);
 
         return $result;
     }
 
-    public function putConnection($connection)
+    public function returnConnection($connection)
     {
         if(is_array($connection) && !array_diff(['driver', 'database', 'connection'], array_keys($connection)))
         {
