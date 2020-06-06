@@ -91,6 +91,13 @@ abstract class ConnectionPool implements ConnectionCreation
 
     public function push($conn)
     {
+        if($this->pool->isFull())
+        {
+            $conn = null;
+            $this->openConnections--;
+            return false;
+        }
+
         if($this->openConnections < $this->max && exists($conn) && $conn instanceof DatabaseConnection)
         {
             $this->pool->push($conn);
