@@ -107,8 +107,11 @@ abstract class ConnectionPool implements ConnectionCreation
 
     public function new()
     {
-        $newConn = new DatabaseConnection($this->createConnection());
-        $this->openConnections++;
-        $this->push($newConn);
+        go(function()
+        {
+            $newConn = new DatabaseConnection($this->createConnection());
+            $this->openConnections++;
+            $this->push($newConn);
+        });
     }
 }
