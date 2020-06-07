@@ -164,7 +164,7 @@ abstract class ConnectionPool implements ConnectionCreation
             throw new RuntimeException('Connection pool was closed');
         }
 
-        if($this->openConnections < $this->max && $this->pool->isEmpty())
+        if($this->openConnections <= $this->max && $this->pool->isEmpty())
         {
             $this->new();
         }
@@ -208,7 +208,7 @@ abstract class ConnectionPool implements ConnectionCreation
             return false;
         }
 
-        if($this->openConnections < $this->max && exists($conn) && $conn instanceof DatabaseConnection)
+        if($this->openConnections <= $this->max && exists($conn) && $conn instanceof DatabaseConnection)
         {
             // Push the connection back into the pool and use a channel timeout
             $this->pool->push($conn, 0.1);
