@@ -91,6 +91,11 @@ abstract class ConnectionPool implements ConnectionCreation
 
     public function push($conn)
     {
+        if(is_null($this->pool))
+        {
+            throw new RuntimeException('Connection pool was closed');
+        }
+
         if($this->pool->isFull())
         {
             $conn = null;
