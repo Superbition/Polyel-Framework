@@ -55,9 +55,12 @@ abstract class ConnectionPool implements ConnectionCreation
         $this->status = true;
     }
 
-    public function status()
+    public function close()
     {
-        return $this->status;
+        $this->pool->close();
+        $this->pool = null;
+        $this->openConnections = 0;
+        $this->status = false;
     }
 
     public function reset()
@@ -66,12 +69,9 @@ abstract class ConnectionPool implements ConnectionCreation
         $this->open();
     }
 
-    public function close()
+    public function status()
     {
-        $this->pool->close();
-        $this->pool = null;
-        $this->openConnections = 0;
-        $this->status = false;
+        return $this->status;
     }
 
     public function pull()
