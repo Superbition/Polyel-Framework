@@ -219,6 +219,11 @@ abstract class ConnectionPool implements ConnectionCreation
         }
     }
 
+    public function add()
+    {
+        $this->new();
+    }
+
     public function remove($num = 1)
     {
         go(function() use($num)
