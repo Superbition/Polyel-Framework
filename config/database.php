@@ -38,6 +38,12 @@ return [
                     "prefix" => "",
                     "pool" => [
 
+                        /*
+                         * minConnections: Number of minimum connections to keep alive
+                         * maxConnections: Maximum number of connections in the pool allowed
+                         * connectionIdleTimeout: Timeout in minutes how long a connection can be idle for
+                         * waitTimeout: Maximum timeout for how long to wait for a connection in seconds
+                         */
                         "minConnections" => 5,
                         "maxConnections" => 80,
                         "connectionIdleTimeout" => 1,
@@ -61,9 +67,16 @@ return [
                     "prefix" => "",
                     "pool" => [
 
+                        /*
+                         * minConnections: Number of minimum connections to keep alive
+                         * maxConnections: Maximum number of connections in the pool allowed
+                         * connectionIdleTimeout: Timeout in minutes how long a connection can be idle for
+                         * waitTimeout: Maximum timeout for how long to wait for a connection in seconds
+                         */
                         "minConnections" => 5,
                         "maxConnections" => 80,
                         "connectionIdleTimeout" => 1,
+                        "waitTimeout" => 1,
 
                     ]
 
