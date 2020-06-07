@@ -74,6 +74,16 @@ abstract class ConnectionPool implements ConnectionCreation
         return $this->status;
     }
 
+    public function getPoolCount()
+    {
+        return $this->pool->length();
+    }
+
+    public function getOpenConnectionCount()
+    {
+        return $this->openConnections;
+    }
+
     public function pull()
     {
         if(is_null($this->pool))
