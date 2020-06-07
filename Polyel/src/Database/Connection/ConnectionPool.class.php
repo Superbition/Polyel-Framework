@@ -12,7 +12,7 @@ abstract class ConnectionPool implements ConnectionCreation
     private bool $status;
 
     // The pool itself where the connections are held, in a Swoole channel
-    private Channel $pool;
+    private $pool;
 
     // Minimum  number of DB connections in the pool
     private int $min;
