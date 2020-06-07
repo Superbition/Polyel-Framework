@@ -165,7 +165,7 @@ abstract class ConnectionPool implements ConnectionCreation
         });
     }
 
-    public function new()
+    private function new()
     {
         go(function()
         {
