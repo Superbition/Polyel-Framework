@@ -40,6 +40,7 @@ return [
 
                         "minConnections" => 5,
                         "maxConnections" => 80,
+                        "connectionIdleTimeout" => 1,
                         "waitTimeout" => 1,
 
                     ]
@@ -62,7 +63,7 @@ return [
 
                         "minConnections" => 5,
                         "maxConnections" => 80,
-                        "maxConnectionIdle" => "1 minute",
+                        "connectionIdleTimeout" => 1,
 
                     ]
 

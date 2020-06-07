@@ -28,8 +28,9 @@ class DatabaseManager
             {
                 $minConn = $poolConfig['pool']['minConnections'];
                 $maxConn = $poolConfig['pool']['maxConnections'];
+                $maxConnectionIdle = $poolConfig['pool']['connectionIdleTimeout'];
                 $waitTimeout = $poolConfig['pool']['waitTimeout'];
-                $this->mysqlPools[$dbName] = new MySQLPool($dbName, $minConn, $maxConn, $waitTimeout);
+                $this->mysqlPools[$dbName] = new MySQLPool($dbName, $minConn, $maxConn, $maxConnectionIdle, $waitTimeout);
 
                 $this->mysqlPools[$dbName]->open();
             }

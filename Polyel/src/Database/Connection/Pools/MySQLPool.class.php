@@ -10,9 +10,9 @@ class MySQLPool extends ConnectionPool
 {
     private $dbName;
 
-    public function __construct(string $dbname, int $min, int $max, float $waitTimeout)
+    public function __construct(string $dbname, int $min, int $max, int $maxConnectionIdle, float $waitTimeout)
     {
-        parent::__construct($min, $max, $waitTimeout);
+        parent::__construct($min, $max, $maxConnectionIdle, $waitTimeout);
 
         $this->dbName = $dbname;
     }

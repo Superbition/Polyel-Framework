@@ -3,6 +3,7 @@
 namespace Polyel\Database\Connection;
 
 use PDO;
+use Swoole;
 use RuntimeException;
 use Swoole\Coroutine\Channel;
 
@@ -23,13 +24,20 @@ abstract class ConnectionPool implements ConnectionCreation
     // The Swoole channel pop timeout
     private float $popTimeout;
 
+    // Max connection idle timeout before being disconnected in minutes
+    private int $maxConnectionIdle;
+
     // Counter to track the number of open connections, not the total in the pool
     private int $openConnections;
 
-    public function __construct(int $min, int $max, float $waitTimeout)
+    // The ID of the gc timer collector timer process
+    private int $connectionIdleGcTimerId;
+
+    public function __construct(int $min, int $max, int $maxConnectionIdle, float $waitTimeout)
     {
         $this->min = $min;
         $this->max = $max;
+        $this->maxConnectionIdle = $maxConnectionIdle;
         $this->popTimeout = $waitTimeout;
 
         $this->status = false;
@@ -45,6 +53,65 @@ abstract class ConnectionPool implements ConnectionCreation
         echo "\n";
     }
 
+    private function startConnectionIdleGc()
+    {
+        // Run GC every 1 minute to check for idle DB connections...
+        $this->connectionIdleGcTimerId = Swoole\Timer::tick(60000, function()
+        {
+            $activeConnections = [];
+
+            while($this->openConnections > $this->min)
+            {
+                if($this->status === false)
+                {
+                    break;
+                }
+
+                if($this->pool->isEmpty())
+                {
+                    break;
+                }
+
+                // Pop using a timeout of 1 second
+                $connection = $this->pool->pop(1);
+
+                if($connection === false)
+                {
+                    continue;
+                }
+
+                $now = time();
+                $lastConnectionActive = ($now - $connection->lastActive());
+
+                if($lastConnectionActive < (60 * $this->maxConnectionIdle))
+                {
+                    $activeConnections[] = $connection;
+                }
+                else
+                {
+                    $connection = null;
+                    $this->openConnections--;
+                }
+            }
+
+            foreach($activeConnections as $connection)
+            {
+                $status = $this->pool->push($connection, 0.1);
+
+                if($status === false)
+                {
+                    $connection = null;
+                    $this->openConnections--;
+                }
+            }
+        });
+    }
+
+    private function stopConnectionIdleGc()
+    {
+        Swoole\Timer::clear($this->connectionIdleGcTimerId);
+    }
+
     public function open()
     {
         for($i=1; $i<=$this->min; $i++)
@@ -53,12 +120,15 @@ abstract class ConnectionPool implements ConnectionCreation
         }
 
         $this->status = true;
+
+        $this->startConnectionIdleGc();
     }
 
     public function close()
     {
         if(!is_null($this->pool))
         {
+            $this->stopConnectionIdleGc();
             $this->pool->close();
             $this->pool = null;
             $this->openConnections = 0;
