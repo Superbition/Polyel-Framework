@@ -101,6 +101,11 @@ abstract class ConnectionPool implements ConnectionCreation
             // Connection is active, we can return it
             return $connection;
         }
+        else
+        {
+            $connection = null;
+            $this->openConnections--;
+        }
 
         // The connection is not alive or active
         return null;
