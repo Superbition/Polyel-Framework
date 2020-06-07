@@ -9,22 +9,22 @@ use http\Exception\RuntimeException;
 abstract class ConnectionPool implements ConnectionCreation
 {
     // The status of the pool, open = true or closed = false
-    private $status;
+    private bool $status;
 
     // The pool itself where the connections are held, in a Swoole channel
-    private $pool;
+    private Channel $pool;
 
     // Minimum  number of DB connections in the pool
-    private $min;
+    private int $min;
 
     // Maximum number of DB connections in the pool
-    private $max;
+    private int $max;
 
     // The Swoole channel pop timeout
-    private $popTimeout;
+    private float $popTimeout;
 
     // Counter to track the number of open connections, not the total in the pool
-    private $openConnections;
+    private int $openConnections;
 
     public function __construct(int $min, int $max, float $waitTimeout)
     {
