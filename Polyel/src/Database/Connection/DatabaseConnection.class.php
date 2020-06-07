@@ -2,6 +2,9 @@
 
 namespace Polyel\Database\Connection;
 
+use PDO;
+use Throwable;
+
 class DatabaseConnection
 {
     private $connection;
@@ -24,6 +27,18 @@ class DatabaseConnection
         $this->lastActive = time();
 
         return $this->connection;
+    }
+
+    public function isConnected()
+    {
+        try
+        {
+            return (bool)$this->use()->getAttribute(PDO::ATTR_SERVER_INFO);
+        }
+        catch(Throwable $e)
+        {
+            return false;
+        }
     }
 
     public function transaction($status)
