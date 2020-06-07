@@ -3,8 +3,8 @@
 namespace Polyel\Database\Connection;
 
 use PDO;
+use RuntimeException;
 use Swoole\Coroutine\Channel;
-use http\Exception\RuntimeException;
 
 abstract class ConnectionPool implements ConnectionCreation
 {
