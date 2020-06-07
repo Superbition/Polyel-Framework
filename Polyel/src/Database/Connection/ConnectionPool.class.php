@@ -100,7 +100,8 @@ abstract class ConnectionPool implements ConnectionCreation
 
         if($this->openConnections < $this->max && exists($conn) && $conn instanceof DatabaseConnection)
         {
-            $this->pool->push($conn);
+            // Push the connection back into the pool and use a channel timeout
+            $this->pool->push($conn, 0.1);
         }
         else
         {
