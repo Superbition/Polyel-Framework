@@ -41,6 +41,11 @@ class DatabaseConnection
         }
     }
 
+    public function lastActive()
+    {
+        return$this->lastActive;
+    }
+
     public function transaction($status)
     {
         $this->transaction = $status;
