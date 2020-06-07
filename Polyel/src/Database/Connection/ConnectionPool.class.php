@@ -111,15 +111,18 @@ abstract class ConnectionPool implements ConnectionCreation
 
     public function remove($num = 1)
     {
-        for($i=1; $i<=$num; $i++)
+        go(function() use($num)
         {
-            if($this->pool->length() >= 1)
+            for($i=1; $i<=$num; $i++)
             {
-                $conn = $this->pull();
-                $this->openConnections--;
-                $conn = null;
+                if($this->pool->length() >= 1)
+                {
+                    $conn = $this->pull();
+                    $this->openConnections--;
+                    $conn = null;
+                }
             }
-        }
+        });
     }
 
     public function new()
