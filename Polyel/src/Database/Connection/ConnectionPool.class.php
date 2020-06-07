@@ -81,7 +81,7 @@ abstract class ConnectionPool implements ConnectionCreation
             throw new RuntimeException('Connection pool was closed');
         }
 
-        if($this->pool->isEmpty() && $this->openConnections < $this->max)
+        if($this->openConnections < $this->max && $this->pool->isEmpty())
         {
             $this->new();
         }
