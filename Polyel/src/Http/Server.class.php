@@ -100,6 +100,11 @@ class Server
             $this->router->handle($request);
             $this->router->deliver($response);
         });
+
+        $this->server->on("WorkerStop", function($server, $workerId)
+        {
+            $this->databaseManager->closeWorkerPool();
+        });
     }
 
     public function run()

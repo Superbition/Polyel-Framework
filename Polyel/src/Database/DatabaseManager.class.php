@@ -35,6 +35,14 @@ class DatabaseManager
         }
     }
 
+    public function closeWorkerPool()
+    {
+        foreach($this->mysqlPools as $pool)
+        {
+            $pool->close();
+        }
+    }
+
     public function getConnection($type, $database = null)
     {
         // Use the default set database if one is not provided
