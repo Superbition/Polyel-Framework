@@ -691,9 +691,25 @@ class QueryBuilder
         return $this->offset($value);
     }
 
-    public function get()
+    public function get($dump = 0)
     {
         $query = $this->compileSql();
+
+        if($dump >= 1)
+        {
+            echo "\e[30m\e[103mSQL Query:\e[39m\e[49m ";
+            var_dump($query);
+            echo "\n\n";
+
+            echo "\e[30m\e[103mSQL Data:\e[39m\e[49m ";
+            var_dump($this->data);
+            echo "\n\n";
+        }
+
+        if($dump === 1)
+        {
+            return;
+        }
 
         if($this->compileMode === 1)
         {
@@ -704,11 +720,20 @@ class QueryBuilder
             return $queryResult;
         }
 
-        var_dump($query);
-        echo "\n\n";
-
         $result = $this->dbManager->execute($this->type, $query, $this->data);
 
         return $result;
+    }
+
+    public function dd()
+    {
+        // Used to dump data and die, as in not execute the SQL statement but continue request
+        return $this->get(1);
+    }
+
+    public function dump()
+    {
+        // Just dump out the SQL query and data, then execute it
+        return $this->get(2);
     }
 }
