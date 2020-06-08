@@ -693,6 +693,15 @@ class QueryBuilder
         return $this->offset($value);
     }
 
+    public function findById($id)
+    {
+        $this->select('*');
+
+        $this->where('id', '=', $id);
+
+        return $this->first();
+    }
+
     public function first()
     {
         $this->limit = 1;
