@@ -55,7 +55,7 @@ class Server
 
         $this->middleware->loadAllMiddleware();
 
-        $this->databaseManager->createPools();
+        \Swoole\Runtime::enableCoroutine();
 
         // Create a new Swoole HTTP server and set server IP and listening port
         $this->server = new SwooleHTTPServer(
@@ -75,7 +75,7 @@ class Server
     {
         $this->server->on("WorkerStart", function($server, $workerId)
         {
-
+            $this->databaseManager->createWorkerPool();
         });
 
         $this->server->on("start", function($server)
