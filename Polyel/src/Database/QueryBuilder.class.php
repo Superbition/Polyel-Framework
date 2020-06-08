@@ -693,6 +693,15 @@ class QueryBuilder
         return $this->offset($value);
     }
 
+    public function first()
+    {
+        $this->limit = 1;
+
+        $result = $this->get();
+
+        return $result[0];
+    }
+
     public function get($dump = 0)
     {
         $query = $this->compileSql();
