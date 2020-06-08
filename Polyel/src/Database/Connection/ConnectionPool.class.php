@@ -171,11 +171,11 @@ abstract class ConnectionPool implements ConnectionCreation
 
         $connection = $this->pool->pop($this->popTimeout);
 
-        // False when the pop timeout is reached. Try again to get a connection...
+        // False when the pop timeout is reached or no connection available.
         if($connection === false)
         {
-            // Pull again because the pop timeout was reached
-            return $this->pull();
+            // No connection available in the pool, wait timeout was reached or pool is exhausted
+            return null;
         }
 
         // Check if the connection is alive and active
