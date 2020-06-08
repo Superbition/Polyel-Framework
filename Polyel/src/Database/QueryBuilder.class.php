@@ -702,6 +702,18 @@ class QueryBuilder
         return $result[0];
     }
 
+    public function value($column)
+    {
+        $result = $this->first();
+
+        if(array_key_exists($column, $result))
+        {
+            return $result[$column];
+        }
+
+        return false;
+    }
+
     public function get($dump = 0)
     {
         $query = $this->compileSql();
