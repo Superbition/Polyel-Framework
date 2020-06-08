@@ -699,7 +699,12 @@ class QueryBuilder
 
         $result = $this->get();
 
-        return $result[0];
+        if(array_key_exists(0, $result))
+        {
+            return $result[0];
+        }
+
+        return null;
     }
 
     public function value($column)
