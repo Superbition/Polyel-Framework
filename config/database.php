@@ -45,7 +45,7 @@ return [
                          * waitTimeout: Maximum timeout for how long to wait for a connection in seconds
                          */
                         "minConnections" => 5,
-                        "maxConnections" => 80,
+                        "maxConnections" => 20,
                         "connectionIdleTimeout" => 1,
                         "waitTimeout" => 1,
 
@@ -74,7 +74,7 @@ return [
                          * waitTimeout: Maximum timeout for how long to wait for a connection in seconds
                          */
                         "minConnections" => 5,
-                        "maxConnections" => 80,
+                        "maxConnections" => 20,
                         "connectionIdleTimeout" => 1,
                         "waitTimeout" => 1,
 
