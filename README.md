@@ -1,5 +1,5 @@
 # Polyel
-A PHP framework for building beautiful, expressive and fast web applications
+A PHP framework for building beautiful, expressive and fast web applications, based on the Swoole networking library
 
 **Status: In Development; unstable** 🛠
 
@@ -7,7 +7,7 @@ A PHP framework for building beautiful, expressive and fast web applications
 [![Swoole Version](https://img.shields.io/badge/swoole-%3E=4.2.1-brightgreen.svg?maxAge=2592000)](https://github.com/swoole/swoole-src)
 
 # What is Polyel?
-Polyel is a PHP framework based on the Swoole networking framework which is a C/C++ extension written for PHP and runs as a PHP CLI application, allowing PHP to be used and follow the same sort of principle as Node.js and following the MVC architectural pattern.
+Polyel is a PHP framework based on the Swoole networking framework, a C++ extension written for PHP and runs as a PHP CLI application, allowing PHP to be used and follow the same principle as Node.js and following the MVC architectural pattern.
 
 Polyel brings everything together and provides features to make web development quicker and more secure. Some features include built-in support for authentication and authorization, XSS filtering, CSRF protection, database wrapper support, email sending, input validation, time manipulation, built-in templating system, front end view support, message management and much more...
 
