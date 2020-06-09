@@ -62,12 +62,14 @@ trait SqlCompile
 
         if(exists($this->limit))
         {
-            $query .= " LIMIT $this->limit";
+            $query .= " LIMIT ?";
+            $this->data[] = $this->limit;
         }
 
         if(exists($this->offset))
         {
-            $query .= " OFFSET $this->offset";
+            $query .= " OFFSET ?";
+            $this->data[] = $this->offset;
         }
 
         return $query;
