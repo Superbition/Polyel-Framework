@@ -16,12 +16,12 @@ Allowing you to create highly scalable applications and with support for web soc
 # Planned Features & Roadmap
 The planned development feature list for the Polyel framework:
 - Fast, easy to use Routing Engine 🗹
-- An async database query builder ☐
+- An async database query builder 🗹
 - Custom built DIC (Container) where everything is preloaded (even controllers), speeding up requests 🗹
 - A complete HTTP server with built-in support for Ajax & web sockets ☐
-- Easy to use session management system ☐
+- Easy to use session management system 🗹
 - OOP MVC framework model built around a async paradigm 🗹
-- Quick, elegant and simple built in templating engine ☐
+- Quick, elegant and simple built in templating engine 🗹
 - Simple configuration management right from the start 🗹
 - Built in Coroutine support based on Swoole PHP 🗹
 - Redis client which supports different use cases ☐
@@ -31,7 +31,7 @@ The planned development feature list for the Polyel framework:
 - File storage service (Planned support for FTP and cloud storage) 🗹
 - Automatic XSS filtering & CSRF protection ☐
 - Automatic SSL assigning using Let's Encrypt ☐
-- Element templates; handles rendering dynamic page components with logic and data ☐
+- Element templates; handles rendering dynamic page components with logic and data 🗹
 
 # Licence
 
