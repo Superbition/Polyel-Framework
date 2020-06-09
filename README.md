@@ -33,6 +33,10 @@ The planned development feature list for the Polyel framework:
 - Automatic SSL assigning using Let's Encrypt ☐
 - Element templates; handles rendering dynamic page components with logic and data 🗹
 
+# Community
+
+Join the [PHPNexus.io](PHPNexus.io) community and come talk about Polyel, PHP or Swoole.
+
 # Licence
 
 Polyel uses the [Apache License Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
