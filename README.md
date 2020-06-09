@@ -35,7 +35,7 @@ The planned development feature list for the Polyel framework:
 
 # Community
 
-Join the [PHPNexus.io](PHPNexus.io) community and come talk about Polyel, PHP or Swoole.
+Join the [PHPNexus.io](https://PHPNexus.io) community and come talk about Polyel, PHP or Swoole.
 
 # Licence
 
