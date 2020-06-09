@@ -6,12 +6,12 @@ A PHP framework for building beautiful, expressive and fast web applications, ba
 [![PHP Version](https://img.shields.io/badge/PHP-%3E=7.3-brightgreen.svg?maxAge=2592000)](https://secure.php.net/)
 [![Swoole Version](https://img.shields.io/badge/swoole-%3E=4.2.1-brightgreen.svg?maxAge=2592000)](https://github.com/swoole/swoole-src)
 
-# What is Polyel?
-Polyel is a PHP framework based on the Swoole networking framework, a C++ extension written for PHP and runs as a PHP CLI application, allowing PHP to be used and follow the same principle as Node.js and following the MVC architectural pattern.
+# What can be done with Polyel?
+Polyel is an MVC PHP framework based on the Swoole networking library, which is a C++ extension written for PHP and runs as a CLI application, allowing you to build high-performance web applications using both synchronous and asynchronous programming.
 
-Polyel brings everything together and provides features to make web development quicker and more secure. Some features include built-in support for authentication and authorization, XSS filtering, CSRF protection, database wrapper support, email sending, input validation, time manipulation, built-in templating system, front end view support, message management and much more...
+A framework that brings everything together, providing features to make web development quicker and more secure. Some features include built-in support for authentication and authorization, XSS filtering, CSRF protection, database query builder support, async email sending, input validation, time manipulation, built-in templating & view service, message management and much more...
 
-Allowing web applications to be built using PHP that is highly scalable and implements support for WebSockets, concurrent connections, Task workers, Async-MySQL and non-blocking I/O programming.
+Allowing you to create highly scalable applications and with support for web sockets, concurrent connections, Task workers, connection pools, async MySQL and non-blocking I/O programming.
 
 # Planned Features & Roadmap
 The planned development feature list for the Polyel framework:
