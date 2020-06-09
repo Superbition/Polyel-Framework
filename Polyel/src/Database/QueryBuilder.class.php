@@ -728,6 +728,21 @@ class QueryBuilder
         return false;
     }
 
+    public function list($column)
+    {
+        $this->select($column);
+
+        $results = $this->get();
+
+        $list = [];
+        foreach($results as $result)
+        {
+            $list[] = $result[$column];
+        }
+
+        return $list;
+    }
+
     public function get($dump = 0)
     {
         $query = $this->compileSql();
