@@ -102,7 +102,12 @@ class DatabaseManager
 
         $this->returnConnection($db);
 
-        return $result;
+        if(exists($result))
+        {
+            return $result;
+        }
+
+        return false;
     }
 
     public function returnConnection($connection)
