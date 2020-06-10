@@ -18,9 +18,11 @@ trait Chunk
 
         do
         {
-            $this->offset(($page - 1) * $count)->limit($count);
+            $clone = clone $this;
 
-            $results = $this->get();
+            $clone->offset(($page - 1) * $count)->limit($count);
+
+            $results = $clone->get();
 
             $chunkCount = count($results);
 
