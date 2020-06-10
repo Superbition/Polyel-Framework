@@ -2,7 +2,7 @@
 
 return [
 
-    "default" => env("Database.Default_Connection", "DefaultDatabase"),
+    "default" => env("Database.Default_Connection", "mysql"),
 
     "connections" => [
 
