@@ -2,7 +2,7 @@
 
 namespace Polyel\Database;
 
-use PDOException;
+use Exception;
 use Polyel\Database\Connection\Pools\MySQLPool;
 
 class DatabaseManager
@@ -97,7 +97,7 @@ class DatabaseManager
                 $result = $statement->fetchAll();
             }
         }
-        catch(PDOException $message)
+        catch(Exception $message)
         {
             echo $message->getMessage();
         }
