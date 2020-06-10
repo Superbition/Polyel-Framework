@@ -81,24 +81,25 @@ class DatabaseManager
 
         try
         {
+            $statement = $db['connection']->use()->prepare($query);
             $statement->execute($data);
+
+            if($insert)
+            {
+                $result = $db['connection']->use()->lastInsertId();
+            }
+            else if($type === 'write')
+            {
+                $result = $statement->rowCount();
+            }
+            else
+            {
+                $result = $statement->fetchAll();
+            }
         }
         catch(PDOException $message)
         {
             echo $message->getMessage();
-        }
-
-        if($insert)
-        {
-            $result = $db['connection']->use()->lastInsertId();
-        }
-        else if($type === 'write')
-        {
-            $result = $statement->rowCount();
-        }
-        else
-        {
-            $result = $statement->fetchAll();
         }
 
         $this->returnConnection($db);
