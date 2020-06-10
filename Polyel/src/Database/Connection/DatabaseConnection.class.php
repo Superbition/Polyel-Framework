@@ -9,7 +9,7 @@ class DatabaseConnection
 {
     private $connection;
 
-    public $transaction;
+    public $transactionStatus;
 
     private $lastActive;
 
@@ -17,7 +17,7 @@ class DatabaseConnection
     {
         $this->connection = $conn;
 
-        $this->transaction = false;
+        $this->transactionStatus = false;
 
         $this->lastActive = time();
     }
@@ -46,8 +46,8 @@ class DatabaseConnection
         return $this->lastActive;
     }
 
-    public function transaction($status)
+    public function transactionStatus()
     {
-        $this->transaction = $status;
+        return $this->transactionStatus;
     }
 }
