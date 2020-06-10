@@ -77,8 +77,6 @@ class DatabaseManager
     {
         $db = $this->getConnection($type, $database);
 
-        $statement = $db['connection']->use()->prepare($query);
-
         try
         {
             $statement = $db['connection']->use()->prepare($query);
