@@ -98,7 +98,6 @@ class DatabaseManager
         }
         else
         {
-
             $result = $statement->fetchAll();
         }
 
