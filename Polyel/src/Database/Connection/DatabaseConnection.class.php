@@ -22,18 +22,18 @@ class DatabaseConnection
         $this->lastActive = time();
     }
 
-    public function use()
+    public function __call($method, $arguments)
     {
         $this->lastActive = time();
 
-        return $this->connection;
+        return $this->connection->$method(...$arguments);
     }
 
     public function isConnected()
     {
         try
         {
-            return (bool)$this->use()->getAttribute(PDO::ATTR_SERVER_INFO);
+            return (bool)$this->getAttribute(PDO::ATTR_SERVER_INFO);
         }
         catch(Throwable $e)
         {

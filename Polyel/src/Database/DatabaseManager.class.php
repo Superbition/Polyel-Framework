@@ -79,12 +79,12 @@ class DatabaseManager
 
         try
         {
-            $statement = $db['connection']->use()->prepare($query);
+            $statement = $db['connection']->prepare($query);
             $statement->execute($data);
 
             if($insert)
             {
-                $result = $db['connection']->use()->lastInsertId();
+                $result = $db['connection']->lastInsertId();
             }
             else if($type === 'write')
             {
