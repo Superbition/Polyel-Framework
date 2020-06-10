@@ -4,6 +4,7 @@ namespace Polyel\Database;
 
 use Closure;
 use DateTimeInterface;
+use Polyel\Database\Support\Chunk;
 use Polyel\Database\Support\SqlCompile;
 use Polyel\Database\Statements\Inserts;
 use Polyel\Database\Statements\Updates;
@@ -13,6 +14,7 @@ use Polyel\Database\Support\ClosureSupport;
 
 class QueryBuilder
 {
+    use Chunk;
     use Inserts;
     use Updates;
     use Deletes;
