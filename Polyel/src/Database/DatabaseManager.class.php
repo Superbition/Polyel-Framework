@@ -95,9 +95,9 @@ class DatabaseManager
                 $result = $statement->fetchAll();
             }
         }
-        catch(Exception $message)
+        catch(Exception $exception)
         {
-            echo $message->getMessage();
+            throw $exception;
         }
 
         $this->returnConnection($db);
