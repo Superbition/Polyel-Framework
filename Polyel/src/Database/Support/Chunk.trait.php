@@ -108,4 +108,15 @@ trait Chunk
         // Chunking complete
         return true;
     }
+
+    public function deferAndChunkById($count, Closure $callback, $column = null)
+    {
+        \Swoole\Event::defer(function() use($count, $callback, $column)
+        {
+            go(function() use($count, $callback, $column)
+            {
+                $this->chunkById($count, $callback, $column);
+            });
+        });
+    }
 }
