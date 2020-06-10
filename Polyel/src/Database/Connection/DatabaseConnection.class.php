@@ -9,7 +9,7 @@ class DatabaseConnection
 {
     private $connection;
 
-    public $transactionStatus;
+    private $transactionStatus;
 
     private $lastActive;
 
