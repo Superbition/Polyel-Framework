@@ -776,8 +776,6 @@ class QueryBuilder
 
         $result = $this->dbManager->execute($this->type, $query, $this->data);
 
-        $this->data = [];
-
         return $result;
     }
 

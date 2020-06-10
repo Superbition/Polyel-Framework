@@ -72,16 +72,6 @@ trait SqlCompile
             $this->data[] = $this->offset;
         }
 
-        $this->selects = null;
-        $this->distinct = null;
-        $this->joins = null;
-        $this->wheres = null;
-        $this->groups = null;
-        $this->havings = null;
-        $this->order = null;
-        $this->limit = null;
-        $this->offset = null;
-
         return $query;
     }
 }
