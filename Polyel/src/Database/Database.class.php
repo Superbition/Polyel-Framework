@@ -11,29 +11,29 @@ class Database
         $this->dbManager = $dbManager;
     }
 
-    public function raw($statement, $data = null, $type = 'write')
+    public function raw($query, $data = null, $type = 'write')
     {
-        return $this->execute($type, $statement, $data);
+        return $this->dbManager->execute($type, $query, $data);
     }
 
     public function select($query, $data = null)
     {
-        return $this->execute("read", $query, $data);
+        return $this->raw($query, $data, "read");
     }
 
     public function insert($query, $data = null)
     {
-        return $this->execute("write", $query, $data);
+        return $this->raw($query, $data, "write");
     }
 
     public function update($query, $data = null)
     {
-        return $this->execute("write", $query, $data);
+        return $this->raw($query, $data, "write");
     }
 
     public function delete($query, $data = null)
     {
-        return $this->execute("write", $query, $data);
+        return $this->raw($query, $data, "write");
     }
 
     public function table($table)
