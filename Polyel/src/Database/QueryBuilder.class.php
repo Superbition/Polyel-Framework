@@ -57,6 +57,8 @@ class QueryBuilder
 
     private $offset;
 
+    private $lock;
+
     public function __construct($connection = null, $compileMode = 0)
     {
         $this->connection = $connection;
@@ -744,6 +746,20 @@ class QueryBuilder
         }
 
         return $list;
+    }
+
+    public function lockForShare()
+    {
+        $this->lock = ' LOCK IN SHARE MODE';
+
+        return $this;
+    }
+
+    public function lockForUpdate()
+    {
+        $this->lock = ' FOR UPDATE';
+
+        return $this;
     }
 
     public function get($dump = 0)

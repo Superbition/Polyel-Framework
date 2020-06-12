@@ -72,6 +72,11 @@ trait SqlCompile
             $this->data[] = $this->offset;
         }
 
+        if(exists($this->lock))
+        {
+            $query .= $this->lock;
+        }
+
         return $query;
     }
 }
