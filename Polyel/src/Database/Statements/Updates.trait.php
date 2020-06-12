@@ -4,7 +4,8 @@ namespace Polyel\Database\Statements;
 
 trait Updates
 {
-    private $updateValueSQL = '';
+    // Used to inject operators to the value of an update statement like plus or minus
+    private $updateColumnOperator = '';
 
     public function update(array $updates): int
     {
@@ -24,9 +25,10 @@ trait Updates
             }
             else
             {
-                if(exists($this->updateValueSQL))
+                // Check if we need to add column operators to the update statement
+                if(exists($this->updateColumnOperator))
                 {
-                    $updateQuery .= $column . " = $this->updateValueSQL ?";
+                    $updateQuery .= $column . " = $this->updateColumnOperator ?";
                 }
                 else
                 {
@@ -114,9 +116,9 @@ trait Updates
     {
         if(is_numeric($amount))
         {
-            $this->updateValueSQL = $column . ' +';
+            $this->updateColumnOperator = $column . ' +';
             $updateResult = $this->update([$column => $amount]);
-            $this->updateValueSQL = '';
+            $this->updateColumnOperator = '';
 
             return $updateResult;
         }
@@ -126,9 +128,9 @@ trait Updates
     {
         if(is_numeric($amount))
         {
-            $this->updateValueSQL = $column . ' -';
+            $this->updateColumnOperator = $column . ' -';
             $updateResult = $this->update([$column => $amount]);
-            $this->updateValueSQL = '';
+            $this->updateColumnOperator = '';
 
             return $updateResult;
         }
