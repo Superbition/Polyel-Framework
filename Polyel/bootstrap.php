@@ -9,6 +9,7 @@ $startingDirectory = new RecursiveDirectoryIterator(__DIR__ . "/src/");
 $pathIterator = new RecursiveIteratorIterator($startingDirectory);
 
 $traits = [];
+$interfaces = [];
 $polyelSourceFiles = [];
 
 echo "Building Polyel Framework source map:";
@@ -27,10 +28,21 @@ foreach ($pathIterator as $file)
             continue;
         }
 
+        // Interfaces need to be loaded first, so collect them separately
+        if(preg_match("/.interface.php/", strtolower($currentFile)))
+        {
+            // Interfaces will be merged to be placed at the start of the loading process later
+            $interfaces[] = $currentFile;
+            continue;
+        }
+
         $polyelSourceFiles[] = $currentFile;
     }
 }
 echo " Done.\n";
+
+// Put all interfaces at the start of the source map so they are available first
+$polyelSourceFiles = array_merge($interfaces, $polyelSourceFiles);
 
 // Put all traits at the start of the source map so they are loaded first.
 $polyelSourceFiles = array_merge($traits, $polyelSourceFiles);
