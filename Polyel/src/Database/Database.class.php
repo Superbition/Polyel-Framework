@@ -4,7 +4,7 @@ namespace Polyel\Database;
 
 use Closure;
 
-class Database
+class Database implements DatabaseInteraction
 {
     private $dbManager;
 

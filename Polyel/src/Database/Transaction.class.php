@@ -5,7 +5,7 @@ namespace Polyel\Database;
 use Closure;
 use Exception;
 
-class Transaction
+class Transaction implements DatabaseInteraction
 {
     // The DB connection from the DB Manager used for the entire transaction
     private $connection;
