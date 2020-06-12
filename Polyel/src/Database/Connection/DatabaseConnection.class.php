@@ -50,4 +50,22 @@ class DatabaseConnection
     {
         return $this->transactionStatus;
     }
+
+    public function startTransaction()
+    {
+        $this->connection->beginTransaction();
+        $this->transactionStatus = true;
+    }
+
+    public function commitTransaction()
+    {
+        $this->connection->commit();
+        $this->transactionStatus = false;
+    }
+
+    public function rollBackTransaction()
+    {
+        $this->connection->rollback();
+        $this->transactionStatus = false;
+    }
 }
