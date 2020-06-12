@@ -114,6 +114,12 @@ class DatabaseManager
     {
         if(is_array($connection) && !array_diff(['driver', 'database', 'connection'], array_keys($connection)))
         {
+            // A connection that is still in a transactional state is not re-usable and cannot enter the pool
+            if($connection['connection']->transactionStatus() === true)
+            {
+                return false;
+            }
+
             switch($connection['driver'])
             {
                 case 'mysql':
