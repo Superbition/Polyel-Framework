@@ -50,7 +50,34 @@ class Database
         $connection = $this->dbManager->getConnection('write', $database);
 
         // Setup a new transaction instance, setting the connection to use and the max attempts to re-try
-        $transaction = new Transaction($connection, $attempts);
+        $transaction = new Transaction($connection, $attempts, false);
+
+        // Initiate and run the callback to perform the transaction statements...
+        $callbackResult = $transaction->run($callback);
+
+        // Finally after the transaction has completed or failed, return the connection to its pool
+        $this->dbManager->returnConnection($connection);
+
+        unset($transaction);
+
+        return $callbackResult;
+    }
+
+    /*
+     * This function allows you to setup a manual transaction callback.
+     * Allowing you to perform raw SQL statements and also use the same
+     * query builder like normal, difference being, the same connection is
+     * used throughout the entire transaction and is a write-only connection.
+     * You must use the transaction functions start(), rollBack() & commit() to
+     * perform transactional operations yourself, you are in control when in manual mode.
+     */
+    public function manualTransaction(Closure $callback, $database = null)
+    {
+        // Grab a write-only connection to be used for our transaction
+        $connection = $this->dbManager->getConnection('write', $database);
+
+        // Setup a new transaction instance, setting the connection to use and the max attempts to re-try
+        $transaction = new Transaction($connection, 1, true);
 
         // Initiate and run the callback to perform the transaction statements...
         $callbackResult = $transaction->run($callback);

@@ -13,10 +13,34 @@ class Transaction
     // Maximum number of attempts that the transaction can re-try for if en error occurs
     private $maxAttempts;
 
-    public function __construct(&$connection, $attempts = 1)
+    // Used to dictate when the transaction is in auto or manual mode
+    private $manualMode;
+
+    public function __construct(&$connection, $attempts = 1, $manualMode = false)
     {
         $this->connection = $connection;
         $this->maxAttempts = $attempts;
+        $this->manualMode = $manualMode;
+    }
+
+    public function status()
+    {
+        return $this->connection['connection']->transactionStatus();
+    }
+
+    public function start()
+    {
+        $this->connection['connection']->startTransaction();
+    }
+
+    public function rollBack()
+    {
+        $this->connection['connection']->rollBackTransaction();
+    }
+
+    public function commit()
+    {
+        $this->connection['connection']->commitTransaction();
     }
 
     public function run(Closure $callback)
@@ -29,8 +53,11 @@ class Transaction
          */
         for($currentAttempt = 1; $currentAttempt <= $this->maxAttempts; $currentAttempt++)
         {
-            // Begin the transaction before the callback
-            $this->connection['connection']->startTransaction();
+            if($this->manualMode === false)
+            {
+                // Begin the transaction before the callback
+                $this->start();
+            }
 
             try
             {
@@ -39,12 +66,15 @@ class Transaction
                  * We pass in this class because it gives the callback access to the
                  * query builder, raw SQL functions and transactional connection.
                  */
-                $callbackResult = $callback($this);
+                $callbackResult = $callback($this, $this);
             }
             catch(Exception $exception)
             {
-                // An error has been caught, let's roll back and try again...
-                $this->connection['connection']->rollBackTransaction();
+                if($this->manualMode === false)
+                {
+                    // An error has been caught, let's roll back and try again...
+                    $this->rollBack();
+                }
 
                 // If the maximum number of attempts have not been reached, we can try again...
                 if($currentAttempt < $this->maxAttempts)
@@ -56,8 +86,11 @@ class Transaction
                 throw $exception;
             }
 
-            // Upon successful transaction, we can safely perform a commit
-            $this->connection['connection']->commitTransaction();
+            if($this->manualMode === false)
+            {
+                // Upon successful transaction, we can safely perform a commit
+                $this->commit();
+            }
 
             // Finally return the callback result
             return $callbackResult;
