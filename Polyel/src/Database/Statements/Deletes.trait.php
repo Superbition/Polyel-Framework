@@ -22,7 +22,12 @@ trait Deletes
             return null;
         }
 
-        $result = $this->dbManager->execute('write', $deleteQuery, $this->data);
+        /*
+         * The connection used is either a DB Manager instance where it directly uses its
+         * execute function to perform a query on the database or a transaction instance is used, where its
+         * execute function uses the same database connection to perform a query within a transaction.
+         */
+        $result = $this->connection->execute('write', $deleteQuery, $this->data);
 
         return (int)$result;
     }
@@ -31,6 +36,11 @@ trait Deletes
     {
         $truncate = "TRUNCATE TABLE $this->from";
 
-        $this->dbManager->execute('write', $truncate);
+        /*
+         * The connection used is either a DB Manager instance where it directly uses its
+         * execute function to perform a query on the database or a transaction instance is used, where its
+         * execute function uses the same database connection to perform a query within a transaction.
+         */
+        $this->connection->execute('write', $truncate);
     }
 }

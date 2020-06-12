@@ -22,7 +22,8 @@ class QueryBuilder
     use SqlCompile;
     use ClosureSupport;
 
-    private $dbManager;
+    // The connection to be used when executing compiled statements, direct or transaction connections...
+    private $connection;
 
     // The type of query that will be executed: read or write
     private $type = 'read';
@@ -56,9 +57,9 @@ class QueryBuilder
 
     private $offset;
 
-    public function __construct(DatabaseManager $dbManager = null, $compileMode = 0)
+    public function __construct($connection = null, $compileMode = 0)
     {
-        $this->dbManager = $dbManager;
+        $this->connection = $connection;
         $this->compileMode = $compileMode;
     }
 
@@ -774,7 +775,12 @@ class QueryBuilder
             return $queryResult;
         }
 
-        $result = $this->dbManager->execute($this->type, $query, $this->data);
+        /*
+         * The connection used is either a DB Manager instance where it directly uses its
+         * execute function to perform a query on the database or a transaction instance is used, where its
+         * execute function uses the same database connection to perform a query within a transaction.
+         */
+        $result = $this->connection->execute($this->type, $query, $this->data);
 
         return $result;
     }

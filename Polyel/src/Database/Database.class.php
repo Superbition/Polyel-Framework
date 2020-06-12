@@ -2,6 +2,8 @@
 
 namespace Polyel\Database;
 
+use Closure;
+
 class Database
 {
     private $dbManager;
@@ -34,6 +36,31 @@ class Database
     public function delete($query, $data = null)
     {
         return $this->raw($query, $data, "write");
+    }
+
+    /*
+     * This function allows you to setup an auto-commit transaction.
+     * Allows you to perform raw SQL statements and also use the same
+     * query builder like normal, difference being, the same connection is
+     * used throughout the entire transaction and is a write-only connection.
+     */
+    public function transaction(Closure $callback, $attempts = 1, $database = null)
+    {
+        // Grab a write-only connection to be used for our transaction
+        $connection = $this->dbManager->getConnection('write', $database);
+
+        // Setup a new transaction instance, setting the connection to use and the max attempts to re-try
+        $transaction = new Transaction($connection, $attempts);
+
+        // Initiate and run the callback to perform the transaction statements...
+        $callbackResult = $transaction->run($callback);
+
+        // Finally after the transaction has completed or failed, return the connection to its pool
+        $this->dbManager->returnConnection($connection);
+
+        unset($transaction);
+
+        return $callbackResult;
     }
 
     public function table($table)

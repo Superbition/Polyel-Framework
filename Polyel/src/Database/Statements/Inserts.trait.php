@@ -43,7 +43,12 @@ trait Inserts
 
             $insertQuery .= $insertColumns . ')' . $insertValues . ')';
 
-            $results[] = $this->dbManager->execute('write', $insertQuery, $insertData, $getInsertId);
+            /*
+             * The connection used is either a DB Manager instance where it directly uses its
+             * execute function to perform a query on the database or a transaction instance is used, where its
+             * execute function uses the same database connection to perform a query within a transaction.
+             */
+            $results[] = $this->connection->execute('write', $insertQuery, $insertData, $getInsertId);
         }
 
         // No return on defer inserts, run a check here, otherwise, return the outcome for an insert(s)

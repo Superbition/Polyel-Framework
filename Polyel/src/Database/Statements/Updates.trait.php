@@ -52,7 +52,12 @@ trait Updates
             $updateData = array_merge($updateData, $this->data);
         }
 
-        $result = $this->dbManager->execute('write', $updateQuery, $updateData);
+        /*
+         * The connection used is either a DB Manager instance where it directly uses its
+         * execute function to perform a query on the database or a transaction instance is used, where its
+         * execute function uses the same database connection to perform a query within a transaction.
+         */
+        $result = $this->connection->execute('write', $updateQuery, $updateData);
 
         return (int)$result;
     }
@@ -68,7 +73,12 @@ trait Updates
 
         $this->limit(1);
 
-        $recordExists = $this->dbManager->execute('write', $this->compileSql(), $this->data);
+        /*
+         * The connection used is either a DB Manager instance where it directly uses its
+         * execute function to perform a query on the database or a transaction instance is used, where its
+         * execute function uses the same database connection to perform a query within a transaction.
+         */
+        $recordExists = $this->connection->execute('write', $this->compileSql(), $this->data);
 
         if($recordExists)
         {
