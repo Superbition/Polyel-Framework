@@ -1,8 +1,8 @@
 <?php
 
-namespace Polyel\Database\Support;
+namespace Polyel\Database\Query\Support;
 
-use Polyel\Database\QueryBuilder;
+use Polyel\Database\Query\QueryBuilder;
 
 trait ClosureSupport
 {

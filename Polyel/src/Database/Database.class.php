@@ -3,6 +3,7 @@
 namespace Polyel\Database;
 
 use Closure;
+use Polyel\Database\Query\QueryBuilder;
 
 class Database implements DatabaseInteraction
 {

@@ -1,17 +1,19 @@
 <?php
 
-namespace Polyel\Database;
+namespace Polyel\Database\Query;
 
 use Closure;
 use DateTimeInterface;
-use Polyel\Database\Support\Chunk;
+use Polyel\Database\Transaction;
 use http\Exception\RuntimeException;
-use Polyel\Database\Support\SqlCompile;
-use Polyel\Database\Statements\Inserts;
-use Polyel\Database\Statements\Updates;
-use Polyel\Database\Statements\Deletes;
-use Polyel\Database\Statements\Aggregates;
-use Polyel\Database\Support\ClosureSupport;
+use Polyel\Database\DatabaseManager;
+use Polyel\Database\Query\Support\Chunk;
+use Polyel\Database\Query\Support\SqlCompile;
+use Polyel\Database\Query\Statements\Inserts;
+use Polyel\Database\Query\Statements\Updates;
+use Polyel\Database\Query\Statements\Deletes;
+use Polyel\Database\Query\Statements\Aggregates;
+use Polyel\Database\Query\Support\ClosureSupport;
 
 class QueryBuilder
 {

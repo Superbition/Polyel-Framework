@@ -4,6 +4,7 @@ namespace Polyel\Database;
 
 use Closure;
 use Exception;
+use Polyel\Database\Query\QueryBuilder;
 
 class Transaction implements DatabaseInteraction
 {

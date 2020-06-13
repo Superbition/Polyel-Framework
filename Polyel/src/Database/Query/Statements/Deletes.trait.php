@@ -1,6 +1,6 @@
 <?php
 
-namespace Polyel\Database\Statements;
+namespace Polyel\Database\Query\Statements;
 
 use Polyel\Database\Transaction;
 use Polyel\Database\DatabaseManager;

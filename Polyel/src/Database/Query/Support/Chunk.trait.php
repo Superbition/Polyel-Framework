@@ -1,6 +1,6 @@
 <?php
 
-namespace Polyel\Database\Support;
+namespace Polyel\Database\Query\Support;
 
 use Closure;
 use RuntimeException;
