@@ -1,8 +1,8 @@
 <?php
 
-namespace Polyel\Database\Query\Support;
+namespace Polyel\Database\Query;
 
-trait SqlCompile
+trait QueryCompile
 {
     private function compileSql()
     {

@@ -8,7 +8,6 @@ use Polyel\Database\Transaction;
 use http\Exception\RuntimeException;
 use Polyel\Database\DatabaseManager;
 use Polyel\Database\Query\Support\Chunk;
-use Polyel\Database\Query\Support\SqlCompile;
 use Polyel\Database\Query\Statements\Inserts;
 use Polyel\Database\Query\Statements\Updates;
 use Polyel\Database\Query\Statements\Deletes;
@@ -22,7 +21,7 @@ class QueryBuilder
     use Updates;
     use Deletes;
     use Aggregates;
-    use SqlCompile;
+    use QueryCompile;
     use ClosureSupport;
 
     // The connection to be used when executing compiled statements, direct or transaction connections...
