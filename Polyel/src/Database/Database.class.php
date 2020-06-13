@@ -102,8 +102,15 @@ class Database implements DatabaseInteraction
         if(!is_null($database))
         {
             $queryBuilder->setDatabase($database);
+
+            $prefix = config("database.connections.$database.prefix");
+        }
+        else
+        {
+            $defaultDatabase = config('database.default');
+            $prefix = config("database.connections.$defaultDatabase.prefix");
         }
 
-        return $queryBuilder->from($table);
+        return $queryBuilder->from($table, $prefix);
     }
 }

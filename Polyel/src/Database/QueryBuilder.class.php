@@ -45,6 +45,8 @@ class QueryBuilder
 
     private $distinct = false;
 
+    private $prefix;
+
     private $from;
 
     private $joins;
@@ -80,9 +82,14 @@ class QueryBuilder
         $this->database = $database;
     }
 
-    public function from($table)
+    public function from($table, $prefix = null)
     {
         $this->from = $table;
+
+        if(!is_null($prefix))
+        {
+            $this->prefix = $prefix;
+        }
 
         return $this;
     }

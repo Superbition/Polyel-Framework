@@ -25,6 +25,11 @@ trait SqlCompile
 
         if(exists($this->from))
         {
+            if(exists($this->prefix))
+            {
+                $this->from = $this->prefix . $this->from;
+            }
+
             $query .= ' FROM ' . $this->from;
         }
 

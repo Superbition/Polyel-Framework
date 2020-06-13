@@ -168,8 +168,11 @@ class Transaction implements DatabaseInteraction
          */
         $transactionalQueryBuilder = new QueryBuilder($this);
 
+        $connectionName = $this->connection['name'];
+        $prefix = config("database.connections.$connectionName.prefix");
+
         // Setup the table FROM cluase
-        $transactionalQueryBuilder->from($table);
+        $transactionalQueryBuilder->from($table, $prefix);
 
         return $transactionalQueryBuilder;
     }
