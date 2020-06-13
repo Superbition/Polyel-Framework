@@ -108,7 +108,7 @@ class Transaction implements DatabaseInteraction
      */
     public function execute($type, $query, $data = null)
     {
-        // Preare our query statement and execute with any data that may have been set
+        // Prepare our query statement and execute with any data that may have been set
         $statement = $this->connection['connection']->prepare($query);
         $statement->execute($data);
 
@@ -172,7 +172,7 @@ class Transaction implements DatabaseInteraction
         $connectionName = $this->connection['name'];
         $prefix = config("database.connections.$connectionName.prefix");
 
-        // Setup the table FROM cluase
+        // Setup the table FROM clause
         $transactionalQueryBuilder->from($table, $prefix);
 
         return $transactionalQueryBuilder;
