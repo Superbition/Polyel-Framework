@@ -40,10 +40,17 @@ return [
             "prefix" => "",
 
             /*
+             * Connection Pool Configuration
+             *
              * Wait Timeout: Maximum timeout for how long to wait for a connection in seconds
              * Connection Idle Timeout: Timeout in minutes how long a connection can be idle for
              * Min Connections: Number of minimum connections to keep alive
              * Max Connections: Maximum number of connections in the pool allowed
+             *
+             * NOTE: A pool is created for each worker process, so a max of 10 connections for read and write
+             * could lead to 10 read + 10 write = 20 * 4 workers = 80 total connections. Tune your read and write
+             * pools to a suitable level and make sure to check database server settings for the maximum number
+             * of connections allowed.
              */
             "pool" => [
 
