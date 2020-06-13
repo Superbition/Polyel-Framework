@@ -90,9 +90,19 @@ class Database implements DatabaseInteraction
         return $callbackResult;
     }
 
-    public function table($table)
+    public function connection($database, $table)
+    {
+        return $this->table($table, $database);
+    }
+
+    public function table($table, $database = null)
     {
         $queryBuilder = new QueryBuilder($this->dbManager);
+
+        if(!is_null($database))
+        {
+            $queryBuilder->setDatabase($database);
+        }
 
         return $queryBuilder->from($table);
     }

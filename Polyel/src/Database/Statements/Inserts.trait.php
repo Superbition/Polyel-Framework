@@ -2,6 +2,9 @@
 
 namespace Polyel\Database\Statements;
 
+use Polyel\Database\Transaction;
+use Polyel\Database\DatabaseManager;
+
 trait Inserts
 {
     public function insert(array $inserts, bool $getInsertId = false, $returnResult = true)
@@ -48,7 +51,14 @@ trait Inserts
              * execute function to perform a query on the database or a transaction instance is used, where its
              * execute function uses the same database connection to perform a query within a transaction.
              */
-            $results[] = $this->connection->execute('write', $insertQuery, $insertData, $getInsertId);
+            if($this->connection instanceof DatabaseManager)
+            {
+                $result[] = $this->connection->execute('write', $insertQuery, $insertData, $getInsertId, $this->database);
+            }
+            else if($this->connection instanceof Transaction)
+            {
+                $result[] = $this->connection->execute('write', $insertQuery, $insertData);
+            }
         }
 
         // No return on defer inserts, run a check here, otherwise, return the outcome for an insert(s)

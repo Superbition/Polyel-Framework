@@ -2,6 +2,9 @@
 
 namespace Polyel\Database\Statements;
 
+use Polyel\Database\Transaction;
+use Polyel\Database\DatabaseManager;
+
 trait Updates
 {
     // Used to inject operators to the value of an update statement like plus or minus
@@ -57,7 +60,14 @@ trait Updates
          * execute function to perform a query on the database or a transaction instance is used, where its
          * execute function uses the same database connection to perform a query within a transaction.
          */
-        $result = $this->connection->execute('write', $updateQuery, $updateData);
+        if($this->connection instanceof DatabaseManager)
+        {
+            $result = $this->connection->execute('write', $updateQuery, $updateData, false, $this->database);
+        }
+        else if($this->connection instanceof Transaction)
+        {
+            $result = $this->connection->execute('write', $updateQuery, $updateData);
+        }
 
         return (int)$result;
     }
@@ -78,7 +88,14 @@ trait Updates
          * execute function to perform a query on the database or a transaction instance is used, where its
          * execute function uses the same database connection to perform a query within a transaction.
          */
-        $recordExists = $this->connection->execute('write', $this->compileSql(), $this->data);
+        if($this->connection instanceof DatabaseManager)
+        {
+            $recordExists = $this->connection->execute('write', $this->compileSql(), $this->data, false, $this->database);
+        }
+        else if($this->connection instanceof Transaction)
+        {
+            $recordExists = $this->connection->execute('write', $this->compileSql(), $this->data);
+        }
 
         if($recordExists)
         {

@@ -5,6 +5,7 @@ namespace Polyel\Database;
 use Closure;
 use DateTimeInterface;
 use Polyel\Database\Support\Chunk;
+use http\Exception\RuntimeException;
 use Polyel\Database\Support\SqlCompile;
 use Polyel\Database\Statements\Inserts;
 use Polyel\Database\Statements\Updates;
@@ -24,6 +25,9 @@ class QueryBuilder
 
     // The connection to be used when executing compiled statements, direct or transaction connections...
     private $connection;
+
+    // The database to use when executing the query, null means to select the default from config
+    private $database = null;
 
     // The type of query that will be executed: read or write
     private $type = 'read';
@@ -63,6 +67,17 @@ class QueryBuilder
     {
         $this->connection = $connection;
         $this->compileMode = $compileMode;
+    }
+
+    public function setDatabase($database)
+    {
+        // Transaction have to use the same connection, so it is not allowed to be changed
+        if($this->connection instanceof Transaction)
+        {
+            throw new RuntimeException('Cannot change database while in Transaction mode.');
+        }
+
+        $this->database = $database;
     }
 
     public function from($table)
@@ -796,7 +811,14 @@ class QueryBuilder
          * execute function to perform a query on the database or a transaction instance is used, where its
          * execute function uses the same database connection to perform a query within a transaction.
          */
-        $result = $this->connection->execute($this->type, $query, $this->data);
+        if($this->connection instanceof DatabaseManager)
+        {
+            $result = $this->connection->execute($this->type, $query, $this->data, false, $this->database);
+        }
+        else if($this->connection instanceof Transaction)
+        {
+            $result = $this->connection->execute($this->type, $query, $this->data);
+        }
 
         return $result;
     }

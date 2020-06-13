@@ -2,6 +2,9 @@
 
 namespace Polyel\Database\Statements;
 
+use Polyel\Database\Transaction;
+use Polyel\Database\DatabaseManager;
+
 trait Deletes
 {
     public function delete($id = null)
@@ -27,7 +30,14 @@ trait Deletes
          * execute function to perform a query on the database or a transaction instance is used, where its
          * execute function uses the same database connection to perform a query within a transaction.
          */
-        $result = $this->connection->execute('write', $deleteQuery, $this->data);
+        if($this->connection instanceof DatabaseManager)
+        {
+            $result = $this->connection->execute('write', $deleteQuery, $this->data, false, $this->database);
+        }
+        else if($this->connection instanceof Transaction)
+        {
+            $result = $this->connection->execute('write', $deleteQuery, $this->data);
+        }
 
         return (int)$result;
     }
@@ -41,6 +51,13 @@ trait Deletes
          * execute function to perform a query on the database or a transaction instance is used, where its
          * execute function uses the same database connection to perform a query within a transaction.
          */
-        $this->connection->execute('write', $truncate);
+        if($this->connection instanceof DatabaseManager)
+        {
+            $this->connection->execute('write', $truncate, null, false, $this->database);
+        }
+        else if($this->connection instanceof Transaction)
+        {
+            $this->connection->execute('write', $truncate);
+        }
     }
 }
