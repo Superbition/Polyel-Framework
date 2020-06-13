@@ -2,83 +2,61 @@
 
 return [
 
-    "default" => env("Database.Default_Connection", "mysql"),
+    "default" => env("Database.Default_Connection", "default"),
 
     "connections" => [
 
-        "mysql" => [
+        "default" => [
 
             "read" => [
+                "hosts" => [
 
-                "DefaultDatabase",
+                    env("Main_Database.HOST", "127.0.0.1")
 
+                ],
             ],
 
             "write" => [
+                "hosts" => [
 
-                "DefaultDatabase",
+                    env("Main_Database.HOST", "127.0.0.1")
 
+                ],
             ],
 
+            "active" => true,
+            "driver" => "mysql",
             "sticky" => true,
+            "database" => env("Main_Database.DATABASE", "polyel1"),
+            "port" => env("Main_Database.PORT", "3306"),
+            "username" => env("Main_Database.USERNAME", "polyel"),
+            "password" => env("Main_Database.PASSWORD", ""),
+            "charset" => "utf8mb4",
+            "collation" => "utf8mb4_unicode_ci",
+            "prefix" => "",
 
-            "databases" => [
+            /*
+             * waitTimeout: Maximum timeout for how long to wait for a connection in seconds
+             * connectionIdleTimeout: Timeout in minutes how long a connection can be idle for
+             * minConnections: Number of minimum connections to keep alive
+             * maxConnections: Maximum number of connections in the pool allowed
+             */
+            "pool" => [
 
-                "DefaultDatabase" => [
+                "waitTimeout" => 1,
+                "connectionIdleTimeout" => 1,
 
-                    "active" => true,
-                    "driver" => "mysql",
-                    "database" => env("Main_Database.DATABASE", "polyel1"),
-                    "host" => env("Main_Database.HOST", "127.0.0.1"),
-                    "port" => env("Main_Database.PORT", "3306"),
-                    "username" => env("Main_Database.USERNAME", "polyel"),
-                    "password" => env("Main_Database.PASSWORD", ""),
-                    "charset" => "utf8mb4",
-                    "collation" => "utf8mb4_unicode_ci",
-                    "prefix" => "",
-                    "pool" => [
+                "read" => [
 
-                        /*
-                         * minConnections: Number of minimum connections to keep alive
-                         * maxConnections: Maximum number of connections in the pool allowed
-                         * connectionIdleTimeout: Timeout in minutes how long a connection can be idle for
-                         * waitTimeout: Maximum timeout for how long to wait for a connection in seconds
-                         */
-                        "minConnections" => 5,
-                        "maxConnections" => 20,
-                        "connectionIdleTimeout" => 1,
-                        "waitTimeout" => 1,
-
-                    ]
+                    "minConnections" => 5,
+                    "maxConnections" => 10,
 
                 ],
 
-                "SecondDatabase" => [
+                "write" => [
 
-                    "active" => false,
-                    "driver" => "mysql",
-                    "database" => env("Second_Database.DATABASE", "polyel2"),
-                    "host" => env("Second_Database.HOST", "127.0.0.1"),
-                    "port" => env("Second_Database.PORT", "3306"),
-                    "username" => env("Second_Database.USERNAME", "polyel"),
-                    "password" => env("Second_Database.PASSWORD", ""),
-                    "charset" => "utf8mb4",
-                    "collation" => "utf8mb4_unicode_ci",
-                    "prefix" => "",
-                    "pool" => [
-
-                        /*
-                         * minConnections: Number of minimum connections to keep alive
-                         * maxConnections: Maximum number of connections in the pool allowed
-                         * connectionIdleTimeout: Timeout in minutes how long a connection can be idle for
-                         * waitTimeout: Maximum timeout for how long to wait for a connection in seconds
-                         */
-                        "minConnections" => 5,
-                        "maxConnections" => 20,
-                        "connectionIdleTimeout" => 1,
-                        "waitTimeout" => 1,
-
-                    ]
+                    "minConnections" => 5,
+                    "maxConnections" => 10,
 
                 ],
 

@@ -17,20 +17,45 @@ class DatabaseManager
 
     public function createWorkerPool(): void
     {
-        $mysqlDatabases = config('database.connections.mysql.databases');
-        foreach($mysqlDatabases as $dbName => $poolConfig)
+        $mysqlDatabases = [];
+
+        $databaseConnections = config('database.connections');
+        foreach($databaseConnections as $connectionName => $connectionConfig)
         {
-            $dbStatus = config("database.connections.mysql.databases.$dbName.active");
-
-            if($dbStatus)
+            switch(($connectionConfig['driver']))
             {
-                $minConn = $poolConfig['pool']['minConnections'];
-                $maxConn = $poolConfig['pool']['maxConnections'];
-                $maxConnectionIdle = $poolConfig['pool']['connectionIdleTimeout'];
-                $waitTimeout = $poolConfig['pool']['waitTimeout'];
-                $this->mysqlPools[$dbName] = new MySQLPool($dbName, $minConn, $maxConn, $maxConnectionIdle, $waitTimeout);
+                case 'mysql':
 
-                $this->mysqlPools[$dbName]->open();
+                    $mysqlDatabases[$connectionName] = $connectionConfig;
+
+                break;
+            }
+        }
+
+        foreach($mysqlDatabases as $connectionName => $connectionConfig)
+        {
+            if($connectionConfig['active'])
+            {
+                $waitTimeout = $connectionConfig['pool']['waitTimeout'];
+                $maxConnectionIdle = $connectionConfig['pool']['connectionIdleTimeout'];
+
+                $readMinConn = $connectionConfig['pool']['read']['minConnections'];
+                $readMaxConn = $connectionConfig['pool']['read']['maxConnections'];
+
+                $writeMinConn = $connectionConfig['pool']['write']['minConnections'];
+                $writeMaxConn = $connectionConfig['pool']['write']['minConnections'];
+
+                $this->mysqlPools[$connectionName] = new MySQLPool(
+                    $connectionName,
+                    $maxConnectionIdle,
+                    $waitTimeout,
+                    $readMinConn,
+                    $readMaxConn,
+                    $writeMinConn,
+                    $writeMaxConn
+                );
+
+                $this->mysqlPools[$connectionName]->open();
             }
         }
     }
@@ -43,28 +68,28 @@ class DatabaseManager
         }
     }
 
-    public function getConnection($type, $database = null)
+    public function getConnection($type, $connectionName = null)
     {
         // Use the default set database if one is not provided
-        if(is_null($database))
+        if(is_null($connectionName))
         {
-            $database = config("database.default");
+            $connectionName = config("database.default");
         }
 
-        switch($database)
+        $connectionConfig = config("database.connections.$connectionName");
+
+        $databaseConnection = [];
+
+        switch($connectionConfig['driver'])
         {
             case 'mysql':
 
-                $dbServers = config("database.connections.$database.$type");
-                $dbServer = $dbServers[array_rand($dbServers)];
+                $databaseConnection['driver'] = 'mysql';
+                $databaseConnection['name'] = $connectionName;
+                $databaseConnection['type'] = $type;
+                $databaseConnection['connection'] = $this->mysqlPools[$connectionName]->pull($type);
 
-                $connection = [];
-
-                $connection['driver'] = 'mysql';
-                $connection['database'] = $dbServer;
-                $connection['connection'] = $this->mysqlPools[$dbServer]->pull();
-
-                return $connection;
+                return $databaseConnection;
 
             break;
         }
@@ -110,21 +135,22 @@ class DatabaseManager
         return false;
     }
 
-    public function returnConnection($connection)
+    public function returnConnection($databaseConnection)
     {
-        if(is_array($connection) && !array_diff(['driver', 'database', 'connection'], array_keys($connection)))
+        if(is_array($databaseConnection) && !array_diff(['driver', 'name', 'type', 'connection'], array_keys($databaseConnection)))
         {
             // A connection that is still in a transactional state is not re-usable and cannot enter the pool
-            if($connection['connection']->transactionStatus() === true)
+            if($databaseConnection['connection']->transactionStatus() === true)
             {
                 return false;
             }
 
-            switch($connection['driver'])
+            switch($databaseConnection['driver'])
             {
                 case 'mysql':
 
-                    $this->mysqlPools[$connection['database']]->push($connection['connection']);
+                    $this->mysqlPools[$databaseConnection['name']]
+                         ->push($databaseConnection['type'], $databaseConnection['connection']);
 
                 break;
             }

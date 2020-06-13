@@ -8,26 +8,29 @@ use Polyel\Database\Connection\ConnectionPool;
 
 class MySQLPool extends ConnectionPool
 {
-    private $dbName;
+    private string $connectionName;
 
-    public function __construct(string $dbname, int $min, int $max, int $maxConnectionIdle, float $waitTimeout)
+    public function __construct(string $connectionName, int $maxConnectionIdle, float $waitTimeout, int $readMin, int $readMax, $writeMin, $writeMax)
     {
-        parent::__construct($min, $max, $maxConnectionIdle, $waitTimeout);
+        parent::__construct($maxConnectionIdle, $waitTimeout, $readMin, $readMax, $writeMin, $writeMax);
 
-        $this->dbName = $dbname;
+        $this->connectionName = $connectionName;
     }
 
-    public function createConnection()
+    public function createConnection($type)
     {
-        $host = config("database.connections.mysql.databases.$this->dbName.host");
-        $port = config("database.connections.mysql.databases.$this->dbName.port");
-        $db = config("database.connections.mysql.databases.$this->dbName.database");
-        $charset = config("database.connections.mysql.databases.$this->dbName.charset");
+        $hosts = config("database.connections.$this->connectionName.$type.hosts");
+
+        $host = $hosts[array_rand($hosts)];
+
+        $port = config("database.connections.$this->connectionName.port");
+        $db = config("database.connections.$this->connectionName.database");
+        $charset = config("database.connections.$this->connectionName.charset");
 
         $dsn = "mysql:host=$host;port=$port;dbname=$db;charset=$charset";
 
-        $user = config("database.connections.mysql.databases.$this->dbName.username");
-        $pass = config("database.connections.mysql.databases.$this->dbName.password");
+        $user = config("database.connections.$this->connectionName.username");
+        $pass = config("database.connections.$this->connectionName.password");
 
         $options = [
             PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,

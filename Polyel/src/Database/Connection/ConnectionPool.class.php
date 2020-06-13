@@ -10,16 +10,13 @@ use Swoole\Coroutine\Channel;
 abstract class ConnectionPool implements ConnectionCreation
 {
     // The status of the pool, open = true or closed = false
-    private bool $status;
+    private bool $status = false;
 
-    // The pool itself where the connections are held, in a Swoole channel
-    private $pool;
+    // The pool itself where the read and write connections are held, in Swoole channels
+    private $pool = [];
 
-    // Minimum  number of DB connections in the pool
-    private int $min;
-
-    // Maximum number of DB connections in the pool
-    private int $max;
+    // Holds the min and max limits for both read and write pools
+    private array $limits = [];
 
     // The Swoole channel pop timeout
     private float $popTimeout;
@@ -28,83 +25,105 @@ abstract class ConnectionPool implements ConnectionCreation
     private int $maxConnectionIdle;
 
     // Counter to track the number of open connections, not the total in the pool
-    private int $openConnections;
+    private array $openConnections = [];
 
     // The ID of the gc timer collector timer process
     private int $connectionIdleGcTimerId;
 
-    public function __construct(int $min, int $max, int $maxConnectionIdle, float $waitTimeout)
+    public function __construct(int $maxConnectionIdle, float $waitTimeout, int $readMin, int $readMax, $writeMin, $writeMax)
     {
-        $this->min = $min;
-        $this->max = $max;
         $this->maxConnectionIdle = $maxConnectionIdle;
         $this->popTimeout = $waitTimeout;
 
-        $this->status = false;
-        $this->openConnections = 0;
-        $this->pool = new Channel($max);
+        $this->limits['read']['min'] = $readMin;
+        $this->limits['read']['max'] = $readMax;
+
+        $this->limits['write']['min'] = $writeMin;
+        $this->limits['write']['max'] = $writeMax;
+
+        $this->pool['read'] = new Channel($this->limits['read']['max']);
+        $this->pool['write'] = new Channel($this->limits['write']['max']);
+
+        $this->openConnections['read'] = 0;
+        $this->openConnections['write'] = 0;
     }
 
     public function debug()
     {
         echo "\n";
-        echo "\e[100m\e[30mOPEN POOL CONNECTIONS\e[49m\e[39m: " . $this->openConnections . "\n";
-        echo "\e[100m\e[30mCURRENT POOL NUM\e[49m\e[39m: " . $this->pool->length() . "\n";
+
+        echo "READ POOL:\n";
+        echo "\e[100m\e[30mOPEN POOL CONNECTIONS\e[49m\e[39m: " . $this->openConnections['read'] . "\n";
+        echo "\e[100m\e[30mCURRENT POOL NUM\e[49m\e[39m: " . $this->pool['read']->length() . "\n";
+
+        echo "\n";
+
+        echo "WRITE POOL:\n";
+        echo "\e[100m\e[30mOPEN POOL CONNECTIONS\e[49m\e[39m: " . $this->openConnections['write'] . "\n";
+        echo "\e[100m\e[30mCURRENT POOL NUM\e[49m\e[39m: " . $this->pool['write']->length() . "\n";
+
         echo "\n";
     }
 
-    private function startConnectionIdleGc()
+    private function runConnectionIdleGc()
     {
         // Run GC every 1 minute to check for idle DB connections...
         $this->connectionIdleGcTimerId = Swoole\Timer::tick(60000, function()
         {
-            $activeConnections = [];
-
-            while($this->openConnections > $this->min)
-            {
-                if($this->status === false)
-                {
-                    break;
-                }
-
-                if($this->pool->isEmpty())
-                {
-                    break;
-                }
-
-                // Pop using a timeout of 1 second
-                $connection = $this->pool->pop(1);
-
-                if($connection === false)
-                {
-                    continue;
-                }
-
-                $now = time();
-                $lastConnectionActive = ($now - $connection->lastActive());
-
-                if($lastConnectionActive < (60 * $this->maxConnectionIdle))
-                {
-                    $activeConnections[] = $connection;
-                }
-                else
-                {
-                    $connection = null;
-                    $this->openConnections--;
-                }
-            }
-
-            foreach($activeConnections as $connection)
-            {
-                $status = $this->pool->push($connection, 0.1);
-
-                if($status === false)
-                {
-                    $connection = null;
-                    $this->openConnections--;
-                }
-            }
+            // Run GC for read and write pools
+            $this->connectionIdleGcFor('read');
+            $this->connectionIdleGcFor('write');
         });
+    }
+
+    private function connectionIdleGcFor($type)
+    {
+        $activeConnections = [];
+
+        while($this->openConnections[$type] > $this->limits[$type]['min'])
+        {
+            if($this->status === false)
+            {
+                break;
+            }
+
+            if($this->pool[$type]->isEmpty())
+            {
+                break;
+            }
+
+            // Pop using a timeout of 1 second
+            $connection = $this->pool[$type]->pop(1);
+
+            if($connection === false)
+            {
+                continue;
+            }
+
+            $now = time();
+            $lastConnectionActive = ($now - $connection->lastActive());
+
+            if($lastConnectionActive < (60 * $this->maxConnectionIdle))
+            {
+                $activeConnections[] = $connection;
+            }
+            else
+            {
+                $connection = null;
+                $this->openConnections[$type]--;
+            }
+        }
+
+        foreach($activeConnections as $connection)
+        {
+            $status = $this->pool[$type]->push($connection, 0.1);
+
+            if($status === false)
+            {
+                $connection = null;
+                $this->openConnections[$type]--;
+            }
+        }
     }
 
     private function stopConnectionIdleGc()
@@ -114,14 +133,21 @@ abstract class ConnectionPool implements ConnectionCreation
 
     public function open()
     {
-        for($i=1; $i<=$this->min; $i++)
+        // Open up the read pool
+        for($i=1; $i<=$this->limits['read']['min']; $i++)
         {
-            $this->new();
+            $this->new('read');
+        }
+
+        // Open up the write pool
+        for($i=1; $i<=$this->limits['write']['min']; $i++)
+        {
+            $this->new('write');
         }
 
         $this->status = true;
 
-        $this->startConnectionIdleGc();
+        $this->runConnectionIdleGc();
     }
 
     public function close()
@@ -129,9 +155,16 @@ abstract class ConnectionPool implements ConnectionCreation
         if(!is_null($this->pool))
         {
             $this->stopConnectionIdleGc();
-            $this->pool->close();
+
+            // Close both the read and write pools
+            $this->pool['read']->close();
+            $this->pool['write']->close();
             $this->pool = null;
-            $this->openConnections = 0;
+
+            // Reset the read & write open connections
+            $this->openConnections['read'] = 0;
+            $this->openConnections['write'] = 0;
+
             $this->status = false;
         }
     }
@@ -147,29 +180,34 @@ abstract class ConnectionPool implements ConnectionCreation
         return $this->status;
     }
 
-    public function getPoolCount()
+    public function getPoolCountFor($type)
     {
-        return $this->pool->length();
+        return $this->pool[$type]->length();
     }
 
-    public function getOpenConnectionCount()
+    public function getOpenConnectionCountFor($type)
     {
-        return $this->openConnections;
+        return $this->openConnections[$type];
     }
 
-    public function pull()
+    /*
+     * Pull out a connection based on the type: read or write
+     * Each pool has a number of read and write connections
+     */
+    public function pull($type)
     {
         if(is_null($this->pool))
         {
             throw new RuntimeException('Connection pool was closed');
         }
 
-        if($this->openConnections <= $this->max && $this->pool->isEmpty())
+        if($this->openConnections[$type] <= $this->limits[$type]['max'] && $this->pool[$type]->isEmpty())
         {
-            $this->new();
+            // Create a new connection based on the type: read or write
+            $this->new($type);
         }
 
-        $connection = $this->pool->pop($this->popTimeout);
+        $connection = $this->pool[$type]->pop($this->popTimeout);
 
         // False when the pop timeout is reached or no connection available.
         if($connection === false)
@@ -187,66 +225,70 @@ abstract class ConnectionPool implements ConnectionCreation
         else
         {
             $connection = null;
-            $this->openConnections--;
+            $this->openConnections[$type]--;
         }
 
         // The connection is not alive or active
         return null;
     }
 
-    public function push($conn)
+    /*
+     * Push the connection back into the pool based on its type, either it will
+     * be a read or write connection.
+     */
+    public function push($type, $conn)
     {
         if(is_null($this->pool))
         {
             throw new RuntimeException('Connection pool was closed');
         }
 
-        if($this->pool->isFull())
+        if($this->pool[$type]->isFull())
         {
             $conn = null;
-            $this->openConnections--;
+            $this->openConnections[$type]--;
             return false;
         }
 
-        if($this->openConnections <= $this->max && exists($conn) && $conn instanceof DatabaseConnection)
+        if($this->openConnections[$type] <= $this->limits[$type]['max'] && exists($conn) && $conn instanceof DatabaseConnection)
         {
             // Push the connection back into the pool and use a channel timeout
-            $this->pool->push($conn, 0.1);
+            $this->pool[$type]->push($conn, 0.1);
         }
         else
         {
-            $this->openConnections--;
+            $this->openConnections[$type]--;
         }
     }
 
-    public function add()
+    public function add($type)
     {
-        $this->new();
+        $this->new($type);
     }
 
-    public function remove($num = 1)
+    public function remove($type, $num = 1)
     {
-        go(function() use($num)
+        go(function() use($type, $num)
         {
             for($i=1; $i<=$num; $i++)
             {
-                if($this->pool->length() >= 1)
+                if($this->pool[$type]->length() >= 1)
                 {
-                    $conn = $this->pull();
-                    $this->openConnections--;
+                    $conn = $this->pull($type);
+                    $this->openConnections[$type]--;
                     $conn = null;
                 }
             }
         });
     }
 
-    private function new()
+    private function new($type)
     {
-        go(function()
+        go(function() use($type)
         {
-            $newConn = new DatabaseConnection($this->createConnection());
-            $this->openConnections++;
-            $this->push($newConn);
+            $newConn = new DatabaseConnection($this->createConnection($type));
+            $this->openConnections[$type]++;
+            $this->push($type, $newConn);
         });
     }
 }
