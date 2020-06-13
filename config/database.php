@@ -2,6 +2,10 @@
 
 return [
 
+    /*
+     * The default database connection to use when one is not provided
+     * and as the default connection to use for all database interaction.
+     */
     "default" => env("Database.Default_Connection", "default"),
 
     "connections" => [
@@ -36,10 +40,10 @@ return [
             "prefix" => "",
 
             /*
-             * waitTimeout: Maximum timeout for how long to wait for a connection in seconds
-             * connectionIdleTimeout: Timeout in minutes how long a connection can be idle for
-             * minConnections: Number of minimum connections to keep alive
-             * maxConnections: Maximum number of connections in the pool allowed
+             * Wait Timeout: Maximum timeout for how long to wait for a connection in seconds
+             * Connection Idle Timeout: Timeout in minutes how long a connection can be idle for
+             * Min Connections: Number of minimum connections to keep alive
+             * Max Connections: Maximum number of connections in the pool allowed
              */
             "pool" => [
 

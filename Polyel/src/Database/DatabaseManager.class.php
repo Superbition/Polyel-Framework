@@ -17,11 +17,14 @@ class DatabaseManager
 
     public function createWorkerPool(): void
     {
+        // Where we will store all of the MySQL databases to process...
         $mysqlDatabases = [];
 
+        // Loop through all the database connections and sort them into arrays...
         $databaseConnections = config('database.connections');
         foreach($databaseConnections as $connectionName => $connectionConfig)
         {
+            // Here we sort different databases from another based on the driver type...
             switch(($connectionConfig['driver']))
             {
                 case 'mysql':
@@ -32,6 +35,7 @@ class DatabaseManager
             }
         }
 
+        // Loop through each MySQL database from the database config and create a pool for each...
         foreach($mysqlDatabases as $connectionName => $connectionConfig)
         {
             if($connectionConfig['active'])
@@ -45,6 +49,7 @@ class DatabaseManager
                 $writeMinConn = $connectionConfig['pool']['write']['minConnections'];
                 $writeMaxConn = $connectionConfig['pool']['write']['minConnections'];
 
+                // Each MySQL database will have its own pool, with read and write connections
                 $this->mysqlPools[$connectionName] = new MySQLPool(
                     $connectionName,
                     $maxConnectionIdle,
@@ -70,7 +75,7 @@ class DatabaseManager
 
     public function getConnection($type, $connectionName = null)
     {
-        // Use the default set database if one is not provided
+        // Use the default set database connection if one is not provided
         if(is_null($connectionName))
         {
             $connectionName = config("database.default");
@@ -80,6 +85,7 @@ class DatabaseManager
 
         $databaseConnection = [];
 
+        // Based on driver type, use a switch to select the correct connection pool
         switch($connectionConfig['driver'])
         {
             case 'mysql':
@@ -145,6 +151,7 @@ class DatabaseManager
                 return false;
             }
 
+            // Based on the driver type, return the connection to its correct pool
             switch($databaseConnection['driver'])
             {
                 case 'mysql':

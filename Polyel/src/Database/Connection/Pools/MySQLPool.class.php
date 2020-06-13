@@ -8,19 +8,27 @@ use Polyel\Database\Connection\ConnectionPool;
 
 class MySQLPool extends ConnectionPool
 {
+    // The database config connection name
     private string $connectionName;
 
     public function __construct(string $connectionName, int $maxConnectionIdle, float $waitTimeout, int $readMin, int $readMax, $writeMin, $writeMax)
     {
+        // Pass required parameters to the Connection Pool constructor
         parent::__construct($maxConnectionIdle, $waitTimeout, $readMin, $readMax, $writeMin, $writeMax);
 
         $this->connectionName = $connectionName;
     }
 
+    /*
+     * Creates a new connection based on the type requested: read or write.
+     * It chooses from a list of read or write hosts and randomly selects a host IP.
+     */
     public function createConnection($type)
     {
+        // Grab all the host IPs for the request type...
         $hosts = config("database.connections.$this->connectionName.$type.hosts");
 
+        // Randomly select a host IP from the list of hosts set in the config
         $host = $hosts[array_rand($hosts)];
 
         $port = config("database.connections.$this->connectionName.port");
