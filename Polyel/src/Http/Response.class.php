@@ -209,6 +209,13 @@ class Response
                 $this->queueHeader("Content-Type", "application/json");
                 return $this->convertArrayToJson($response->content);
             }
+
+            // Check if the content set for response is of type ViewBuilder
+            if(is_object($response->content) && $response->content instanceof \Polyel\View\ViewBuilder)
+            {
+                // Return the rendered view
+                return $this->view->render($response->content);
+            }
         }
 
         // Detect if a file has been queued to be sent

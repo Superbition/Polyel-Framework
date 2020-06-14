@@ -4,6 +4,7 @@ namespace Polyel\Http;
 
 use Polyel\Router\Router;
 use Polyel\Config\Config;
+use Polyel\View\Facade\View;
 use Swoole\Coroutine as Swoole;
 use Polyel\Controller\Controller;
 use Polyel\Middleware\Middleware;
@@ -57,6 +58,9 @@ class Server
 
         $this->sessionManager->setDriver(config('session.driver'));
 
+        // Preload all element logic classes into the container
+        View::loadClassElements();
+
         // Create a new Swoole HTTP server and set server IP and listening port
         $this->server = new SwooleHTTPServer(
             $this->config->get("main.serverIP"),
@@ -67,6 +71,8 @@ class Server
         $this->server->set([
             'worker_num' => swoole_cpu_num(),
             'package_max_length' => config("server.maxUploadSize"),
+            'document_root' => config("server.publicRoot"),
+            'enable_static_handler' => true,
             'upload_tmp_dir' => config("server.uploadDir"),
             ]);
     }

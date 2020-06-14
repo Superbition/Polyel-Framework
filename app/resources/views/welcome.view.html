@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <title>Welcome to Polyel</title>
+
+    <style>
+
+        html, body
+        {
+            height: 100%;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #dad9e2;
+        }
+
+        #banner
+        {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 12px 100px;
+            font-family: "Arial";
+            color: #707cc3;
+            border: 1px solid #a8aaac;
+            border-radius: 5px;
+            -webkit-box-shadow: 0px 0px 84px -54px rgba(0,0,0,0.75);
+            -moz-box-shadow: 0px 0px 84px -54px rgba(0,0,0,0.75);
+            box-shadow: 0px 0px 84px -54px rgba(0,0,0,0.75);
+        }
+
+        #welcomeMsg
+        {
+            font-size: 32px;
+        }
+
+        #welcomeLinks
+        {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #welcomeLinks li
+        {
+            display: inline-block;
+            color: #a8aaac;
+        }
+
+        #welcomeLinks li:not(:last-of-type)
+        {
+            margin-right: 25px;
+        }
+
+        #welcomeLinks li a:link
+        {
+            text-decoration: none;
+            color: #a8aaac;
+        }
+
+        #welcomeLinks li a:visited
+        {
+            text-decoration: none;
+            color: #a8aaac;
+        }
+
+        #welcomeLinks li a:hover
+        {
+            text-decoration: none;
+            color: #707cc3;
+        }
+
+        #welcomeLinks li a:active
+        {
+            text-decoration: none;
+            color: #a8aaac;
+        }
+
+    </style>
+
+</head>
+
+    <body>
+
+        <div id="banner">
+
+            <p id="welcomeMsg">Welcome to Polyel</p>
+
+            <ul id="welcomeLinks">
+                <li><a href="https://polyel.io" target="_blank">Home</a></li>
+                <li><a href="https://polyel.io/docs" target="_blank">Documentation</a></li>
+                <li><a href="https://github.com/Superbition/Polyel" target="_blank">Github</a></li>
+                <li><a href="https://twitter.com/PolyelPHP" target="_blank">Twitter</a></li>
+                <li><a href="https://phpnexus.io/" target="_blank">Community</a></li>
+            </ul>
+
+        </div>
+
+    </body>
+
+</html>

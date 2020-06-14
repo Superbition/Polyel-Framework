@@ -11,7 +11,7 @@ class LocalStorage
     private $directoryLinks = [
         "app" => ROOT_DIR . "/app",
         "controllers" => ROOT_DIR . "/app/Controllers",
-        "views" => ROOT_DIR . "/app/views",
+        "views" => ROOT_DIR . "/app/resources/views",
         "public" => ROOT_DIR . "/public",
         "config" => ROOT_DIR . "/config",
         "storage" => ROOT_DIR . "/storage",
