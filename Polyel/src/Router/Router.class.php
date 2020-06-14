@@ -114,9 +114,13 @@ class Router
             // Check if the route matches any registered routes
             if($this->routeExists($this->requestMethod, $this->requestedRoute))
             {
-                // Grab the session cookie and check for a valid session, create one if one doesn't exist
-                $sessionCookie = $this->request->cookie(config('session.cookieName'));
-                $this->sessionManager->startSession($sessionCookie);
+                // Only operate the session system if set to active
+                if(config('session.active'))
+                {
+                    // Grab the session cookie and check for a valid session, create one if one doesn't exist
+                    $sessionCookie = $this->request->cookie(config('session.cookieName'));
+                    $this->sessionManager->startSession($sessionCookie);
+                }
 
                 // Set the default HTTP status code, might change throughout the request cycle
                 $this->response->setStatusCode(200);
