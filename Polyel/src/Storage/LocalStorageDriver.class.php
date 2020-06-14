@@ -11,7 +11,7 @@ class LocalStorage
     private $directoryLinks = [
         "app" => ROOT_DIR . "/app",
         "controllers" => ROOT_DIR . "/app/Controllers",
-        "views" => ROOT_DIR . "/app/views",
+        "views" => ROOT_DIR . "/app/resources/views",
         "public" => ROOT_DIR . "/public",
         "config" => ROOT_DIR . "/config",
         "storage" => ROOT_DIR . "/storage",
@@ -22,7 +22,7 @@ class LocalStorage
     private $fromLink;
 
     // Used to store the file write mode, default is overwrite
-    private $writeMode = "c";
+    private $writeMode = "w+";
 
     public function __construct()
     {
@@ -76,7 +76,7 @@ class LocalStorage
         $handle = fopen(realpath($filePath), "rb");
 
         // Read the entire file and close the handle afterwards
-        $file = Swoole::fread($handle, filesize($filePath));
+        $file = Swoole::fread($handle, 0);
         fclose($handle);
 
         // Reset the from link
@@ -148,7 +148,7 @@ class LocalStorage
         });
 
         // Reset the write mode back to the default
-        $this->writeMode = "c";
+        $this->writeMode = "w+";
     }
 
     public function copy($source, $dest)

@@ -24,7 +24,7 @@ printf "\n-------------------------------------------------------------------\n"
 
 php -f "$DIR/server.php" &
 
-DIR_EXCLUDES="--exclude=.git --exclude=.idea"
+DIR_EXCLUDES="--exclude=.git --exclude=.idea --exclude=storage --exclude=app/resources"
 
 DIR_HASH="$(tar ${DIR_EXCLUDES} -cf - ${DIR} -P | sha1sum)"
 
@@ -48,7 +48,7 @@ while true; do
 
         pkill -f "$PROCESS_NAME"
 
-	    while pkill -0 -f "$PROCESS_NAME"; do
+	    while pkill -f -15 "$PROCESS_NAME"; do
 
 		    sleep 0.5
 
