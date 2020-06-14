@@ -4,8 +4,8 @@ namespace App\Controllers;
 
 class WelcomeController extends Controller
 {
-    public function sayHello()
+    public function welcome()
     {
-        return "Hello World!";
+        return response(view('welcome:view'));
     }
 }
