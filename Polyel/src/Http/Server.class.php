@@ -9,6 +9,7 @@ use Swoole\Coroutine as Swoole;
 use Polyel\Controller\Controller;
 use Polyel\Middleware\Middleware;
 use Polyel\Session\SessionManager;
+use Polyel\Database\DatabaseManager;
 use Swoole\HTTP\Server as SwooleHTTPServer;
 
 class Server
@@ -27,9 +28,11 @@ class Server
 
     private $middleware;
 
+    private $databaseManager;
+  
     private $sessionManager;
 
-    public function __construct(Config $config, Router $router, Controller $controller, Middleware $middleware, SessionManager $sessionManager)
+    public function __construct(Config $config, Router $router, Controller $controller, Middleware $middleware, DatabaseManager $databaseManager, SessionManager $sessionManager)
     {
         cli_set_process_title("Polyel-HTTP-Server");
 
@@ -37,6 +40,7 @@ class Server
         $this->router = $router;
         $this->controller = $controller;
         $this->middleware = $middleware;
+        $this->databaseManager = $databaseManager;
         $this->sessionManager = $sessionManager;
     }
 
@@ -55,6 +59,8 @@ class Server
         $this->controller->loadAllControllers();
 
         $this->middleware->loadAllMiddleware();
+
+        \Swoole\Runtime::enableCoroutine();
 
         $this->sessionManager->setDriver(config('session.driver'));
 
@@ -81,7 +87,7 @@ class Server
     {
         $this->server->on("WorkerStart", function($server, $workerId)
         {
-
+            $this->databaseManager->createWorkerPool();
         });
 
         $this->server->on("start", function($server)
@@ -105,6 +111,11 @@ class Server
 
             $this->router->handle($request);
             $this->router->deliver($response);
+        });
+
+        $this->server->on("WorkerStop", function($server, $workerId)
+        {
+            $this->databaseManager->closeWorkerPool();
         });
     }
 

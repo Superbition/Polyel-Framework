@@ -28,7 +28,7 @@ foreach ($pathIterator as $file)
             continue;
         }
 
-        // Interfaces need to be loaded at the start, so we collect them separately
+        // Interfaces need to be loaded first, so collect them separately
         if(preg_match("/.interface.php/", strtolower($currentFile)))
         {
             // Interfaces will be merged to be placed at the start of the loading process later
@@ -41,7 +41,7 @@ foreach ($pathIterator as $file)
 }
 echo " Done.\n";
 
-// Put all interfaces at the start of the source map so they are loaded first.
+// Put all interfaces at the start of the source map so they are available first
 $polyelSourceFiles = array_merge($interfaces, $polyelSourceFiles);
 
 // Put all traits at the start of the source map so they are loaded first.
