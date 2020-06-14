@@ -8,6 +8,7 @@ use Polyel\View\Facade\View;
 use Swoole\Coroutine as Swoole;
 use Polyel\Controller\Controller;
 use Polyel\Middleware\Middleware;
+use Polyel\Session\SessionManager;
 use Swoole\HTTP\Server as SwooleHTTPServer;
 
 class Server
@@ -26,7 +27,9 @@ class Server
 
     private $middleware;
 
-    public function __construct(Config $config, Router $router, Controller $controller, Middleware $middleware)
+    private $sessionManager;
+
+    public function __construct(Config $config, Router $router, Controller $controller, Middleware $middleware, SessionManager $sessionManager)
     {
         cli_set_process_title("Polyel-HTTP-Server");
 
@@ -34,6 +37,7 @@ class Server
         $this->router = $router;
         $this->controller = $controller;
         $this->middleware = $middleware;
+        $this->sessionManager = $sessionManager;
     }
 
     public function boot()
@@ -51,6 +55,8 @@ class Server
         $this->controller->loadAllControllers();
 
         $this->middleware->loadAllMiddleware();
+
+        $this->sessionManager->setDriver(config('session.driver'));
 
         // Preload all element logic classes into the container
         View::loadClassElements();

@@ -12,9 +12,9 @@ class Request
 
     private $hostIP;
 
-    private $clientIP;
+    public $clientIP;
 
-    private $userAgent;
+    public $userAgent;
 
     private $serverPort;
 
@@ -59,7 +59,7 @@ class Request
 
         $this->queries = $request->get;
 
-        $this->cookies = $request->cookie;
+        $this->cookies = $request->cookie ?? [];
 
         $this->files = $request->files;
 
