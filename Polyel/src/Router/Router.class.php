@@ -181,22 +181,6 @@ class Router
         }
     }
 
-    public function deliver($response)
-    {
-        if($this->debug->doDumpsExist())
-        {
-            // The rendered response but with the debug dumps at the start.
-            $response->end($this->debug->getDumps() . "<br>" . Template::render($this->requestedView));
-
-            // Resets the last amount of dumps so duplicates are not shown upon next request.
-            $this->debug->cleanup();
-        }
-        else
-        {
-            $this->response->send($response);
-        }
-    }
-
     private function addRoute($requestMethod, $route, $action)
     {
         // Throw an error if trying to add a route that already exists...
