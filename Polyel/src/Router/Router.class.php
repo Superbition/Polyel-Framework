@@ -15,27 +15,6 @@ class Router
     use RouteVerbs;
     use RouteUtilities;
 
-    // The URI pattern the route responds to.
-    private $uriSplit;
-
-    // Holds the main requested route from the client
-    private $requestedRoute;
-
-    // Holds the current matched registered URL str
-    private $currentRegURL;
-
-    // Holds the current matched controller from the registered route
-    private $currentController;
-
-    // Holds the current matched route action for the controller
-    private $currentRouteAction;
-
-    // Holds the current parameters matched from a registered route
-    private $currentRouteParams;
-
-    // Holds the request method sent by the client
-    private $requestMethod;
-
     // Holds all the request routes to respond to
     private $routes;
 
