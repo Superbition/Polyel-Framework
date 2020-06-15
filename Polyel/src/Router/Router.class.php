@@ -45,21 +45,6 @@ class Router
 
     public function handle(Request $request, Kernel $HttpKernel): Response
     {
-        // Get the full URL from the clients request
-        $this->requestedRoute = $request->server["request_uri"];
-
-        /*
-         * Split the URI into an array based on the delimiter
-         * Remove empty array values from the URI because of the delimiters
-         * Reindex the array back to 0
-         */
-        $this->uriSplit = explode("/", $request->server["request_uri"]);
-        $this->uriSplit = array_filter($this->uriSplit);
-        $this->uriSplit = array_values($this->uriSplit);
-
-        // Get the request method: GET, POST, PUT etc.
-        $this->requestMethod = $request->server["request_method"];
-
         // Check for a HEAD request
         if($this->requestMethod === "HEAD")
         {
