@@ -62,11 +62,11 @@ class Router
             if(isset($this->routes["REDIRECT"][$request->uri]))
             {
                 // Set a redirection to happen when responding
-                $redirection = $this->routes["REDIRECT"][$this->requestedRoute];
-                $this->response->redirect($redirection["url"], $redirection["statusCode"]);
+                $redirection = $this->routes["REDIRECT"][$request->uri];
+                $response->redirect($redirection["url"], $redirection["statusCode"]);
 
                 // Returning progresses the request to skip to responding directly
-                return;
+                return $response;
             }
 
             $this->request->capture($request);
