@@ -5,6 +5,7 @@ namespace Polyel\Router;
 use Polyel;
 use Exception;
 use Polyel\Debug\Debug;
+use Polyel\Http\Kernel;
 use Polyel\Http\Request;
 use Polyel\Http\Response;
 use Polyel\Middleware\Middleware;
@@ -42,7 +43,7 @@ class Router
         $this->middleware = $middleware;
     }
 
-    public function handle($request)
+    public function handle(Request $request, Kernel $HttpKernel): Response
     {
         // Get the full URL from the clients request
         $this->requestedRoute = $request->server["request_uri"];
