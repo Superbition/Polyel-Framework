@@ -103,9 +103,9 @@ class Server
             echo "\n------------------------------------------------------------------------\n";
         });
 
-        $this->server->on("request", function($request, $response)
+        $this->server->on("request", function($HttpRequest, $HttpResponse)
         {
-            $this->setDefaultResponseHeaders($response);
+            $this->setDefaultResponseHeaders($HttpResponse);
 
             $this->runDebug();
 
