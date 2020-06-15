@@ -24,7 +24,7 @@ class Container
     }
 
     // Recursively checks for class dependencies, resolves them and creates class instances.
-    private function checkForDependencies($classToResolve)
+    private function checkForDependencies($classToResolve, $returnClassOnly = false)
     {
         // Return when the class already exists inside the container
         if($this->get($classToResolve))
@@ -85,11 +85,11 @@ class Container
          * constructor with what it requires in order to initiate a new class.
          * The $dependencyList contains the class arguments in the form of a array.
          */
-        $this->resolveClassDependency($classToResolve, $dependencyList);
+        return $this->resolveClassDependency($classToResolve, $dependencyList, $returnClassOnly);
     }
 
     // Resolve a single class dependency and store it in the container
-    private function resolveClassDependency($dependencyToResolve, $classArgs)
+    private function resolveClassDependency($dependencyToResolve, $classArgs, $returnClassOnly)
     {
         // Using Reflection, load the class up...
         $classDependency = new ReflectionClass($dependencyToResolve);
@@ -105,8 +105,17 @@ class Container
             $newClassInstance = $classDependency->newInstanceWithoutConstructor();
         }
 
-        // Finally store the newly created instance inside the container.
-        $this->container[$dependencyToResolve] = $newClassInstance;
+        // Whether  to just return the class by itself or to place it inside the service container
+        if($returnClassOnly)
+        {
+            // Return a fully resolved class
+            return $newClassInstance;
+        }
+        else
+        {
+            // Finally store the newly created instance inside the container.
+            $this->container[$dependencyToResolve] = $newClassInstance;
+        }
     }
 
     // Public facing function to externally resolve a class
@@ -182,6 +191,13 @@ class Container
 
         // For when the requested class does not exist inside the container...
         return null;
+    }
+
+    // Used to resolve and create a new class without storing it inside the container
+    public function new($class)
+    {
+        // Returns a fully resolved class by itself and does not place it inside the service container
+        return $this->checkForDependencies($class, true);
     }
 
     // A function to return all the names of the classes inside the container, full namespace is returned.
