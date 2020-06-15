@@ -2,6 +2,7 @@
 
 namespace Polyel\Http;
 
+use Polyel;
 use Polyel\Router\Router;
 use Polyel\Config\Config;
 use Polyel\View\Facade\View;
@@ -109,8 +110,13 @@ class Server
 
             $this->runDebug();
 
-            $this->router->handle($request);
-            $this->router->deliver($response);
+            $HttpKernel = Polyel::new(Polyel\Http\Kernel::class);
+
+            $HttpKernel->request->capture($HttpRequest);
+
+            $response = $this->router->handle($HttpKernel->request, $HttpKernel);
+
+            $response->send($HttpResponse);
         });
 
         $this->server->on("WorkerStop", function($server, $workerId)
