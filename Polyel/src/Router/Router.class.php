@@ -46,17 +46,17 @@ class Router
     public function handle(Request $request, Kernel $HttpKernel): Response
     {
         // Check for a HEAD request
-        if($this->requestMethod === "HEAD")
+        if($request->method === "HEAD")
         {
             // Because HEAD and GET are basically the same, switch a HEAD to act like a GET request
-            $this->requestMethod = "GET";
+            $request->method = "GET";
         }
 
         // Continue routing if there is a URL
-        if(!empty($this->requestedRoute))
+        if(!empty($request->uri))
         {
             // Check if a redirection has been set...
-            if(isset($this->routes["REDIRECT"][$this->requestedRoute]))
+            if(isset($this->routes["REDIRECT"][$request->uri]))
             {
                 // Set a redirection to happen when responding
                 $redirection = $this->routes["REDIRECT"][$this->requestedRoute];
