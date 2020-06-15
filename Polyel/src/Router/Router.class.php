@@ -33,21 +33,13 @@ class Router
     // The Middleware service
     private $middleware;
 
-    // The Request object
-    private $request;
-
-    // The Response object
-    private $response;
-
     private $routeParamPattern;
 
-    public function __construct(SessionManager $sessionManager, Debug $debug, Middleware $middleware, Request $request, Response $response)
+    public function __construct(SessionManager $sessionManager, Debug $debug, Middleware $middleware)
     {
         $this->sessionManager = $sessionManager;
         $this->debug = $debug;
         $this->middleware = $middleware;
-        $this->request = $request;
-        $this->response = $response;
     }
 
     public function handle($request)
