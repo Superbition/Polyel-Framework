@@ -52,6 +52,9 @@ class Router
             $request->method = "GET";
         }
 
+        // Get the response from the HTTP Kernel that will be sent back to the client
+        $response = $HttpKernel->response;
+
         // Continue routing if there is a URL
         if(!empty($request->uri))
         {
