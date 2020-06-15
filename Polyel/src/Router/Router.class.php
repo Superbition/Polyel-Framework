@@ -255,21 +255,6 @@ class Router
         return false;
     }
 
-    public function getCurrentRoute()
-    {
-        return $this->requestedRoute;
-    }
-
-    public function getCurrentRouteSplit()
-    {
-        return $this->uriSplit;
-    }
-
-    public function getCurrentRouteAction()
-    {
-        return $this->currentRouteAction;
-    }
-
     public function middleware($middlewareKeys)
     {
         $requestMethod = array_key_first($this->lastAddedRoute);
