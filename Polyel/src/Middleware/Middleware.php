@@ -33,16 +33,6 @@ class Middleware
             {
                 // Make the class available by declaring it
                 require_once $middlewareFilePath;
-
-                // The last declared class will be the above when it was required_once
-                $listOfDefinedClasses = get_declared_classes();
-
-                // Get the last class in the array of declared classes
-                $definedClass = explode("\\", end($listOfDefinedClasses));
-                $definedClass = end($definedClass);
-
-                // Calling the Container to resolve the class into the container
-                Polyel::resolveClass("App\Middleware\\" . $definedClass);
             }
         }
     }
