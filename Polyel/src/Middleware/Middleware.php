@@ -84,7 +84,7 @@ class Middleware
      * before or after. $applicationStage is the request or response service that gets passed in to
      * allow a middleware to process its correct type.
      */
-    private function runMiddleware($type, $requestMethod, $route, $request, $response = null)
+    private function runMiddleware($HttpKernel, $type, $requestMethod, $route)
     {
         // Check if a middleware exists for the request method, GET, POST etc.
         if(array_key_exists($requestMethod, $this->middlewares))
@@ -109,21 +109,21 @@ class Middleware
                     $middleware = config("middleware.keys." . $middlewareKey);
 
                     // Call Polyel and get the middleware class from the container
-                    $middlewareToRun = Polyel::call($middleware);
+                    $middlewareToRun = $HttpKernel->container->resolveClass($middleware);
 
                     // Based on the passed in middleware type, execute if both types match
                     if($middlewareToRun->middlewareType == $type)
                     {
                         // Only the after Middleware type can use the $response service
-                        if(!exists($response))
+                        if($type === 'before')
                         {
                             // Process the middleware if the request types match up
-                            $response = $middlewareToRun->process($request);
+                            $response = $middlewareToRun->process($HttpKernel->request);
                         }
                         else
                         {
                             // Process the middleware if the request types match up
-                            $response = $middlewareToRun->process($request, $response);
+                            $response = $middlewareToRun->process($HttpKernel->request, $HttpKernel->response);
                         }
 
                         // If a Middleware wants to return a response early, halt and send it back
