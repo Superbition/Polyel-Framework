@@ -3,7 +3,6 @@
 namespace Polyel\Http;
 
 use Polyel\View\View;
-use Polyel\Session\SessionManager;
 use Polyel\Http\Utilities\ResponseUtilities;
 
 class Response
