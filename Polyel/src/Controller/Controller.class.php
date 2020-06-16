@@ -2,7 +2,6 @@
 
 namespace Polyel\Controller;
 
-use Polyel;
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
 
@@ -27,12 +26,6 @@ class Controller
             if(preg_match('/^.+\.php$/i', $controllerFilePath))
             {
                 require_once $controllerFilePath;
-
-                $listOfDefinedClasses = get_declared_classes();
-                $definedClass = explode("\\", end($listOfDefinedClasses));
-                $definedClass = end($definedClass);
-
-                Polyel::resolveClass("App\Controllers\\" . $definedClass);
             }
         }
     }
