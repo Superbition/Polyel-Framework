@@ -298,7 +298,7 @@ class Session
         {
             $this->sessionManager->driver()->destroySession($currentSessionID, false);
 
-            $newSessionID = $this->sessionManager->regenerateSession();
+            $newSessionID = $this->sessionManager->regenerateSession($this->request, $this->response);
 
             $newSessionData = $this->all();
 
