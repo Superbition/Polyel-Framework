@@ -82,9 +82,8 @@ class Router
                 // Only operate the session system if set to active
                 if(config('session.active'))
                 {
-                    // Grab the session cookie and check for a valid session, create one if one doesn't exist
-                    $sessionCookie = $this->request->cookie(config('session.cookieName'));
-                    $this->sessionManager->startSession($sessionCookie);
+                    // Check for a valid session and update the session data, create one if one doesn't exist
+                    $this->sessionManager->startSession($request, $response);
                 }
 
                 // Set the default HTTP status code, might change throughout the request cycle
