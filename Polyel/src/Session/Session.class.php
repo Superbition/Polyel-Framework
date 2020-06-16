@@ -2,17 +2,25 @@
 
 namespace Polyel\Session;
 
+use Polyel\Http\Request;
+use Polyel\Http\Response;
+
 class Session
 {
     // Holds the session manager service
     private $sessionManager;
 
+    private $request;
+
+    private $response;
+
     // Used when a push call is made to indicate data should be pushed onto the session
     private $pushFlag = false;
 
-    public function __construct(SessionManager $sessionManager)
+    public function __construct(Request $request, Response $response)
     {
-        $this->sessionManager = $sessionManager;
+        $this->request = $request;
+        $this->response = $response;
     }
 
     /*
