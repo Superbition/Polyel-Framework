@@ -4,7 +4,6 @@ namespace Polyel\Session;
 
 use Polyel;
 use Swoole\Timer as Timer;
-use Polyel\Http\Facade\Cookie;
 
 class SessionManager
 {
@@ -105,7 +104,7 @@ class SessionManager
         return $sessionID;
     }
 
-    private function queueSessionCookie($sessionID)
+    private function queueSessionCookie($sessionID, $response)
     {
         $sessionLifetime = config('session.lifetime');
 
@@ -125,7 +124,7 @@ class SessionManager
             $sameSite = 'None',
         ];
 
-        Cookie::queue(...$sessionCookie);
+        $response->queueCookie(...$sessionCookie);
     }
 
     public function getCurrentRequestSessionID()
