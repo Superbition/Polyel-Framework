@@ -118,7 +118,7 @@ class Router
                     $methodDependencies = Polyel::resolveMethod($controllerName, $controllerAction);
 
                     // Method injection for any services first, then route parameters and get the controller response
-                    $controllerResponse = $controller->$controllerAction(...$methodDependencies, ...$this->currentRouteParams);
+                    $controllerResponse = $controller->$controllerAction(...$methodDependencies, ...$routeParams);
 
                     // Capture a response returned from any after middleware if one returns a response...
                     $afterMiddlewareResponse = $this->middleware->runAnyAfter($request, $response, $request->method, $matchedRoute['url']);
