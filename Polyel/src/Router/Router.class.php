@@ -104,7 +104,7 @@ class Router
                 if(isset($controller) && !empty($controller))
                 {
                     // Capture a response from a before middleware if one returns a response
-                    $beforeMiddlewareResponse = $this->middleware->runAnyBefore($this->request, $this->requestMethod, $this->currentRegURL);
+                    $beforeMiddlewareResponse = $this->middleware->runAnyBefore($request, $request->method, $matchedRoute['url']);
 
                     // If a before middleware wants to return a response early in the app process...
                     if(exists($beforeMiddlewareResponse))
@@ -121,7 +121,7 @@ class Router
                     $controllerResponse = $controller->$controllerAction(...$methodDependencies, ...$this->currentRouteParams);
 
                     // Capture a response returned from any after middleware if one returns a response...
-                    $afterMiddlewareResponse = $this->middleware->runAnyAfter($this->request, $this->response, $this->requestMethod, $this->currentRegURL);
+                    $afterMiddlewareResponse = $this->middleware->runAnyAfter($request, $response, $request->method, $matchedRoute['url']);
 
                     // After middleware takes priority over the controller when returning a response
                     if(exists($afterMiddlewareResponse))
