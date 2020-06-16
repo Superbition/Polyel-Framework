@@ -144,6 +144,8 @@ class Router
                 $this->response->build(response(view('404:error'), 404));
             }
         }
+
+        return $response;
     }
 
     private function addRoute($requestMethod, $route, $action)
