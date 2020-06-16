@@ -87,7 +87,10 @@ class Router
                 }
 
                 // Set the default HTTP status code, might change throughout the request cycle
-                $this->response->setStatusCode(200);
+                $response->setStatusCode(200);
+
+                // URL route parameters from request
+                $routeParams = $matchedRoute['params'];
 
                 // Get the current matched controller and route action
                 $controller = $this->currentController;
