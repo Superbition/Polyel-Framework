@@ -33,6 +33,17 @@ class Polyel
         return self::$container->new($class);
     }
 
+    public static function newHttpKernel()
+    {
+        $kernelContainer = new Container(Polyel\Http\Kernel::class);
+
+        $HttpKernel = $kernelContainer->get(Polyel\Http\Kernel::class);
+
+        $HttpKernel->setContainer($kernelContainer);
+
+        return $HttpKernel;
+    }
+
     public static function resolveMethod($class, $method)
     {
         return self::$container->resolveMethodInjection($class, $method);
