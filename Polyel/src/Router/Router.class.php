@@ -93,8 +93,8 @@ class Router
                 $routeParams = $matchedRoute['params'];
 
                 // Get the current matched controller and route action
-                $controller = $this->currentController;
-                $controllerAction = $this->currentRouteAction;
+                $controller = $matchedRoute['controller'];
+                $controllerAction = $matchedRoute['action'];
 
                 //The controller namespace and getting its instance from the container using ::call
                 $controllerName = "App\Controllers\\" . $controller;
