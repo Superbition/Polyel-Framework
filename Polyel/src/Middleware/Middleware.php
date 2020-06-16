@@ -137,9 +137,9 @@ class Middleware
         }
     }
 
-    public function runAnyBefore($request, $requestMethod, $route)
+    public function runAnyBefore($HttpKernel, $requestMethod, $route)
     {
-        $globalResponse = $this->runGlobalMiddleware("before", $request);
+        $globalResponse = $this->runGlobalMiddleware($HttpKernel, 'before');
 
         if(exists($globalResponse))
         {
@@ -147,7 +147,7 @@ class Middleware
             return $globalResponse;
         }
 
-        $beforeResponse = $this->runMiddleware("before", $requestMethod, $route, $request);
+        $beforeResponse = $this->runMiddleware($HttpKernel, "before", $requestMethod, $route);
 
         if(exists($beforeResponse))
         {
@@ -159,9 +159,9 @@ class Middleware
         return null;
     }
 
-    public function runAnyAfter($request, $response, $requestMethod, $route)
+    public function runAnyAfter($HttpKernel, $requestMethod, $route)
     {
-        $globalResponse = $this->runGlobalMiddleware("after", $request, $response);
+        $globalResponse = $this->runGlobalMiddleware($HttpKernel, "after");
 
         if(exists($globalResponse))
         {
@@ -169,7 +169,7 @@ class Middleware
             return $globalResponse;
         }
 
-        $afterResponse = $this->runMiddleware("after", $requestMethod, $route, $request, $response);
+        $afterResponse = $this->runMiddleware($HttpKernel, "after", $requestMethod, $route);
 
         if(exists($afterResponse))
         {
