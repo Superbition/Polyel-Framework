@@ -3,7 +3,6 @@
 namespace Polyel\Session;
 
 use Polyel;
-use Polyel\Http\Request;
 use Swoole\Timer as Timer;
 use Polyel\Http\Facade\Cookie;
 
