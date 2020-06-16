@@ -67,11 +67,11 @@ class Container
                 if(!$this->get($dependencyToCheck))
                 {
                     // Recursively resolve and check further dependencies before we resolve the final class.
-                    $this->checkForDependencies($dependencyToCheck);
+                    $resolvedClass = $this->checkForDependencies($dependencyToCheck, $returnClassOnly);
                 }
 
                 // Using the constructors parameters, we store all the required dependencies here.
-                $dependencyList[] = $this->get($dependencyToCheck);
+                $dependencyList[] = $this->get($dependencyToCheck) ?? $resolvedClass;
             }
         }
         else
