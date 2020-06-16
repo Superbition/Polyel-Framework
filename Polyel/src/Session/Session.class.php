@@ -15,6 +15,8 @@ class Session
 
     private $response;
 
+    private $sessionID;
+
     // Used when a push call is made to indicate data should be pushed onto the session
     private $pushFlag = false;
 
@@ -23,6 +25,16 @@ class Session
         $this->sessionManager = Polyel::call(SessionManager::class);
         $this->request = $request;
         $this->response = $response;
+    }
+
+    public function setID($sessionID)
+    {
+        $this->sessionID = $sessionID;
+    }
+
+    public function id()
+    {
+        return $this->sessionID;
     }
 
     /*
