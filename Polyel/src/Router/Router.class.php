@@ -2,7 +2,6 @@
 
 namespace Polyel\Router;
 
-use Polyel;
 use Exception;
 use Polyel\Debug\Debug;
 use Polyel\Http\Kernel;
@@ -115,7 +114,7 @@ class Router
                     }
 
                     // Resolve and perform method injection when calling the controller action
-                    $methodDependencies = Polyel::resolveMethod($controllerName, $controllerAction);
+                    $methodDependencies = $HttpKernel->container->resolveMethodInjection($controllerName, $controllerAction);
 
                     // Method injection for any services first, then route parameters and get the controller response
                     $controllerResponse = $controller->$controllerAction(...$methodDependencies, ...$routeParams);
