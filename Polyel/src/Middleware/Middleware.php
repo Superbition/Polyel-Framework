@@ -2,7 +2,6 @@
 
 namespace Polyel\Middleware;
 
-use Polyel;
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
 
