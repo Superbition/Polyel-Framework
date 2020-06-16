@@ -3,6 +3,7 @@
 namespace Polyel\Session;
 
 use Polyel;
+use Polyel\Http\Kernel;
 use Swoole\Timer as Timer;
 
 class SessionManager
@@ -45,7 +46,7 @@ class SessionManager
         $this->gcStarted = true;
     }
 
-    public function startSession($HttpKernel)
+    public function startSession(Kernel $HttpKernel)
     {
         $sessionCookieID = $HttpKernel->request->cookie(config('session.cookieName'));
 
