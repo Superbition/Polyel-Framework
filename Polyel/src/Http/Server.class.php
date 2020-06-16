@@ -110,7 +110,7 @@ class Server
 
             $this->runDebug();
 
-            $HttpKernel = Polyel::new(Polyel\Http\Kernel::class);
+            $HttpKernel = Polyel::newHttpKernel();
 
             $HttpKernel->request->capture($HttpRequest);
 
