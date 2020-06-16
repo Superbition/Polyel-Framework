@@ -14,6 +14,11 @@ class Container
     {
         if(isset($classesToResolve))
         {
+            if(!is_array($classesToResolve))
+            {
+                $classesToResolve = [$classesToResolve];
+            }
+
             // Resolve each class inside the array that was passed in
             foreach($classesToResolve as $class)
             {
