@@ -2,6 +2,7 @@
 
 namespace Polyel\Session;
 
+use Polyel;
 use Polyel\Http\Request;
 use Polyel\Http\Response;
 
@@ -19,6 +20,7 @@ class Session
 
     public function __construct(Request $request, Response $response)
     {
+        $this->sessionManager = Polyel::call(SessionManager::class);
         $this->request = $request;
         $this->response = $response;
     }
