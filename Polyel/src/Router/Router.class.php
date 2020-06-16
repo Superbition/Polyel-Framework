@@ -82,7 +82,7 @@ class Router
                 if(config('session.active'))
                 {
                     // Check for a valid session and update the session data, create one if one doesn't exist
-                    $this->sessionManager->startSession($request, $response);
+                    $this->sessionManager->startSession($HttpKernel);
                 }
 
                 // Set the default HTTP status code, might change throughout the request cycle

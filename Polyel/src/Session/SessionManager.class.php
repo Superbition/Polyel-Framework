@@ -50,9 +50,9 @@ class SessionManager
         $this->gcStarted = true;
     }
 
-    public function startSession($request, $response)
+    public function startSession($HttpKernel)
     {
-        $sessionCookieID = $request->cookie(config('session.cookieName'));
+        $sessionCookieID = $HttpKernel->request->cookie(config('session.cookieName'));
 
         $sessionData = $this->driver->getSessionData($sessionCookieID);
 
