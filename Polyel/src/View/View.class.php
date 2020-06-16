@@ -9,6 +9,8 @@ class View
 {
     use ViewTools;
 
+    private const RESOURCE_DIR = ROOT_DIR . "/app/resources";
+
     // Holds the template name and eventually the file path
     private $resource;
 
@@ -26,8 +28,6 @@ class View
 
     // Holds the Element service class
     private $element;
-
-    private $resourceDir = ROOT_DIR . "/app/resources";
 
     public function __construct(Element $element)
     {
@@ -51,7 +51,7 @@ class View
              * Format the resource file path and get the resource from the local disk
              * NOTE: The $this->resource file/path name is already converted from dot syntax in ViewBuilder
              */
-            $viewLocation = $this->resourceDir . "/${type}s/" . $this->resource . ".${type}.html";
+            $viewLocation = static::RESOURCE_DIR . "/${type}s/" . $this->resource . ".${type}.html";
             $this->resource = Storage::access('local')->read($viewLocation);
 
             // Get all the tags from the resource template
@@ -130,7 +130,7 @@ class View
             $resourceFileNamePath = str_replace('.', '/', $resourceName);
 
             // Build the include file location to check...
-            $includeLocation = $this->resourceDir . "/${includeType}s/" . $resourceFileNamePath . '.view.html';
+            $includeLocation = static::RESOURCE_DIR . "/${includeType}s/" . $resourceFileNamePath . '.view.html';
 
             // Check if the include exists on local disk
             if(file_exists($includeLocation))
@@ -224,7 +224,7 @@ class View
         $extViewName = str_replace(".", "/", $extViewName);
 
         // Build up the extending view file path and grab the content from disk
-        $extViewFilePath = $this->resourceDir . "/${extType}s/" . $extViewName . ".$extType.html";
+        $extViewFilePath = static::RESOURCE_DIR . "/${extType}s/" . $extViewName . ".$extType.html";
         $this->extendingView = Storage::access('local')->read($extViewFilePath);
 
         // Collect any extending view tags
@@ -250,7 +250,7 @@ class View
 
         // Convert dot syntax to file slashes, build a full file path to the view, using the type as well
         $viewName = str_replace(".", "/", $viewName);
-        $viewFilePath = $this->resourceDir . "/${viewType}s/" . $viewName . ".$viewType.html";
+        $viewFilePath = static::RESOURCE_DIR . "/${viewType}s/" . $viewName . ".$viewType.html";
 
         if(file_exists($viewFilePath))
         {
