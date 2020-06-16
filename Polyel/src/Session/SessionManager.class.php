@@ -13,9 +13,6 @@ class SessionManager
 
     private $gcStarted = false;
 
-    // Holds the current request session ID so the session service has access to it
-    private $currentRequestSessionID;
-
     public function __construct()
     {
         $this->availableDrivers = [
@@ -125,16 +122,6 @@ class SessionManager
         ];
 
         $response->queueCookie(...$sessionCookie);
-    }
-
-    public function getCurrentRequestSessionID()
-    {
-        return $this->currentRequestSessionID;
-    }
-
-    public function clearCurrentRequestSessionID()
-    {
-        $this->currentRequestSessionID = null;
     }
 
     public function driver()
