@@ -65,6 +65,8 @@ class SessionManager
         // Update session ip, agent and last active time
         $this->driver->updateSession($sessionCookieID, $HttpKernel->request);
 
+        $HttpKernel->setSessionID($sessionCookieID);
+
         // The session gc is started on the first request once the server is booted
         if($this->gcStarted == false)
         {
