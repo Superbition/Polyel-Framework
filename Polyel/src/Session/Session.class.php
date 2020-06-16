@@ -42,7 +42,7 @@ class Session
      */
     public function all()
     {
-        $sessionID = $this->sessionManager->getCurrentRequestSessionID();
+        $sessionID = $this->id();
 
         return $this->sessionManager->driver()->getSessionData($sessionID);
     }
@@ -160,7 +160,7 @@ class Session
         }
 
         // We need the session ID to access the session data
-        $sessionID = $this->sessionManager->getCurrentRequestSessionID();
+        $sessionID = $this->id();
 
         // Using the driver from the session manager, re-save the data...
         $this->sessionManager->driver()->saveSessionData($sessionID, $sessionData);
@@ -214,7 +214,7 @@ class Session
         unset($sessionData[$lastKey]);
 
         // We need the session ID to access the session data
-        $sessionID = $this->sessionManager->getCurrentRequestSessionID();
+        $sessionID = $this->id();
 
         // Using the driver from the session manager, re-save the data...
         $this->sessionManager->driver()->saveSessionData($sessionID, $sessionDataAll);
@@ -268,7 +268,7 @@ class Session
         unset($sessionData[$lastKey]);
 
         // We need the session ID to access the session data
-        $sessionID = $this->sessionManager->getCurrentRequestSessionID();
+        $sessionID = $this->id();
 
         // Using the driver from the session manager, re-save the data...
         $this->sessionManager->driver()->saveSessionData($sessionID, $sessionDataAll);
@@ -280,7 +280,7 @@ class Session
     public function clear()
     {
         // We need the session ID to access the session data
-        $sessionID = $this->sessionManager->getCurrentRequestSessionID();
+        $sessionID = $this->id();
 
         $this->sessionManager->driver()->clear($sessionID);
     }
@@ -291,7 +291,7 @@ class Session
     public function regenerate()
     {
         // Get the current session ID and data
-        $currentSessionID = $this->sessionManager->getCurrentRequestSessionID();
+        $currentSessionID = $this->id();
         $oldSessionData = $this->all();
 
         if(exists($oldSessionData) && array_key_exists('id', $oldSessionData))

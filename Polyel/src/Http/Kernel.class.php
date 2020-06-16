@@ -30,4 +30,9 @@ class Kernel
     {
         $this->container = $container;
     }
+
+    public function setSessionID($sessionID)
+    {
+        $this->session->setID($sessionID);
+    }
 }
