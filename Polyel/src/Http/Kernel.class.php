@@ -2,6 +2,7 @@
 
 namespace Polyel\Http;
 
+use Polyel\Session\Session;
 use Polyel\Container\Container;
 
 class Kernel
@@ -9,17 +10,20 @@ class Kernel
     // The kernel service container for this HTTP request
     public $container;
 
+    // Session service for the HttpKernel
+    public $session;
+
     // The request service for the duration of this HTTP request
     public $request;
 
     // The response service for the duration of this HTTP request
     public $response;
 
-    public function __construct()
+    public function __construct(Session $session, Request $request, Response $response)
     {
-        $this->container = new Container();
-        $this->request = $this->container->resolveClass(Request::class);
-        $this->response = $this->container->resolveClass(Response::class);
+        $this->session = $session;
+        $this->request = $request;
+        $this->response = $response;
     }
 
     public function setContainer(Container $container)
