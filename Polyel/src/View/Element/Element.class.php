@@ -8,7 +8,7 @@ use RecursiveDirectoryIterator;
 
 class Element
 {
-    private $elementClassDir = ROOT_DIR . "/app/View/Elements";
+    private const ELEMENT_CLASS_DIR = ROOT_DIR . "/app/View/Elements";
 
     public function __construct()
     {
@@ -34,7 +34,7 @@ class Element
 
     public function loadClassElements()
     {
-        $elementClassDir = new RecursiveDirectoryIterator($this->elementClassDir);
+        $elementClassDir = new RecursiveDirectoryIterator(static::ELEMENT_CLASS_DIR);
         $pathIterator = new RecursiveIteratorIterator($elementClassDir);
 
         foreach($pathIterator as $elementClass)
