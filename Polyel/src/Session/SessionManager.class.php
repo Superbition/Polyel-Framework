@@ -13,17 +13,13 @@ class SessionManager
 
     private $availableDrivers;
 
-    private $request;
-
     private $gcStarted = false;
 
     // Holds the current request session ID so the session service has access to it
     private $currentRequestSessionID;
 
-    public function __construct(Request $request)
+    public function __construct()
     {
-        $this->request = $request;
-
         $this->availableDrivers = [
           'file' => Polyel\Session\Drivers\FileSessionDriver::class,
         ];
