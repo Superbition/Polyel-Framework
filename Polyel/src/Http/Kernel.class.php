@@ -21,4 +21,9 @@ class Kernel
         $this->request = $this->container->resolveClass(Request::class);
         $this->response = $this->container->resolveClass(Response::class);
     }
+
+    public function setContainer(Container $container)
+    {
+        $this->container = $container;
+    }
 }
