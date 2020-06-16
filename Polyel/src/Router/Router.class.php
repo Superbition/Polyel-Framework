@@ -98,7 +98,7 @@ class Router
 
                 //The controller namespace and getting its instance from the container using ::call
                 $controllerName = "App\Controllers\\" . $controller;
-                $controller = Polyel::call($controllerName);
+                $controller = $HttpKernel->container->resolveClass($controllerName);
 
                 // Check that the controller exists
                 if(isset($controller) && !empty($controller))
