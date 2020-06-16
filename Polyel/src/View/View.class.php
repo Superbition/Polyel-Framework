@@ -259,9 +259,4 @@ class View
 
         return false;
     }
-
-    public function loadClassElements()
-    {
-        $this->element->loadClassElements();
-    }
 }

@@ -5,8 +5,8 @@ namespace Polyel\Http;
 use Polyel;
 use Polyel\Router\Router;
 use Polyel\Config\Config;
-use Polyel\View\Facade\View;
 use Swoole\Coroutine as Swoole;
+use Polyel\View\Element\Element;
 use Polyel\Controller\Controller;
 use Polyel\Middleware\Middleware;
 use Polyel\Session\SessionManager;
@@ -66,7 +66,7 @@ class Server
         $this->sessionManager->setDriver(config('session.driver'));
 
         // Preload all element logic classes into the container
-        View::loadClassElements();
+        Element::loadClassElements();
 
         // Create a new Swoole HTTP server and set server IP and listening port
         $this->server = new SwooleHTTPServer(

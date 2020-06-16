@@ -32,7 +32,7 @@ class Element
         }
     }
 
-    public function loadClassElements()
+    public static function loadClassElements()
     {
         $elementClassDir = new RecursiveDirectoryIterator(static::ELEMENT_CLASS_DIR);
         $pathIterator = new RecursiveIteratorIterator($elementClassDir);
@@ -44,12 +44,6 @@ class Element
             if(preg_match('/^.+\.php$/i', $elementClassFilePath))
             {
                 require_once $elementClassFilePath;
-
-                $listOfDefinedClasses = get_declared_classes();
-                $definedClass = explode("\\", end($listOfDefinedClasses));
-                $definedClass = end($definedClass);
-
-                Polyel::resolveClass("App\View\Elements\\" . $definedClass);
             }
         }
     }
