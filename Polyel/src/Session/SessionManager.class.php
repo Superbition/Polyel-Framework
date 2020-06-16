@@ -59,7 +59,7 @@ class SessionManager
         // Either cookie does not exist or the session is missing on the server
         if(!exists($sessionCookieID) || $this->driver->isValid($sessionCookieID, $sessionData) === false)
         {
-            $this->regenerateSession();
+            $sessionCookieID = $this->regenerateSession($HttpKernel->request, $HttpKernel->response);
         }
 
         // Update session ip, agent and last active time
@@ -73,22 +73,20 @@ class SessionManager
         }
     }
 
-    public function regenerateSession()
+    public function regenerateSession($request, $response)
     {
         $prefix = config('session.prefix');
 
         do {
 
-            $sessionID = $this->generateSessionID($prefix, 42);
+            $newSessionID = $this->generateSessionID($prefix, 42);
 
-        } while($this->driver->collisionCheckID($sessionID) === true);
+        } while($this->driver->collisionCheckID($newSessionID) === true);
 
-        $this->driver->createNewSession($sessionID, $this->request);
-        $this->queueSessionCookie($sessionID);
+        $this->driver->createNewSession($newSessionID, $request);
+        $this->queueSessionCookie($newSessionID, $response);
 
-        $this->currentRequestSessionID = $sessionID;
-
-        return $sessionID;
+        return $newSessionID;
     }
 
     private function generateSessionID($prefix, $length): string
