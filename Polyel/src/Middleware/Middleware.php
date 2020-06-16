@@ -42,7 +42,7 @@ class Middleware
         $this->middlewares[$requestMethod][$uri] = $middleware;
     }
 
-    public function runGlobalMiddleware($middlewareType, $request, $response = null)
+    public function runGlobalMiddleware($HttpKernel, $middlewareType)
     {
         $globalBeforeMiddleware = config("middleware.global." . $middlewareType);
 
@@ -52,21 +52,21 @@ class Middleware
             $middleware = config("middleware.keys." . $middleware);
 
             // Call Polyel and get the middleware class from the container
-            $middlewareToRun = Polyel::call($middleware);
+            $middlewareToRun = $HttpKernel->container->resolveClass($middleware);
 
             // Based on the passed in middleware type, execute if both types match
             if($middlewareToRun->middlewareType == $middlewareType)
             {
                 // Only the after Middleware type can use the $response service
-                if(!exists($response))
+                if($middlewareType === 'before')
                 {
                     // Process the middleware if the request types match up
-                    $response = $middlewareToRun->process($request);
+                    $response = $middlewareToRun->process($HttpKernel->request);
                 }
                 else
                 {
                     // Process the middleware if the request types match up
-                    $response = $middlewareToRun->process($request, $response);
+                    $response = $middlewareToRun->process($HttpKernel->request, $HttpKernel->response);
                 }
 
                 // If a Middleware wants to return a response early, halt and send it back
