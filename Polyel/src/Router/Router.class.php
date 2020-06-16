@@ -110,8 +110,8 @@ class Router
                     if(exists($beforeMiddlewareResponse))
                     {
                         // Build the response from a before middleware and return to halt execution of the app
-                        $this->response->build($beforeMiddlewareResponse);
-                        return;
+                        $response->build($beforeMiddlewareResponse);
+                        return $response;
                     }
 
                     // Resolve and perform method injection when calling the controller action
@@ -127,7 +127,7 @@ class Router
                     if(exists($afterMiddlewareResponse))
                     {
                         // If a after middleware wants to return a response, send it off to get built...
-                        $this->response->build($afterMiddlewareResponse);
+                        $response->build($afterMiddlewareResponse);
                     }
                     else
                     {
@@ -136,14 +136,14 @@ class Router
                          * meaning the controller action can return its response for the request that was sent.
                          * Give the response service the response the controller wants to send back to the client
                          */
-                        $this->response->build($controllerResponse);
+                        $response->build($controllerResponse);
                     }
                 }
             }
             else
             {
                 // Error 404 route not found
-                $this->response->build(response(view('404:error'), 404));
+                $response->build(response(view('404:error'), 404));
             }
         }
 
