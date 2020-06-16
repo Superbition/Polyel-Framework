@@ -69,10 +69,15 @@ class Router
                 return $response;
             }
 
-            $this->request->capture($request);
+            /*
+             * Search for a registered route based on the request method and URI.
+             * If a route is found, route information is returned, controller, action, parameters and URL.
+             * False is returned is no match can be made for the requested route.
+             */
+            $matchedRoute = $this->getRegisteredRouteFor($request->method, $request->uri);
 
-            // Check if the route matches any registered routes
-            if($this->routeExists($this->requestMethod, $this->requestedRoute))
+            // Check if the requested route exists, we continue further into the application...
+            if($matchedRoute !== false)
             {
                 // Only operate the session system if set to active
                 if(config('session.active'))
@@ -178,7 +183,7 @@ class Router
         $this->listOfAddedRoutes[$requestMethod][] = $route;
     }
 
-    private function routeExists($requestMethod, $requestedRoute)
+    private function getRegisteredRouteFor($requestMethod, $requestedRoute)
     {
         // For when the route requested is more than one char, meaning its not the index `/` route
         if(strlen($requestedRoute) > 1)
@@ -217,19 +222,16 @@ class Router
         // If a route is found, the controller and action is returned, along with any set params
         if($routeRequested)
         {
-            // Get the built up registered URL that was matched
-            $this->currentRegURL = $routeRequested["regURL"];
-
             // Extract the controller and action and set them so the class has access to them
             $routeRequested["controller"] = explode("@", $routeRequested["controller"]);
-            $this->currentController = $routeRequested["controller"][0];
-            $this->currentRouteAction = $routeRequested["controller"][1];
 
-            // Give the class access to any route parameters if they were found
-            $this->currentRouteParams = $routeRequested["params"];
+            $matchedRoute['url'] = $routeRequested["regURL"];
+            $matchedRoute['controller'] = $routeRequested["controller"][0];
+            $matchedRoute['params'] = $routeRequested["params"];
+            $matchedRoute['action'] = $routeRequested["controller"][1];
 
             // A route match was made...
-            return true;
+            return $matchedRoute;
         }
 
         // If no route can be matched to a registered route
