@@ -300,6 +300,8 @@ class Session
 
             $newSessionID = $this->sessionManager->regenerateSession($this->request, $this->response);
 
+            $this->setID($newSessionID);
+
             $newSessionData = $this->all();
 
             $newSessionData['user_id'] = $oldSessionData['user_id'];
