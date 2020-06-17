@@ -2,9 +2,9 @@
 
 namespace App\Controllers;
 
-use Polyel\Controller\Controller as PolyelController;
+use Polyel\Controller\Controller as BaseController;
 
-class Controller extends PolyelController
+class Controller extends BaseController
 {
 
 }
