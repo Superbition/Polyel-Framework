@@ -19,7 +19,6 @@ $coreServices = [
     Polyel\Storage\Storage::class,
     Polyel\Storage\LocalStorage::class,
     Polyel\Database\Database::class,
-    Polyel\Time\Time::class,
     Polyel\View\View::class,
 
 ];
