@@ -5,7 +5,7 @@ namespace Polyel\Storage;
 use Exception;
 use Swoole\Coroutine as Swoole;
 
-class LocalStorage
+class LocalStorageDriver
 {
     // Default links to some important directories
     private $directoryLinks = [

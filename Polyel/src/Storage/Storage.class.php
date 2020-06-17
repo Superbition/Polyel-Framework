@@ -7,7 +7,7 @@ class Storage
     // Holds the storage driver for local operators
     private $localStorage;
 
-    public function __construct(LocalStorage $localStorage)
+    public function __construct(LocalStorageDriver $localStorage)
     {
         $this->localStorage = $localStorage;
     }
