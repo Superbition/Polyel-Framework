@@ -229,10 +229,19 @@ class Router
              * Because the route requested is more than one char, it means we have a route that is not the
              * index `route` so it needs to be processed and matched to a registered route in order to
              * process further into the application. Here we prepare the requested route into segments and trim any
-             * left or right `/` chars which would cause an empty element in an array during the matching process of
-             * the matching logic. The requested route is segmented so its easy to loop through and find a match...
+             * right `/` chars. Only trim the right side of the route because we don't want to fix invalid routes
+             * like '//admin' to '/admin' for the client and cause invalid routes to still match correctly.
+             *
+             * The requested route is segmented so its easy to loop through and find a match...
              */
-            $segmentedRequestedRoute = explode("/", rtrim(ltrim($requestedRoute, "/"), "/"));
+            $segmentedRequestedRoute = explode("/", rtrim($requestedRoute, "/"));
+
+            /*
+             * Remove the first proceeding forward slash from the URL as explode treats '/' as empty.
+             * We remove the first '/' to compensate for the first slash from the URL but not anymore. If a route
+             * contains two or more slashes, these will not process or match properly.
+             */
+            array_shift($segmentedRequestedRoute);
         }
         else
         {
