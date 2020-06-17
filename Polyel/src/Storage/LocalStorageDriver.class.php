@@ -5,35 +5,11 @@ namespace Polyel\Storage;
 use Exception;
 use Swoole\Coroutine as Swoole;
 
-class LocalStorage
+class LocalStorageDriver
 {
-    // Default links to some important directories
-    private $directoryLinks = [
-        "app" => ROOT_DIR . "/app",
-        "controllers" => ROOT_DIR . "/app/Controllers",
-        "views" => ROOT_DIR . "/app/resources/views",
-        "public" => ROOT_DIR . "/public",
-        "config" => ROOT_DIR . "/config",
-        "storage" => ROOT_DIR . "/storage",
-        "src" => ROOT_DIR . "/Polyel/src",
-    ];
-
-    // Used to set a common directory link
-    private $fromLink;
-
-    // Used to store the file write mode, default is overwrite
-    private $writeMode = "w+";
-
     public function __construct()
     {
 
-    }
-
-    // Used to start reading from a common directory link
-    public function from($fromLink)
-    {
-        $this->fromLink = $fromLink;
-        return $this;
     }
 
     // Send back the file size in a human readable format
@@ -61,12 +37,6 @@ class LocalStorage
     // Read a file and return the raw string content
     public function read($filePath)
     {
-        // Check if a from link has been set
-        if(isset($this->fromLink))
-        {
-            $filePath = $this->directoryLinks[strtolower($this->fromLink)] . $filePath;
-        }
-
         if(!file_exists($filePath))
         {
             throw new Exception("Read Error: File not found at " . $filePath);
@@ -78,9 +48,6 @@ class LocalStorage
         // Read the entire file and close the handle afterwards
         $file = Swoole::fread($handle, 0);
         fclose($handle);
-
-        // Reset the from link
-        $this->fromLink = null;
 
         // Return the file contents as a string
         return $file;
@@ -130,25 +97,21 @@ class LocalStorage
     public function append($filePath, $contents)
     {
         // Set the write mode to append to the end of the file
-        $this->writeMode = "a+";
-        $this->write($filePath, $contents);
+        $this->write($filePath, $contents, "a+");
     }
 
     // Main writing function for overwrite and appending
-    public function write($filePath, $contents = "")
+    public function write($filePath, $contents = "", $writeMode = "w+")
     {
         $filePath = ROOT_DIR . $filePath;
 
         // Open a resource handle and use a Swoole Coroutine to defer blocking I/O
-        $handle = fopen($filePath, $this->writeMode);
+        $handle = fopen($filePath, $writeMode);
         Swoole::create(function() use ($handle, $contents)
         {
             Swoole::fwrite($handle, $contents);
             fclose($handle);
         });
-
-        // Reset the write mode back to the default
-        $this->writeMode = "w+";
     }
 
     public function copy($source, $dest)

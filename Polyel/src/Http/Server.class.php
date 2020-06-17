@@ -2,10 +2,11 @@
 
 namespace Polyel\Http;
 
+use Polyel;
 use Polyel\Router\Router;
 use Polyel\Config\Config;
-use Polyel\View\Facade\View;
 use Swoole\Coroutine as Swoole;
+use Polyel\View\Element\Element;
 use Polyel\Controller\Controller;
 use Polyel\Middleware\Middleware;
 use Polyel\Session\SessionManager;
@@ -46,28 +47,22 @@ class Server
 
     public function boot()
     {
-        // Load all configuration files
         $this->config->load();
 
-        // Run initial Routing setup tasks
         $this->router->setup();
 
-        // Preload all application routes
         $this->router->loadRoutes();
 
-        // Preload all applications Controllers
         $this->controller->loadAllControllers();
 
         $this->middleware->loadAllMiddleware();
 
-        \Swoole\Runtime::enableCoroutine();
-
         $this->sessionManager->setDriver(config('session.driver'));
 
-        // Preload all element logic classes into the container
-        View::loadClassElements();
+        Element::loadClassElements();
 
-        // Create a new Swoole HTTP server and set server IP and listening port
+        \Swoole\Runtime::enableCoroutine();
+
         $this->server = new SwooleHTTPServer(
             $this->config->get("main.serverIP"),
             $this->config->get("main.serverPort"),
@@ -103,14 +98,21 @@ class Server
             echo "\n------------------------------------------------------------------------\n";
         });
 
-        $this->server->on("request", function($request, $response)
+        $this->server->on("request", function($HttpRequest, $HttpResponse)
         {
-            $this->setDefaultResponseHeaders($response);
+            $this->setDefaultResponseHeaders($HttpResponse);
 
             $this->runDebug();
 
-            $this->router->handle($request);
-            $this->router->deliver($response);
+            $HttpKernel = Polyel::newHttpKernel();
+
+            $HttpKernel->request->capture($HttpRequest);
+
+            $response = $this->router->handle(
+                $HttpKernel->request, $HttpKernel
+            );
+
+            $response->send($HttpResponse);
         });
 
         $this->server->on("WorkerStop", function($server, $workerId)

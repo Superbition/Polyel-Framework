@@ -2,17 +2,39 @@
 
 namespace Polyel\Session;
 
+use Polyel;
+use Polyel\Http\Request;
+use Polyel\Http\Response;
+
 class Session
 {
     // Holds the session manager service
     private $sessionManager;
 
+    private $request;
+
+    private $response;
+
+    private $sessionID;
+
     // Used when a push call is made to indicate data should be pushed onto the session
     private $pushFlag = false;
 
-    public function __construct(SessionManager $sessionManager)
+    public function __construct(Request $request, Response $response)
     {
-        $this->sessionManager = $sessionManager;
+        $this->sessionManager = Polyel::call(SessionManager::class);
+        $this->request = $request;
+        $this->response = $response;
+    }
+
+    public function setID($sessionID)
+    {
+        $this->sessionID = $sessionID;
+    }
+
+    public function id()
+    {
+        return $this->sessionID;
     }
 
     /*
@@ -20,7 +42,7 @@ class Session
      */
     public function all()
     {
-        $sessionID = $this->sessionManager->getCurrentRequestSessionID();
+        $sessionID = $this->id();
 
         return $this->sessionManager->driver()->getSessionData($sessionID);
     }
@@ -138,7 +160,7 @@ class Session
         }
 
         // We need the session ID to access the session data
-        $sessionID = $this->sessionManager->getCurrentRequestSessionID();
+        $sessionID = $this->id();
 
         // Using the driver from the session manager, re-save the data...
         $this->sessionManager->driver()->saveSessionData($sessionID, $sessionData);
@@ -192,7 +214,7 @@ class Session
         unset($sessionData[$lastKey]);
 
         // We need the session ID to access the session data
-        $sessionID = $this->sessionManager->getCurrentRequestSessionID();
+        $sessionID = $this->id();
 
         // Using the driver from the session manager, re-save the data...
         $this->sessionManager->driver()->saveSessionData($sessionID, $sessionDataAll);
@@ -246,7 +268,7 @@ class Session
         unset($sessionData[$lastKey]);
 
         // We need the session ID to access the session data
-        $sessionID = $this->sessionManager->getCurrentRequestSessionID();
+        $sessionID = $this->id();
 
         // Using the driver from the session manager, re-save the data...
         $this->sessionManager->driver()->saveSessionData($sessionID, $sessionDataAll);
@@ -258,7 +280,7 @@ class Session
     public function clear()
     {
         // We need the session ID to access the session data
-        $sessionID = $this->sessionManager->getCurrentRequestSessionID();
+        $sessionID = $this->id();
 
         $this->sessionManager->driver()->clear($sessionID);
     }
@@ -269,14 +291,16 @@ class Session
     public function regenerate()
     {
         // Get the current session ID and data
-        $currentSessionID = $this->sessionManager->getCurrentRequestSessionID();
+        $currentSessionID = $this->id();
         $oldSessionData = $this->all();
 
         if(exists($oldSessionData) && array_key_exists('id', $oldSessionData))
         {
             $this->sessionManager->driver()->destroySession($currentSessionID, false);
 
-            $newSessionID = $this->sessionManager->regenerateSession();
+            $newSessionID = $this->sessionManager->regenerateSession($this->request, $this->response);
+
+            $this->setID($newSessionID);
 
             $newSessionData = $this->all();
 

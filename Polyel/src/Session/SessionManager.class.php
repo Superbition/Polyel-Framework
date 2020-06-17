@@ -3,9 +3,8 @@
 namespace Polyel\Session;
 
 use Polyel;
-use Polyel\Http\Request;
+use Polyel\Http\Kernel;
 use Swoole\Timer as Timer;
-use Polyel\Http\Facade\Cookie;
 
 class SessionManager
 {
@@ -13,17 +12,10 @@ class SessionManager
 
     private $availableDrivers;
 
-    private $request;
-
     private $gcStarted = false;
 
-    // Holds the current request session ID so the session service has access to it
-    private $currentRequestSessionID;
-
-    public function __construct(Request $request)
+    public function __construct()
     {
-        $this->request = $request;
-
         $this->availableDrivers = [
           'file' => Polyel\Session\Drivers\FileSessionDriver::class,
         ];
@@ -54,20 +46,22 @@ class SessionManager
         $this->gcStarted = true;
     }
 
-    public function startSession($sessionCookieID)
+    public function startSession(Kernel $HttpKernel)
     {
-        $this->currentRequestSessionID = $sessionCookieID;
+        $sessionCookieID = $HttpKernel->request->cookie(config('session.cookieName'));
 
         $sessionData = $this->driver->getSessionData($sessionCookieID);
 
         // Either cookie does not exist or the session is missing on the server
         if(!exists($sessionCookieID) || $this->driver->isValid($sessionCookieID, $sessionData) === false)
         {
-            $this->regenerateSession();
+            $sessionCookieID = $this->regenerateSession($HttpKernel->request, $HttpKernel->response);
         }
 
         // Update session ip, agent and last active time
-        $this->driver->updateSession($this->currentRequestSessionID, $this->request);
+        $this->driver->updateSession($sessionCookieID, $HttpKernel->request);
+
+        $HttpKernel->setSessionID($sessionCookieID);
 
         // The session gc is started on the first request once the server is booted
         if($this->gcStarted == false)
@@ -77,22 +71,20 @@ class SessionManager
         }
     }
 
-    public function regenerateSession()
+    public function regenerateSession($request, $response)
     {
         $prefix = config('session.prefix');
 
         do {
 
-            $sessionID = $this->generateSessionID($prefix, 42);
+            $newSessionID = $this->generateSessionID($prefix, 42);
 
-        } while($this->driver->collisionCheckID($sessionID) === true);
+        } while($this->driver->collisionCheckID($newSessionID) === true);
 
-        $this->driver->createNewSession($sessionID, $this->request);
-        $this->queueSessionCookie($sessionID);
+        $this->driver->createNewSession($newSessionID, $request);
+        $this->queueSessionCookie($newSessionID, $response);
 
-        $this->currentRequestSessionID = $sessionID;
-
-        return $sessionID;
+        return $newSessionID;
     }
 
     private function generateSessionID($prefix, $length): string
@@ -110,7 +102,7 @@ class SessionManager
         return $sessionID;
     }
 
-    private function queueSessionCookie($sessionID)
+    private function queueSessionCookie($sessionID, $response)
     {
         $sessionLifetime = config('session.lifetime');
 
@@ -130,17 +122,7 @@ class SessionManager
             $sameSite = 'None',
         ];
 
-        Cookie::queue(...$sessionCookie);
-    }
-
-    public function getCurrentRequestSessionID()
-    {
-        return $this->currentRequestSessionID;
-    }
-
-    public function clearCurrentRequestSessionID()
-    {
-        $this->currentRequestSessionID = null;
+        $response->queueCookie(...$sessionCookie);
     }
 
     public function driver()

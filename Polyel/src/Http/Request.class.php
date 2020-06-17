@@ -8,23 +8,23 @@ class Request
 {
     use CookieHandler;
 
-    private $headers;
-
-    private $hostIP;
+    public $hostIP;
 
     public $clientIP;
 
     public $userAgent;
 
-    private $serverPort;
+    public $serverPort;
 
-    private $serverProtocol;
+    public $serverProtocol;
 
-    private $uri;
+    public $uri;
 
-    private $path;
+    public $path;
 
-    private $method;
+    public $method;
+
+    private $headers;
 
     private $fullQueryString;
 

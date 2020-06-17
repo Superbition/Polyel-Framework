@@ -14,15 +14,11 @@ $coreServices = [
     Polyel\Controller\Controller::class,
     Polyel\Debug\Debug::class,
     Polyel\Http\Server::class,
-    Polyel\Http\Request::class,
-    Polyel\Http\Response::class,
     Polyel\Middleware\Middleware::class,
     Polyel\Router\Router::class,
-    Polyel\Session\Session::class,
     Polyel\Storage\Storage::class,
-    Polyel\Storage\LocalStorage::class,
+    Polyel\Storage\LocalStorageDriver::class,
     Polyel\Database\Database::class,
-    Polyel\Time\Time::class,
     Polyel\View\View::class,
 
 ];

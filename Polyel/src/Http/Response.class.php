@@ -3,7 +3,6 @@
 namespace Polyel\Http;
 
 use Polyel\View\View;
-use Polyel\Session\SessionManager;
 use Polyel\Http\Utilities\ResponseUtilities;
 
 class Response
@@ -13,9 +12,6 @@ class Response
 
     // The View service object
     private $view;
-
-    // The SessionManager service
-    private $sessionManager;
 
     // Holds the final response content for the request
     private $response;
@@ -32,10 +28,9 @@ class Response
     // Holds a filepath and if set, the file will be sent back to the client
     private $file;
 
-    public function __construct(View $view, SessionManager $sessionManager)
+    public function __construct(View $view)
     {
         $this->view = $view;
-        $this->sessionManager = $sessionManager;
     }
 
     public function send($response)
@@ -61,9 +56,6 @@ class Response
         $this->setCookiesFor($response);
 
         $response->status($this->httpStatusCode);
-
-        // Clear out the current request session ID to prevent it being used on another request
-        $this->sessionManager->clearCurrentRequestSessionID();
 
         /*
          * Main response is ended here!

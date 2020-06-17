@@ -2,7 +2,6 @@
 
 namespace Polyel\Middleware;
 
-use Polyel;
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
 
@@ -33,16 +32,6 @@ class Middleware
             {
                 // Make the class available by declaring it
                 require_once $middlewareFilePath;
-
-                // The last declared class will be the above when it was required_once
-                $listOfDefinedClasses = get_declared_classes();
-
-                // Get the last class in the array of declared classes
-                $definedClass = explode("\\", end($listOfDefinedClasses));
-                $definedClass = end($definedClass);
-
-                // Calling the Container to resolve the class into the container
-                Polyel::resolveClass("App\Middleware\\" . $definedClass);
             }
         }
     }
@@ -52,7 +41,7 @@ class Middleware
         $this->middlewares[$requestMethod][$uri] = $middleware;
     }
 
-    public function runGlobalMiddleware($middlewareType, $request, $response = null)
+    public function runGlobalMiddleware($HttpKernel, $middlewareType)
     {
         $globalBeforeMiddleware = config("middleware.global." . $middlewareType);
 
@@ -62,21 +51,21 @@ class Middleware
             $middleware = config("middleware.keys." . $middleware);
 
             // Call Polyel and get the middleware class from the container
-            $middlewareToRun = Polyel::call($middleware);
+            $middlewareToRun = $HttpKernel->container->resolveClass($middleware);
 
             // Based on the passed in middleware type, execute if both types match
             if($middlewareToRun->middlewareType == $middlewareType)
             {
                 // Only the after Middleware type can use the $response service
-                if(!exists($response))
+                if($middlewareType === 'before')
                 {
                     // Process the middleware if the request types match up
-                    $response = $middlewareToRun->process($request);
+                    $response = $middlewareToRun->process($HttpKernel->request);
                 }
                 else
                 {
                     // Process the middleware if the request types match up
-                    $response = $middlewareToRun->process($request, $response);
+                    $response = $middlewareToRun->process($HttpKernel->request, $HttpKernel->response);
                 }
 
                 // If a Middleware wants to return a response early, halt and send it back
@@ -94,7 +83,7 @@ class Middleware
      * before or after. $applicationStage is the request or response service that gets passed in to
      * allow a middleware to process its correct type.
      */
-    private function runMiddleware($type, $requestMethod, $route, $request, $response = null)
+    private function runMiddleware($HttpKernel, $type, $requestMethod, $route)
     {
         // Check if a middleware exists for the request method, GET, POST etc.
         if(array_key_exists($requestMethod, $this->middlewares))
@@ -119,21 +108,21 @@ class Middleware
                     $middleware = config("middleware.keys." . $middlewareKey);
 
                     // Call Polyel and get the middleware class from the container
-                    $middlewareToRun = Polyel::call($middleware);
+                    $middlewareToRun = $HttpKernel->container->resolveClass($middleware);
 
                     // Based on the passed in middleware type, execute if both types match
                     if($middlewareToRun->middlewareType == $type)
                     {
                         // Only the after Middleware type can use the $response service
-                        if(!exists($response))
+                        if($type === 'before')
                         {
                             // Process the middleware if the request types match up
-                            $response = $middlewareToRun->process($request);
+                            $response = $middlewareToRun->process($HttpKernel->request);
                         }
                         else
                         {
                             // Process the middleware if the request types match up
-                            $response = $middlewareToRun->process($request, $response);
+                            $response = $middlewareToRun->process($HttpKernel->request, $HttpKernel->response);
                         }
 
                         // If a Middleware wants to return a response early, halt and send it back
@@ -148,9 +137,9 @@ class Middleware
         }
     }
 
-    public function runAnyBefore($request, $requestMethod, $route)
+    public function runAnyBefore($HttpKernel, $requestMethod, $route)
     {
-        $globalResponse = $this->runGlobalMiddleware("before", $request);
+        $globalResponse = $this->runGlobalMiddleware($HttpKernel, 'before');
 
         if(exists($globalResponse))
         {
@@ -158,7 +147,7 @@ class Middleware
             return $globalResponse;
         }
 
-        $beforeResponse = $this->runMiddleware("before", $requestMethod, $route, $request);
+        $beforeResponse = $this->runMiddleware($HttpKernel, "before", $requestMethod, $route);
 
         if(exists($beforeResponse))
         {
@@ -170,9 +159,9 @@ class Middleware
         return null;
     }
 
-    public function runAnyAfter($request, $response, $requestMethod, $route)
+    public function runAnyAfter($HttpKernel, $requestMethod, $route)
     {
-        $globalResponse = $this->runGlobalMiddleware("after", $request, $response);
+        $globalResponse = $this->runGlobalMiddleware($HttpKernel, "after");
 
         if(exists($globalResponse))
         {
@@ -180,7 +169,7 @@ class Middleware
             return $globalResponse;
         }
 
-        $afterResponse = $this->runMiddleware("after", $requestMethod, $route, $request, $response);
+        $afterResponse = $this->runMiddleware($HttpKernel, "after", $requestMethod, $route);
 
         if(exists($afterResponse))
         {

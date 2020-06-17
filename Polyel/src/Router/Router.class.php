@@ -2,9 +2,9 @@
 
 namespace Polyel\Router;
 
-use Polyel;
 use Exception;
 use Polyel\Debug\Debug;
+use Polyel\Http\Kernel;
 use Polyel\Http\Request;
 use Polyel\Http\Response;
 use Polyel\Middleware\Middleware;
@@ -14,27 +14,6 @@ class Router
 {
     use RouteVerbs;
     use RouteUtilities;
-
-    // The URI pattern the route responds to.
-    private $uriSplit;
-
-    // Holds the main requested route from the client
-    private $requestedRoute;
-
-    // Holds the current matched registered URL str
-    private $currentRegURL;
-
-    // Holds the current matched controller from the registered route
-    private $currentController;
-
-    // Holds the current matched route action for the controller
-    private $currentRouteAction;
-
-    // Holds the current parameters matched from a registered route
-    private $currentRouteParams;
-
-    // Holds the request method sent by the client
-    private $requestMethod;
 
     // Holds all the request routes to respond to
     private $routes;
@@ -54,113 +33,100 @@ class Router
     // The Middleware service
     private $middleware;
 
-    // The Request object
-    private $request;
-
-    // The Response object
-    private $response;
-
     private $routeParamPattern;
 
-    public function __construct(SessionManager $sessionManager, Debug $debug, Middleware $middleware, Request $request, Response $response)
+    public function __construct(SessionManager $sessionManager, Debug $debug, Middleware $middleware)
     {
         $this->sessionManager = $sessionManager;
         $this->debug = $debug;
         $this->middleware = $middleware;
-        $this->request = $request;
-        $this->response = $response;
     }
 
-    public function handle($request)
+    public function handle(Request $request, Kernel $HttpKernel): Response
     {
-        // Get the full URL from the clients request
-        $this->requestedRoute = $request->server["request_uri"];
-
-        /*
-         * Split the URI into an array based on the delimiter
-         * Remove empty array values from the URI because of the delimiters
-         * Reindex the array back to 0
-         */
-        $this->uriSplit = explode("/", $request->server["request_uri"]);
-        $this->uriSplit = array_filter($this->uriSplit);
-        $this->uriSplit = array_values($this->uriSplit);
-
-        // Get the request method: GET, POST, PUT etc.
-        $this->requestMethod = $request->server["request_method"];
-
         // Check for a HEAD request
-        if($this->requestMethod === "HEAD")
+        if($request->method === "HEAD")
         {
             // Because HEAD and GET are basically the same, switch a HEAD to act like a GET request
-            $this->requestMethod = "GET";
+            $request->method = "GET";
         }
 
+        // Get the response from the HTTP Kernel that will be sent back to the client
+        $response = $HttpKernel->response;
+
         // Continue routing if there is a URL
-        if(!empty($this->requestedRoute))
+        if(!empty($request->uri))
         {
             // Check if a redirection has been set...
-            if(isset($this->routes["REDIRECT"][$this->requestedRoute]))
+            if(isset($this->routes["REDIRECT"][$request->uri]))
             {
                 // Set a redirection to happen when responding
-                $redirection = $this->routes["REDIRECT"][$this->requestedRoute];
-                $this->response->redirect($redirection["url"], $redirection["statusCode"]);
+                $redirection = $this->routes["REDIRECT"][$request->uri];
+                $response->redirect($redirection["url"], $redirection["statusCode"]);
 
                 // Returning progresses the request to skip to responding directly
-                return;
+                return $response;
             }
 
-            $this->request->capture($request);
+            /*
+             * Search for a registered route based on the request method and URI.
+             * If a route is found, route information is returned, controller, action, parameters and URL.
+             * False is returned is no match can be made for the requested route.
+             */
+            $matchedRoute = $this->getRegisteredRouteFor($request->method, $request->uri);
 
-            // Check if the route matches any registered routes
-            if($this->routeExists($this->requestMethod, $this->requestedRoute))
+            // Check if the requested route exists, we continue further into the application...
+            if($matchedRoute !== false)
             {
                 // Only operate the session system if set to active
                 if(config('session.active'))
                 {
-                    // Grab the session cookie and check for a valid session, create one if one doesn't exist
-                    $sessionCookie = $this->request->cookie(config('session.cookieName'));
-                    $this->sessionManager->startSession($sessionCookie);
+                    // Check for a valid session and update the session data, create one if one doesn't exist
+                    $this->sessionManager->startSession($HttpKernel);
                 }
 
                 // Set the default HTTP status code, might change throughout the request cycle
-                $this->response->setStatusCode(200);
+                $response->setStatusCode(200);
+
+                // URL route parameters from request
+                $routeParams = $matchedRoute['params'];
 
                 // Get the current matched controller and route action
-                $controller = $this->currentController;
-                $controllerAction = $this->currentRouteAction;
+                $controller = $matchedRoute['controller'];
+                $controllerAction = $matchedRoute['action'];
 
                 //The controller namespace and getting its instance from the container using ::call
                 $controllerName = "App\Controllers\\" . $controller;
-                $controller = Polyel::call($controllerName);
+                $controller = $HttpKernel->container->resolveClass($controllerName);
 
                 // Check that the controller exists
                 if(isset($controller) && !empty($controller))
                 {
                     // Capture a response from a before middleware if one returns a response
-                    $beforeMiddlewareResponse = $this->middleware->runAnyBefore($this->request, $this->requestMethod, $this->currentRegURL);
+                    $beforeMiddlewareResponse = $this->middleware->runAnyBefore($HttpKernel, $request->method, $matchedRoute['url']);
 
                     // If a before middleware wants to return a response early in the app process...
                     if(exists($beforeMiddlewareResponse))
                     {
                         // Build the response from a before middleware and return to halt execution of the app
-                        $this->response->build($beforeMiddlewareResponse);
-                        return;
+                        $response->build($beforeMiddlewareResponse);
+                        return $response;
                     }
 
                     // Resolve and perform method injection when calling the controller action
-                    $methodDependencies = Polyel::resolveMethod($controllerName, $controllerAction);
+                    $methodDependencies = $HttpKernel->container->resolveMethodInjection($controllerName, $controllerAction);
 
                     // Method injection for any services first, then route parameters and get the controller response
-                    $controllerResponse = $controller->$controllerAction(...$methodDependencies, ...$this->currentRouteParams);
+                    $controllerResponse = $controller->$controllerAction(...$methodDependencies, ...$routeParams);
 
                     // Capture a response returned from any after middleware if one returns a response...
-                    $afterMiddlewareResponse = $this->middleware->runAnyAfter($this->request, $this->response, $this->requestMethod, $this->currentRegURL);
+                    $afterMiddlewareResponse = $this->middleware->runAnyAfter($HttpKernel, $request->method, $matchedRoute['url']);
 
                     // After middleware takes priority over the controller when returning a response
                     if(exists($afterMiddlewareResponse))
                     {
                         // If a after middleware wants to return a response, send it off to get built...
-                        $this->response->build($afterMiddlewareResponse);
+                        $response->build($afterMiddlewareResponse);
                     }
                     else
                     {
@@ -169,32 +135,18 @@ class Router
                          * meaning the controller action can return its response for the request that was sent.
                          * Give the response service the response the controller wants to send back to the client
                          */
-                        $this->response->build($controllerResponse);
+                        $response->build($controllerResponse);
                     }
                 }
             }
             else
             {
                 // Error 404 route not found
-                $this->response->build(response(view('404:error'), 404));
+                $response->build(response(view('404:error'), 404));
             }
         }
-    }
 
-    public function deliver($response)
-    {
-        if($this->debug->doDumpsExist())
-        {
-            // The rendered response but with the debug dumps at the start.
-            $response->end($this->debug->getDumps() . "<br>" . Template::render($this->requestedView));
-
-            // Resets the last amount of dumps so duplicates are not shown upon next request.
-            $this->debug->cleanup();
-        }
-        else
-        {
-            $this->response->send($response);
-        }
+        return $response;
     }
 
     private function addRoute($requestMethod, $route, $action)
@@ -234,7 +186,7 @@ class Router
         $this->listOfAddedRoutes[$requestMethod][] = $route;
     }
 
-    private function routeExists($requestMethod, $requestedRoute)
+    private function getRegisteredRouteFor($requestMethod, $requestedRoute)
     {
         // For when the route requested is more than one char, meaning its not the index `/` route
         if(strlen($requestedRoute) > 1)
@@ -273,38 +225,20 @@ class Router
         // If a route is found, the controller and action is returned, along with any set params
         if($routeRequested)
         {
-            // Get the built up registered URL that was matched
-            $this->currentRegURL = $routeRequested["regURL"];
-
             // Extract the controller and action and set them so the class has access to them
             $routeRequested["controller"] = explode("@", $routeRequested["controller"]);
-            $this->currentController = $routeRequested["controller"][0];
-            $this->currentRouteAction = $routeRequested["controller"][1];
 
-            // Give the class access to any route parameters if they were found
-            $this->currentRouteParams = $routeRequested["params"];
+            $matchedRoute['url'] = $routeRequested["regURL"];
+            $matchedRoute['controller'] = $routeRequested["controller"][0];
+            $matchedRoute['params'] = $routeRequested["params"];
+            $matchedRoute['action'] = $routeRequested["controller"][1];
 
             // A route match was made...
-            return true;
+            return $matchedRoute;
         }
 
         // If no route can be matched to a registered route
         return false;
-    }
-
-    public function getCurrentRoute()
-    {
-        return $this->requestedRoute;
-    }
-
-    public function getCurrentRouteSplit()
-    {
-        return $this->uriSplit;
-    }
-
-    public function getCurrentRouteAction()
-    {
-        return $this->currentRouteAction;
     }
 
     public function middleware($middlewareKeys)
