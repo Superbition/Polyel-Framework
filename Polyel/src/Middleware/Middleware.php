@@ -54,7 +54,7 @@ class Middleware
             $middlewareToRun = $HttpKernel->container->resolveClass($middleware);
 
             // Based on the passed in middleware type, execute if both types match
-            if($middlewareToRun->middlewareType == $middlewareType)
+            if($middlewareToRun->middlewareType === $middlewareType)
             {
                 // Only the after Middleware type can use the $response service
                 if($middlewareType === 'before')
@@ -111,7 +111,7 @@ class Middleware
                     $middlewareToRun = $HttpKernel->container->resolveClass($middleware);
 
                     // Based on the passed in middleware type, execute if both types match
-                    if($middlewareToRun->middlewareType == $type)
+                    if($middlewareToRun->middlewareType === $type)
                     {
                         // Only the after Middleware type can use the $response service
                         if($type === 'before')
