@@ -2,7 +2,7 @@
 
 namespace Polyel\Router;
 
-use Exception;
+use RuntimeException;
 use Polyel\Debug\Debug;
 use Polyel\Http\Kernel;
 use Polyel\Http\Request;
@@ -154,7 +154,7 @@ class Router
         // Throw an error if trying to add a route that already exists...
         if(in_array($route, $this->listOfAddedRoutes[$requestMethod], true))
         {
-            throw new Exception("\e[41m Trying to add a route that already exists: " . $route . " \e[0m");
+            throw new RuntimeException("\e[41m Trying to add a route that already exists: " . $route . " \e[0m");
         }
 
         // Only pack the route when it has more than one parameter
