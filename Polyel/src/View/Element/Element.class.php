@@ -2,7 +2,6 @@
 
 namespace Polyel\View\Element;
 
-use Polyel;
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
 
@@ -15,13 +14,13 @@ class Element
 
     }
 
-    public function processElementsFor(&$mainResource, $elementTags)
+    public function processElementsFor(&$mainResource, $elementTags, $HttpKernel)
     {
         if(exists($elementTags))
         {
             foreach($elementTags as $element)
             {
-                $elementClass = Polyel::call("App\View\Elements\\" . $element);
+                $elementClass = $HttpKernel->container->resolveClass("App\View\Elements\\" . $element);
 
                 $renderedElement = $elementClass->build();
 

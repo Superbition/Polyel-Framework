@@ -90,7 +90,7 @@ class View
             $this->processJsIncludes($jsTags);
 
             $elementTags = $this->getStringsBetween($this->resource, "{{ @addElement(", ") }}");
-            $this->element->processElementsFor($this->resource, $elementTags);
+            $this->element->processElementsFor($this->resource, $elementTags, $this->HttpKernel);
 
             return $this->resource;
         }
