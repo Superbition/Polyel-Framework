@@ -2,7 +2,9 @@
 
 namespace Polyel\Container;
 
+use Closure;
 use ReflectionClass;
+use ReflectionFunction;
 
 class Container
 {
@@ -183,6 +185,48 @@ class Container
 
         // Return false when the class we want to perform method inject on does not exist
         return false;
+    }
+
+    // Used to resolve a Closures parameter dependencies for a Closure
+    public function resolveClosureDependencies($method)
+    {
+        $closureDependencyList = [];
+
+        if($method instanceof Closure)
+        {
+            $closureReflection = new ReflectionFunction($method);
+
+            $closureParameters = $closureReflection->getParameters();
+
+            // Loop through each Closure param and resolve them if needed
+            foreach($closureParameters as $param)
+            {
+                // Cannot process a parameter if it does not have a type
+                if(!$param->hasType())
+                {
+                    // Skip current param because it does not have a type thus, cannot check what class it is
+                    continue;
+                }
+
+                // Getting the name gets the full namespace
+                $closureDependencyName = $param->getType()->getName();
+                $closureDependency = $this->get($closureDependencyName);
+
+                // Sometimes the Closure param dependency might not exist yet, try to resolve it...
+                if(!isset($closureDependency))
+                {
+                    // Try to resolve a class that may not have been initiated
+                    $this->checkForDependencies($closureDependencyName);
+                    $closureDependency = $this->get($closureDependencyName);
+                }
+
+                // Once the Closure dependency has been resolve, add it to the list to return later...
+                $closureDependencyList[] = $closureDependency;
+            }
+        }
+
+        // Return any Closure dependencies
+        return $closureDependencyList;
     }
 
     // Used to retrieve class instances from the container.
