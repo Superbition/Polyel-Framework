@@ -21,9 +21,6 @@ class LocalStorageDriver
     // Used to set a common directory link
     private $fromLink;
 
-    // Used to store the file write mode, default is overwrite
-    private $writeMode = "w+";
-
     public function __construct()
     {
 
@@ -130,25 +127,21 @@ class LocalStorageDriver
     public function append($filePath, $contents)
     {
         // Set the write mode to append to the end of the file
-        $this->writeMode = "a+";
-        $this->write($filePath, $contents);
+        $this->write($filePath, $contents, "a+");
     }
 
     // Main writing function for overwrite and appending
-    public function write($filePath, $contents = "")
+    public function write($filePath, $contents = "", $writeMode = "w+")
     {
         $filePath = ROOT_DIR . $filePath;
 
         // Open a resource handle and use a Swoole Coroutine to defer blocking I/O
-        $handle = fopen($filePath, $this->writeMode);
+        $handle = fopen($filePath, $writeMode);
         Swoole::create(function() use ($handle, $contents)
         {
             Swoole::fwrite($handle, $contents);
             fclose($handle);
         });
-
-        // Reset the write mode back to the default
-        $this->writeMode = "w+";
     }
 
     public function copy($source, $dest)
