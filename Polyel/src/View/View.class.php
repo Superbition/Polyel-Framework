@@ -243,7 +243,7 @@ class View
         return str_replace("{{ @content }}", $resourceContent, $this->extendingView);
     }
 
-    public function exists($viewNameAndType): bool
+    public static function exists($viewNameAndType): bool
     {
         // Sort the view name and type as they are stored like viewName:viewType
         list($viewName, $viewType) = explode(":", $viewNameAndType);
