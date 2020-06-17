@@ -7,17 +7,6 @@ use Swoole\Coroutine as Swoole;
 
 class LocalStorageDriver
 {
-    // Default links to some important directories
-    private $directoryLinks = [
-        "app" => ROOT_DIR . "/app",
-        "controllers" => ROOT_DIR . "/app/Controllers",
-        "views" => ROOT_DIR . "/app/resources/views",
-        "public" => ROOT_DIR . "/public",
-        "config" => ROOT_DIR . "/config",
-        "storage" => ROOT_DIR . "/storage",
-        "src" => ROOT_DIR . "/Polyel/src",
-    ];
-
     public function __construct()
     {
 
