@@ -18,19 +18,9 @@ class LocalStorageDriver
         "src" => ROOT_DIR . "/Polyel/src",
     ];
 
-    // Used to set a common directory link
-    private $fromLink;
-
     public function __construct()
     {
 
-    }
-
-    // Used to start reading from a common directory link
-    public function from($fromLink)
-    {
-        $this->fromLink = $fromLink;
-        return $this;
     }
 
     // Send back the file size in a human readable format
@@ -58,12 +48,6 @@ class LocalStorageDriver
     // Read a file and return the raw string content
     public function read($filePath)
     {
-        // Check if a from link has been set
-        if(isset($this->fromLink))
-        {
-            $filePath = $this->directoryLinks[strtolower($this->fromLink)] . $filePath;
-        }
-
         if(!file_exists($filePath))
         {
             throw new Exception("Read Error: File not found at " . $filePath);
@@ -75,9 +59,6 @@ class LocalStorageDriver
         // Read the entire file and close the handle afterwards
         $file = Swoole::fread($handle, 0);
         fclose($handle);
-
-        // Reset the from link
-        $this->fromLink = null;
 
         // Return the file contents as a string
         return $file;
