@@ -108,7 +108,9 @@ class Server
 
             $HttpKernel->request->capture($HttpRequest);
 
-            $response = $this->router->handle($HttpKernel->request, $HttpKernel);
+            $response = $this->router->handle(
+                $HttpKernel->request, $HttpKernel
+            );
 
             $response->send($HttpResponse);
         });
