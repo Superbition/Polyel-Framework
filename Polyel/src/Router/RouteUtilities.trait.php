@@ -63,8 +63,8 @@ trait RouteUtilities
                             // And if the route has a default value
                             if(isset($routeValue[0]))
                             {
-                                // A match was found, return the controller and parameters if there are any
-                                $routeMatched["controller"] = $routeValue[0];
+                                // A match was found, return the action and parameters if there are any
+                                $routeMatched["action"] = $routeValue[0];
                                 $routeMatched["params"] = $params;
                                 $routeMatched["regURL"] = $regURL;
                                 return $routeMatched;
@@ -79,9 +79,9 @@ trait RouteUtilities
                         {
                             /*
                              * Else route value is not an array, return route value
-                             * A match was found, return the controller and parameters if there are any
+                             * A match was found, return the action and parameters if there are any
                              */
-                            $routeMatched["controller"] = $routeValue;
+                            $routeMatched["action"] = $routeValue;
                             $routeMatched["params"] = $params;
                             $routeMatched["regURL"] = $regURL;
                             return $routeMatched;

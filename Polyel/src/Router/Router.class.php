@@ -2,11 +2,13 @@
 
 namespace Polyel\Router;
 
+use Closure;
 use RuntimeException;
 use Polyel\Debug\Debug;
 use Polyel\Http\Kernel;
 use Polyel\Http\Request;
 use Polyel\Http\Response;
+use App\Controllers\Controller;
 use Polyel\Middleware\Middleware;
 use Polyel\Session\SessionManager;
 
@@ -91,16 +93,32 @@ class Router
                 // URL route parameters from request
                 $routeParams = $matchedRoute['params'];
 
-                // Get the current matched controller and route action
-                $controller = $matchedRoute['controller'];
-                $controllerAction = $matchedRoute['action'];
+                /*
+                 * The route action is either a a Closure or Controller
+                 */
+                if($matchedRoute['action'] instanceof Closure)
+                {
+                    // Get the Closure and set it as the route action
+                    $routeAction = $matchedRoute['action'];
+                }
+                else if(is_string($matchedRoute['action']))
+                {
+                    // Extract the controller and action and set them so the class has access to them
+                    $matchedRoute['action'] = explode("@", $matchedRoute['action']);
 
-                //The controller namespace and getting its instance from the container using ::call
-                $controllerName = "App\Controllers\\" . $controller;
-                $controller = $HttpKernel->container->resolveClass($controllerName);
+                    // Get the current matched controller and route action
+                    list($controller, $controllerAction) = $matchedRoute['action'];
+
+                    //The controller namespace and getting its instance from the container using ::call
+                    $controllerName = "App\Controllers\\" . $controller;
+                    $controller = $HttpKernel->container->resolveClass($controllerName);
+
+                    // Set the route action to the resolved controller
+                    $routeAction = $controller;
+                }
 
                 // Check that the controller exists
-                if(isset($controller) && !empty($controller))
+                if(isset($routeAction) && !empty($routeAction))
                 {
                     // Capture a response from a before middleware if one returns a response
                     $beforeMiddlewareResponse = $this->middleware->runAnyBefore($HttpKernel, $request->method, $matchedRoute['url']);
@@ -113,11 +131,25 @@ class Router
                         return $response;
                     }
 
-                    // Resolve and perform method injection when calling the controller action
-                    $methodDependencies = $HttpKernel->container->resolveMethodInjection($controllerName, $controllerAction);
+                    /*
+                     * The route action is either a a Closure or Controller
+                     */
+                    if($routeAction instanceof Closure)
+                    {
+                        // Resolve and perform method injection when calling the Closure
+                        $closureDependencies = $HttpKernel->container->resolveClosureDependencies($routeAction);
 
-                    // Method injection for any services first, then route parameters and get the controller response
-                    $controllerResponse = $controller->$controllerAction(...$methodDependencies, ...$routeParams);
+                        // Method injection for any services first, then route parameters and get the Closure response
+                        $applicationResponse = $routeAction(...$closureDependencies, ...$routeParams);
+                    }
+                    else if($routeAction instanceof Controller)
+                    {
+                        // Resolve and perform method injection when calling the controller action
+                        $methodDependencies = $HttpKernel->container->resolveMethodInjection($controllerName, $controllerAction);
+
+                        // Method injection for any services first, then route parameters and get the Controller response
+                        $applicationResponse = $controller->$controllerAction(...$methodDependencies, ...$routeParams);
+                    }
 
                     // Capture a response returned from any after middleware if one returns a response...
                     $afterMiddlewareResponse = $this->middleware->runAnyAfter($HttpKernel, $request->method, $matchedRoute['url']);
@@ -135,7 +167,7 @@ class Router
                          * meaning the controller action can return its response for the request that was sent.
                          * Give the response service the response the controller wants to send back to the client
                          */
-                        $response->build($controllerResponse);
+                        $response->build($applicationResponse);
                     }
                 }
             }
@@ -225,13 +257,9 @@ class Router
         // If a route is found, the controller and action is returned, along with any set params
         if($routeRequested)
         {
-            // Extract the controller and action and set them so the class has access to them
-            $routeRequested["controller"] = explode("@", $routeRequested["controller"]);
-
             $matchedRoute['url'] = $routeRequested["regURL"];
-            $matchedRoute['controller'] = $routeRequested["controller"][0];
+            $matchedRoute['action'] = $routeRequested["action"];
             $matchedRoute['params'] = $routeRequested["params"];
-            $matchedRoute['action'] = $routeRequested["controller"][1];
 
             // A route match was made...
             return $matchedRoute;
