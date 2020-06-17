@@ -47,28 +47,22 @@ class Server
 
     public function boot()
     {
-        // Load all configuration files
         $this->config->load();
 
-        // Run initial Routing setup tasks
         $this->router->setup();
 
-        // Preload all application routes
         $this->router->loadRoutes();
 
-        // Preload all applications Controllers
         $this->controller->loadAllControllers();
 
         $this->middleware->loadAllMiddleware();
 
-        \Swoole\Runtime::enableCoroutine();
-
         $this->sessionManager->setDriver(config('session.driver'));
 
-        // Preload all element logic classes into the container
         Element::loadClassElements();
 
-        // Create a new Swoole HTTP server and set server IP and listening port
+        \Swoole\Runtime::enableCoroutine();
+
         $this->server = new SwooleHTTPServer(
             $this->config->get("main.serverIP"),
             $this->config->get("main.serverPort"),
