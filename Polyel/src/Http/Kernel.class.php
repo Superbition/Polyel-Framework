@@ -2,6 +2,7 @@
 
 namespace Polyel\Http;
 
+use Polyel\View\View;
 use Polyel\Session\Session;
 use Polyel\Container\Container;
 
@@ -24,6 +25,12 @@ class Kernel
         $this->session = $session;
         $this->request = $request;
         $this->response = $response;
+    }
+
+    public function setup()
+    {
+        $view = $this->container->get(View::class);
+        $view->setHttpKernel($this);
     }
 
     public function setContainer(Container $container)

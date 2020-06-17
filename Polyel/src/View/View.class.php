@@ -29,9 +29,17 @@ class View
     // Holds the Element service class
     private $element;
 
+    // The request HttpKernel
+    private $HttpKernel;
+
     public function __construct(Element $element)
     {
         $this->element = $element;
+    }
+
+    public function setHttpKernel($HttpKernel)
+    {
+        $this->HttpKernel = $HttpKernel;
     }
 
     // The main function used to perform the view rendering and data to template exchange

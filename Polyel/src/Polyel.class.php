@@ -41,6 +41,8 @@ class Polyel
 
         $HttpKernel->setContainer($kernelContainer);
 
+        $HttpKernel->setup();
+
         return $HttpKernel;
     }
 
