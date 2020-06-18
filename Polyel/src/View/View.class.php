@@ -59,8 +59,8 @@ class View
              * Format the resource file path and get the resource from the local disk
              * NOTE: The $this->resource file/path name is already converted from dot syntax in ViewBuilder
              */
-            $viewLocation = static::RESOURCE_DIR . "/${type}s/" . $this->resource . ".${type}.html";
-            $this->resource = Storage::access('local')->read($viewLocation);
+            $viewLocation = "/${type}s/" . $this->resource . ".${type}.html";
+            $this->resource = Storage::access('local', static::RESOURCE_DIR)->read($viewLocation);
 
             // Get all the tags from the resource template
             $this->resourceTags = $this->getStringsBetween($this->resource, "{{", "}}");
@@ -138,13 +138,13 @@ class View
             $resourceFileNamePath = str_replace('.', '/', $resourceName);
 
             // Build the include file location to check...
-            $includeLocation = static::RESOURCE_DIR . "/${includeType}s/" . $resourceFileNamePath . '.view.html';
+            $includeLocation = "/${includeType}s/" . $resourceFileNamePath . '.view.html';
 
             // Check if the include exists on local disk
             if(file_exists($includeLocation))
             {
                 // Get the resource content include from file and inject it into the main template
-                $includeContent = Storage::access('local')->read($includeLocation);
+                $includeContent = Storage::access('local', static::RESOURCE_DIR)->read($includeLocation);
                 $resourceContent = str_replace("{{ @include($resourceName:$includeType) }}", $includeContent, $resourceContent);
             }
             else
@@ -232,8 +232,8 @@ class View
         $extViewName = str_replace(".", "/", $extViewName);
 
         // Build up the extending view file path and grab the content from disk
-        $extViewFilePath = static::RESOURCE_DIR . "/${extType}s/" . $extViewName . ".$extType.html";
-        $this->extendingView = Storage::access('local')->read($extViewFilePath);
+        $extViewFilePath = "/${extType}s/" . $extViewName . ".$extType.html";
+        $this->extendingView = Storage::access('local', static::RESOURCE_DIR)->read($extViewFilePath);
 
         // Collect any extending view tags
         $this->extendingViewTags = $this->getStringsBetween($this->extendingView, "{{", "}}");

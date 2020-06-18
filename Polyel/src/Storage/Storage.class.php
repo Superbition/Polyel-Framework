@@ -4,29 +4,81 @@ namespace Polyel\Storage;
 
 class Storage
 {
-    // Holds the storage driver for local operators
-    private $localStorage;
+    // Holds all the configured drives for the Storage System
+    private static $drives;
 
-    public function __construct(LocalStorageDriver $localStorage)
+    // When no drive is stated, the configured default is used
+    private static $defaultDrive;
+
+    // All the supported drivers that a drive can use
+    private array $supportedDrivers = [
+        'local',
+    ];
+
+    public function __construct()
     {
-        $this->localStorage = $localStorage;
+
     }
 
-    // The access function is the gateway to all the storage drivers
-    public function access($storageLocation)
+    public static function setup()
     {
-        // Use a switch to determine which storage driver is needed
-        switch (strtolower(...$storageLocation))
+        self::$drives = config('filesystem.drives');
+        self::$defaultDrive = config('filesystem.default');
+    }
+
+    // The drive function is the gateway to all the configured storage drives
+    public function drive($drive = null)
+    {
+        // If the drive is null, use the default set drive from config
+        $drive = $drive ?? self::$defaultDrive;
+
+        if($this->driveExists($drive))
         {
-            // Local storage driver for local filesystem access
-            case 'local':
+            $drive = self::$drives[$drive];
 
-                return $this->localStorage;
-
-                break;
+            if(exists($drive['driver']) && $this->storageDriverIsValid($drive['driver']))
+            {
+                return $this->connectToDrive($drive);
+            }
         }
 
-        // Return NULL when no storage driver match is found
-        return NULL;
+        // Return null when no storage drive is found
+        return null;
+    }
+
+    // Used to access a driver and set a root manually without using a condifured drive
+    public function access($driver, $root)
+    {
+        if($this->storageDriverIsValid($driver))
+        {
+            $drive['driver'] = $driver;
+            $drive['root'] = $root;
+
+            return $this->connectToDrive($drive);
+        }
+
+        return null;
+    }
+
+    private function driveExists($drive)
+    {
+        return array_key_exists($drive, self::$drives);
+    }
+
+    private function storageDriverIsValid($driver)
+    {
+        return in_array($driver, $this->supportedDrivers, true);
+    }
+
+    private function connectToDrive($driveConfig)
+    {
+        switch($driveConfig['driver'])
+        {
+            case 'local':
+
+                return new Drivers\LocalStorageDriver($driveConfig['root']);
+
+            break;
+        }
     }
 }

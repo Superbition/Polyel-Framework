@@ -32,11 +32,11 @@ class Element
         {
             // Convert file name from dot syntax to a real file path if they are used
             $elementFilePath = str_replace(".", "/", $this->element);
-            $elementLocation = $this->elementTemplateDir . '/' . $elementFilePath . ".html";
+            $elementLocation = $this->elementTemplateDir . '/';
 
-            if(file_exists($elementLocation))
+            if(file_exists($elementLocation . $elementFilePath))
             {
-                $this->elementTemplate = Storage::access('local')->read($elementLocation);
+                $this->elementTemplate = Storage::access('local', $elementLocation)->read($elementFilePath);
             }
         }
     }

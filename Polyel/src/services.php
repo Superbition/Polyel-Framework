@@ -17,7 +17,6 @@ $coreServices = [
     Polyel\Middleware\Middleware::class,
     Polyel\Router\Router::class,
     Polyel\Storage\Storage::class,
-    Polyel\Storage\LocalStorageDriver::class,
     Polyel\Database\Database::class,
     Polyel\View\View::class,
 

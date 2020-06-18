@@ -5,6 +5,7 @@ namespace Polyel\Http;
 use Polyel;
 use Polyel\Router\Router;
 use Polyel\Config\Config;
+use Polyel\Storage\Storage;
 use Swoole\Coroutine as Swoole;
 use Polyel\View\Element\Element;
 use Polyel\Controller\Controller;
@@ -56,6 +57,8 @@ class Server
         $this->middleware->loadAllMiddleware();
 
         $this->sessionManager->setDriver(config('session.driver'));
+
+        Storage::setup();
 
         Element::loadClassElements();
 

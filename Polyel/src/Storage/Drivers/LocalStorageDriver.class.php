@@ -1,21 +1,22 @@
 <?php
 
-namespace Polyel\Storage;
+namespace Polyel\Storage\Drivers;
 
 use Exception;
-use Swoole\Coroutine as Swoole;
 
 class LocalStorageDriver
 {
-    public function __construct()
-    {
+    private $root;
 
+    public function __construct($root)
+    {
+        $this->root = $root;
     }
 
     // Send back the file size in a human readable format
     public function size($filePath)
     {
-        $filePath = ROOT_DIR . $filePath;
+        $filePath = $this->root . $filePath;
 
         // Don't continue if the file does not exist
         if(!file_exists($filePath))
@@ -37,6 +38,8 @@ class LocalStorageDriver
     // Read a file and return the raw string content
     public function read($filePath)
     {
+        $filePath = $this->root . $filePath;
+
         if(!file_exists($filePath))
         {
             throw new Exception("Read Error: File not found at " . $filePath);
@@ -45,8 +48,10 @@ class LocalStorageDriver
         // Open a resource handle
         $handle = fopen(realpath($filePath), "rb");
 
+        clearstatcache();
+
         // Read the entire file and close the handle afterwards
-        $file = Swoole::fread($handle, 0);
+        $file = fread($handle, filesize($filePath));
         fclose($handle);
 
         // Return the file contents as a string
@@ -56,7 +61,7 @@ class LocalStorageDriver
     // Prepend to a file using php:://temp
     public function prepend($filePath, $contents)
     {
-        $filePath = ROOT_DIR . $filePath;
+        $filePath = $this->root . $filePath;
 
         // Make sure the file we want to write to exists beforehand
         if(!file_exists($filePath))
@@ -73,10 +78,10 @@ class LocalStorageDriver
         $destHandle = fopen("php://temp", "w");
 
         // Using a Swoole Coroutine to defer blocking I/O
-        Swoole::create(function() use($srcHandle, $destHandle, $contents)
+        go(function() use($srcHandle, $destHandle, $contents)
         {
             // Write the contents we want to prepend first into the php://temp stream
-            Swoole::fwrite($destHandle, $contents);
+            fwrite($destHandle, $contents);
 
             /*
              * First copy the source contents into the end of the destination stream.
@@ -103,38 +108,46 @@ class LocalStorageDriver
     // Main writing function for overwrite and appending
     public function write($filePath, $contents = "", $writeMode = "w+")
     {
-        $filePath = ROOT_DIR . $filePath;
+        $filePath = $this->root . $filePath;
 
         // Open a resource handle and use a Swoole Coroutine to defer blocking I/O
         $handle = fopen($filePath, $writeMode);
-        Swoole::create(function() use ($handle, $contents)
+        go(function() use ($handle, $contents)
         {
-            Swoole::fwrite($handle, $contents);
+            fwrite($handle, $contents);
             fclose($handle);
         });
     }
 
+    public function has($file)
+    {
+        $filePath = $this->root . $file;
+
+        if(file_exists($filePath))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     public function copy($source, $dest)
     {
-        $source = ROOT_DIR . $source;
-        $dest = ROOT_DIR . $dest;
+        $source = $this->root . $source;
+        $dest = $this->root . $dest;
 
-        Swoole::create(function() use ($source, $dest)
+        go(function() use ($source, $dest)
         {
             copy($source, $dest);
         });
     }
 
-    public function move($oldName, $newName, $absoluteOldPath = false)
+    public function move($oldName, $newName)
     {
-        if($absoluteOldPath === false)
-        {
-            $oldName = ROOT_DIR . $oldName;
-        }
+        $oldName = $this->root . $oldName;
+        $newName = $this->root . $newName;
 
-        $newName = ROOT_DIR . $newName;
-
-        Swoole::create(function() use ($oldName, $newName)
+        go(function() use ($oldName, $newName)
         {
             rename($oldName, $newName);
         });
@@ -145,8 +158,10 @@ class LocalStorageDriver
     public function delete($filePath)
     {
         // Defer the delete process
-        Swoole::create(function() use ($filePath)
+        go(function() use ($filePath)
         {
+            $filePath = $this->root . $filePath;
+
             // When the filePath is a single string
             if(!is_array($filePath))
             {
@@ -166,12 +181,12 @@ class LocalStorageDriver
     public function makeDir($dirPath, $mode = 0777)
     {
         // Recursively create the directory path given using the mode that was set
-        return mkdir(ROOT_DIR . $dirPath, $mode, true);
+        return mkdir($this->root . $dirPath, $mode, true);
     }
 
     public function removeDir($dirPath)
     {
         // Only deletes a directory that is empty
-        return rmdir(ROOT_DIR . $dirPath);
+        return rmdir($this->root . $dirPath);
     }
 }
