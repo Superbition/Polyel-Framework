@@ -119,6 +119,18 @@ class LocalStorageDriver
         });
     }
 
+    public function has($file)
+    {
+        $filePath = $this->root . $file;
+
+        if(file_exists($filePath))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     public function copy($source, $dest)
     {
         $source = $this->root . $source;
