@@ -27,6 +27,6 @@ class Storage
         }
 
         // Return NULL when no storage driver match is found
-        return NULL;
+        return null;
     }
 }
