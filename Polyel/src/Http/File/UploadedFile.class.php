@@ -176,7 +176,7 @@ class UploadedFile extends SplFileInfo
             $this->storeAsFlag = false;
 
             // Using the storage service, move the file into its new saved location
-            $newSavedPath = Storage::access($diskToSaveTo)->move($this->tmpName, "/" . $newFilePath, true);
+            $newSavedPath = Storage::drive($diskToSaveTo)->move($this->tmpName, "/" . $newFilePath, true);
 
             return $newSavedPath;
         }
