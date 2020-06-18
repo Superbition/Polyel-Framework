@@ -39,6 +39,20 @@ class Storage
         return null;
     }
 
+    // Used to access a driver and set a root manually without using a condifured drive
+    public function access($driver, $root)
+    {
+        if($this->storageDriverIsValid($driver))
+        {
+            $drive['driver'] = $driver;
+            $drive['root'] = $root;
+
+            return $this->connectToDrive($drive);
+        }
+
+        return null;
+    }
+
     private function driveExists($drive)
     {
         return array_key_exists($drive, self::$drives);
