@@ -125,7 +125,7 @@ class LocalStorageDriver
         });
     }
 
-    public function move($oldName, $newName, $absoluteOldPath = false)
+    public function move($oldName, $newName)
     {
         if($absoluteOldPath === false)
         {
