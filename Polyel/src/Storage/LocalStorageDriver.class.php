@@ -48,8 +48,10 @@ class LocalStorageDriver
         // Open a resource handle
         $handle = fopen(realpath($filePath), "rb");
 
+        clearstatcache();
+
         // Read the entire file and close the handle afterwards
-        $file = fread($handle, 0);
+        $file = fread($handle, filesize($filePath));
         fclose($handle);
 
         // Return the file contents as a string
