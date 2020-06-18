@@ -77,7 +77,7 @@ class LocalStorageDriver
         $destHandle = fopen("php://temp", "w");
 
         // Using a Swoole Coroutine to defer blocking I/O
-        Swoole::create(function() use($srcHandle, $destHandle, $contents)
+        go(function() use($srcHandle, $destHandle, $contents)
         {
             // Write the contents we want to prepend first into the php://temp stream
             fwrite($destHandle, $contents);
@@ -111,7 +111,7 @@ class LocalStorageDriver
 
         // Open a resource handle and use a Swoole Coroutine to defer blocking I/O
         $handle = fopen($filePath, $writeMode);
-        Swoole::create(function() use ($handle, $contents)
+        go(function() use ($handle, $contents)
         {
             fwrite($handle, $contents);
             fclose($handle);
@@ -123,7 +123,7 @@ class LocalStorageDriver
         $source = $this->root . $source;
         $dest = $this->root . $dest;
 
-        Swoole::create(function() use ($source, $dest)
+        go(function() use ($source, $dest)
         {
             copy($source, $dest);
         });
@@ -134,7 +134,7 @@ class LocalStorageDriver
         $oldName = $this->root . $oldName;
         $newName = $this->root . $newName;
 
-        Swoole::create(function() use ($oldName, $newName)
+        go(function() use ($oldName, $newName)
         {
             rename($oldName, $newName);
         });
@@ -145,7 +145,7 @@ class LocalStorageDriver
     public function delete($filePath)
     {
         // Defer the delete process
-        Swoole::create(function() use ($filePath)
+        go(function() use ($filePath)
         {
             $filePath = $this->root . $filePath;
 
