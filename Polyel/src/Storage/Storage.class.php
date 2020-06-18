@@ -7,6 +7,9 @@ class Storage
     // Holds all the configured drives for the Storage System
     private static $drives;
 
+    // When no drive is stated, the configured default is used
+    private static $defaultDrive;
+
     // All the supported drivers that a drive can use
     private array $supportedDrivers = [
         'local',
@@ -20,11 +23,15 @@ class Storage
     public static function setup()
     {
         self::$drives = config('filesystem.drives');
+        self::$defaultDrive = config('filesystem.default');
     }
 
     // The drive function is the gateway to all the configured storage drives
-    public function drive($drive)
+    public function drive($drive = null)
     {
+        // If the drive is null, use the default set drive from config
+        $drive = $drive ?? self::$defaultDrive;
+
         if($this->driveExists($drive))
         {
             $drive = self::$drives[$drive];
