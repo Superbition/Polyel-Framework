@@ -1,6 +1,6 @@
 <?php
 
-namespace Polyel\Storage;
+namespace Polyel\Storage\Drivers;
 
 use Exception;
 

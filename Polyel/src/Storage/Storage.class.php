@@ -76,7 +76,7 @@ class Storage
         {
             case 'local':
 
-                return new LocalStorageDriver($driveConfig['root']);
+                return new Drivers\LocalStorageDriver($driveConfig['root']);
 
             break;
         }
