@@ -3,7 +3,6 @@
 namespace Polyel\Storage;
 
 use Exception;
-use Swoole\Coroutine as Swoole;
 
 class LocalStorageDriver
 {
