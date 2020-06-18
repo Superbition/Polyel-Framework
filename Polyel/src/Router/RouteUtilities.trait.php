@@ -37,7 +37,7 @@ trait RouteUtilities
         {
             // By default parameters have to be matched by their surrounding characters like {param}...
             $paramFound = false;
-            if(preg_match_all($this->routeParamPattern, $routeKey))
+            if(preg_match($this->routeParamPattern, $routeKey))
             {
                 /*
                  * If a parameter is found at the current depth, we set the paramFound flag to true
