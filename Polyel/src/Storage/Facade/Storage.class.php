@@ -12,6 +12,7 @@ use Polyel;
  * @method static read($filePath)
  * @method static prepend($filePath, $contents)
  * @method static append($filePath, $contents)
+ * @method static has($file)
  * @method static copy($source, $dest)
  * @method static move($oldName, $newName)
  * @method static delete($filePath)
