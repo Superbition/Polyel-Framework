@@ -49,8 +49,6 @@ class Server
     {
         $this->config->load();
 
-        $this->router->setup();
-
         $this->router->loadRoutes();
 
         $this->controller->loadAllControllers();

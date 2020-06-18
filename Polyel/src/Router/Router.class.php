@@ -35,8 +35,6 @@ class Router
     // The Middleware service
     private $middleware;
 
-    private $routeParamPattern;
-
     public function __construct(SessionManager $sessionManager, Debug $debug, Middleware $middleware)
     {
         $this->sessionManager = $sessionManager;
@@ -306,12 +304,5 @@ class Router
         $this->initialiseHttpVerbs();
 
         require ROOT_DIR . "/app/routing/web.php";
-    }
-
-    public function setup()
-    {
-        // Use the param tag from the Router config file, used when detecting params in routes
-        $paramTag = explode(" ", config("router.routeParameterTag"));
-        $this->routeParamPattern = "/(\\" . $paramTag[0] . "[a-zA-Z_0-9]*\\" . $paramTag[1] . ")/";
     }
 }
