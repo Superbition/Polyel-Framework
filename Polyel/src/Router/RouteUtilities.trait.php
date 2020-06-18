@@ -4,6 +4,7 @@ namespace Polyel\Router;
 
 trait RouteUtilities
 {
+    // The regex used to check if a route key is a parameter like {param}
     private $routeParamPattern = "/({[a-zA-Z_0-9]*})/";
 
     /*
@@ -35,7 +36,7 @@ trait RouteUtilities
         // Loop through all the routes found in this level of the $routes array
         foreach($routes as $routeKey => $routeValue)
         {
-            // By default parameters have to be matched by their surrounding characters like {param}...
+            // Parameters have to be matched by their surrounding characters like {param}...
             $paramFound = false;
             if(preg_match($this->routeParamPattern, $routeKey))
             {
