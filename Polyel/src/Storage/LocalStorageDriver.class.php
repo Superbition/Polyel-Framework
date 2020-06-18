@@ -50,7 +50,7 @@ class LocalStorageDriver
         $handle = fopen(realpath($filePath), "rb");
 
         // Read the entire file and close the handle afterwards
-        $file = Swoole::fread($handle, 0);
+        $file = fread($handle, 0);
         fclose($handle);
 
         // Return the file contents as a string
@@ -80,7 +80,7 @@ class LocalStorageDriver
         Swoole::create(function() use($srcHandle, $destHandle, $contents)
         {
             // Write the contents we want to prepend first into the php://temp stream
-            Swoole::fwrite($destHandle, $contents);
+            fwrite($destHandle, $contents);
 
             /*
              * First copy the source contents into the end of the destination stream.
@@ -113,7 +113,7 @@ class LocalStorageDriver
         $handle = fopen($filePath, $writeMode);
         Swoole::create(function() use ($handle, $contents)
         {
-            Swoole::fwrite($handle, $contents);
+            fwrite($handle, $contents);
             fclose($handle);
         });
     }
