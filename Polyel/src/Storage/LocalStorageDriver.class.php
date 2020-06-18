@@ -7,15 +7,17 @@ use Swoole\Coroutine as Swoole;
 
 class LocalStorageDriver
 {
-    public function __construct()
-    {
+    private $root;
 
+    public function __construct($root)
+    {
+        $this->root = $root;
     }
 
     // Send back the file size in a human readable format
     public function size($filePath)
     {
-        $filePath = ROOT_DIR . $filePath;
+        $filePath = $this->root . $filePath;
 
         // Don't continue if the file does not exist
         if(!file_exists($filePath))
@@ -37,6 +39,8 @@ class LocalStorageDriver
     // Read a file and return the raw string content
     public function read($filePath)
     {
+        $filePath = $this->root . $filePath;
+
         if(!file_exists($filePath))
         {
             throw new Exception("Read Error: File not found at " . $filePath);
@@ -56,7 +60,7 @@ class LocalStorageDriver
     // Prepend to a file using php:://temp
     public function prepend($filePath, $contents)
     {
-        $filePath = ROOT_DIR . $filePath;
+        $filePath = $this->root . $filePath;
 
         // Make sure the file we want to write to exists beforehand
         if(!file_exists($filePath))
@@ -103,7 +107,7 @@ class LocalStorageDriver
     // Main writing function for overwrite and appending
     public function write($filePath, $contents = "", $writeMode = "w+")
     {
-        $filePath = ROOT_DIR . $filePath;
+        $filePath = $this->root . $filePath;
 
         // Open a resource handle and use a Swoole Coroutine to defer blocking I/O
         $handle = fopen($filePath, $writeMode);
@@ -116,8 +120,8 @@ class LocalStorageDriver
 
     public function copy($source, $dest)
     {
-        $source = ROOT_DIR . $source;
-        $dest = ROOT_DIR . $dest;
+        $source = $this->root . $source;
+        $dest = $this->root . $dest;
 
         Swoole::create(function() use ($source, $dest)
         {
@@ -127,12 +131,8 @@ class LocalStorageDriver
 
     public function move($oldName, $newName)
     {
-        if($absoluteOldPath === false)
-        {
-            $oldName = ROOT_DIR . $oldName;
-        }
-
-        $newName = ROOT_DIR . $newName;
+        $oldName = $this->root . $oldName;
+        $newName = $this->root . $newName;
 
         Swoole::create(function() use ($oldName, $newName)
         {
@@ -147,6 +147,8 @@ class LocalStorageDriver
         // Defer the delete process
         Swoole::create(function() use ($filePath)
         {
+            $filePath = $this->root . $filePath;
+
             // When the filePath is a single string
             if(!is_array($filePath))
             {
@@ -166,12 +168,12 @@ class LocalStorageDriver
     public function makeDir($dirPath, $mode = 0777)
     {
         // Recursively create the directory path given using the mode that was set
-        return mkdir(ROOT_DIR . $dirPath, $mode, true);
+        return mkdir($this->root . $dirPath, $mode, true);
     }
 
     public function removeDir($dirPath)
     {
         // Only deletes a directory that is empty
-        return rmdir(ROOT_DIR . $dirPath);
+        return rmdir($this->root . $dirPath);
     }
 }
