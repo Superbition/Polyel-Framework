@@ -46,7 +46,7 @@ class Storage
 
     private function storageDriverIsValid($driver)
     {
-        return array_key_exists($driver, $this->supportedDrivers);
+        return in_array($driver, $this->supportedDrivers, true);
     }
 
     private function connectToDrive($driveConfig)
