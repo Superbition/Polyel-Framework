@@ -189,6 +189,12 @@ class Router
             throw new RuntimeException("\e[41m Trying to add a route that already exists: " . $route . " \e[0m");
         }
 
+        // Validate that the new route is a valid route and if it is using parameters correctly.
+        if(preg_match_all("/^(\/([a-zA-Z0-9]*|\{[a-z]+\}))+$/m", $route) === 0)
+        {
+            throw new RuntimeException("\e[41mInvalid route at:\e[0m '" . $route . "'");
+        }
+
         // Only pack the route when it has more than one parameter
         if(strlen($route) > 1)
         {
