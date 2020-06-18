@@ -3,6 +3,7 @@
 namespace Polyel\Http;
 
 use Polyel;
+use Swoole\Runtime;
 use Polyel\Router\Router;
 use Polyel\Config\Config;
 use Polyel\Storage\Storage;
@@ -62,7 +63,7 @@ class Server
 
         Element::loadClassElements();
 
-        \Swoole\Runtime::enableCoroutine();
+        Runtime::enableCoroutine();
 
         $this->server = new SwooleHTTPServer(
             $this->config->get("main.serverIP"),
