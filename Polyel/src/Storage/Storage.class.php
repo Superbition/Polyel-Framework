@@ -4,29 +4,60 @@ namespace Polyel\Storage;
 
 class Storage
 {
-    // Holds the storage driver for local operators
-    private $localStorage;
+    // Holds all the configured drives for the Storage System
+    private static $drives;
 
-    public function __construct(LocalStorageDriver $localStorage)
+    // All the supported drivers that a drive can use
+    private array $supportedDrivers = [
+        'local',
+    ];
+
+    public function __construct()
     {
-        $this->localStorage = $localStorage;
+
     }
 
-    // The access function is the gateway to all the storage drivers
-    public function access($storageLocation)
+    public static function setup()
     {
-        // Use a switch to determine which storage driver is needed
-        switch (strtolower(...$storageLocation))
+        self::$drives = config('filesystem.drives');
+    }
+
+    // The drive function is the gateway to all the configured storage drives
+    public function drive($drive)
+    {
+        if($this->driveExists($drive))
         {
-            // Local storage driver for local filesystem access
-            case 'local':
+            $drive = self::$drives[$drive];
 
-                return $this->localStorage;
-
-                break;
+            if(exists($drive['driver']) && $this->storageDriverIsValid($drive['driver']))
+            {
+                return $this->connectToDrive($drive);
+            }
         }
 
-        // Return NULL when no storage driver match is found
+        // Return null when no storage drive is found
         return null;
+    }
+
+    private function driveExists($drive)
+    {
+        return array_key_exists($drive, self::$drives);
+    }
+
+    private function storageDriverIsValid($driver)
+    {
+        return array_key_exists($driver, $this->supportedDrivers);
+    }
+
+    private function connectToDrive($driveConfig)
+    {
+        switch($driveConfig['driver'])
+        {
+            case 'local':
+
+                return new LocalStorageDriver($driveConfig['root']);
+
+            break;
+        }
     }
 }
