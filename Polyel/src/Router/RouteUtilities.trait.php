@@ -4,6 +4,8 @@ namespace Polyel\Router;
 
 trait RouteUtilities
 {
+    private $routeParamPattern = "/({[a-zA-Z_0-9]*})/";
+
     /*
      * Used to find and make a match with a registered route from Route::<method>
      * Processes static and dynamic route requests recursively and collects any URL route parameters to send back
