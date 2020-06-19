@@ -53,7 +53,7 @@ return [
              */
             "pool" => [
 
-                "waitTimeout" => 1,
+                "waitTimeout" => 5,
                 "connectionIdleTimeout" => 1,
 
                 "read" => [
