@@ -30,7 +30,6 @@ return [
 
             "active" => true,
             "driver" => "mysql",
-            "sticky" => true,
             "database" => env("Main_Database.DATABASE", "polyel1"),
             "port" => env("Main_Database.PORT", "3306"),
             "username" => env("Main_Database.USERNAME", "polyel"),

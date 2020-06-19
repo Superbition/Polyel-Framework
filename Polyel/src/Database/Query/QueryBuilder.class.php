@@ -785,6 +785,13 @@ class QueryBuilder
         return $this;
     }
 
+    public function important()
+    {
+        $this->type = 'write';
+
+        return $this;
+    }
+
     public function get($dump = 0)
     {
         $query = $this->compileSql();
