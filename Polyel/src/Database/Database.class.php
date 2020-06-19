@@ -14,29 +14,29 @@ class Database implements DatabaseInteraction
         $this->dbManager = $dbManager;
     }
 
-    public function raw($query, $data = null, $type = 'write')
+    public function raw($query, $data = null, $type = 'write', $database = null)
     {
-        return $this->dbManager->execute($type, $query, $data);
+        return $this->dbManager->execute($type, $query, $data, false, $database);
     }
 
-    public function select($query, $data = null)
+    public function select($query, $data = null, $database = null)
     {
-        return $this->raw($query, $data, "read");
+        return $this->raw($query, $data, "read", $database);
     }
 
-    public function insert($query, $data = null)
+    public function insert($query, $data = null, $database = null)
     {
-        return $this->raw($query, $data, "write");
+        return $this->raw($query, $data, "write", $database);
     }
 
-    public function update($query, $data = null)
+    public function update($query, $data = null, $database = null)
     {
-        return $this->raw($query, $data, "write");
+        return $this->raw($query, $data, "write", $database);
     }
 
-    public function delete($query, $data = null)
+    public function delete($query, $data = null, $database = null)
     {
-        return $this->raw($query, $data, "write");
+        return $this->raw($query, $data, "write", $database);
     }
 
     /*
