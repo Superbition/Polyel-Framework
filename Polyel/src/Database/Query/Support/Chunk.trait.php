@@ -24,7 +24,14 @@ trait Chunk
 
             $results = $clone->get();
 
-            $chunkCount = count($results);
+            if(is_array($results))
+            {
+                $chunkCount = count($results);
+            }
+            else
+            {
+                $chunkCount = 0;
+            }
 
             if($chunkCount === 0)
             {
@@ -82,7 +89,14 @@ trait Chunk
             $results = $clone->get();
 
             // Get the chunk result set count
-            $chunkCount = count($results);
+            if(is_array($results))
+            {
+                $chunkCount = count($results);
+            }
+            else
+            {
+                $chunkCount = 0;
+            }
 
             // Break out of the loop if there are no results to process
             if($chunkCount === 0)
