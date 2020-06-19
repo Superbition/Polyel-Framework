@@ -17,6 +17,7 @@ Allowing you to create highly scalable applications and with support for web soc
 The planned development feature list for the Polyel framework:
 - [x] Fast, easy to use Routing Engine with built in automatic caching
 - [x] An async database query builder
+- [x] Database read & write connection pool
 - [x] Custom built DIC (Container) where everything is preloaded (even controllers), speeding up requests
 - [ ] A complete HTTP server with built-in support for Ajax & web sockets
 - [x] Easy to use session management system
