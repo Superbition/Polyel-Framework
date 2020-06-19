@@ -485,7 +485,7 @@ class QueryBuilder
         return $this->whereDateTime($column, $operator, $value, ' OR ', 'DAYOFYEAR');
     }
 
-    public function whereColumn($columnOne, $operator, $columnTwo, $bool = ' AND ')
+    public function whereColumn($columnOne, $operator, $columnTwo)
     {
         return $this->where($columnOne, $operator, $columnTwo, ' AND ', false);
     }
