@@ -47,7 +47,7 @@ class Request
     {
         $this->headers = $request->header;
         $this->hostIP = $this->headers["host"];
-        $this->userAgent = $this->headers["user-agent"];
+        $this->userAgent = $this->headers["user-agent"] ?? null;
 
         $this->clientIP = $request->server["remote_addr"];
         $this->serverPort = $request->server["server_port"];
