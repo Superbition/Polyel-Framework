@@ -310,4 +310,14 @@ class Session
             $this->sessionManager->driver()->saveSessionData($newSessionID, $newSessionData);
         }
     }
+
+    public function createCsrfToken()
+    {
+        if(!$this->exists('CSRF-TOKEN'))
+        {
+            $csrfToken = $this->sessionManager->generateCsrfToken();
+
+            $this->store('CSRF-TOKEN', $csrfToken);
+        }
+    }
 }
