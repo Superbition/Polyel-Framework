@@ -191,7 +191,7 @@ class Router
          * Validate that the new route is a valid route and if it is using parameters correctly.
          * Routes must be separated with forward slashes and params must not touch each other.
          */
-        if(preg_match_all("/^(\/([a-zA-Z-0-9]*|\{[a-z]+\}))+$/m", $route) === 0)
+        if(preg_match_all("/^(\/([a-zA-Z-0-9]*|\{[a-z-0-9]+\}))+$/m", $route) === 0)
         {
             throw new RuntimeException("\e[41mInvalid route at:\e[0m '" . $route . "'");
         }
