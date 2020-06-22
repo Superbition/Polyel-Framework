@@ -8,6 +8,7 @@ use Polyel\Router\Router;
 use Polyel\Config\Config;
 use Polyel\Storage\Storage;
 use Swoole\Coroutine as Swoole;
+use Polyel\Hashing\Facade\Hash;
 use Polyel\View\Element\Element;
 use Polyel\Controller\Controller;
 use Polyel\Middleware\Middleware;
@@ -58,6 +59,8 @@ class Server
         $this->middleware->loadAllMiddleware();
 
         $this->sessionManager->setDriver(config('session.driver'));
+
+        Hash::setup();
 
         Storage::setup();
 
