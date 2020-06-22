@@ -8,6 +8,4 @@ return [
 
     "serverPort" => env("Server_Config.PORT", ""),
 
-    "Title_Format" => ""
-
 ];
