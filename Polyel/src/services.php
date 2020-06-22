@@ -19,5 +19,6 @@ $coreServices = [
     Polyel\Storage\Storage::class,
     Polyel\Database\Database::class,
     Polyel\View\View::class,
+    Polyel\Hashing\HashManager::class,
 
 ];
