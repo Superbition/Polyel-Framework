@@ -129,4 +129,9 @@ class SessionManager
     {
         return $this->driver;
     }
+
+    public function generateCsrfToken($length = 64)
+    {
+        return bin2hex(random_bytes($length));
+    }
 }

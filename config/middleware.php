@@ -8,6 +8,8 @@ return [
      */
     "keys" =>
     [
+        "ValidateCsrfToken" => \App\Middleware\ValidateCsrfToken::class,
+
         "BeforeMiddlewareExample" => \App\Middleware\BeforeExampleMiddleware::class,
 
         "AfterMiddlewareExample" => \App\Middleware\AfterExampleMiddleware::class,
@@ -21,6 +23,7 @@ return [
     "global" =>
     [
         "before" => [
+            "ValidateCsrfToken",
             //"BeforeMiddlewareExample",
         ],
 

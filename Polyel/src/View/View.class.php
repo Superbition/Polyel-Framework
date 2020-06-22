@@ -92,6 +92,8 @@ class View
             $elementTags = $this->getStringsBetween($this->resource, "{{ @addElement(", ") }}");
             $this->element->processElementsFor($this->resource, $elementTags, $this->HttpKernel);
 
+            $this->addCsrfTokens();
+
             return $this->resource;
         }
 
@@ -221,6 +223,12 @@ class View
                 $resourceContent = str_replace("{{ !$key! }}", $value, $resourceContent);
             }
         }
+    }
+
+    private function addCsrfTokens()
+    {
+        $csrfToken = '<input type="hidden" name="csrf_token" value="' . $this->HttpKernel->session->get('CSRF-TOKEN') . '">';
+        $this->resource = str_replace("{{ @csrfToken }}", $csrfToken, $this->resource);
     }
 
     private function extendView($resourceToExtend, $extendingViewData, $resourceContent)
