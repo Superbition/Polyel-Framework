@@ -2,7 +2,7 @@
 
 return [
 
-    'algo' => 'bcrypt',
+    'algo' => 'argon2id',
 
     'bcrypt' => [
         'rounds' => 10,
