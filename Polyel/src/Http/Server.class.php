@@ -66,8 +66,8 @@ class Server
         Runtime::enableCoroutine();
 
         $this->server = new SwooleHTTPServer(
-            $this->config->get("main.serverIP"),
-            $this->config->get("main.serverPort"),
+            $this->config->get("server.serverIP"),
+            $this->config->get("server.serverPort"),
             SWOOLE_PROCESS
         );
 
@@ -95,8 +95,8 @@ class Server
             echo " Swoole: " . swoole_version() . "\n";
             echo " PHP Version: " . phpversion() . "\n";
             echo " \e[36mPolyel HTTP server started at http://" .
-                $this->config->get("main.serverIP") . ":" .
-                $this->config->get("main.serverPort") . "\e[30m\e[0m";
+                $this->config->get("server.serverIP") . ":" .
+                $this->config->get("server.serverPort") . "\e[30m\e[0m";
             echo "\n------------------------------------------------------------------------\n";
         });
 
