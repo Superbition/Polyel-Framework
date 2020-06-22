@@ -6,7 +6,7 @@ interface Hasher
 {
     public function info($hashedValue);
 
-    public function make($value, array $options = []);
+    public function create($value, array $options = []);
 
     public function check($value, $hashedValue);
 

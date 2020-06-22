@@ -26,7 +26,7 @@ class ArgonHasher extends BaseHasher Implements Hasher
         $this->argonAlgo = $argonAlgo;
     }
 
-    public function make($value, array $options = [])
+    public function create($value, array $options = [])
     {
         $memory = $options['memory'] ?? $this->memory;
         $time = $options['time'] ?? $this->time;

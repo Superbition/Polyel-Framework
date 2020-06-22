@@ -13,7 +13,7 @@ class BcryptHasher extends BaseHasher Implements Hasher
         $this->rounds = $options['rounds'] ?? 10;
     }
 
-    public function make($value, array $options = [])
+    public function create($value, array $options = [])
     {
         $rounds = $options['rounds'] ?? $this->rounds;
 

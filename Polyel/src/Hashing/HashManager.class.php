@@ -49,9 +49,9 @@ class HashManager implements Hasher
         return $this->hasher->info($hashedValue);
     }
 
-    public function make($value, array $options = [])
+    public function create($value, array $options = [])
     {
-        return $this->hasher->make($value, $options);
+        return $this->hasher->create($value, $options);
     }
 
     public function check($value, $hashedValue)
