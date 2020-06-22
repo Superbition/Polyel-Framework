@@ -2,6 +2,8 @@
 
 namespace Polyel\Hashing;
 
+use RuntimeException;
+
 class HashManager implements Hasher
 {
     private $hasher;
@@ -35,6 +37,10 @@ class HashManager implements Hasher
                 $this->hasher->setArgonType($this->argonAlgos[$algoName]);
 
             break;
+
+            default:
+
+                throw new RuntimeException("invalid hashing algorithm in config: $algoName");
         }
     }
 
