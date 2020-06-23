@@ -30,11 +30,31 @@ class EncryptionManager implements Encryption
 
             if($this->validateKeyAndCipher($key, $cipher))
             {
-                $this->key = $key;
-                $this->cipher = $cipher;
-                $this->encrypter = new AesCbcEncrypter($this->key, $this->cipher);
+                switch($cipher)
+                {
+                    case 'AES-128-CBC':
+                    case 'AES-256-CBC':
 
-                $this->initialised = true;
+                    $this->key = $key;
+                    $this->cipher = $cipher;
+                    $this->encrypter = new AesCbcEncrypter($this->key, $this->cipher);
+
+                    break;
+
+                    case 'AES-128-GCM':
+                    case 'AES-256-GCM':
+
+                    $this->key = $key;
+                    $this->cipher = $cipher;
+                    $this->encrypter = new AesGcmEncrypter($this->key, $this->cipher);
+
+                    break;
+                }
+
+                if(exists($this->encrypter))
+                {
+                    $this->initialised = true;
+                }
             }
             else
             {

@@ -14,7 +14,9 @@ return [
     | You must set a securely generated key with the correct length if you want your
     | encrypted data to be safe.
     |
-    | Current supported ciphers are: AES-128-CBC, AES-256-CBC
+    | Current supported ciphers are:
+    |   AES-128-CBC, AES-256-CBC,
+    |   AES-128-GCM, AES-256-GCM
     │
     */
     "encryptionKey" => env('Encryption.KEY', ''),
