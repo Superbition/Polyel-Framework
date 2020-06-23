@@ -33,4 +33,9 @@ class Encrypter implements Encryption
     {
 
     }
+
+    private function hashForMac($iv, $data)
+    {
+        return hash_hmac('sha256', $iv.$data, $this->key);
+    }
 }
