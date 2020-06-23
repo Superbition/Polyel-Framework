@@ -306,6 +306,10 @@ class Router
     {
         $this->initialiseHttpVerbs();
 
+        // Load web routes...
         require ROOT_DIR . "/app/routing/web.php";
+
+        // Load api routes...
+        require ROOT_DIR . "/app/routing/api.php";
     }
 }
