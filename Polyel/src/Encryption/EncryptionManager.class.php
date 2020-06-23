@@ -57,9 +57,26 @@ class EncryptionManager implements Encryption
         }
     }
 
-    public function generateEncryptionKey()
+    public function generateEncryptionKey($cipher = null)
     {
-        $randomKey = random_bytes(config('main.encryptionCipher') === 'AES-128-CBC' ? 16 : 32);
+        $cipher = $cipher ?? config('main.encryptionCipher');
+
+        switch($cipher)
+        {
+            case 'AES-128-CBC':
+
+                $keyLen = 16;
+
+            break;
+
+            case 'AES-256-CBC':
+
+                $keyLen = 32;
+
+            break;
+        }
+
+        $randomKey = random_bytes($keyLen);
 
         return base64_encode($randomKey);
     }
