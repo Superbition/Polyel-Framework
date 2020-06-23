@@ -4,7 +4,7 @@ return [
 
     "appName" => "Polyel",
 
-    "encryptionKey" => env('Encryption.KEY'),
+    "encryptionKey" => env('Encryption.KEY', ''),
 
     "encryptionCipher" => "AES-256-CBC",
 
