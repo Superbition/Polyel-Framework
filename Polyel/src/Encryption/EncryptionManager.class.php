@@ -32,7 +32,7 @@ class EncryptionManager implements Encryption
             {
                 $this->key = $key;
                 $this->cipher = $cipher;
-                $this->encrypter = new Encrypter($this->key, $this->cipher);
+                $this->encrypter = new AesCbcEncrypter($this->key, $this->cipher);
 
                 $this->initialised = true;
             }

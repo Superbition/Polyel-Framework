@@ -6,7 +6,7 @@ use JsonException;
 use Polyel\Encryption\Exception\EncryptionException;
 use Polyel\Encryption\Exception\DecryptionException;
 
-class Encrypter implements Encryption
+class AesCbcEncrypter implements Encryption
 {
     private string $key;
 
