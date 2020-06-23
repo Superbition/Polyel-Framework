@@ -6,6 +6,8 @@ use RuntimeException;
 
 class EncryptionManager implements Encryption
 {
+    private $initialised;
+
     private $encrypter;
 
     private string $key;
@@ -14,25 +16,30 @@ class EncryptionManager implements Encryption
 
     public function __construct()
     {
-
+        $this->initialised = false;
     }
 
     public function setup()
     {
-        $key = config('main.encryptionKey');
-        $cipher = config('main.encryptionCipher');
-
-        $key = base64_decode($key);
-
-        if($this->validateKeyAndCipher($key, $cipher))
+        if($this->initialised === false)
         {
-            $this->key = $key;
-            $this->cipher = $cipher;
-            $this->encrypter = new Encrypter($this->key, $this->cipher);
-        }
-        else
-        {
-            throw new RuntimeException('Encryption key and cipher not compatible, only AES-128-CBC (16 bit) & AES-256-CBC (32 bit) are supported');
+            $key = config('main.encryptionKey');
+            $cipher = config('main.encryptionCipher');
+
+            $key = base64_decode($key);
+
+            if($this->validateKeyAndCipher($key, $cipher))
+            {
+                $this->key = $key;
+                $this->cipher = $cipher;
+                $this->encrypter = new Encrypter($this->key, $this->cipher);
+
+                $this->initialised = true;
+            }
+            else
+            {
+                throw new RuntimeException('Encryption key and cipher not compatible, only AES-128-CBC (16 bit) & AES-256-CBC (32 bit) are supported');
+            }
         }
     }
 
