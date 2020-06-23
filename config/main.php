@@ -13,6 +13,8 @@ return [
     | process for you. Polyel uses openssl to perform AES encryption with a MAC.
     | You must set a securely generated key with the correct length if you want your
     | encrypted data to be safe.
+    |
+    | Current supported ciphers are: AES-128-CBC, AES-256-CBC
     │
     */
     "encryptionKey" => env('Encryption.KEY', ''),
