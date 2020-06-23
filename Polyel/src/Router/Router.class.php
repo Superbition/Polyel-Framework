@@ -26,6 +26,8 @@ class Router
     // Full list of registered routes that were added
     private $listOfAddedRoutes;
 
+    private $groupStack;
+
     // The Session Manager service
     private $sessionManager;
 
@@ -184,6 +186,22 @@ class Router
 
     private function addRoute($requestMethod, $route, $action)
     {
+        // If the group stack exists, it means we are adding routes from a group Closure
+        if(exists($this->groupStack))
+        {
+            // Add the prefix if one was set
+            if(isset($this->groupStack['prefix']))
+            {
+                $route = $this->groupStack['prefix'] . $route;
+            }
+
+            // Get the middlewares if some were set, they are set once the route is registered
+            if(isset($this->groupStack['middleware']))
+            {
+                $groupRouteMiddleware = $this->groupStack['middleware'];
+            }
+        }
+
         // Throw an error if trying to add a route that already exists...
         if(in_array($route, $this->listOfAddedRoutes[$requestMethod], true))
         {
@@ -226,6 +244,12 @@ class Router
 
         // Keep a list of all the added routes
         $this->listOfAddedRoutes[$requestMethod][] = $route;
+
+        // Register any group middleware if they exist, they will set on the last added route
+        if(isset($groupRouteMiddleware))
+        {
+            $this->middleware($groupRouteMiddleware);
+        }
     }
 
     private function getRegisteredRouteFor($requestMethod, $requestedRoute)
@@ -286,6 +310,30 @@ class Router
 
         // If no route can be matched to a registered route
         return false;
+    }
+
+    /*
+     * Group a set of routes using specific attributes like prefix and middleware
+     */
+    public function group($attributes, Closure $routes)
+    {
+        /*
+         * Using a closure, set the attributes first and then
+         * run the closure which should be a group of routes. Each route in
+         * the closure will use the attributes set in the group stack. The group
+         * stack is cleared once the group call has finished.
+         */
+        if($routes instanceof Closure)
+        {
+            // Set the group stack of attributes for the group to use when registering new routes in the group
+            $this->groupStack = $attributes;
+
+            // Run the set of grouped rotues
+            $routes();
+        }
+
+        // Clear the group stack so other routes don't conflict with attributes in this group
+        $this->groupStack = null;
     }
 
     public function middleware($middlewareKeys)
