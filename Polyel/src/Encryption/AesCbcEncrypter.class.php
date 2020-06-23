@@ -20,7 +20,6 @@ class AesCbcEncrypter implements Encryption
 
     public function encrypt($data, $serialize = true)
     {
-
         // The initialisation vector
         $ivector = random_bytes(openssl_cipher_iv_length($this->cipher));
 
