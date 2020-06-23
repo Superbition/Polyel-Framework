@@ -49,7 +49,28 @@ class EncryptionManager implements Encryption
         {
             $keyLength = mb_strlen($key, '8bit');
 
-            return ($cipher === 'AES-128-CBC' && $keyLength === 16) || ($cipher === 'AES-256-CBC' && $keyLength === 32);
+            switch($cipher)
+            {
+                case 'AES-128-CBC':
+                case 'AES-128-GCM':
+
+                    $cipherLength = 16;
+
+                break;
+
+                case 'AES-256-CBC':
+                case 'AES-256-GCM':
+
+                    $cipherLength = 32;
+
+                break;
+
+                default:
+
+                    $cipherLength = null;
+            }
+
+            return ($cipherLength === $keyLength);
         }
         else
         {
