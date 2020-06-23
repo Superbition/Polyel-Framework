@@ -97,12 +97,12 @@ class AesCbcEncrypter implements Encryption
 
     public function encryptString($string)
     {
-
+        return $this->encrypt($string, false);
     }
 
     public function decryptString($payload)
     {
-
+        return $this->decrypt($payload, false);
     }
 
     private function hashForMac($iv, $data)
