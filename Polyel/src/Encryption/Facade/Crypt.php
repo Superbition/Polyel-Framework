@@ -9,6 +9,7 @@ use Polyel;
  * @method static decrypt($payload, $unserialize = true)
  * @method static encryptString($string)
  * @method static decryptString($payload)
+ * @method static generateEncryptionKey($cipher = null)
  */
 class Crypt
 {
