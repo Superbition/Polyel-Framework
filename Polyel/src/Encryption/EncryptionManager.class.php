@@ -64,12 +64,14 @@ class EncryptionManager implements Encryption
         switch($cipher)
         {
             case 'AES-128-CBC':
+            case 'AES-128-GCM':
 
                 $keyLen = 16;
 
             break;
 
             case 'AES-256-CBC':
+            case 'AES-256-GCM':
 
                 $keyLen = 32;
 
