@@ -26,7 +26,7 @@ class Router
     // Full list of registered routes that were added
     private $listOfAddedRoutes;
 
-    private $groupStack;
+    private $groupStack = [];
 
     // The Session Manager service
     private $sessionManager;
@@ -189,16 +189,21 @@ class Router
         // If the group stack exists, it means we are adding routes from a group Closure
         if(exists($this->groupStack))
         {
-            // Add the prefix if one was set
-            if(isset($this->groupStack['prefix']))
+            // Use a foreach to support nested route groups, reverse the stack so everything is added in correct order
+            foreach(array_reverse($this->groupStack) as $stack)
             {
-                $route = $this->groupStack['prefix'] . $route;
-            }
+                // Add the prefix if one was set
+                if(isset($stack['prefix']))
+                {
+                    $route = $stack['prefix'] . $route;
+                }
 
-            // Get the middlewares if some were set, they are set once the route is registered
-            if(isset($this->groupStack['middleware']))
-            {
-                $groupRouteMiddleware = $this->groupStack['middleware'];
+                // Get the middlewares if some were set, they are set once the route is registered
+                if(isset($stack['middleware']))
+                {
+                    // Gather all the middleware from the stack to register to the route at the end
+                    $groupMiddleware[] = $stack['middleware'];
+                }
             }
         }
 
@@ -246,9 +251,17 @@ class Router
         $this->listOfAddedRoutes[$requestMethod][] = $route;
 
         // Register any group middleware if they exist, they will set on the last added route
-        if(isset($groupRouteMiddleware))
+        if(isset($groupMiddleware))
         {
-            $this->middleware($groupRouteMiddleware);
+            // Support adding nested grouped middleware
+            foreach($groupMiddleware as $middleware)
+            {
+                // Build up all the keys from the group stack
+                $middlewareKeys[] = $middleware;
+            }
+
+            // Add all middleware to the route
+            $this->middleware($middlewareKeys);
         }
     }
 
@@ -326,14 +339,14 @@ class Router
         if($routes instanceof Closure)
         {
             // Set the group stack of attributes for the group to use when registering new routes in the group
-            $this->groupStack = $attributes;
+            $this->groupStack[] = $attributes;
 
             // Run the set of grouped rotues
             $routes();
         }
 
-        // Clear the group stack so other routes don't conflict with attributes in this group
-        $this->groupStack = null;
+        // Clear the most recent group from the stack
+        array_pop($this->groupStack);
     }
 
     public function middleware($middlewareKeys)
