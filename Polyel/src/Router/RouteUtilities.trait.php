@@ -60,10 +60,18 @@ trait RouteUtilities
                     // And the route is valid and has a value
                     if(isset($routeValue))
                     {
-                        // And if the route value is an array
+                        /*
+                         * And if the route value is an array, it means multiple routes exist
+                         * inside the same route tree at this level but a matching action will always be the
+                         * first indexed array if the route does exist at this tree level.
+                         */
                         if(is_array($routeValue))
                         {
-                            // And if the route has a default value
+                            /*
+                             * And if the route value has a dead end route, which will always be at
+                             * array level [0], it means that an route action is located here. But there
+                             * are other routes within the same tree level.
+                             */
                             if(isset($routeValue[0]))
                             {
                                 // A match was found, return the action and parameters if there are any
