@@ -11,6 +11,10 @@ use Polyel\Router\Facade\Route;
 | boot after registering web routes.
 | You may use the group method to assign a prefix or a set of middleware
 | to multiple API routes at a time. An example has been defined below...
+|
+| Note: API registered routes are treated as stateless, so they do not have
+| access to the Session System. By default '/api/*' is added to the CSRF
+| protection as well.
 │
 */
 
