@@ -11,7 +11,7 @@ class ValidateCsrfToken extends CsrfTokenVerifier
      */
     protected array $except = [
 
-        //...
+        '/api/*',
 
     ];
 }
