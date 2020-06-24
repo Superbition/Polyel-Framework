@@ -227,8 +227,16 @@ class View
 
     private function addCsrfTokens()
     {
-        $csrfToken = '<input type="hidden" name="csrf_token" value="' . $this->HttpKernel->session->get('CSRF-TOKEN') . '">';
-        $this->resource = str_replace("{{ @csrfToken }}", $csrfToken, $this->resource);
+        // Check if the Session System is active
+        if(isset($this->HttpKernel->session))
+        {
+            $csrfToken = '<input type="hidden" name="csrf_token" value="' . $this->HttpKernel->session->get('CSRF-TOKEN') . '">';
+            $this->resource = str_replace("{{ @csrfToken }}", $csrfToken, $this->resource);
+        }
+        else
+        {
+            $this->resource = str_replace("{{ @csrfToken }}", '', $this->resource);
+        }
     }
 
     private function extendView($resourceToExtend, $extendingViewData, $resourceContent)
