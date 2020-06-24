@@ -14,10 +14,7 @@ use Polyel\Router\Facade\Route;
 │
 */
 
-Route::group(['prefix' => '/api', 'middleware' => ''], function()
+Route::group(['prefix' => '/api', 'middleware' => 'auth:api'], function()
 {
-    Route::get("/test", function()
-    {
-        return 'api test route in a group';
-    });
+    // ...
 });
