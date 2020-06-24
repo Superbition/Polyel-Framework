@@ -20,6 +20,9 @@ class Router
     // Holds all the request routes to respond to
     private $routes;
 
+    // Flag to detect when API routes are being added
+    private $registeringApiRoutes = false;
+
     // The last added registered route and its request method
     private $lastAddedRoute;
 
@@ -80,14 +83,36 @@ class Router
             // Check if the requested route exists, we continue further into the application...
             if($matchedRoute !== false)
             {
-                // Only operate the session system if set to active
-                if(config('session.active'))
+                // Check if the request is an API registered route...
+                if(isset($matchedRoute['action'][1]) && $matchedRoute['action'][1] === 'API')
+                {
+                    /*
+                     * When the route is an API request it will contain the API flag as part of the action.
+                     * The first thing to do is replace the action index with only the route action.
+                     * Then set the route type to API because this will let the Router know it is dealing
+                     * with an API registered route.
+                     */
+                    $matchedRoute['action'] = $matchedRoute['action'][0];
+                    $matchedRoute['type'] = 'API';
+                }
+                else
+                {
+                    // Else no API flag is set, meaning we are handling a normal WEB registered route.
+                    $matchedRoute['type'] = 'WEB';
+                }
+
+                // Only operate the session system if it is a WEB route and the Session is set to active
+                if($matchedRoute['type'] !== 'API' && config('session.active'))
                 {
                     // Check for a valid session and update the session data, create one if one doesn't exist
                     $this->sessionManager->startSession($HttpKernel);
 
                     // Create the CSRF token if it is missing in the clients session data
                     $HttpKernel->session->createCsrfToken();
+                }
+                else
+                {
+                    $HttpKernel->session = null;
                 }
 
                 // Set the default HTTP status code, might change throughout the request cycle
@@ -225,6 +250,13 @@ class Router
         // Only pack the route when it has more than one parameter
         if(strlen($route) > 1)
         {
+            // If set to true, it means we are currently loading API routes from '/app/routing/api.php'
+            if($this->registeringApiRoutes)
+            {
+                // So we attach API to the route action to indicate this route is an API request
+                $action = [$action, 'API'];
+            }
+
             /*
              * Convert a route into a single multidimensional array, making it easier to handle parameters later...
              * The route becomes the multidimensional array where the action is stored.
@@ -371,6 +403,8 @@ class Router
         require ROOT_DIR . "/app/routing/web.php";
 
         // Load api routes...
+        $this->registeringApiRoutes = true;
         require ROOT_DIR . "/app/routing/api.php";
+        $this->registeringApiRoutes = false;
     }
 }

@@ -74,8 +74,22 @@ trait RouteUtilities
                              */
                             if(isset($routeValue[0]))
                             {
+                                // The first index will always be the route action
+                                $routeAction = $routeValue[0];
+
+                                // If [1] exists, it means the route is an API registered route...
+                                if(isset($routeValue[1]) && $routeValue[1] === 'API')
+                                {
+                                    /*
+                                     * So we attach that info to the route action, indicating
+                                     * this is an API route, allowing the Router to know that it is
+                                     * handling an API request for this matched route.
+                                     */
+                                    $routeAction = [$routeAction, 'API'];
+                                }
+
                                 // A match was found, return the action and parameters if there are any
-                                $routeMatched["action"] = $routeValue[0];
+                                $routeMatched["action"] = $routeAction;
                                 $routeMatched["params"] = $params;
                                 $routeMatched["regURL"] = $regURL;
                                 return $routeMatched;
