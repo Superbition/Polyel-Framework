@@ -89,8 +89,8 @@ trait RouteUtilities
                         else
                         {
                             /*
-                             * Else route value is not an array, return route value
-                             * A match was found, return the action and parameters if there are any
+                             * Else the route value is not an array, because this is a single tree with no
+                             * other routes at the same level, a match was found, return the action and parameters.
                              */
                             $routeMatched["action"] = $routeValue;
                             $routeMatched["params"] = $params;
