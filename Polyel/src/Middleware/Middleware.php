@@ -41,17 +41,42 @@ class Middleware
         $this->middlewares[$requestMethod][$uri] = $middleware;
     }
 
+    private function getMiddlewareParamsFromKey(&$middlewareKey)
+    {
+        /*
+         * The middleware key will contain first, the middleware name itself, then any params after a ':'
+         * Also remove any whitespace from the middleware key before exploding into an array.
+         */
+        $keys = explode(':', preg_replace('/\s+/', '', $middlewareKey));
+
+        // The first key is always the name of the middleware, the key is changed by ref here
+        $middlewareKey = $keys[0];
+
+        // If keys is more than 1 element, it means we have middleware parameters to process...
+        if(count($keys) > 1)
+        {
+            // Return all the middleware parameters, splitting on commas for multiple params
+            return explode(',', $keys[1]);
+        }
+
+        // No middleware params were set, return an empty param array...
+        return [];
+    }
+
     public function runGlobalMiddleware($HttpKernel, $middlewareType)
     {
         $globalBeforeMiddleware = config("middleware.global." . $middlewareType);
 
-        foreach($globalBeforeMiddleware as $middleware)
+        foreach($globalBeforeMiddleware as $middlewareKey)
         {
+            // Extract any middleware params and put the middleware key on its own...
+            $middlewareParams = $this->getMiddlewareParamsFromKey($middlewareKey);
+
             // Use config() to get the full namespace based on the middleware key
-            $middleware = config("middleware.keys." . $middleware);
+            $middlewareKey = config("middleware.keys." . $middlewareKey);
 
             // Call Polyel and get the middleware class from the container
-            $middlewareToRun = $HttpKernel->container->resolveClass($middleware);
+            $middlewareToRun = $HttpKernel->container->resolveClass($middlewareKey);
 
             // Based on the passed in middleware type, execute if both types match
             if($middlewareToRun->middlewareType === $middlewareType)
@@ -60,12 +85,12 @@ class Middleware
                 if($middlewareType === 'before')
                 {
                     // Process the middleware if the request types match up
-                    $response = $middlewareToRun->process($HttpKernel->request);
+                    $response = $middlewareToRun->process($HttpKernel->request, ...$middlewareParams);
                 }
                 else
                 {
                     // Process the middleware if the request types match up
-                    $response = $middlewareToRun->process($HttpKernel->request, $HttpKernel->response);
+                    $response = $middlewareToRun->process($HttpKernel->request, $HttpKernel->response, ...$middlewareParams);
                 }
 
                 // If a Middleware wants to return a response early, halt and send it back
@@ -104,6 +129,9 @@ class Middleware
                 // Process each middleware and run process() from each middleware
                 foreach($middlewareKeys as $middlewareKey)
                 {
+                    // Extract any middleware params and put the middleware key on its own...
+                    $middlewareParams = $this->getMiddlewareParamsFromKey($middlewareKey);
+
                     // Use config() to get the full namespace based on the middleware key
                     $middleware = config("middleware.keys." . $middlewareKey);
 
@@ -117,12 +145,12 @@ class Middleware
                         if($type === 'before')
                         {
                             // Process the middleware if the request types match up
-                            $response = $middlewareToRun->process($HttpKernel->request);
+                            $response = $middlewareToRun->process($HttpKernel->request, ...$middlewareParams);
                         }
                         else
                         {
                             // Process the middleware if the request types match up
-                            $response = $middlewareToRun->process($HttpKernel->request, $HttpKernel->response);
+                            $response = $middlewareToRun->process($HttpKernel->request, $HttpKernel->response, ...$middlewareParams);
                         }
 
                         // If a Middleware wants to return a response early, halt and send it back
