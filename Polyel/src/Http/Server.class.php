@@ -13,6 +13,7 @@ use Polyel\View\Element\Element;
 use Polyel\Controller\Controller;
 use Polyel\Middleware\Middleware;
 use Polyel\Session\SessionManager;
+use Polyel\Encryption\Facade\Crypt;
 use Polyel\Database\DatabaseManager;
 use Swoole\HTTP\Server as SwooleHTTPServer;
 
@@ -59,6 +60,8 @@ class Server
         $this->middleware->loadAllMiddleware();
 
         $this->sessionManager->setDriver(config('session.driver'));
+
+        Crypt::setup();
 
         Hash::setup();
 
