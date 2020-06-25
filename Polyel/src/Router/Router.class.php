@@ -20,11 +20,16 @@ class Router
     // Holds all the request routes to respond to
     private $routes;
 
+    // Flag to detect when API routes are being added
+    private $registeringApiRoutes = false;
+
     // The last added registered route and its request method
     private $lastAddedRoute;
 
     // Full list of registered routes that were added
     private $listOfAddedRoutes;
+
+    private $groupStack = [];
 
     // The Session Manager service
     private $sessionManager;
@@ -78,14 +83,36 @@ class Router
             // Check if the requested route exists, we continue further into the application...
             if($matchedRoute !== false)
             {
-                // Only operate the session system if set to active
-                if(config('session.active'))
+                // Check if the request is an API registered route...
+                if(isset($matchedRoute['action'][1]) && $matchedRoute['action'][1] === 'API')
+                {
+                    /*
+                     * When the route is an API request it will contain the API flag as part of the action.
+                     * The first thing to do is replace the action index with only the route action.
+                     * Then set the route type to API because this will let the Router know it is dealing
+                     * with an API registered route.
+                     */
+                    $matchedRoute['action'] = $matchedRoute['action'][0];
+                    $matchedRoute['type'] = 'API';
+                }
+                else
+                {
+                    // Else no API flag is set, meaning we are handling a normal WEB registered route.
+                    $matchedRoute['type'] = 'WEB';
+                }
+
+                // Only operate the session system if it is a WEB route and the Session is set to active
+                if($matchedRoute['type'] !== 'API' && config('session.active'))
                 {
                     // Check for a valid session and update the session data, create one if one doesn't exist
                     $this->sessionManager->startSession($HttpKernel);
 
                     // Create the CSRF token if it is missing in the clients session data
                     $HttpKernel->session->createCsrfToken();
+                }
+                else
+                {
+                    $HttpKernel->session = null;
                 }
 
                 // Set the default HTTP status code, might change throughout the request cycle
@@ -184,6 +211,27 @@ class Router
 
     private function addRoute($requestMethod, $route, $action)
     {
+        // If the group stack exists, it means we are adding routes from a group Closure
+        if(exists($this->groupStack))
+        {
+            // Use a foreach to support nested route groups, reverse the stack so everything is added in correct order
+            foreach(array_reverse($this->groupStack) as $stack)
+            {
+                // Add the prefix if one was set
+                if(isset($stack['prefix']))
+                {
+                    $route = $stack['prefix'] . $route;
+                }
+
+                // Get the middlewares if some were set, they are set once the route is registered
+                if(isset($stack['middleware']))
+                {
+                    // Gather all the middleware from the stack to register to the route at the end
+                    $groupMiddleware[] = $stack['middleware'];
+                }
+            }
+        }
+
         // Throw an error if trying to add a route that already exists...
         if(in_array($route, $this->listOfAddedRoutes[$requestMethod], true))
         {
@@ -202,6 +250,13 @@ class Router
         // Only pack the route when it has more than one parameter
         if(strlen($route) > 1)
         {
+            // If set to true, it means we are currently loading API routes from '/app/routing/api.php'
+            if($this->registeringApiRoutes)
+            {
+                // So we attach API to the route action to indicate this route is an API request
+                $action = [$action, 'API'];
+            }
+
             /*
              * Convert a route into a single multidimensional array, making it easier to handle parameters later...
              * The route becomes the multidimensional array where the action is stored.
@@ -226,6 +281,20 @@ class Router
 
         // Keep a list of all the added routes
         $this->listOfAddedRoutes[$requestMethod][] = $route;
+
+        // Register any group middleware if they exist, they will set on the last added route
+        if(isset($groupMiddleware))
+        {
+            // Support adding nested grouped middleware
+            foreach($groupMiddleware as $middleware)
+            {
+                // Build up all the keys from the group stack
+                $middlewareKeys[] = $middleware;
+            }
+
+            // Add all middleware to the route
+            $this->middleware($middlewareKeys);
+        }
     }
 
     private function getRegisteredRouteFor($requestMethod, $requestedRoute)
@@ -288,6 +357,30 @@ class Router
         return false;
     }
 
+    /*
+     * Group a set of routes using specific attributes like prefix and middleware
+     */
+    public function group($attributes, Closure $routes)
+    {
+        /*
+         * Using a closure, set the attributes first and then
+         * run the closure which should be a group of routes. Each route in
+         * the closure will use the attributes set in the group stack. The group
+         * stack is cleared once the group call has finished.
+         */
+        if($routes instanceof Closure)
+        {
+            // Set the group stack of attributes for the group to use when registering new routes in the group
+            $this->groupStack[] = $attributes;
+
+            // Run the set of grouped rotues
+            $routes();
+        }
+
+        // Clear the most recent group from the stack
+        array_pop($this->groupStack);
+    }
+
     public function middleware($middlewareKeys)
     {
         $requestMethod = array_key_first($this->lastAddedRoute);
@@ -306,6 +399,12 @@ class Router
     {
         $this->initialiseHttpVerbs();
 
+        // Load web routes...
         require ROOT_DIR . "/app/routing/web.php";
+
+        // Load api routes...
+        $this->registeringApiRoutes = true;
+        require ROOT_DIR . "/app/routing/api.php";
+        $this->registeringApiRoutes = false;
     }
 }
