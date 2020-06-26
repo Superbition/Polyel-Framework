@@ -51,8 +51,12 @@ trait RouteUtilities
             // If the route key matches the requested route key or if a parameter was found
             if($routeKey === $requestedSegmentedRoute[$currentDepth - 1] || $paramFound)
             {
-                // Build up the registered URL which gets sent back if a match is found
-                $regURL .= "/" . $routeKey;
+                /*
+                 * Build up the registered URL which gets sent back if a match is found
+                 * Here we only add the route key if it is not the index route as we
+                 * don't want to end up with '//' when matching the '/' index route
+                 */
+                $regURL .= "/" . (($routeKey !== '/') ? ($routeKey) : (''));
 
                 // And if the current array depth matches the desired depth
                 if($currentDepth === $maxDepth)
