@@ -24,6 +24,13 @@ class Element
 
                 $renderedElement = $elementClass->build();
 
+                // If the build method returns false, it means we don't want this element in our final View
+                if($renderedElement === false)
+                {
+                    // The element has returned without content, replace the element tag with nothing...
+                    $renderedElement = "";
+                }
+
                 $mainResource = str_replace("{{ @addElement($element) }}", $renderedElement, $mainResource);
             }
         }
