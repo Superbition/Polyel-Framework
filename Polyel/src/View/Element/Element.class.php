@@ -25,8 +25,6 @@ class Element
                 $renderedElement = $elementClass->build();
 
                 $mainResource = str_replace("{{ @addElement($element) }}", $renderedElement, $mainResource);
-
-                $elementClass->reset();
             }
         }
     }
