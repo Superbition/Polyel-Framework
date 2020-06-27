@@ -10,6 +10,8 @@ return [
     [
         "ValidateCsrfToken" => \App\Middleware\ValidateCsrfToken::class,
 
+        "Auth" => \App\Middleware\Authenticate::class,
+
         "BeforeMiddlewareExample" => \App\Middleware\BeforeExampleMiddleware::class,
 
         "AfterMiddlewareExample" => \App\Middleware\AfterExampleMiddleware::class,
