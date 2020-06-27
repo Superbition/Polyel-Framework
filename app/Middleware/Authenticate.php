@@ -8,11 +8,11 @@ class Authenticate extends AuthenticationMiddleware
 {
     public function unauthenticated()
     {
-
+        return redirect('/login', 301);
     }
 
     public function authenticated()
     {
-        return redirect('/', 301);
+
     }
 }
