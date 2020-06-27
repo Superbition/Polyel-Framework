@@ -4,6 +4,7 @@ namespace Polyel\Http;
 
 use Polyel\View\View;
 use Polyel\Session\Session;
+use Polyel\Auth\AuthManager;
 use Polyel\Container\Container;
 
 class Kernel
@@ -20,15 +21,21 @@ class Kernel
     // The response service for the duration of this HTTP request
     public $response;
 
-    public function __construct(Session $session, Request $request, Response $response)
+    // The AuthManager service
+    public $auth;
+
+    public function __construct(Session $session, Request $request, Response $response, AuthManager $auth)
     {
         $this->session = $session;
         $this->request = $request;
         $this->response = $response;
+        $this->auth = $auth;
     }
 
     public function setup()
     {
+        $this->auth->initialise($this);
+
         $view = $this->container->get(View::class);
         $view->setHttpKernel($this);
     }

@@ -16,4 +16,9 @@ class AuthManager
     {
         $this->users = $users;
     }
+
+    public function initialise($HttpKernel)
+    {
+        $this->HttpKernel = $HttpKernel;
+    }
 }
