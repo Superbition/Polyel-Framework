@@ -2,6 +2,7 @@
 
 namespace Polyel\Auth;
 
+use RuntimeException;
 use Polyel\Auth\SourceDrivers\Database;
 use Polyel\Auth\Protectors\TokenProtector;
 use Polyel\Auth\Protectors\SessionProtector;
@@ -25,5 +26,15 @@ class AuthManager
     public function initialise($HttpKernel)
     {
         $this->HttpKernel = $HttpKernel;
+    }
+
+    public function protector($protector)
+    {
+        if(in_array($protector, $this->protectors))
+        {
+            return $this->protectors[$protector];
+        }
+
+        throw new RuntimeException('Invalid protector requested: ' . $protector);
     }
 }
