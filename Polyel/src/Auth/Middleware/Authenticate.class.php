@@ -4,7 +4,7 @@ namespace Polyel\Auth\Middleware;
 
 use Polyel\Auth\AuthManager as Auth;
 
-class Authenticate
+abstract class Authenticate implements AuthenticationOutcomes
 {
     public $middlewareType = "before";
 
