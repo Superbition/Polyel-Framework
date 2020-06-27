@@ -2,16 +2,18 @@
 
 namespace Polyel\Auth;
 
+use Polyel\Auth\SourceDrivers\Database;
+
 class AuthManager
 {
     private $HttpKernel;
 
     private $protectors;
 
-    public function __construct()
+    private $users;
+
+    public function __construct(Database $users)
     {
-
+        $this->users = $users;
     }
-
-
 }
