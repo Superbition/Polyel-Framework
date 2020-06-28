@@ -15,7 +15,7 @@ abstract class Authenticate implements AuthenticationOutcomes
         $this->auth = $auth;
     }
 
-    public function process($request, $protector)
+    public function process($request, $protector = null)
     {
 
     }
