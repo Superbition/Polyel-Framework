@@ -14,5 +14,13 @@ class RegisterController extends Controller
 
     }
 
+    private function create()
+    {
 
+    }
+
+    private function registered()
+    {
+
+    }
 }

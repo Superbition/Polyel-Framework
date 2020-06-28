@@ -14,5 +14,18 @@ class LoginController extends Controller
 
     }
 
+    private function success()
+    {
 
+    }
+
+    private function failed()
+    {
+
+    }
+
+    public function loggedOff()
+    {
+
+    }
 }
