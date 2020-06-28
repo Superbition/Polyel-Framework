@@ -14,6 +14,11 @@ class Database
 
     }
 
+    public function setTable($table)
+    {
+        $this->table = $table;
+    }
+
     public function getUserById($id)
     {
 

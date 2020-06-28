@@ -3,6 +3,7 @@
 namespace Polyel\Auth;
 
 use RuntimeException;
+use Polyel\Auth\SourceDrivers\Database;
 use Polyel\Auth\Protectors\TokenProtector;
 use Polyel\Auth\Protectors\SessionProtector;
 
@@ -12,8 +13,12 @@ class AuthManager
 
     private $protectors;
 
-    public function __construct(SessionProtector $sessionProtector, TokenProtector $tokenProtector)
+    private $users;
+
+    public function __construct(Database $users, SessionProtector $sessionProtector, TokenProtector $tokenProtector)
     {
+        $this->users = $users;
+
         $this->protectors['session'] = $sessionProtector;
         $this->protectors['token'] = $tokenProtector;
     }
@@ -21,6 +26,11 @@ class AuthManager
     public function initialise($HttpKernel)
     {
         $this->HttpKernel = $HttpKernel;
+    }
+
+    public function setSource($source)
+    {
+        $this->users->setTable($source);
     }
 
     public function protector($protector)
