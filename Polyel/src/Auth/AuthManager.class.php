@@ -30,7 +30,7 @@ class AuthManager
 
     public function protector($protector)
     {
-        if(in_array($protector, $this->protectors))
+        if(array_key_exists($protector, $this->protectors))
         {
             return $this->protectors[$protector];
         }
