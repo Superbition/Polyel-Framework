@@ -54,7 +54,7 @@ class Session
     {
         $sessionData = $this->all();
 
-        if(exists($sessionData) && in_array('data', $sessionData))
+        if(exists($sessionData) && array_key_exists('data', $sessionData))
         {
             return $sessionData['data'];
         }
