@@ -19,8 +19,8 @@ class RegisterController extends Controller
 
     }
 
-    private function registered()
+    private function registered($id)
     {
-
+        return redirect('/');
     }
 }
