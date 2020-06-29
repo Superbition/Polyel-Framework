@@ -53,11 +53,11 @@ trait Inserts
              */
             if($this->connection instanceof DatabaseManager)
             {
-                $result[] = $this->connection->execute('write', $insertQuery, $insertData, $getInsertId, $this->database);
+                $results[] = $this->connection->execute('write', $insertQuery, $insertData, $getInsertId, $this->database);
             }
             else if($this->connection instanceof Transaction)
             {
-                $result[] = $this->connection->execute('write', $insertQuery, $insertData);
+                $results[] = $this->connection->execute('write', $insertQuery, $insertData);
             }
         }
 
