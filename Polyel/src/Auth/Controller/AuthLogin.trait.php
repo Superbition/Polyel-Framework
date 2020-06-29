@@ -8,7 +8,7 @@ trait AuthLogin
 {
     public function displayLoginView()
     {
-
+        return response(view('auth.login:view'));
     }
 
     public function login(Request $request)
