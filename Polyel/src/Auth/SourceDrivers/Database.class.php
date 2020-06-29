@@ -33,7 +33,7 @@ class Database
 
     public function getUserById($id)
     {
-        return DB::table($this->table)->findById($id);
+        return DB::table($this->table())->findById($id);
     }
 
     public function getUserByToken($token)
