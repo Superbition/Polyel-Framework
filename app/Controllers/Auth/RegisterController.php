@@ -2,6 +2,7 @@
 
 namespace App\Controllers\Auth;
 
+use App\Models\User;
 use Polyel\Auth\AuthManager;
 use App\Controllers\Controller;
 use Polyel\Auth\Controller\AuthRegister;
