@@ -24,7 +24,7 @@ trait AuthRegister
          * function and get the response is one is returned, if one is we use the devs
          * provided response.
          */
-        if($response = $this->registered($id))
+        if($response = $this->registered($request, $id))
         {
             return $response;
         }

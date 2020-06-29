@@ -31,7 +31,7 @@ class RegisterController extends Controller
         ]);
     }
 
-    private function registered($id)
+    private function registered($request, $id)
     {
         return redirect('/');
     }
