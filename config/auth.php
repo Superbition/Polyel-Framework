@@ -62,7 +62,7 @@ return [
     'sources' => [
 
         'users' => [
-            'table' => 'table',
+            'table' => 'users',
         ],
 
     ],
