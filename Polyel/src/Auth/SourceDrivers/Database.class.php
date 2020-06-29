@@ -6,7 +6,7 @@ use Polyel\Database\Facade\DB;
 
 class Database
 {
-    // The table containing the users
+    // The table name containing the users
     private string $table;
 
     public function __construct()
@@ -21,6 +21,11 @@ class Database
 
     public function table()
     {
+        /*
+         * If the source table has not been set, use the default table source
+         * from the auth config. Here we get the default protector and use the
+         * default source set for that protector.
+         */
         if(!isset($this->table))
         {
             $defaultProtector = config('auth.defaults.protector');
