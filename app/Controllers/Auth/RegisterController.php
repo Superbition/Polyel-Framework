@@ -5,6 +5,7 @@ namespace App\Controllers\Auth;
 use App\Models\User;
 use Polyel\Auth\AuthManager;
 use App\Controllers\Controller;
+use Polyel\Hashing\Facade\Hash;
 use Polyel\Auth\Controller\AuthRegister;
 
 class RegisterController extends Controller
@@ -21,9 +22,13 @@ class RegisterController extends Controller
         $this->user = $user;
     }
 
-    private function create()
+    private function create(array $data)
     {
-
+        return $this->user->create([
+            'username' => $data['username'],
+            'email' => $data['email'],
+            'password' => Hash::create($data['password']),
+        ]);
     }
 
     private function registered($id)
