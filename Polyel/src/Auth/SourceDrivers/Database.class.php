@@ -19,6 +19,18 @@ class Database
         $this->table = $table;
     }
 
+    public function table()
+    {
+        if(!isset($this->table))
+        {
+            $defaultProtector = config('auth.defaults.protector');
+            $authSource = config("auth.protectors.$defaultProtector.source");
+            $this->table = config("auth.sources.$authSource.table");
+        }
+
+        return $this->table;
+    }
+
     public function getUserById($id)
     {
         return DB::table($this->table)->findById($id);
