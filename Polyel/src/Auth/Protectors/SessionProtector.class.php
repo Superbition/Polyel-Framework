@@ -63,4 +63,21 @@ class SessionProtector
         // The user could not be found by their ID, invalid user, not authenticated...
         return false;
     }
+
+    public function loginById($userId)
+    {
+        // Try and load the user from the database
+        $this->user = $this->load($userId);
+
+        // By performing this check, it also confirms the user was actually loaded using the ID
+        if(exists($this->user))
+        {
+            // Now we can set the user ID inside the session, making them authenticated
+            $this->session->setUser($userId);
+
+            return true;
+        }
+
+        return false;
+    }
 }
