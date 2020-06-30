@@ -22,6 +22,16 @@ class SessionProtector
         $this->users = $users;
     }
 
+    public function user()
+    {
+        if($this->user instanceof AuthenticatedUser)
+        {
+            return $this->user;
+        }
+
+        return false;
+    }
+
     public function check(Request $request)
     {
         // Get the user ID from the session system
