@@ -48,6 +48,32 @@ class Database
 
     public function getUserByCredentials($credentials)
     {
+        // Only proceed if the credentials exist and that it's not the password that was just sent...
+        if(!exists($credentials) || (count($credentials) === 1 && array_key_exists('password', $credentials)))
+        {
+            return false;
+        }
+
+        // Start off the query that will be used to search for a user...
+        $query = DB::table($this->table());
+
+        /*
+         * Using a for loop, build up each credential and
+         * add them as a where clause which will be used to
+         * search for a user we want to find by their credentials.
+         * This is mostly used for when you are logging in a user and
+         * trying to find them via an email or username etc.
+         */
+        foreach($credentials as $key => $value)
+        {
+            // We don't want to search for a user based on their password as it will be hashed...
+            if($key === 'password')
+            {
+                continue;
+            }
+
+            $query->where($key, '=', $value);
+        }
 
     }
 }
