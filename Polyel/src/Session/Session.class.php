@@ -47,6 +47,20 @@ class Session
         return $this->sessionManager->driver()->getSessionData($sessionID);
     }
 
+    public function setUser($id)
+    {
+        $session = $this->all();
+
+        $session['user_id'] = $id;
+
+        $this->sessionManager->driver()->saveSessionData($this->id(), $session);
+    }
+
+    public function user()
+    {
+        return $this->all()['user_id'];
+    }
+
     /*
      * Only returns the data part of the session
      */
