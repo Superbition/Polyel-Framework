@@ -29,7 +29,7 @@ class LoginController extends Controller
 
     private function success(Request $request, $user)
     {
-
+        return redirect('/');
     }
 
     private function failed(Request $request)
