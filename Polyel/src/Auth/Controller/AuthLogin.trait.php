@@ -72,8 +72,15 @@ trait AuthLogin
         return response('', 401);
     }
 
-    private function logout()
+    private function logout(Request $request)
     {
+        $this->auth->protector('session')->logout();
 
+        if($response = $this->loggedOff($request))
+        {
+            return $response;
+        }
+
+        return response('', 204);
     }
 }

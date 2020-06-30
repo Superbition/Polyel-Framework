@@ -128,4 +128,13 @@ class SessionProtector
         // Check that the given password string is valid (after being hashed) against the stored hashed password
         return Hash::check($credentials['password'], $user['password']);
     }
+
+    public function logout()
+    {
+        $this->user = null;
+
+        $this->session->setUser(null);
+
+        $this->session->regenerate();
+    }
 }

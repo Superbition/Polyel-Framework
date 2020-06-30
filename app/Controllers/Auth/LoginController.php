@@ -37,8 +37,8 @@ class LoginController extends Controller
 
     }
 
-    public function loggedOff()
+    public function loggedOff(Request $request)
     {
-
+        return redirect('/');
     }
 }
