@@ -2,6 +2,7 @@
 
 namespace App\Controllers\Auth;
 
+use Polyel\Http\Request;
 use Polyel\Auth\AuthManager;
 use App\Controllers\Controller;
 use Polyel\Auth\Controller\AuthLogin;
@@ -26,12 +27,12 @@ class LoginController extends Controller
         $this->auth = $auth;
     }
 
-    private function success()
+    private function success(Request $request)
     {
 
     }
 
-    private function failed()
+    private function failed(Request $request)
     {
 
     }
