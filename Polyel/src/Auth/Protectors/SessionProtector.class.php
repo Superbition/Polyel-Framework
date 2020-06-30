@@ -4,6 +4,7 @@ namespace Polyel\Auth\Protectors;
 
 use Polyel\Http\Request;
 use Polyel\Session\Session;
+use Polyel\Hashing\Facade\Hash;
 use Polyel\Auth\AuthenticatedUser;
 use Polyel\Auth\SourceDrivers\Database;
 
@@ -89,5 +90,42 @@ class SessionProtector
         }
 
         return false;
+    }
+
+    public function attemptLogin(array $credentials)
+    {
+        // Try to find the user by their credentials like email or username...
+        $user = $this->users->getUserByCredentials($credentials);
+
+        /*
+         * If a user was found using the given credentials
+         * from the login attempt/request, validate that their
+         * passwords matched up when they are in a hashed format and checked
+         * using a timing safe comparision with password_verify()...
+         */
+        if(exists($user) && $this->hasValidCredentials($user, $credentials))
+        {
+            // Try to login the user by using their id
+            $this->user = $this->loginById($user['id']);
+
+            // The user could not be logged in by using their ID if they are false
+            if($this->user !== false)
+            {
+                // A login was performed, so we regenerate the session to help prevent session fixation attacks
+                $this->session->regenerate();
+
+                // The login and credentials validation was successful...
+                return true;
+            }
+        }
+
+        // Either the user was not found or the given credentials were invalid
+        return false;
+    }
+
+    private function hasValidCredentials($user, $credentials)
+    {
+        // Check that the given password string is valid (after being hashed) against the stored hashed password
+        return Hash::check($credentials['password'], $user['password']);
     }
 }
