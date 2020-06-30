@@ -27,7 +27,7 @@ class LoginController extends Controller
         $this->auth = $auth;
     }
 
-    private function success(Request $request)
+    private function success(Request $request, $user)
     {
 
     }
