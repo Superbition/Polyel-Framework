@@ -8,7 +8,7 @@ class Authenticate extends AuthenticationMiddleware
 {
     public function unauthenticated()
     {
-        return redirect('/login', 301);
+        return redirect('/login');
     }
 
     public function authenticated()
