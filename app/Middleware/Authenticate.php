@@ -13,6 +13,6 @@ class Authenticate extends AuthenticationMiddleware
 
     public function authenticated()
     {
-
+        // ...
     }
 }
