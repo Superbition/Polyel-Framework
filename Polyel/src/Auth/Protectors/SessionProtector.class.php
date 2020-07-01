@@ -123,7 +123,7 @@ class SessionProtector
         return false;
     }
 
-    private function hasValidCredentials($user, $credentials)
+    public function hasValidCredentials($user, $credentials)
     {
         // Check that the given password string is valid (after being hashed) against the stored hashed password
         return Hash::check($credentials['password'], $user['password']);
