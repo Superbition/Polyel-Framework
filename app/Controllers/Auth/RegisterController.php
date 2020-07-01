@@ -10,6 +10,19 @@ use Polyel\Auth\Controller\AuthRegister;
 
 class RegisterController extends Controller
 {
+    /*
+    │------------------------------------------------------------------------------
+    │ Register Controller
+    │------------------------------------------------------------------------------
+    │ This controller processes user registration requests, handling validation
+    | and the creation of new users to your application. Most of the functionality
+    | for user registration is already provided for you by the register trait
+    | included with this controller. You may use the create and registered methods
+    | to alter what happens during these events before the default Polyel outcome
+    | is used if you don’t provide a response.
+    │
+    */
+
     use AuthRegister;
 
     private $auth;

@@ -9,6 +9,19 @@ use Polyel\Auth\Controller\AuthLogin;
 
 class LoginController extends Controller
 {
+    /*
+    │------------------------------------------------------------------------------
+    │ Login Controller
+    │------------------------------------------------------------------------------
+    │ This controller handles user authentication and will process a user’s login
+    | request using the Polyel authentication system. Most of the functionality is
+    | already provided for you by the login trait which includes all of the login
+    | functionality out of the box for you. You may use the success, failed and
+    | loggedOff methods to alter what happens on those events before the default
+    | Polyel outcome is used if you don't return a response.
+    │
+    */
+
     use AuthLogin;
 
     private $auth;
