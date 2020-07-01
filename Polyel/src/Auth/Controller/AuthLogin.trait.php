@@ -8,6 +8,11 @@ trait AuthLogin
 {
     public function displayLoginView()
     {
+        if($this->auth->protector('session')->check())
+        {
+            return redirect($this->home);
+        }
+
         return response(view('auth.login:view'));
     }
 

@@ -24,6 +24,9 @@ class LoginController extends Controller
 
     use AuthLogin;
 
+    // Where to redirect the user if they are already logged in and try to access the login page
+    private string $home = '/';
+
     private $auth;
 
     public function __construct(AuthManager $auth)
