@@ -25,6 +25,9 @@ class RegisterController extends Controller
 
     use AuthRegister;
 
+    // Where to redirect the user if they are already logged in and try to access the register page
+    private string $home = '/';
+
     private $auth;
 
     private $user;

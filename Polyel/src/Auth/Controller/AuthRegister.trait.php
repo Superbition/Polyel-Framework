@@ -8,6 +8,11 @@ trait AuthRegister
 {
     public function displayRegistrationView()
     {
+        if($this->auth->protector('session')->check())
+        {
+            return redirect($this->home);
+        }
+
         return response(view('auth.register:view'));
     }
 
