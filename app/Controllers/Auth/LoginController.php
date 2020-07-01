@@ -11,20 +11,22 @@ class LoginController extends Controller
 {
     use AuthLogin;
 
-    /*
-     * The field to be used as the main username when trying to
-     * login a user from the request data obtained from the login
-     * POST request. By default this is set to be 'email' but you may
-     * change this to something else, just make sure it links to your
-     * form names.
-     */
-    private string $username = 'email';
-
     private $auth;
 
     public function __construct(AuthManager $auth)
     {
         $this->auth = $auth;
+    }
+
+    /*
+     * The username when to use when logging in a user from the request data
+     * obtained from the POST request. By default this is set to be 'email'
+     * but you may change this to something else, just make sure it links to your
+     * form names and database field.
+     */
+    private function username(Request $request)
+    {
+        return 'email';
     }
 
     private function success(Request $request, $user)

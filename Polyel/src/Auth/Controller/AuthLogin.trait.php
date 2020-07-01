@@ -31,11 +31,17 @@ trait AuthLogin
     private function attemptLogin(Request $request)
     {
         /*
+         * Get the username we will use to try and identify the user with.
+         * We store the result here so we don't have to call this function more than once.
+         */
+        $username = $this->username($request);
+
+        /*
          * Pull out the credentials from the POST request and use the
          * Session Protector from the Auth System to try and validate the given
          * credentials, returning true or false as the outcome.
          */
-        $credentials[$this->username] = $request->data($this->username);
+        $credentials[$username] = $request->data($username);
         $credentials['password'] = $request->data('password');
         return $this->auth->protector('session')->attemptLogin($credentials);
     }
