@@ -95,6 +95,6 @@ return [
     |
     │
     */
-    'password_confirmation_timeout' => 3600
+    'password_confirmation_timeout' => 7200
 
 ];
