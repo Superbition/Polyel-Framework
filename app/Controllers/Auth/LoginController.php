@@ -42,6 +42,18 @@ class LoginController extends Controller
         return 'email';
     }
 
+    /*
+     * Use this method to return any additional conditions for when
+     * a user is attempting to login to your application. For example you
+     * could add an extra condition to check if the user is not banned etc.
+     * This method is called just before attempting to find the user in the
+     * database.
+     */
+    public function additionalConditions(Request $request)
+    {
+        //return ['banned' => 0];
+    }
+
     private function success(Request $request, $user)
     {
         return redirect('/');

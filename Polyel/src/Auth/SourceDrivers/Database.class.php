@@ -46,7 +46,7 @@ class Database
 
     }
 
-    public function getUserByCredentials($credentials)
+    public function getUserByCredentials($credentials, $conditions  = null)
     {
         // Only proceed if the credentials exist and that it's not the password that was just sent...
         if(!exists($credentials) || (count($credentials) === 1 && array_key_exists('password', $credentials)))
@@ -73,6 +73,16 @@ class Database
             }
 
             $query->where($key, '=', $value);
+        }
+
+        // Add any additional conditions to the query to find the user...
+        if(exists($conditions))
+        {
+            // An extra condition could be used to check if the user is banned or active for example...
+            foreach($conditions as $key => $value)
+            {
+                $query->where($key, '=', $value);
+            }
         }
 
         // Execute the query but only grab the first record, only one record should be found though

@@ -92,10 +92,10 @@ class SessionProtector
         return false;
     }
 
-    public function attemptLogin(array $credentials)
+    public function attemptLogin(array $credentials, array $conditions  = null)
     {
         // Try to find the user by their credentials like email or username...
-        $user = $this->users->getUserByCredentials($credentials);
+        $user = $this->users->getUserByCredentials($credentials, $conditions);
 
         /*
          * If a user was found using the given credentials

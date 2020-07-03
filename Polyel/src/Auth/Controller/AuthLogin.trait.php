@@ -36,6 +36,9 @@ trait AuthLogin
          */
         $username = $this->username($request);
 
+        // See if there are any extra conditions to apply when search for a user in the database
+        $additionalConditions = $this->additionalConditions($request);
+
         /*
          * Pull out the credentials from the POST request and use the
          * Session Protector from the Auth System to try and validate the given
@@ -43,7 +46,7 @@ trait AuthLogin
          */
         $credentials[$username] = $request->data($username);
         $credentials['password'] = $request->data('password');
-        return $this->auth->protector('session')->attemptLogin($credentials);
+        return $this->auth->protector('session')->attemptLogin($credentials, $additionalConditions);
     }
 
     /*
