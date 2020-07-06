@@ -10,8 +10,7 @@ class GenericUser
 
     public function __construct(array $user)
     {
-        $this->id = $user['id'];
-        $this->user = array_shift($user);
+        $this->user = $user;
     }
 
     public function get($key)
