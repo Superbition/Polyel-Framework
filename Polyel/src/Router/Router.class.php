@@ -395,6 +395,11 @@ class Router
         $this->routes["REDIRECT"][$src]["statusCode"] = $statusCode;
     }
 
+    public function addAuthRoutes()
+    {
+        registerAuthRoutes();
+    }
+
     public function loadRoutes()
     {
         $this->initialiseHttpVerbs();

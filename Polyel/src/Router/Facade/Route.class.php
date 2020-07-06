@@ -13,6 +13,7 @@ use Closure;
  * @method static delete($route, $action)
  * @method static prepend($filePath, $contents)
  * @method static group($attributes, Closure $routes)
+ * @method static addAuthRoutes()
  */
 class Route
 {
