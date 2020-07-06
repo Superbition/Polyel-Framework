@@ -14,12 +14,7 @@ class AuthenticatedUser
         $this->user = array_shift($user);
     }
 
-    public function getUserId()
-    {
-        return $this->id;
-    }
-
-    public function getData($key)
+    public function get($key)
     {
         return $this->user[$key];
     }
