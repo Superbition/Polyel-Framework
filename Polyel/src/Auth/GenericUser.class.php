@@ -2,7 +2,7 @@
 
 namespace Polyel\Auth;
 
-class AuthenticatedUser
+class GenericUser
 {
     private $id;
 

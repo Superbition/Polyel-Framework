@@ -5,7 +5,7 @@ namespace Polyel\Auth\Protectors;
 use Polyel\Http\Request;
 use Polyel\Session\Session;
 use Polyel\Hashing\Facade\Hash;
-use Polyel\Auth\AuthenticatedUser;
+use Polyel\Auth\GenericUser;
 use Polyel\Auth\SourceDrivers\Database;
 
 class SessionProtector
@@ -25,7 +25,7 @@ class SessionProtector
 
     public function user()
     {
-        if($this->user instanceof AuthenticatedUser)
+        if($this->user instanceof GenericUser)
         {
             return $this->user;
         }
@@ -48,8 +48,8 @@ class SessionProtector
                 $this->user = $this->load($user);
             }
 
-            // If an AuthenticatedUser exists, it means we have a valid authenticated user
-            if($this->user instanceof AuthenticatedUser)
+            // If an GenericUser exists, it means we have a valid authenticated user
+            if($this->user instanceof GenericUser)
             {
                 return true;
             }
@@ -64,11 +64,11 @@ class SessionProtector
         // Try and find the user by the ID from the session...
         $user = $this->users->getUserById($user);
 
-        // If we find the user, create a new AuthenticatedUser instance
+        // If we find the user, create a new GenericUser instance
         if(exists($user))
         {
             // Return a newly authenticated user and their data...
-            return new AuthenticatedUser($user);
+            return new GenericUser($user);
         }
 
         // The user could not be found by their ID, invalid user, not authenticated...
