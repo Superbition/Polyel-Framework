@@ -106,7 +106,7 @@ class SessionProtector
         if(exists($user) && $this->hasValidCredentials($user, $credentials))
         {
             // Try to login the user by using their id
-            $this->user = $this->loginById($user['id']);
+            $this->user = $this->loginById($user->get('id'));
 
             // The user could not be logged in by using their ID if they are false
             if($this->user !== false)
@@ -126,7 +126,7 @@ class SessionProtector
     public function hasValidCredentials($user, $credentials)
     {
         // Check that the given password string is valid (after being hashed) against the stored hashed password
-        return Hash::check($credentials['password'], $user['password']);
+        return Hash::check($credentials['password'], $user->get('password'));
     }
 
     public function logout()

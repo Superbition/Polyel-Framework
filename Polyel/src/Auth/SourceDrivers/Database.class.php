@@ -2,6 +2,7 @@
 
 namespace Polyel\Auth\SourceDrivers;
 
+use Polyel\Auth\GenericUser;
 use Polyel\Database\Facade\DB;
 
 class Database
@@ -89,6 +90,6 @@ class Database
         $user = $query->first();
 
         // Return the database retrieval result based on credentials
-        return $user;
+        return new GenericUser($user);
     }
 }
