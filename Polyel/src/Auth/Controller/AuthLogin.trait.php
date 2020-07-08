@@ -3,6 +3,7 @@
 namespace Polyel\Auth\Controller;
 
 use Polyel\Http\Request;
+use Polyel\Session\Session;
 
 trait AuthLogin
 {
@@ -11,11 +12,14 @@ trait AuthLogin
         return response(view('auth.login:view'));
     }
 
-    public function login(Request $request)
+    public function login(Request $request, Session $session)
     {
         // Pass over the request and attempt to login a user, using the data sent from the request
         if($this->attemptLogin($request))
         {
+            // Because a login was successful, a user does not need to confirm their password again
+            $session->store('lastPasswordConfirmation', time());
+
             /*
              * If a request is successful, the user is loaded into the current session using
              * their ID, the session is also regenerated after login and then we call the
