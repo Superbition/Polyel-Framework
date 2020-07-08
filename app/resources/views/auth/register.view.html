@@ -109,36 +109,36 @@
 
     <body>
 
-    <div id="registerContainer">
+        <div id="registerContainer">
 
-        <p id="registerMsg">Register</p>
+            <p id="registerMsg">Register</p>
 
-        <div id="registerFormContainer">
+            <div id="registerFormContainer">
 
-            <form action="/register" method="post">
+                <form action="/register" method="post">
 
-                <input type="text" placeholder="Username" name="username" required autofocus>
+                    <input type="text" placeholder="Username" name="username" required autofocus>
 
-                <input type="text" placeholder="Email" name="email" required>
+                    <input type="text" placeholder="Email" name="email" required>
 
-                <input type="password" placeholder="Password" name="password" required>
+                    <input type="password" placeholder="Password" name="password" required>
 
-                <input type="password" placeholder="Confirm Password" name="passwordConfirmed" required>
+                    <input type="password" placeholder="Confirm Password" name="passwordConfirmed" required>
 
-                <div id="formButtonContainer">
+                    <div id="formButtonContainer">
 
-                    <button type="button" onclick="window.location.href='/login';">Login</button>
-                    <button type="submit">Register</button>
+                        <button type="button" onclick="window.location.href='/login';">Login</button>
+                        <button type="submit">Register</button>
 
-                </div>
+                    </div>
 
-                {{ @csrfToken }}
+                    {{ @csrfToken }}
 
-            </form>
+                </form>
+
+            </div>
 
         </div>
-
-    </div>
 
     </body>
 
