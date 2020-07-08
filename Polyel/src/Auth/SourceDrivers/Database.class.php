@@ -39,7 +39,9 @@ class Database
 
     public function getUserById($id)
     {
-        return DB::table($this->table())->findById($id);
+        $user = DB::table($this->table())->findById($id);
+
+        return new GenericUser($user);
     }
 
     public function getUserByToken($token)

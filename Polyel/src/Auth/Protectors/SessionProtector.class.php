@@ -67,8 +67,8 @@ class SessionProtector
         // If we find the user, create a new GenericUser instance
         if(exists($user))
         {
-            // Return a newly authenticated user and their data...
-            return new GenericUser($user);
+            // Return a newly authenticated (Generic) user...
+            return $user;
         }
 
         // The user could not be found by their ID, invalid user, not authenticated...
