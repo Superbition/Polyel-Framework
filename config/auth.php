@@ -26,9 +26,7 @@ return [
     'defaults' => [
 
         'protector' => 'web',
-        'resets' => [
-            'passwords' => 'users',
-        ],
+        'reset' => 'users',
 
     ],
 
@@ -81,6 +79,7 @@ return [
             'users' => [
                 'source' => 'users',
                 'table' => 'password_resets',
+                'timeout' => 20,
                 'expire' => 60,
             ],
 
