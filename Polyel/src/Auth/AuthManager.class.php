@@ -57,4 +57,11 @@ class AuthManager
 
         throw new RuntimeException('Invalid protector requested: ' . $protector);
     }
+
+    public function check($protector = 'web')
+    {
+        $protector = config("auth.protectors.$protector");
+
+        return $this->protector($protector['driver'])->check();
+    }
 }
