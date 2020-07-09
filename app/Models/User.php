@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
-use Polyel\Model\Model;
 use Polyel\Database\Facade\DB;
+use Polyel\Model\User as Model;
+use Polyel\Auth\Contracts\EmailVerification;
 
-class User extends Model
+class User extends Model implements EmailVerification
 {
     protected $table = 'users';
 

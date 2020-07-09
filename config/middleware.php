@@ -14,6 +14,8 @@ return [
 
         "Auth" => \App\Middleware\Authenticate::class,
 
+        "IsVerified" => \App\Middleware\UserVerification::class,
+
         "ConfirmPassword" => \App\Middleware\ConfirmPassword::class,
 
         "BeforeMiddlewareExample" => \App\Middleware\BeforeExampleMiddleware::class,
