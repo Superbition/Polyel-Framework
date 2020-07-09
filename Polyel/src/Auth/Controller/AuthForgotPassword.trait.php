@@ -10,7 +10,7 @@ trait AuthForgotPassword
 {
     public function displayForgotPasswordView()
     {
-        return response(view('auth.forgotpassword:view'));
+        return response(view('auth.forgotPassword:view'));
     }
 
     public function sendPasswordResetEmail(Request $request, Database $users)
