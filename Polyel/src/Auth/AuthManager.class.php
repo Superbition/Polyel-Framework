@@ -64,4 +64,28 @@ class AuthManager
 
         return $this->protector($protector['driver'])->check();
     }
+
+    public function user($protector = 'web')
+    {
+        $protector = config("auth.protectors.$protector");
+
+        if($this->check())
+        {
+            return $this->protector($protector['driver'])->user();
+        }
+
+        return false;
+    }
+
+    public function userId($protector = 'web')
+    {
+        $user = $this->user($protector);
+
+        if($user instanceof GenericUser)
+        {
+            return $user->get('id');
+        }
+
+        return false;
+    }
 }
