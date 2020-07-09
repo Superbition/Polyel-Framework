@@ -1,6 +1,6 @@
 <?php
 
-namespace Polyel\Auth\Middleware;
+namespace Polyel\Auth\Middleware\Contracts;
 
 interface AuthenticationOutcomes
 {

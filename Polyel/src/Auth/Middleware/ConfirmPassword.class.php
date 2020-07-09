@@ -4,6 +4,7 @@ namespace Polyel\Auth\Middleware;
 
 use Polyel\Session\Session;
 use Polyel\Auth\AuthManager as Auth;
+use Polyel\Auth\Middleware\Contracts\PasswordConfirmationOutcomes;
 
 abstract class ConfirmPassword implements PasswordConfirmationOutcomes
 {

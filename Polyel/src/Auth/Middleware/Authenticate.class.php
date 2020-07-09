@@ -3,6 +3,7 @@
 namespace Polyel\Auth\Middleware;
 
 use Polyel\Auth\AuthManager as Auth;
+use Polyel\Auth\Middleware\Contracts\AuthenticationOutcomes;
 
 abstract class Authenticate implements AuthenticationOutcomes
 {
