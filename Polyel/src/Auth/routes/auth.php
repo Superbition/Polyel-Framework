@@ -23,7 +23,10 @@ function registerAuthRoutes()
     Route::get('/password/confirm', 'Auth\ConfirmPasswordController@displayConfirmView');
     Route::post('/password/confirm', 'Auth\ConfirmPasswordController@confirmPassword');
 
-    Route::get('/email/verify', 'Auth\VerificationController@displayEmailVerificationView');
-    Route::get('/email/verify/{id}', 'Auth\VerificationController@verify');
-    Route::post('/email/verify/resend', 'Auth\VerificationController@resendVerifyEmail');
+    Route::group(['middleware' => 'Auth'], function()
+    {
+        Route::get('/email/verify', 'Auth\VerificationController@displayEmailVerificationView');
+        Route::get('/email/verify/{id}/{hash}/{expire}', 'Auth\VerificationController@verify');
+        Route::post('/email/verify/resend', 'Auth\VerificationController@resendVerifyEmail');
+    });
 }
