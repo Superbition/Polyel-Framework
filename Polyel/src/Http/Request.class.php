@@ -57,7 +57,7 @@ class Request
         $this->method = $request->server["request_method"];
         $this->fullQueryString = $request->server["query_string"] ?? null;
 
-        $this->queries = $request->get;
+        $this->queries = $request->get ?? [];
 
         $this->cookies = $request->cookie ?? [];
 
@@ -240,7 +240,7 @@ class Request
         if(exists($queryName))
         {
             // Check to see if the query name given exists
-            if(exists($this->queries[$queryName]))
+            if(array_key_exists($queryName, $this->queries))
             {
                 // Return thr query value
                 return $this->queries[$queryName];
