@@ -124,8 +124,13 @@ class EncryptionManager implements Encryption
         return base64_encode($randomKey);
     }
 
-    public function getEncryptionKey()
+    public function getEncryptionKey($decode = true)
     {
+        if($decode)
+        {
+            return base64_decode($this->key);
+        }
+
         return $this->key;
     }
 
