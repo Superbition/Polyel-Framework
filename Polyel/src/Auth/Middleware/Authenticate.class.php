@@ -2,6 +2,7 @@
 
 namespace Polyel\Auth\Middleware;
 
+use Polyel\Session\Session;
 use Polyel\Auth\AuthManager as Auth;
 use Polyel\Auth\Middleware\Contracts\AuthenticationOutcomes;
 
@@ -11,9 +12,12 @@ abstract class Authenticate implements AuthenticationOutcomes
 
     protected $auth;
 
-    public function __construct(Auth $auth)
+    protected $session;
+
+    public function __construct(Auth $auth, Session $session)
     {
         $this->auth = $auth;
+        $this->session = $session;
     }
 
     public function process($request, $protector = null)
@@ -30,6 +34,9 @@ abstract class Authenticate implements AuthenticationOutcomes
         // If false, it means the user is not authenticated...
         if($authenticated === false)
         {
+            // Can be used to redirect the user after logon...
+            $this->session->store('intendedUrlAfterLogin', $request->url());
+
             // Return an unauthenticated response
             return $this->unauthenticated();
         }

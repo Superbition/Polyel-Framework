@@ -3,6 +3,7 @@
 namespace App\Controllers\Auth;
 
 use Polyel\Http\Request;
+use Polyel\Session\Session;
 use Polyel\Auth\AuthManager;
 use App\Controllers\Controller;
 use Polyel\Auth\Controller\AuthLogin;
@@ -26,9 +27,12 @@ class LoginController extends Controller
 
     private $auth;
 
-    public function __construct(AuthManager $auth)
+    private $session;
+
+    public function __construct(AuthManager $auth, Session $session)
     {
         $this->auth = $auth;
+        $this->session = $session;
     }
 
     /*
@@ -56,6 +60,15 @@ class LoginController extends Controller
 
     private function success(Request $request, $user)
     {
+        /*
+         * Redirect the user to their intended destination if they
+         * tried to access a certain page that requires authentication.
+         */
+        if($this->session->exists('intendedUrlAfterLogin'))
+        {
+            return redirect($this->session->pull('intendedUrlAfterLogin'));
+        }
+
         return redirect('/');
     }
 
