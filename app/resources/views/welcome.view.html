@@ -12,22 +12,39 @@
         html, body
         {
             height: 100%;
+            font-family: "Arial";
             margin: 0;
             padding: 0;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column;
             background-color: #dad9e2;
         }
 
-        #banner
+        #topBar
+        {
+            display: flex;
+            position: absolute;
+            align-self: flex-end;
+            max-height: 25px;
+            padding-top: 25px;
+            padding-right: 25px;
+        }
+
+        main
+        {
+            display: flex;
+            justify-content: center;
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+
+        #welcome
         {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 12px 100px;
-            font-family: "Arial";
             color: #707cc3;
             border: 1px solid #a8aaac;
             border-radius: 5px;
@@ -53,30 +70,30 @@
             color: #a8aaac;
         }
 
-        #welcomeLinks li:not(:last-of-type)
+        #welcomeLinks li:not(:last-of-type), .topBarLink:not(:last-of-type)
         {
             margin-right: 25px;
         }
 
-        #welcomeLinks li a:link
+        #welcomeLinks li a:link, .topBarLink:link
         {
             text-decoration: none;
             color: #a8aaac;
         }
 
-        #welcomeLinks li a:visited
+        #welcomeLinks li a:visited, .topBarLink:visited
         {
             text-decoration: none;
             color: #a8aaac;
         }
 
-        #welcomeLinks li a:hover
+        #welcomeLinks li a:hover, .topBarLink:hover
         {
             text-decoration: none;
             color: #707cc3;
         }
 
-        #welcomeLinks li a:active
+        #welcomeLinks li a:active, .topBarLink:active
         {
             text-decoration: none;
             color: #a8aaac;
@@ -88,19 +105,30 @@
 
     <body>
 
-        <div id="banner">
+        <div id="topBar">
 
-            <p id="welcomeMsg">Welcome to Polyel</p>
-
-            <ul id="welcomeLinks">
-                <li><a href="https://polyel.io" target="_blank">Home</a></li>
-                <li><a href="https://polyel.io/docs" target="_blank">Documentation</a></li>
-                <li><a href="https://github.com/Superbition/Polyel" target="_blank">Github</a></li>
-                <li><a href="https://twitter.com/PolyelPHP" target="_blank">Twitter</a></li>
-                <li><a href="https://phpnexus.io/" target="_blank">Community</a></li>
-            </ul>
+            <a class="topBarLink" href="/login">Login</a>
+            <a class="topBarLink" href="/register">Register</a>
 
         </div>
+
+        <main>
+
+            <div id="welcome">
+
+                <p id="welcomeMsg">Welcome to Polyel</p>
+
+                <ul id="welcomeLinks">
+                    <li><a href="https://polyel.io" target="_blank">Home</a></li>
+                    <li><a href="https://polyel.io/docs" target="_blank">Documentation</a></li>
+                    <li><a href="https://github.com/Superbition/Polyel" target="_blank">Github</a></li>
+                    <li><a href="https://twitter.com/PolyelPHP" target="_blank">Twitter</a></li>
+                    <li><a href="https://phpnexus.io/" target="_blank">Community</a></li>
+                </ul>
+
+            </div>
+
+        </main>
 
     </body>
 
