@@ -22,6 +22,8 @@ class Request
 
     public $path;
 
+    public $type;
+
     public $method;
 
     private $headers;

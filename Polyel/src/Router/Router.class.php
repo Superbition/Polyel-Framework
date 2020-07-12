@@ -99,6 +99,8 @@ class Router
                 {
                     // Else no API flag is set, meaning we are handling a normal WEB registered route.
                     $matchedRoute['type'] = 'WEB';
+
+                    $request->type = 'web';
                 }
 
                 // Only operate the session system if it is a WEB route and the Session is set to active
@@ -112,6 +114,8 @@ class Router
                 }
                 else
                 {
+                    $request->type = 'api';
+
                     $this->sessionManager->disable();
                 }
 
