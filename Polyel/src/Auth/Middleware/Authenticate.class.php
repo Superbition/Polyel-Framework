@@ -37,8 +37,11 @@ abstract class Authenticate implements AuthenticationOutcomes
         // If false, it means the user is not authenticated...
         if($authenticated === false)
         {
-            // Can be used to redirect the user after logon...
-            $this->session->store('intendedUrlAfterLogin', $request->url());
+            if($request->type === 'web')
+            {
+                // Can be used to redirect the user after logon...
+                $this->session->store('intendedUrlAfterLogin', $request->url());
+            }
 
             // Return an unauthenticated response
             return $this->unauthenticated();
