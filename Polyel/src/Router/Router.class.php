@@ -112,7 +112,7 @@ class Router
                 }
                 else
                 {
-                    $HttpKernel->session = null;
+                    $this->sessionManager->disable();
                 }
 
                 // Set the default HTTP status code, might change throughout the request cycle
