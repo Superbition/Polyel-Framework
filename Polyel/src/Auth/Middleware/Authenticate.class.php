@@ -25,6 +25,9 @@ abstract class Authenticate implements AuthenticationOutcomes
         // Get the default protector is one is not provided...
         $protector = $protector ?: $this->getDefaultProtector();
 
+        // Get the protector config: source & driver
+        $protector = $this->getProtectorConfig($protector);
+
         // Using the selected protector, set the source table to be used when authenticating users
         $this->auth->setSource($protector['source']);
 
@@ -51,10 +54,15 @@ abstract class Authenticate implements AuthenticationOutcomes
         return $this->auth->protector($protector['driver'])->check($request);
     }
 
+    private function getProtectorConfig($protector)
+    {
+        // Return the selected protector config
+        return config("auth.protectors.$protector");
+    }
+
     private function getDefaultProtector()
     {
-        // Grabs the default protector that is set in the auth.php config file
-        $defaultProtector = config('auth.defaults.protector');
-        return config("auth.protectors.$defaultProtector");
+        // Gets the default protector that is set in the auth.php config file
+        return config('auth.defaults.protector');
     }
 }
