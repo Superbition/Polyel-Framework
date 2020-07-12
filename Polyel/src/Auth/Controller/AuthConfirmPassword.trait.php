@@ -4,7 +4,7 @@ namespace Polyel\Auth\Controller;
 
 use Polyel\Http\Request;
 use Polyel\Session\Session;
-use Polyel\Auth\SourceDrivers\Database;
+use Polyel\Auth\Drivers\Database;
 
 trait AuthConfirmPassword
 {

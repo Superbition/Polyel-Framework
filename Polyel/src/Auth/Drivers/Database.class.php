@@ -1,6 +1,6 @@
 <?php
 
-namespace Polyel\Auth\SourceDrivers;
+namespace Polyel\Auth\Drivers;
 
 use Polyel\Auth\GenericUser;
 use Polyel\Database\Facade\DB;

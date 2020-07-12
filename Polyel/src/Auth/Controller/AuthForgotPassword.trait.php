@@ -4,7 +4,7 @@ namespace Polyel\Auth\Controller;
 
 use Polyel\Http\Request;
 use Polyel\Database\Facade\DB;
-use Polyel\Auth\SourceDrivers\Database;
+use Polyel\Auth\Drivers\Database;
 
 trait AuthForgotPassword
 {

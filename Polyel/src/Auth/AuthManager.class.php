@@ -3,7 +3,7 @@
 namespace Polyel\Auth;
 
 use RuntimeException;
-use Polyel\Auth\SourceDrivers\Database;
+use Polyel\Auth\Drivers\Database;
 use Polyel\Auth\Protectors\TokenProtector;
 use Polyel\Auth\Protectors\SessionProtector;
 

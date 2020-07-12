@@ -6,7 +6,7 @@ use Polyel\Http\Request;
 use Polyel\Session\Session;
 use Polyel\Hashing\Facade\Hash;
 use Polyel\Auth\GenericUser;
-use Polyel\Auth\SourceDrivers\Database;
+use Polyel\Auth\Drivers\Database;
 
 class SessionProtector
 {
