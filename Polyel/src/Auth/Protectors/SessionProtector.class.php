@@ -33,7 +33,7 @@ class SessionProtector
         return false;
     }
 
-    public function check()
+    public function check(Request $request)
     {
         // Get the user ID from the session system
         $user = $this->session->user();
