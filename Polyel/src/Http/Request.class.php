@@ -88,10 +88,10 @@ class Request
              * normal form POST requests or JSON inputs from rawContent(). Arrays are accessed
              * via dot syntax and the JSON header must be set to decode JSON objs.
              * If the input given is using dot syntax, we continue checking for finding an array key/value...
-             * Make sure the input array is also more than 1 as well
+             * Make sure the input array count is also more than 0 as well
              */
             $inputArray = explode(".", $inputName);
-            if(is_array($inputArray) && exists($inputArray) && count($inputArray) > 1)
+            if(is_array($inputArray) && exists($inputArray) && count($inputArray) > 0)
             {
                 // Get the normal POST form data as a starting point
                 $postDataArr = $this->postData;
