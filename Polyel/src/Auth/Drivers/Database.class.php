@@ -44,25 +44,6 @@ class Database
         return new GenericUser($user);
     }
 
-    public function getUserByToken($clientId, $conditions  = null)
-    {
-        $joiningTable = $this->table();
-
-        $user = DB::table('api_tokens')
-            ->join($joiningTable, 'api_tokens.user_id', '=', "$joiningTable.id")
-            ->where('api_tokens.id', '=', $clientId)
-            ->first();
-
-        unset($user['user_id']);
-
-        if(exists($user))
-        {
-            return new GenericUser($user);
-        }
-
-        return false;
-    }
-
     public function getUserByCredentials($credentials, $conditions  = null)
     {
         // Only proceed if the credentials exist and that it's not the password that was just sent...
@@ -107,5 +88,36 @@ class Database
 
         // Return the database retrieval result based on credentials
         return new GenericUser($user);
+    }
+
+    public function getUserByToken($clientId, $conditions  = null)
+    {
+        $joiningTable = $this->table();
+
+        $user = DB::table('api_tokens')
+            ->join($joiningTable, 'api_tokens.user_id', '=', "$joiningTable.id")
+            ->where('api_tokens.id', '=', $clientId)
+            ->first();
+
+        unset($user['user_id']);
+
+        if(exists($user))
+        {
+            return new GenericUser($user);
+        }
+
+        return false;
+    }
+
+    public function doesApiClientIdExist($clientId)
+    {
+        $clientId = DB::table('api_tokens')->where('id', '=', $clientId)->first();
+
+        if(exists($clientId))
+        {
+            return true;
+        }
+
+        return false;
     }
 }
