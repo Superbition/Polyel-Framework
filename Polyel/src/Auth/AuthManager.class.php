@@ -4,6 +4,7 @@ namespace Polyel\Auth;
 
 use RuntimeException;
 use Polyel\Auth\Drivers\Database;
+use Polyel\Encryption\Facade\Crypt;
 use Polyel\Auth\Protectors\TokenProtector;
 use Polyel\Auth\Protectors\SessionProtector;
 
@@ -91,5 +92,40 @@ class AuthManager
         }
 
         return false;
+    }
+
+    public function generateApiClientId()
+    {
+        do {
+
+            $clientId = vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex(random_bytes(16)), 4));
+
+        } while($this->users->doesApiClientIdExist($clientId) === true);
+
+
+        return $clientId;
+    }
+
+    public function generateApiToken($saveToDatabase = true, $userId = null)
+    {
+        $token = bin2hex(random_bytes(64));
+        $hash = hash_hmac('sha512', $token, Crypt::getEncryptionKey());
+        $clientId = $this->generateApiClientId();
+
+        $userId = $userId ?: $this->userId();
+
+        if($saveToDatabase)
+        {
+            if($this->users->createNewApiToken($clientId, $hash, $userId) === 0)
+            {
+                return false;
+            }
+        }
+
+        return [
+            'clientId' => $clientId,
+            'token' => $token,
+            'hash' => $hash,
+        ];
     }
 }

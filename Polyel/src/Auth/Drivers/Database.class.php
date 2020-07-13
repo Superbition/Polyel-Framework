@@ -120,4 +120,17 @@ class Database
 
         return false;
     }
+
+    public function createNewApiToken($clientId, $hashedToken, $userId)
+    {
+        $affected = DB::table('api_tokens')->insert([
+            'id' => $clientId,
+            'token_hashed' => $hashedToken,
+            'user_id' => $userId,
+            'token_last_active' => null,
+            'token_expires_at' => date("Y-m-d H:i:s", strtotime(config('auth.api_token_lifetime'))),
+        ]);
+
+        return $affected;
+    }
 }
