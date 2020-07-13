@@ -306,7 +306,9 @@ class Request
 
     public function hasHeader($headerToFind, $headerEquals = null)
     {
-        if(exists($this->headers[$headerToFind]))
+        $headerToFind = strtolower($headerToFind);
+
+        if(array_key_exists($headerToFind, $this->headers))
         {
             if(exists($headerEquals))
             {
