@@ -291,7 +291,7 @@ class Request
     {
         if(exists($header))
         {
-            if(exists($this->headers[$header]))
+            if(array_key_exists($header, $this->headers))
             {
                 return $this->headers[$header];
             }
