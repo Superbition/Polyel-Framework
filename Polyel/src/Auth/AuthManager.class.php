@@ -58,16 +58,20 @@ class AuthManager
         throw new RuntimeException('Invalid protector requested: ' . $protector);
     }
 
-    public function check($protector = 'web')
+    public function check()
     {
-        $protector = config("auth.protectors.$protector");
+        $requestType = $this->HttpKernel->request->type;
+
+        $protector = config("auth.protectors.$requestType");
 
         return $this->protector($protector['driver'])->check();
     }
 
-    public function user($protector = 'web')
+    public function user()
     {
-        $protector = config("auth.protectors.$protector");
+        $requestType = $this->HttpKernel->request->type;
+
+        $protector = config("auth.protectors.$requestType");
 
         if($this->check())
         {
@@ -77,9 +81,9 @@ class AuthManager
         return false;
     }
 
-    public function userId($protector = 'web')
+    public function userId()
     {
-        $user = $this->user($protector);
+        $user = $this->user();
 
         if($user instanceof GenericUser)
         {
