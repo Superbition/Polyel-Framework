@@ -44,9 +44,23 @@ class Database
         return new GenericUser($user);
     }
 
-    public function getUserByToken($token)
+    public function getUserByToken($clientId, $conditions  = null)
     {
+        $joiningTable = $this->table();
 
+        $user = DB::table('api_tokens')
+            ->join($joiningTable, 'api_tokens.user_id', '=', "$joiningTable.id")
+            ->where('api_tokens.id', '=', $clientId)
+            ->first();
+
+        unset($user['user_id']);
+
+        if(exists($user))
+        {
+            return new GenericUser($user);
+        }
+
+        return false;
     }
 
     public function getUserByCredentials($credentials, $conditions  = null)
