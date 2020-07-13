@@ -291,6 +291,8 @@ class Request
     {
         if(exists($header))
         {
+            $header = strtolower($header);
+
             if(array_key_exists($header, $this->headers))
             {
                 return $this->headers[$header];
