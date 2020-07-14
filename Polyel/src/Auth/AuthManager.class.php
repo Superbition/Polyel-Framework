@@ -35,21 +35,6 @@ class AuthManager
         $this->users->setTable($source);
     }
 
-    public function getResetConfig($config = null)
-    {
-        if(is_null($config))
-        {
-            $defaultResetKey = config('auth.defaults.reset');
-            $config = config("auth.resets.passwords.$defaultResetKey");
-        }
-        else
-        {
-            $config = config("auth.resets.passwords.$config");
-        }
-
-        return $config;
-    }
-
     public function protector($protector)
     {
         if(array_key_exists($protector, $this->protectors))

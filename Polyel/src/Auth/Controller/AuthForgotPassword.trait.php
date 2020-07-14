@@ -28,7 +28,7 @@ trait AuthForgotPassword
 
             $email = $user->get('email');
 
-            $resetConfig = $this->auth->getResetConfig();
+            $resetConfig = $this->getPasswordResetConfig();
 
             // Stop tokens from being re-created too often...
             if($this->tokenRecentlyCreated($email, $resetConfig['table'], $resetConfig['timeout']))
@@ -87,5 +87,20 @@ trait AuthForgotPassword
     private function removeExistingToken(string $email, string $table)
     {
         DB::table($table)->where('email', '=', $email)->delete();
+    }
+
+    public function getPasswordResetConfig($config = null)
+    {
+        if(is_null($config))
+        {
+            $defaultResetKey = config('auth.defaults.reset');
+            $config = config("auth.resets.passwords.$defaultResetKey");
+        }
+        else
+        {
+            $config = config("auth.resets.passwords.$config");
+        }
+
+        return $config;
     }
 }

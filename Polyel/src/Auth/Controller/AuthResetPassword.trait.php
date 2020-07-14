@@ -20,7 +20,7 @@ trait AuthResetPassword
         // Get the email, new password and token from the request
         $credentials = $this->credentials($request);
 
-        $resetConfig = $this->auth->getResetConfig();
+        $resetConfig = $this->getPasswordResetConfig();
 
         // See if a reset exists for the given email...
         $reset = $this->getResetFromDatabase($credentials['email'], $resetConfig['table']);
@@ -100,5 +100,20 @@ trait AuthResetPassword
     private function sendSuccessfulResetResponse($message)
     {
         return redirect('/login');
+    }
+
+    public function getPasswordResetConfig($config = null)
+    {
+        if(is_null($config))
+        {
+            $defaultResetKey = config('auth.defaults.reset');
+            $config = config("auth.resets.passwords.$defaultResetKey");
+        }
+        else
+        {
+            $config = config("auth.resets.passwords.$config");
+        }
+
+        return $config;
     }
 }
