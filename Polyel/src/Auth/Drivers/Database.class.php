@@ -106,7 +106,7 @@ class Database
             return new GenericUser($user);
         }
 
-        return false;
+        return null;
     }
 
     public function doesApiClientIdExist($clientId)
