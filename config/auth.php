@@ -112,6 +112,6 @@ return [
     |
     │
     */
-    'api_token_lifetime' => '+1 year',
+    'api_token_lifetime' => '1 year',
 
 ];
