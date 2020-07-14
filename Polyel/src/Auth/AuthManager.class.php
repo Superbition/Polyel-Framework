@@ -31,6 +31,7 @@ class AuthManager
 
     public function setSource($source)
     {
+        // The table where the users are located
         $this->users->setTable($source);
     }
 
@@ -63,6 +64,7 @@ class AuthManager
     {
         $requestType = $this->HttpKernel->request->type;
 
+        // Gets the protector based on the request type of either web or api
         $protector = config("auth.protectors.$requestType");
 
         return $this->protector($protector['driver'])->check();
@@ -72,6 +74,7 @@ class AuthManager
     {
         $requestType = $this->HttpKernel->request->type;
 
+        // Gets the protector based on the request type of either web or api
         $protector = config("auth.protectors.$requestType");
 
         if($this->check())
@@ -112,12 +115,15 @@ class AuthManager
         $hash = hash_hmac('sha512', $token, Crypt::getEncryptionKey());
         $clientId = $this->generateApiClientId();
 
+        // Either use the passed in id or get the id from the current authed user through the protector in use
         $userId = $userId ?: $this->userId();
 
+        // After creating a new API token, save the API user to the database
         if($saveToDatabase)
         {
             if($this->users->createNewApiToken($clientId, $hash, $userId) === 0)
             {
+                // Failed while trying to save new API user to the database
                 return false;
             }
         }

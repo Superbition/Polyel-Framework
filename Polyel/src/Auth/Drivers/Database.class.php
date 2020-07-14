@@ -92,6 +92,7 @@ class Database
 
     public function getUserByToken($clientId, $conditions  = null)
     {
+        // The joining table will be the configured users table
         $joiningTable = $this->table();
 
         $user = DB::table('api_tokens')
@@ -99,8 +100,10 @@ class Database
             ->where('api_tokens.id', '=', $clientId)
             ->first();
 
+        // Remove user_id because we don't want it twice, from api_tokens and users
         unset($user['user_id']);
 
+        // If a user was found, return a new Generic User instance
         if(exists($user))
         {
             return new GenericUser($user);
