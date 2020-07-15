@@ -20,7 +20,7 @@
             background-color: #dad9e2;
         }
 
-        #topBar
+        header
         {
             display: flex;
             position: absolute;
@@ -28,6 +28,23 @@
             max-height: 25px;
             padding-top: 25px;
             padding-right: 25px;
+        }
+
+        header form button
+        {
+            font: inherit;
+            color: #a8aaac;
+            background: none !important;
+            border: none;
+            padding: 0 !important;
+            cursor: pointer;
+        }
+
+        header p
+        {
+            margin: 0 25px 0 0;
+            font: inherit;
+            color: #a8aaac;
         }
 
         main
@@ -70,30 +87,30 @@
             color: #a8aaac;
         }
 
-        #welcomeLinks li:not(:last-of-type), .topBarLink:not(:last-of-type)
+        #welcomeLinks li:not(:last-of-type), header a:not(:last-of-type), header form button:not(:last-of-type)
         {
             margin-right: 25px;
         }
 
-        #welcomeLinks li a:link, .topBarLink:link
+        #welcomeLinks li a:link, header a:link, header form button:link
         {
             text-decoration: none;
             color: #a8aaac;
         }
 
-        #welcomeLinks li a:visited, .topBarLink:visited
+        #welcomeLinks li a:visited, header a:visited, header form button:visited
         {
             text-decoration: none;
             color: #a8aaac;
         }
 
-        #welcomeLinks li a:hover, .topBarLink:hover
+        #welcomeLinks li a:hover, header a:hover, header form button:hover
         {
             text-decoration: none;
             color: #707cc3;
         }
 
-        #welcomeLinks li a:active, .topBarLink:active
+        #welcomeLinks li a:active, header a:active, header form button:active
         {
             text-decoration: none;
             color: #a8aaac;
@@ -105,12 +122,7 @@
 
     <body>
 
-        <div id="topBar">
-
-            <a class="topBarLink" href="/login">Login</a>
-            <a class="topBarLink" href="/register">Register</a>
-
-        </div>
+        {{ @addElement(WelcomeHeader) }}
 
         <main>
 
