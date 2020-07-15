@@ -74,7 +74,7 @@ class LoginController extends Controller
 
     private function failed(Request $request)
     {
-
+        // TODO: What happens here when login is invalid
     }
 
     public function loggedOff(Request $request)

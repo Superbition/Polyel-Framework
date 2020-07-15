@@ -94,11 +94,13 @@ trait AuthResetPassword
 
     private function sendFailedResetResponse($token, $error)
     {
+        // TODO: Add error msg back to the view
         return redirect('/password/reset/' . $token);
     }
 
     private function sendSuccessfulResetResponse($message)
     {
+        // TODO: Add msg back to the view?
         return redirect('/login');
     }
 

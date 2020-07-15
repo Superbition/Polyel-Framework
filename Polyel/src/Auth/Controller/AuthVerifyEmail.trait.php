@@ -33,6 +33,7 @@ trait AuthVerifyEmail
             // Redirect if the user has already got a verified email
             if($this->user->hasVerifiedEmail())
             {
+                // TODO: Add a flash msg to say their email is already verified...
                 return redirect($this->redirectTo);
             }
 
@@ -44,6 +45,7 @@ trait AuthVerifyEmail
                     return $response;
                 }
 
+                // TODO: Add msg to say email was verified, banner, flash msg?
                 return redirect($this->redirectTo);
             }
         }
@@ -95,9 +97,11 @@ trait AuthVerifyEmail
         // Don't resend verification URLs if they are already verified
         if($this->user->hasVerifiedEmail())
         {
+            // TODO: Add msg to indicate their email is already verified
             return redirect($this->redirectTo);
         }
 
+        // TODO: Check for email errors
         $this->sendVerificationEmail($this->auth->user()->get('email'));
 
         // TODO: Add resend message here

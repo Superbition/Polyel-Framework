@@ -32,6 +32,7 @@ trait AuthConfirmPassword
         }
 
         // Password confirm was not correct...
+        // TODO: Add error msg onto the view
         return redirect('/password/confirm');
     }
 
