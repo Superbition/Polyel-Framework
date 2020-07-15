@@ -43,11 +43,21 @@ abstract class Authenticate implements AuthenticationOutcomes
                 $this->session->store('intendedUrlAfterLogin', $request->url());
             }
 
-            // Return an unauthenticated response
+            if($request->type === 'api')
+            {
+                return $this->unauthorized();
+            }
+
+            // Return an unauthenticated web response
             return $this->unauthenticated();
         }
 
-        // Return an authenticated response
+        if($request->type === 'api')
+        {
+            return $this->authorized();
+        }
+
+        // Return an authenticated web response
         return $this->authenticated();
     }
 
