@@ -55,7 +55,7 @@ class LoginController extends Controller
      */
     public function additionalConditions(Request $request)
     {
-        //return ['banned' => 0];
+        //return ['banned' => [0, 'Your account has been banned and you cannot login']];
     }
 
     private function success(Request $request, $user)
