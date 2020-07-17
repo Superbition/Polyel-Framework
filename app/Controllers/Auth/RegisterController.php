@@ -35,6 +35,11 @@ class RegisterController extends Controller
         $this->user = $user;
     }
 
+    public function validation()
+    {
+
+    }
+
     private function create(array $data)
     {
         return $this->user->create([
