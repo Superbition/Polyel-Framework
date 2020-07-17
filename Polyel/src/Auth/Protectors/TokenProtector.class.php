@@ -64,6 +64,8 @@ class TokenProtector
 
                 if($this->hasValidApiToken($this->user, $authorization))
                 {
+                    $this->users->updateWhenTokenWasLastActive($clientId);
+
                     return true;
                 }
             }

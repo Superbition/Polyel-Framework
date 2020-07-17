@@ -136,4 +136,11 @@ class Database
 
         return $affected;
     }
+
+    public function updateWhenTokenWasLastActive($clientId)
+    {
+        DB::table('api_tokens')->where('id', '=', $clientId)->update([
+           'token_last_active' => date("Y-m-d H:i:s"),
+        ]);
+    }
 }
