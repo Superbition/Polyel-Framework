@@ -23,6 +23,6 @@ class ConfirmPassword extends ConfirmPasswordMiddleware
      */
     public function passwordConfirmationNotRequired(Request $request)
     {
-
+        // ...
     }
 }
