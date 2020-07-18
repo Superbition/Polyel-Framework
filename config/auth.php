@@ -113,6 +113,18 @@ return [
 
     /*
     │------------------------------------------------------------------------------
+    │ Database API Token Table
+    │------------------------------------------------------------------------------
+    | This is the table name for where API tokens are stored, the default name
+    | does not need to be changed but you may alter this if you like. Please make
+    | sure to also refer to the documentation for what columns and data types the
+    | API token table requires for API authentication to work.
+    │
+    */
+    'api_database_token_table' => 'api_tokens',
+
+    /*
+    │------------------------------------------------------------------------------
     │ API Token Lifetime
     │------------------------------------------------------------------------------
     | When a token is created to gain access to your API, this defines how long a

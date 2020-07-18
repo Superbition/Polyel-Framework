@@ -95,12 +95,15 @@ class Database
         // The joining table will be the configured users table
         $joiningTable = $this->table();
 
-        $user = DB::table('api_tokens')
-            ->join($joiningTable, 'api_tokens.user_id', '=', "$joiningTable.id")
-            ->where('api_tokens.id', '=', $clientId)
+        $user = DB::table(config('auth.api_database_token_table'))
+            ->join($joiningTable, config('auth.api_database_token_table') . '.user_id', '=', "$joiningTable.id")
+            ->where(config('auth.api_database_token_table') . '.id', '=', $clientId)
             ->first();
 
-        // Remove user_id because we don't want it twice, from api_tokens and users
+        /*
+         * Remove user_id because we don't want it twice, from the token table (id) and users (id) columns
+         * This makes it so the user id is stored as 'id' like it would normally be from its table
+         */
         unset($user['user_id']);
 
         // If a user was found, return a new Generic User instance
@@ -114,7 +117,7 @@ class Database
 
     public function doesApiClientIdExist($clientId)
     {
-        $clientId = DB::table('api_tokens')->where('id', '=', $clientId)->first();
+        $clientId = DB::table(config('auth.api_database_token_table'))->where('id', '=', $clientId)->first();
 
         if(exists($clientId))
         {
@@ -126,7 +129,7 @@ class Database
 
     public function createNewApiToken($clientId, $hashedToken, $userId)
     {
-        $affected = DB::table('api_tokens')->insert([
+        $affected = DB::table(config('auth.api_database_token_table'))->insert([
             'id' => $clientId,
             'token_hashed' => $hashedToken,
             'user_id' => $userId,
@@ -139,7 +142,7 @@ class Database
 
     public function updateWhenTokenWasLastActive($clientId)
     {
-        DB::table('api_tokens')->where('id', '=', $clientId)->update([
+        DB::table(config('auth.api_database_token_table'))->where('id', '=', $clientId)->update([
            'token_last_active' => date("Y-m-d H:i:s"),
         ]);
     }
