@@ -125,6 +125,13 @@ class AuthManager
         ];
     }
 
+    public function generateApiTokenOnly()
+    {
+        $token = $this->generateApiToken(false);
+
+        return $token['token'];
+    }
+
     public function revokeApiToken($token)
     {
         $this->users->deleteApiToken($token);
