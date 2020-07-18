@@ -141,6 +141,19 @@ class Database
         return $affected;
     }
 
+    public function updateApiToken($clientId, $newTokenHash)
+    {
+        $affected = DB::table(config('auth.api_database_token_table'))
+            ->where('id', '=', $clientId)
+            ->update([
+                'token_hashed' => $newTokenHash,
+                'token_last_active' => null,
+                'token_expires_at' => date("Y-m-d H:i:s", strtotime('+' . config('auth.api_token_lifetime'))),
+            ]);
+
+        return $affected;
+    }
+
     public function deleteApiToken($token)
     {
         DB::table(config('auth.api_database_token_table'))

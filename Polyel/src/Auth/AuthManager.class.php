@@ -132,6 +132,17 @@ class AuthManager
         return $token['token'];
     }
 
+    public function refreshApiToken($clientId)
+    {
+        $newToken = $this->generateApiToken(false);
+
+        $this->users->updateApiToken($clientId, $newToken['hash']);
+
+        unset($newToken['clientId']);
+
+        return $newToken;
+    }
+
     public function revokeApiToken($token)
     {
         $this->users->deleteApiToken($token);
