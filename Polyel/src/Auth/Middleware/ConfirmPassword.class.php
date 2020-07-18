@@ -27,11 +27,8 @@ abstract class ConfirmPassword implements PasswordConfirmationOutcomes
             // Store the intended location the user wanted to go
             $this->session->store('intendedConfirmURL', $request->path());
 
-            // Let the developer handle where to redirect to if they set a response
-            if($response = $this->passwordConfirmationRequired($request))
-            {
-                return $response;
-            }
+            // Give the developer a chance to perform actions when a password confirmation is triggered
+            $this->passwordConfirmationRequired($request);
 
             // TODO: Add error msg validation so the user knows what happened?
             // If no response is given we redirect to confirm the users password

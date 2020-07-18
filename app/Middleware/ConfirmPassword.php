@@ -8,12 +8,13 @@ use Polyel\Auth\Middleware\ConfirmPassword as ConfirmPasswordMiddleware;
 class ConfirmPassword extends ConfirmPasswordMiddleware
 {
     /*
-     * What to di when the user has breached the password
-     * confirmation timeout and needs to confirm their password again
+     * Perform any actions when a password confirmation has
+     * been triggered and the user is required to confirm their
+     * password again.
      */
     public function passwordConfirmationRequired(Request $request)
     {
-        return redirect('/password/confirm');
+        // ...
     }
 
     /*
