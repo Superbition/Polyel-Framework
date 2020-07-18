@@ -82,6 +82,11 @@ class AuthManager
         return false;
     }
 
+    public function logout()
+    {
+        $this->protector('session')->logout();
+    }
+
     public function generateApiClientId()
     {
         do {
