@@ -101,7 +101,7 @@ class AuthManager
 
     public function generateApiToken($saveToDatabase = true, $userId = null)
     {
-        $token = bin2hex(random_bytes(64));
+        $token = bin2hex(random_bytes(80));
         $hash = hash_hmac('sha512', $token, Crypt::getEncryptionKey());
         $clientId = $this->generateApiClientId();
 
