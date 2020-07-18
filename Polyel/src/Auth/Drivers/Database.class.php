@@ -4,6 +4,7 @@ namespace Polyel\Auth\Drivers;
 
 use Polyel\Auth\GenericUser;
 use Polyel\Database\Facade\DB;
+use Polyel\Encryption\Facade\Crypt;
 
 class Database
 {
@@ -138,6 +139,27 @@ class Database
         ]);
 
         return $affected;
+    }
+
+    public function deleteApiToken($token)
+    {
+        DB::table(config('auth.api_database_token_table'))
+            ->where('token_hashed', '=', hash_hmac('sha512', $token, Crypt::getEncryptionKey()))
+            ->delete();
+    }
+
+    public function deleteApiTokenByClientId($clientId)
+    {
+        DB::table(config('auth.api_database_token_table'))
+            ->where('id', '=', $clientId)
+            ->delete();
+    }
+
+    public function deleteAllApiTokensByUserId($userId)
+    {
+        DB::table(config('auth.api_database_token_table'))
+            ->where('user_id', '=', $userId)
+            ->delete();
     }
 
     public function updateWhenTokenWasLastActive($clientId)

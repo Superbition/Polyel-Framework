@@ -124,4 +124,24 @@ class AuthManager
             'hash' => $hash,
         ];
     }
+
+    public function revokeApiToken($token)
+    {
+        $this->users->deleteApiToken($token);
+    }
+
+    public function revokeApiTokenUsingClientId($clientId)
+    {
+        $this->users->deleteApiTokenByClientId($clientId);
+    }
+
+    public function revokeAllApiTokens($userId = null)
+    {
+        if(is_null($userId))
+        {
+            $userId = $this->userId();
+        }
+
+        $this->users->deleteAllApiTokensByUserId($userId);
+    }
 }
