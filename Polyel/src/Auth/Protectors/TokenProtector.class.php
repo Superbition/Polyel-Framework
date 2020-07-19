@@ -62,7 +62,9 @@ class TokenProtector
             {
                 $this->user = $user;
 
-                if($this->hasValidApiToken($this->user, $authorization))
+                $tokenExpirationDate = $this->user->get('token_expires_at');
+
+                if($this->hasValidApiToken($this->user, $authorization) && $this->tokenHasNotExpired($tokenExpirationDate))
                 {
                     $this->users->updateWhenTokenWasLastActive($clientId);
 
@@ -79,5 +81,10 @@ class TokenProtector
         $authorization = hash_hmac('sha512', $authorization, Crypt::getEncryptionKey());
 
         return hash_equals($authorization, $user->get('token_hashed'));
+    }
+
+    private function tokenHasNotExpired($tokenExpirationDate)
+    {
+        return time() < strtotime($tokenExpirationDate);
     }
 }
