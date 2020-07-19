@@ -12,7 +12,7 @@ class TokenProtector
     // The authenticated user during a request cycle
     private $user;
 
-    // THe users we have access to in the database
+    // The users we have access to in the database
     private $users;
 
     public function __construct(Database $users)
