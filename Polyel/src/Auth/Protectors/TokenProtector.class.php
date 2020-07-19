@@ -78,6 +78,11 @@ class TokenProtector
 
     public function hasValidApiToken(GenericUser $user, string $authorization)
     {
+        if(strlen($authorization) !== 160)
+        {
+            return false;
+        }
+
         $authorization = hash_hmac('sha512', $authorization, Crypt::getEncryptionKey());
 
         return hash_equals($authorization, $user->get('token_hashed'));
