@@ -41,10 +41,9 @@ class TokenProtector
             return false;
         }
 
-        $clientId = $request->data('ClientID') ?: $request->headers('ClientID');
-        $authorization = $request->headers('Authorization');
+        $credentials = $this->getApiCredentials($request);
 
-        if($this->attemptTokenAuthentication($clientId, $authorization))
+        if(is_array($credentials) && $this->attemptTokenAuthentication($credentials))
         {
             return true;
         }
@@ -52,11 +51,52 @@ class TokenProtector
         return false;
     }
 
-    public function attemptTokenAuthentication(string $clientId, string $authorization, array $conditions  = null)
+    private function getApiCredentials(Request $request)
     {
-        if(exists($clientId))
+        if($request->method === 'GET')
         {
-            $user = $this->users->getUserByToken($clientId, $conditions);
+            // Try to find the client ID and API token from either query parameters or headers
+            $clientId = $request->query('client_id') ?: $request->headers('ClientID');
+            $authorization = $request->query('api_token') ?: $request->headers('Authorization');
+
+            // Add on the auth type when using query parameters to send in the API token
+            if(strpos($authorization, 'Bearer') !== 0 && exists($request->query('api_token')))
+            {
+                $authorization = 'Bearer ' . $authorization;
+            }
+
+            if(exists($clientId) && exists($authorization))
+            {
+                return ['ClientID' => $clientId, 'Authorization' => $authorization];
+            }
+        }
+
+        if(in_array($request->method, ['POST', 'PUT', 'PATCH', 'DELETE']))
+        {
+            // Try and find the client ID and API token from the request body or headers
+            $clientId = $request->data('client_id') ?: $request->headers('ClientID');
+            $authorization = $request->data('api_token') ?: $request->headers('Authorization');
+
+            // Add the auth type to the start of the token only when using the request body to set the token
+            if(strpos($authorization, 'Bearer') !== 0 && exists($request->data('api_token')))
+            {
+                $authorization = 'Bearer ' . $authorization;
+            }
+
+            if(exists($clientId) && exists($authorization))
+            {
+                return ['ClientID' => $clientId, 'Authorization' => $authorization];
+            }
+        }
+
+        return null;
+    }
+
+    public function attemptTokenAuthentication(array $credentials, array $conditions  = null)
+    {
+        if(array_key_exists('ClientID', $credentials) && array_key_exists('Authorization', $credentials))
+        {
+            $user = $this->users->getUserByToken($credentials['ClientID'], $conditions);
 
             if($user instanceof GenericUser)
             {
@@ -64,9 +104,9 @@ class TokenProtector
 
                 $tokenExpirationDate = $this->user->get('token_expires_at');
 
-                if($this->hasValidApiToken($this->user, $authorization) && $this->tokenHasNotExpired($tokenExpirationDate))
+                if($this->hasValidApiToken($this->user, $credentials['Authorization']) && $this->tokenHasNotExpired($tokenExpirationDate))
                 {
-                    $this->users->updateWhenTokenWasLastActive($clientId);
+                    $this->users->updateWhenTokenWasLastActive($credentials['ClientID']);
 
                     return true;
                 }
@@ -78,6 +118,25 @@ class TokenProtector
 
     public function hasValidApiToken(GenericUser $user, string $authorization)
     {
+        // Split the bearer type and token
+        $bearerToken  = explode(' ', $authorization);
+
+        // Two elements means we have Bearer + Token
+        if(count($bearerToken) !== 2)
+        {
+            return false;
+        }
+
+        // Check that the auth type is Bearer token
+        if($bearerToken[0] !== 'Bearer')
+        {
+            return false;
+        }
+
+        // Get the token from the Bearer token
+        $authorization = $bearerToken[1];
+
+        // A valid token will be 160 in length
         if(strlen($authorization) !== 160)
         {
             return false;
