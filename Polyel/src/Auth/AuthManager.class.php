@@ -143,6 +143,11 @@ class AuthManager
         return $newToken;
     }
 
+    public function extendApiTokenLifetime($clientId, $extension)
+    {
+        return $this->users->updateApiTokenLifetime($clientId, $extension);
+    }
+
     public function revokeApiToken($token)
     {
         $this->users->deleteApiToken($token);

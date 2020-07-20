@@ -154,6 +154,19 @@ class Database
         return $affected;
     }
 
+    public function updateApiTokenLifetime($clientId, $extension)
+    {
+        $currentTokenLifetime = DB::table(config('auth.api_database_token_table'))
+            ->where('id', '=', $clientId)
+            ->value('token_expires_at');
+
+        return DB::table(config('auth.api_database_token_table'))
+            ->where('id', '=', $clientId)
+            ->update([
+                'token_expires_at' => date("Y-m-d H:i:s", strtotime($extension, strtotime($currentTokenLifetime))),
+            ]);
+    }
+
     public function deleteApiToken($token)
     {
         DB::table(config('auth.api_database_token_table'))
