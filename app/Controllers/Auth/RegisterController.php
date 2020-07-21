@@ -51,6 +51,7 @@ class RegisterController extends Controller
 
     private function registered($request, $id)
     {
+        // TODO: Send verification email here after user reg?
         return redirect('/');
     }
 }
