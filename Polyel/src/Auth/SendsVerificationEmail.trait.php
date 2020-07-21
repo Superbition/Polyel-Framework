@@ -14,7 +14,7 @@ trait SendsVerificationEmail
     {
         $id = $this->auth->userId();
 
-        if($id)
+        if(exists($id))
         {
             $url = $this->verificationUrl($id, $to);
 
