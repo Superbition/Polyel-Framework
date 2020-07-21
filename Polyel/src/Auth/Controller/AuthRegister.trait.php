@@ -3,9 +3,12 @@
 namespace Polyel\Auth\Controller;
 
 use Polyel\Http\Request;
+use Polyel\Auth\SendsVerificationEmail;
 
 trait AuthRegister
 {
+    use SendsVerificationEmail;
+
     public function displayRegistrationView()
     {
         return response(view('auth.register:view'));
