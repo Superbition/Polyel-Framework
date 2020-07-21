@@ -6,7 +6,6 @@ use App\Models\User;
 use Polyel\Http\Request;
 use Polyel\Auth\AuthManager;
 use App\Controllers\Controller;
-use Polyel\Auth\SendsVerificationEmail;
 use Polyel\Auth\Controller\AuthVerifyEmail;
 
 class VerificationController extends Controller
@@ -25,7 +24,7 @@ class VerificationController extends Controller
     │
     */
 
-    use AuthVerifyEmail, SendsVerificationEmail;
+    use AuthVerifyEmail;
 
     /*
      * Controls where to redirect the user after their

@@ -4,9 +4,12 @@ namespace Polyel\Auth\Controller;
 
 use Polyel\Http\Request;
 use Polyel\Encryption\Facade\Crypt;
+use Polyel\Auth\SendsVerificationEmail;
 
 trait AuthVerifyEmail
 {
+    use SendsVerificationEmail;
+
     public function displayEmailVerificationView()
     {
         // Don't show the email verification view if they are already verified
