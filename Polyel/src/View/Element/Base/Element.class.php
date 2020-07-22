@@ -76,13 +76,16 @@ class Element
         $this->elementContent .= $append;
     }
 
-    protected function appendHtmlBlock($block, $data): void
+    protected function appendHtmlBlock($block, $data = null): void
     {
         $blockTags = $this->getStringsBetween($block, "{{", "}}");
 
-        foreach($data as $key => $value)
+        if(exists($data))
         {
-            $this->replaceTag($key, $value, $blockTags, $block);
+            foreach($data as $key => $value)
+            {
+                $this->replaceTag($key, $value, $blockTags, $block);
+            }
         }
 
         $this->elementContent .= $block;
