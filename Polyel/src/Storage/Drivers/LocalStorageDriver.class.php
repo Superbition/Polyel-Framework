@@ -50,8 +50,19 @@ class LocalStorageDriver
 
         clearstatcache();
 
+        // Create a file lock so reading is not affected
+        while(flock($handle, LOCK_SH | LOCK_NB) === false)
+        {
+            // If the file is locked, wait some time...
+            \Co\System::sleep(rand(1, 5) / 10);
+        }
+
         // Read the entire file and close the handle afterwards
         $file = fread($handle, filesize($filePath));
+
+        // Release the file lock
+        flock($handle, LOCK_UN);
+
         fclose($handle);
 
         // Return the file contents as a string
@@ -106,7 +117,7 @@ class LocalStorageDriver
     }
 
     // Main writing function for overwrite and appending
-    public function write($filePath, $contents = "", $writeMode = "w+")
+    public function write($filePath, $contents = "", $writeMode = 'a')
     {
         $filePath = $this->root . $filePath;
 
@@ -114,7 +125,25 @@ class LocalStorageDriver
         $handle = fopen($filePath, $writeMode);
         go(function() use ($handle, $contents)
         {
+            // Create a file lock so reading is not affected
+            while(flock($handle, LOCK_EX | LOCK_NB) === false)
+            {
+                // If the file is locked, wait some time...
+                \Co\System::sleep(rand(1, 5) / 10);
+            }
+
+            // Erase the contents of the file, truncate to the beginning like 'w+' would
+            ftruncate($handle, 0) ;
+
+            // Write contents to file
             fwrite($handle, $contents);
+
+            //Flush output before releasing the file lock
+            fflush($handle);
+
+            // Release the file lock used for writing
+            flock($handle, LOCK_UN);
+
             fclose($handle);
         });
     }
