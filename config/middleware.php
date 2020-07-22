@@ -10,6 +10,14 @@ return [
     [
         "ValidateCsrfToken" => \App\Middleware\ValidateCsrfToken::class,
 
+        "RedirectIfAuthenticated" => \App\Middleware\RedirectIfAuthenticated::class,
+
+        "Auth" => \App\Middleware\Authenticate::class,
+
+        "IsVerified" => \App\Middleware\UserVerification::class,
+
+        "ConfirmPassword" => \App\Middleware\ConfirmPassword::class,
+
         "BeforeMiddlewareExample" => \App\Middleware\BeforeExampleMiddleware::class,
 
         "AfterMiddlewareExample" => \App\Middleware\AfterExampleMiddleware::class,

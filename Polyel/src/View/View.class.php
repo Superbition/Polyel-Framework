@@ -227,14 +227,16 @@ class View
 
     private function addCsrfTokens()
     {
-        // Check if the Session System is active
-        if(isset($this->HttpKernel->session))
+        // CSRF Tokens are not needed when handling a API request...
+        if($this->HttpKernel->request->type !== 'api')
         {
+            // Only inject CSRF tokens during a web request
             $csrfToken = '<input type="hidden" name="csrf_token" value="' . $this->HttpKernel->session->get('CSRF-TOKEN') . '">';
             $this->resource = str_replace("{{ @csrfToken }}", $csrfToken, $this->resource);
         }
         else
         {
+            // Remove the CSRF Token tag from the HTML view if no token is needed or not found
             $this->resource = str_replace("{{ @csrfToken }}", '', $this->resource);
         }
     }

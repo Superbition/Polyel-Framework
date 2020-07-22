@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+
+        <style>
+
+            *
+            {
+                box-sizing: border-box;
+            }
+
+            html, body
+            {
+                height: 100%;
+                padding: 0;
+                margin: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: #dad9e2;
+            }
+
+            #loginContainer
+            {
+                display: flex;
+                flex-direction: column;
+                height: auto;
+                width: 300px;
+                padding: 12px 10px;
+                font-family: "Arial";
+                color: #707cc3;
+                border: 2px solid #a8aaac;
+                border-radius: 5px;
+                -webkit-box-shadow: 0px 0px 84px -54px rgba(0,0,0,0.75);
+                -moz-box-shadow: 0px 0px 84px -54px rgba(0,0,0,0.75);
+                box-shadow: 0px 0px 84px -54px rgba(0,0,0,0.75);
+            }
+
+            #loginMsg
+            {
+                font-size: 32px;
+                margin: 0 0 21px;
+            }
+
+            #loginFormContainer form input
+            {
+                display: flex;
+                width: 100%;
+                height: 30px;
+                outline: none;
+                padding-left: 16px;
+                border: 2px solid #a8aaac;
+                border-radius: 3px;
+            }
+
+            #loginFormContainer form input:focus
+            {
+                border: 2px solid #858687;
+            }
+
+            #loginFormContainer form input:not(:last-child)
+            {
+                margin-bottom: 15px;
+            }
+
+            #formButtonContainer
+            {
+                display: flex;
+                justify-content: flex-end;
+            }
+
+            #formButtonContainer button
+            {
+                outline: none;
+                background-color: #dad9e2;
+                border: 2px solid #a8aaac;
+                border-radius: 3px;
+                color: grey;
+                padding: 8px 18px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 12px;
+            }
+
+            #formButtonContainer button:hover
+            {
+                background-color: #cdccd4;
+                cursor: pointer;
+            }
+
+            #formButtonContainer button:active
+            {
+                transform: translateY(3px);
+            }
+
+            #formButtonContainer button:first-child
+            {
+                margin-right: 8px;
+            }
+
+            #forgotPasswordLink
+            {
+                margin-top: 15px;
+                text-align: right;
+            }
+
+            #forgotPasswordLink a:link
+            {
+                color: grey;
+                text-decoration: none;
+            }
+
+            #forgotPasswordLink a:visited
+            {
+                color: grey;
+                text-decoration: none;
+            }
+
+            #forgotPasswordLink a:hover
+            {
+                color: #707cc3;
+                text-decoration: none;
+                cursor: pointer;
+            }
+
+            #forgotPasswordLink a:active
+            {
+                color: grey;
+                text-decoration: none;
+            }
+
+        </style>
+
+        <title>Login</title>
+        <meta charset="UTF-8">
+
+    </head>
+
+    <body>
+
+        <div id="loginContainer">
+
+            <p id="loginMsg">Login</p>
+
+            <div id="loginFormContainer">
+
+                <form action="/login" method="post">
+
+                    <input type="text" placeholder="Email" name="email" required autofocus>
+
+                    <input type="password" placeholder="Password" name="password" required>
+
+                    <div id="formButtonContainer">
+
+                        <button type="button" onclick="window.location.href='/register';">Register</button>
+                        <button type="submit">Login</button>
+
+                    </div>
+
+                    <div id="forgotPasswordLink"><a href="/password/reset">Forgot password?</a></div>
+
+                    {{ @csrfToken }}
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </body>
+
+</html>

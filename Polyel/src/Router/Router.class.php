@@ -99,6 +99,8 @@ class Router
                 {
                     // Else no API flag is set, meaning we are handling a normal WEB registered route.
                     $matchedRoute['type'] = 'WEB';
+
+                    $request->type = 'web';
                 }
 
                 // Only operate the session system if it is a WEB route and the Session is set to active
@@ -112,7 +114,9 @@ class Router
                 }
                 else
                 {
-                    $HttpKernel->session = null;
+                    $request->type = 'api';
+
+                    $this->sessionManager->disable();
                 }
 
                 // Set the default HTTP status code, might change throughout the request cycle
@@ -393,6 +397,11 @@ class Router
         // Register a new redirection with its URL and status code
         $this->routes["REDIRECT"][$src]["url"] = $des;
         $this->routes["REDIRECT"][$src]["statusCode"] = $statusCode;
+    }
+
+    public function addAuthRoutes()
+    {
+        registerAuthRoutes();
     }
 
     public function loadRoutes()

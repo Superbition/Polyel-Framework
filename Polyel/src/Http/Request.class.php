@@ -22,6 +22,8 @@ class Request
 
     public $path;
 
+    public $type;
+
     public $method;
 
     private $headers;
@@ -57,7 +59,7 @@ class Request
         $this->method = $request->server["request_method"];
         $this->fullQueryString = $request->server["query_string"] ?? null;
 
-        $this->queries = $request->get;
+        $this->queries = $request->get ?? [];
 
         $this->cookies = $request->cookie ?? [];
 
@@ -86,10 +88,10 @@ class Request
              * normal form POST requests or JSON inputs from rawContent(). Arrays are accessed
              * via dot syntax and the JSON header must be set to decode JSON objs.
              * If the input given is using dot syntax, we continue checking for finding an array key/value...
-             * Make sure the input array is also more than 1 as well
+             * Make sure the input array count is also more than 0 as well
              */
             $inputArray = explode(".", $inputName);
-            if(is_array($inputArray) && exists($inputArray) && count($inputArray) > 1)
+            if(is_array($inputArray) && exists($inputArray) && count($inputArray) > 0)
             {
                 // Get the normal POST form data as a starting point
                 $postDataArr = $this->postData;
@@ -240,7 +242,7 @@ class Request
         if(exists($queryName))
         {
             // Check to see if the query name given exists
-            if(exists($this->queries[$queryName]))
+            if(array_key_exists($queryName, $this->queries))
             {
                 // Return thr query value
                 return $this->queries[$queryName];
@@ -289,7 +291,9 @@ class Request
     {
         if(exists($header))
         {
-            if(exists($this->headers[$header]))
+            $header = strtolower($header);
+
+            if(array_key_exists($header, $this->headers))
             {
                 return $this->headers[$header];
             }
@@ -302,7 +306,9 @@ class Request
 
     public function hasHeader($headerToFind, $headerEquals = null)
     {
-        if(exists($this->headers[$headerToFind]))
+        $headerToFind = strtolower($headerToFind);
+
+        if(array_key_exists($headerToFind, $this->headers))
         {
             if(exists($headerEquals))
             {

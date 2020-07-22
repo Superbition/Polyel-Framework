@@ -736,7 +736,7 @@ class QueryBuilder
 
         $result = $this->get();
 
-        if(array_key_exists(0, $result))
+        if(is_array($result) && array_key_exists(0, $result))
         {
             return $result[0];
         }
