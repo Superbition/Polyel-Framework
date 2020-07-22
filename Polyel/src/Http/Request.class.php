@@ -369,4 +369,19 @@ class Request
 
         return false;
     }
+
+    public function expectsJson()
+    {
+        if($this->hasHeader('Accept', 'application/json'))
+        {
+            return true;
+        }
+
+        if($this->hasHeader('content-type', 'application/json'))
+        {
+            return true;
+        }
+
+        return false;
+    }
 }
