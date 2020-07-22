@@ -32,7 +32,7 @@ function redirect($url, $status = 302)
 
 function exists($var)
 {
-    if(isset($var) && !empty($var) || is_numeric($var))
+    if((isset($var) && !empty($var)) || is_numeric($var))
     {
         return true;
     }
