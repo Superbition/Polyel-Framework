@@ -6,6 +6,17 @@
  */
 spl_autoload_register(static function($fullClassNamespace)
 {
+    // List of directories to try and load required classes from
+    $directoryRoots = [
+
+        // The Polyel Source directory
+        __DIR__ . '/src',
+
+        // The application directory
+        __DIR__ . '/../app',
+
+    ];
+
     // Segment the path so we can turn it into a normal file path
     $classNamespaceSegmented = explode("\\", $fullClassNamespace);
 
@@ -21,15 +32,37 @@ spl_autoload_register(static function($fullClassNamespace)
         $classFilePath .= "/" . $pathSegment;
     }
 
-    // Add the src directory onto the front and the full class file extension
-    $classFilePath = __DIR__ . "/src" . $classFilePath;
-    $classFilePath .= ".class.php";
-
-    // Check that the class now exists
-    if(file_exists($classFilePath))
+    foreach($directoryRoots as $root)
     {
-        // Finally include the required class
-        require $classFilePath;
+        // The class we want to try and find
+        $class = $root . $classFilePath;
+
+        // Check that the class exists before loading the file
+        if(file_exists($class . '.class.php'))
+        {
+            require $class . '.class.php';
+
+            // Class has been found, break out of the loop
+            break;
+        }
+
+        // Check that the trait exists before loading the file
+        if(file_exists($class . '.trait.php'))
+        {
+            require $class . '.trait.php';
+
+            // Class has been found, break out of the loop
+            break;
+        }
+
+        // Check if the class exists without an extension type like .class or .trait etc.
+        if(file_exists($class . '.php'))
+        {
+            require $class . '.php';
+
+            // Class has been found, break out of the loop
+            break;
+        }
     }
 
 });

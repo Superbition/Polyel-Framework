@@ -100,6 +100,11 @@ foreach ($polyelSourceFiles as $file)
             // Class was defined by the autoloader, output message and bypass trying to load the class again...
             echo "\e[33m     └---> Autoloaded: " . $classNamespace[0] . "\n" . "\e[39m";
         }
+        else if($classNamespace[1] === "trait" && trait_exists($classNamespace[0], false))
+        {
+            // Class was defined by the autoloader, output message and bypass trying to load the class again...
+            echo "\e[33m     └---> Autoloaded: " . $classNamespace[0] . "\n" . "\e[39m";
+        }
         else
         {
             // The file is either not a class or the class has not yet been defined.
