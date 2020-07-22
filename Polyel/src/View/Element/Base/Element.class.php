@@ -34,9 +34,9 @@ class Element
             $elementFilePath = str_replace(".", "/", $this->element);
             $elementLocation = $this->elementTemplateDir . '/';
 
-            if(file_exists($elementLocation . $elementFilePath))
+            if(file_exists($elementLocation . $elementFilePath . '.html'))
             {
-                $this->elementTemplate = Storage::access('local', $elementLocation)->read($elementFilePath);
+                $this->elementTemplate = Storage::access('local', $elementLocation)->read($elementFilePath . '.html');
             }
         }
     }
