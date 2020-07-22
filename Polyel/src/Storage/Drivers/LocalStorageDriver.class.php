@@ -123,7 +123,7 @@ class LocalStorageDriver
 
         // Open a resource handle and use a Swoole Coroutine to defer blocking I/O
         $handle = fopen($filePath, $writeMode);
-        go(function() use ($handle, $contents)
+        go(function() use ($handle, $contents, $writeMode)
         {
             // Create a file lock so reading is not affected
             while(flock($handle, LOCK_EX | LOCK_NB) === false)
@@ -132,8 +132,15 @@ class LocalStorageDriver
                 \Co\System::sleep(rand(1, 5) / 10);
             }
 
-            // Erase the contents of the file, truncate to the beginning like 'w+' would
-            ftruncate($handle, 0) ;
+            /*
+             * Because flock doesn't work with 'w+' we only truncate when write mode is 'a'
+             * The write mode 'a+' is used to append to the end of a file.
+             */
+            if($writeMode === 'a')
+            {
+                // Erase the contents of the file, truncate to the beginning like 'w+' would
+                ftruncate($handle, 0);
+            }
 
             // Write contents to file
             fwrite($handle, $contents);
