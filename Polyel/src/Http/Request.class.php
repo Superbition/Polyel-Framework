@@ -360,6 +360,23 @@ class Request
         return new UploadedFile($this->files, $fileName);
     }
 
+    public function files()
+    {
+        if(is_array($this->files) && exists($this->files))
+        {
+            $files = [];
+
+            foreach($this->files as $name => $file)
+            {
+                $files[$name] = new UploadedFile($this->files, $name);
+            }
+
+            return $files;
+        }
+
+        return null;
+    }
+
     public function hasFile($fileName)
     {
         if(exists($this->files) && array_key_exists($fileName, $this->files))
