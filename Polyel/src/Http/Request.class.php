@@ -370,6 +370,16 @@ class Request
         return false;
     }
 
+    public function hasFiles()
+    {
+        if(is_array($this->files) && exists($this->files))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     public function expectsJson()
     {
         if($this->hasHeader('Accept', 'application/json'))
