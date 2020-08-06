@@ -3,10 +3,11 @@
 namespace Polyel\Http;
 
 use Polyel\Http\File\UploadedFile;
+use Polyel\Validation\RequestValidation;
 
 class Request
 {
-    use CookieHandler;
+    use CookieHandler, RequestValidation;
 
     public $hostIP;
 
