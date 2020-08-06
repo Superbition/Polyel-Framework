@@ -202,6 +202,11 @@ class Router
                         $response->build($applicationResponse);
                     }
                 }
+
+                if($matchedRoute['type'] !== 'API' && config('session.active'))
+                {
+                    $HttpKernel->session->store('previousUrl', $request->uri);
+                }
             }
             else
             {
