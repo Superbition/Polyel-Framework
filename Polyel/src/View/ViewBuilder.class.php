@@ -69,6 +69,11 @@ class ViewBuilder
         }
     }
 
+    public function __toString()
+    {
+        return (string) file_get_contents($this->resourceDir . "/{$this->type}s/" . $this->resource . ".{$this->type}.html");
+    }
+
     public function extending($extendingView, $extendingViewData = null)
     {
         if(exists($extendingView))
