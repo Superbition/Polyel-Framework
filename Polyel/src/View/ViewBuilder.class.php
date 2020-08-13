@@ -26,7 +26,7 @@ class ViewBuilder
     // The data which needs to be exchanged with the template
     public $data;
 
-    public function __construct($resource, $data)
+    public function __construct($resource, $data = null)
     {
         // Get the type from the resource name and set the name and type to the class
         $resourceAndType = explode(":", $resource);
