@@ -37,13 +37,16 @@ class ValidationException extends Exception
 
     protected function sessionResponse($status)
     {
-        $errors = $this->vlaidator->errors();
+        $invalidFields = $this->vlaidator->errors();
 
         $this->session->remove('errors');
 
-        foreach($errors as $error => $message)
+        foreach($invalidFields as $field => $errors)
         {
-            $this->session->push("errors.$error", $message);
+            foreach($errors as $error)
+            {
+                $this->session->push("errors.$field", $error);
+            }
         }
 
         return redirect($this->session->get('previousUrl'), $status);
