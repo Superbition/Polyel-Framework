@@ -39,6 +39,11 @@ trait RequestValidation
         {
             $data = json_decode($data, true);
         }
+        else if($this->isMethod("GET"))
+        {
+            // Use URL query data if a GET request is sent and no other data is found
+            $data = $this->query();
+        }
 
         $validator = new Validator($data, $rules);
 
