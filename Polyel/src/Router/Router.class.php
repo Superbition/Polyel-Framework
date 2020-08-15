@@ -194,7 +194,10 @@ class Router
                             }
                             else
                             {
-                                $response->build($validator->session($HttpKernel->session)->response(302));
+                                $response->build(
+                                    $validator->session($HttpKernel->session)
+                                              ->response(302, $request->uri)
+                                );
                             }
 
                             return $response;

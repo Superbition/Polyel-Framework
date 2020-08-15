@@ -25,17 +25,17 @@ class ValidationException extends Exception
         return $this;
     }
 
-    public function response($status)
+    public function response($status, $fallbackUri = null)
     {
         if($this->session instanceof Session)
         {
-            return $this->sessionResponse($status);
+            return $this->sessionResponse($status, $fallbackUri);
         }
 
         return $this->jsonResponse($status);
     }
 
-    protected function sessionResponse($status)
+    protected function sessionResponse($status, $fallbackUri)
     {
         $invalidFields = $this->vlaidator->errors();
 
@@ -49,7 +49,7 @@ class ValidationException extends Exception
             }
         }
 
-        return redirect($this->session->get('previousUrl'), $status);
+        return redirect($this->session->get('previousUrl', $fallbackUri), $status);
     }
 
     protected function jsonResponse($status)
