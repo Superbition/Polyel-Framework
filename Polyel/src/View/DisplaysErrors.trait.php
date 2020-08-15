@@ -26,6 +26,16 @@ trait DisplaysErrors
             $this->processSingleErrorTags($errorParameters);
         }
 
+        /*
+         * Process all @errorCount(<field>) tags
+         * Will add the error count for a field, counts all errors inside the session.
+         * Does not only count the first error, counts all.
+         */
+        if($errorCountParameters = $this->getStringsBetween($this->resource, "{{ @errorCount(", ") }}"))
+        {
+            $this->processErrorCountTags($errorCountParameters);
+        }
+
         // All errors within the session should have been processed, so we remove them so they don't show up again
         $this->HttpKernel->session->remove('errors');
     }
@@ -131,6 +141,22 @@ trait DisplaysErrors
                 // No error exists within the session but no output was set, remove the error tag from the view
                 $this->resource = str_replace("{{ @error($field) }}", '', $this->resource);
             }
+        }
+    }
+
+    protected function processErrorCountTags($errorCountParameters)
+    {
+        foreach($errorCountParameters as $field)
+        {
+            if($errors = $this->HttpKernel->session->get("errors.$field"))
+            {
+                $this->resource = str_replace("{{ @errorCount($field) }}", count($errors), $this->resource);
+
+                continue;
+            }
+
+            // Default to zero errors when none are found within the session data
+            $this->resource = str_replace("{{ @errorCount($field) }}", '0', $this->resource);
         }
     }
 }
