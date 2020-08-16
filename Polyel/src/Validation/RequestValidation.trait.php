@@ -4,7 +4,7 @@ namespace Polyel\Validation;
 
 trait RequestValidation
 {
-    public function validate(array $rules)
+    public function validate(array $rules, string $group = '')
     {
         // Get all the request data
         $data = $this->data();
@@ -45,7 +45,7 @@ trait RequestValidation
             $data = $this->query();
         }
 
-        $validator = new Validator($data, $rules);
+        $validator = new Validator($data, $rules, $group);
 
         return $validator->validate();
     }

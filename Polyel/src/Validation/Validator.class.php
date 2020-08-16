@@ -14,6 +14,8 @@ class Validator
 
     private array $rules;
 
+    private string $group;
+
     /*
      * The validation rules which can be used with files
      */
@@ -46,11 +48,12 @@ class Validator
      */
     private array $errors = [];
 
-    public function __construct(array $data, array $rules)
+    public function __construct(array $data, array $rules, string $group = '')
     {
         $this->flattenedData = $this->flatternData($data);
         $this->data = $data;
         $this->rules = $this->prepareRules($rules);
+        $this->group = $group;
     }
 
     protected function prepareRules(array $fieldsAndRules)
@@ -264,8 +267,17 @@ class Validator
                 return false;
             }
 
-            // Add the error message to the array of fields and their error messages
-            $this->errors[$field][] = $errorMessage;
+            // Store an error message inside a named group if one is set
+            if(exists($this->group))
+            {
+                // Add the error message to a named form group of fields and their error messages
+                $this->errors[$this->group][$field][] = $errorMessage;
+            }
+            else
+            {
+                // Add the error message to an array of fields and their error messages
+                $this->errors[$field][] = $errorMessage;
+            }
 
             // The error has been successfully added to the list of error messages
             return true;
