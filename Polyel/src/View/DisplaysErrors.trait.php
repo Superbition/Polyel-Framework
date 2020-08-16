@@ -40,10 +40,14 @@ trait DisplaysErrors
         $this->HttpKernel->session->remove('errors');
     }
 
-    protected function processAllErrorTags($errorsParameters)
+    protected function processAllErrorTags($errorsTagParameters)
     {
-        foreach($errorsParameters as $errorTemplateName)
+        foreach($errorsTagParameters as $errorsParameters)
         {
+            // Explode the parameters into single variables, fill them as null if they don't exist
+            [$errorTemplateName, $errorGroupName] = array_pad(
+                explode(',', $errorsParameters, 2), 2, null);
+
             // The error HTML template defined from @errors(<templateName>)
             $errorTemplate = new ViewBuilder("$errorTemplateName:error");
 
@@ -56,7 +60,13 @@ trait DisplaysErrors
                 $errorReplacementLine = $this->getStringsBetween($errorTemplate, "{{ @error(", ") }}")[0];
 
                 // Render all errors based on the error replacement line from the error template
-                $errors = $this->renderAllErrors($errorReplacementLine);
+                $errors = $this->renderAllErrors($errorReplacementLine, $errorGroupName);
+
+                if(exists($errorGroupName))
+                {
+                    // Prepare the group name, ready to be used to replace the tag...
+                    $errorGroupName = ",$errorGroupName";
+                }
 
                 if(exists($errors))
                 {
@@ -64,20 +74,36 @@ trait DisplaysErrors
                     $errorTemplate = str_replace("{{ @error($errorReplacementLine) }}", $errors, $errorTemplate);
 
                     // Then inject the error template with the errors into the main view/resource
-                    $this->resource = str_replace("{{ @errors($errorTemplateName) }}", $errorTemplate, $this->resource);
+                    $this->resource = str_replace(
+                        "{{ @errors($errorTemplateName$errorGroupName) }}",
+                        $errorTemplate,
+                        $this->resource);
 
                     continue;
                 }
 
                 // For when no errors exist, just remove the @errors(...) tag from the resource
-                $this->resource = str_replace("{{ @errors($errorTemplateName) }}", '', $this->resource);
+                $this->resource = str_replace("{{ @errors($errorTemplateName$errorGroupName) }}", '', $this->resource);
             }
         }
     }
 
-    protected function renderAllErrors($errorReplacementLine)
+    protected function renderAllErrors($errorReplacementLine, $errorGroupName)
     {
-        $errorsFromSession = $this->HttpKernel->session->get('errors');
+        if(exists($errorGroupName))
+        {
+            $errorGroupName = trim($errorGroupName);
+
+            // Only get the errors from the provided group name
+            $errorPath = "errors.$errorGroupName";
+        }
+        else
+        {
+            // Use all the errors at root level
+            $errorPath = "errors";
+        }
+
+        $errorsFromSession = $this->HttpKernel->session->get($errorPath);
 
         if(!exists($errorsFromSession))
         {
@@ -92,6 +118,16 @@ trait DisplaysErrors
             // Loop through the current fields errors
             foreach($errors as $error)
             {
+                /*
+                 * If the error is an array it means we have hit a error group and should not
+                 * process this any further because the current errors tag is not using the correct
+                 * error path. Meaning the errors are not for this tag.
+                 */
+                if(is_array($error))
+                {
+                    return null;
+                }
+
                 // Using the error replacement line, place the error message where the @message tag is
                 $errorList .= str_replace('@message', $error, $errorReplacementLine);
             }
