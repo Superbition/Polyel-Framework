@@ -113,27 +113,40 @@ trait DisplaysErrors
         $errorList = '';
 
         // Looping through each field and its errors (array)
-        foreach($errorsFromSession as $field => $errors)
+        foreach($errorsFromSession as $field => $error)
         {
+            // For when an error group field is directly selected like 'login.email' for example
+            if(is_string($error))
+            {
+                $errorList .= $this->replaceErrorMessageTag($error, $errorReplacementLine);
+
+                continue;
+            }
+
             // Loop through the current fields errors
-            foreach($errors as $error)
+            foreach($error as $message)
             {
                 /*
                  * If the error is an array it means we have hit a error group and should not
                  * process this any further because the current errors tag is not using the correct
                  * error path. Meaning the errors are not for this tag.
                  */
-                if(is_array($error))
+                if(is_array($message))
                 {
                     return null;
                 }
 
-                // Using the error replacement line, place the error message where the @message tag is
-                $errorList .= str_replace('@message', $error, $errorReplacementLine);
+                $errorList .= $this->replaceErrorMessageTag($message, $errorReplacementLine);
             }
         }
 
         return $errorList;
+    }
+
+    protected function replaceErrorMessageTag($error, $messageTemplate)
+    {
+        // Using the message template, place the error message where the @message tag is
+        return str_replace('@message', $error, $messageTemplate);
     }
 
     protected function processSingleErrorTags($errorTagParameters)
