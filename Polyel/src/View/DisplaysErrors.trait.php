@@ -162,7 +162,7 @@ trait DisplaysErrors
             [$field, $output] = array_pad(explode(',', $errorParameters, 2), 2, null);
 
             // Only process error tags if the field actually has errors from the session storage
-            if($this->HttpKernel->session->exists("errors.$field"))
+            if($error = $this->HttpKernel->session->get("errors.$field"))
             {
                 // If an output is set, we replace the error tag with that
                 if(exists($output))
@@ -170,7 +170,7 @@ trait DisplaysErrors
                     $originalOutput = $output;
 
                     $output = str_replace(
-                        '{{ @message }}', $this->HttpKernel->session->get("errors.$field")[0], $output
+                        '{{ @message }}', $error[0], $output
                     );
 
                     $this->resource = str_replace(
@@ -181,12 +181,7 @@ trait DisplaysErrors
                 }
 
                 // For when no output exists, we replace the error tag with the actual error msg itself
-                if($error = $this->HttpKernel->session->get("errors.$field"))
-                {
-                    $this->resource = str_replace("{{ @error($field) }}", $error[0], $this->resource);
-
-                    continue;
-                }
+                $this->resource = str_replace("{{ @error($field) }}", $error[0], $this->resource);
             }
             else if(exists($output))
             {
