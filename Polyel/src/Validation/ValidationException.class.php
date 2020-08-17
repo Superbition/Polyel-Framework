@@ -41,11 +41,21 @@ class ValidationException extends Exception
 
         $this->session->remove('errors');
 
-        foreach($invalidFields as $field => $errors)
+        foreach($invalidFields as $fieldOrGroup => $errors)
         {
-            foreach($errors as $error)
+            foreach($errors as $groupedField => $error)
             {
-                $this->session->push("errors.$field", $error);
+                $groupedField = (is_string($groupedField)) ? $groupedField = ".$groupedField" : '';
+
+                if(!is_array($error))
+                {
+                    $error = [$error];
+                }
+
+                foreach($error as $message)
+                {
+                    $this->session->push("errors.$fieldOrGroup$groupedField", $message);
+                }
             }
         }
 
