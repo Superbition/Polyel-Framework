@@ -57,7 +57,9 @@ trait DisplaysErrors
                 $errorTemplate = $errorTemplate->__toString();
 
                 // Grab the error line we want to use for each error we render
-                $errorReplacementLine = $this->getStringsBetween($errorTemplate, "{{ @error(", ") }}")[0];
+                $errorReplacementLine = $this->getStringsBetween(
+                    $errorTemplate, "{{ @error(", ") }}"
+                )[0];
 
                 // Render all errors based on the error replacement line from the error template
                 $errors = $this->renderAllErrors($errorReplacementLine, $errorGroupName);
@@ -83,7 +85,9 @@ trait DisplaysErrors
                 }
 
                 // For when no errors exist, just remove the @errors(...) tag from the resource
-                $this->resource = str_replace("{{ @errors($errorTemplateName$errorGroupName) }}", '', $this->resource);
+                $this->resource = str_replace(
+                    "{{ @errors($errorTemplateName$errorGroupName) }}", '', $this->resource
+                );
             }
         }
     }
@@ -165,9 +169,13 @@ trait DisplaysErrors
                 {
                     $originalOutput = $output;
 
-                    $output = str_replace('{{ @message }}', $this->HttpKernel->session->get("errors.$field")[0], $output);
+                    $output = str_replace(
+                        '{{ @message }}', $this->HttpKernel->session->get("errors.$field")[0], $output
+                    );
 
-                    $this->resource = str_replace("{{ @error($field,$originalOutput) }}", trim($output), $this->resource);
+                    $this->resource = str_replace(
+                        "{{ @error($field,$originalOutput) }}", trim($output), $this->resource
+                    );
 
                     continue;
                 }
