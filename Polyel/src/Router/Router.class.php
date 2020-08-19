@@ -110,6 +110,8 @@ class Router
                     // Check for a valid session and update the session data, create one if one doesn't exist
                     $this->sessionManager->startSession($HttpKernel);
 
+                    $response->setSession($HttpKernel->session);
+
                     // Create the CSRF token if it is missing in the clients session data
                     $HttpKernel->session->createCsrfToken();
                 }

@@ -3,6 +3,7 @@
 namespace Polyel\Http;
 
 use Polyel\View\View;
+use Polyel\Session\Session;
 use Polyel\Http\Utilities\ResponseUtilities;
 
 class Response
@@ -15,6 +16,8 @@ class Response
 
     // Holds the final response content for the request
     private $response;
+
+    private $session;
 
     // Holds the headers which need to be set for the response before replying to client
     private $headers;
@@ -31,6 +34,11 @@ class Response
     public function __construct(View $view)
     {
         $this->view = $view;
+    }
+
+    public function setSession(Session $session)
+    {
+        $this->session = $session;
     }
 
     public function send($response)
@@ -118,11 +126,19 @@ class Response
         $this->headers[$headerName] = $headerValue;
     }
 
-    public function redirect($url, $statusCode = 302)
+    public function redirect($url, $statusCode = 302, $errors = [])
     {
         // Setup a redirection happen when send() is called
         $this->redirection = $url;
         $this->httpStatusCode = $statusCode;
+
+        if(isset($this->session) && exists($errors))
+        {
+            foreach($errors as $field => $message)
+            {
+                $this->session->push("errors.$field", $message);
+            }
+        }
     }
 
     /*
@@ -159,7 +175,7 @@ class Response
             {
                 if(exists($response->url))
                 {
-                    $this->redirect($response->url, $response->status);
+                    $this->redirect($response->url, $response->status, $response->errors);
                     return;
                 }
             }
