@@ -45,7 +45,7 @@ class ValidationException extends Exception
         {
             foreach($errors as $groupedField => $error)
             {
-                $groupedField = (is_string($groupedField)) ? $groupedField = ".$groupedField" : '';
+                $groupedField = (is_string($groupedField)) ? ".$groupedField" : '';
 
                 if(!is_array($error))
                 {
