@@ -126,7 +126,7 @@ class Response
         $this->headers[$headerName] = $headerValue;
     }
 
-    public function redirect($url, $statusCode = 302, $errors = [])
+    public function redirect($url, $statusCode = 302, $errors = [], $group = null)
     {
         // Setup a redirection happen when send() is called
         $this->redirection = $url;
@@ -134,9 +134,22 @@ class Response
 
         if(isset($this->session) && exists($errors))
         {
+            if($group && $oldData = $this->session->pull('old'))
+            {
+                // Add the group name to the old data array if it was set
+                $this->session->store("old.$group", $oldData);
+            }
+
+            if($group)
+            {
+                // Prepare the group name to be used with dot notation if set
+                $group = "$group.";
+            }
+
             foreach($errors as $field => $message)
             {
-                $this->session->push("errors.$field", $message);
+                // Add each redirect error to the session
+                $this->session->push("errors.$group$field", $message);
             }
         }
     }
@@ -175,7 +188,7 @@ class Response
             {
                 if(exists($response->url))
                 {
-                    $this->redirect($response->url, $response->status, $response->errors);
+                    $this->redirect($response->url, $response->status, $response->errors, $response->group);
                     return;
                 }
             }

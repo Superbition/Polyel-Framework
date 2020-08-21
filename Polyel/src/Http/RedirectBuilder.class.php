@@ -13,15 +13,19 @@ class RedirectBuilder
 
     public $errors = [];
 
+    public $group = null;
+
     public function __construct($url, $status)
     {
         $this->url = $url;
         $this->status = $status;
     }
 
-    public function withErrors(array $errors)
+    public function withErrors(array $errors, string $group = '')
     {
         $this->errors = $errors;
+
+        $this->group = $group;
 
         return $this;
     }
