@@ -112,6 +112,11 @@ class Router
 
                     $response->setSession($HttpKernel->session);
 
+                    if($oldData = $HttpKernel->request->data())
+                    {
+                        $HttpKernel->session->store('old', $oldData);
+                    }
+
                     // Create the CSRF token if it is missing in the clients session data
                     $HttpKernel->session->createCsrfToken();
                 }
