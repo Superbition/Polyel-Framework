@@ -6,6 +6,13 @@ trait RequestValidation
 {
     public function validate(array $rules, string $group = '')
     {
+        $validator = new Validator($this->getRequestDataForValidation(), $rules, $group);
+
+        return $validator->validate();
+    }
+
+    protected function getRequestDataForValidation()
+    {
         // Get all the request data
         $data = $this->data();
 
@@ -45,8 +52,6 @@ trait RequestValidation
             $data = $this->query();
         }
 
-        $validator = new Validator($data, $rules, $group);
-
-        return $validator->validate();
+        return $data;
     }
 }
