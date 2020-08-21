@@ -254,6 +254,11 @@ class Validator
         return in_array($rule, $this->implicitRules, true);
     }
 
+    public function group()
+    {
+        return $this->group ?? null;
+    }
+
     private function addError(string $field, string $rule, array $parameters = [])
     {
         $errorMessage = $this->getRuleErrorMessage($rule);

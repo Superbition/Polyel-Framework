@@ -41,6 +41,12 @@ class ValidationException extends Exception
 
         $this->session->remove('errors');
 
+        if($group = $this->vlaidator->group())
+        {
+            // Add the group name to the old data array if it was set
+            $this->session->store("old.$group", $this->session->pull('old'));
+        }
+
         foreach($invalidFields as $fieldOrGroup => $errors)
         {
             foreach($errors as $groupedField => $error)
