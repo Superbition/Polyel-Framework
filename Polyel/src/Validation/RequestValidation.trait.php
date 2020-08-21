@@ -16,12 +16,6 @@ trait RequestValidation
         // Get all the request data
         $data = $this->data();
 
-        // Make sure data has been sent with this request before we continue...
-        if($data === false)
-        {
-            return false;
-        }
-
         // Process any uploaded files separately because they are part of another array
         if($this->hasFiles())
         {
