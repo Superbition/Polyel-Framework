@@ -13,6 +13,26 @@ trait ValidationRules
             in_array($value, ['yes', 'on', '1', 1, true, 'true'], true);
     }
 
+    protected function validateActiveUrl($field, $value)
+    {
+        if(!is_string($value))
+        {
+            return false;
+        }
+
+        if(\Swoole\Coroutine\System::gethostbyname($value, AF_INET, 1))
+        {
+            return true;
+        }
+
+        if(\Swoole\Coroutine\System::gethostbyname($value, AF_INET6, 1))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     protected function validateEmail($field, $value, $parameters)
     {
         if(!is_string($value) && empty($value))

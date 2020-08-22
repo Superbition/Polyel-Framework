@@ -10,6 +10,7 @@ trait ValidationErrorMessages
 
     private $errorMessages = [
         'Accepted' => '{field} must be accepted.',
+        'ActiveURL' => '{field} is an invalid URL.',
         'Email' => 'Your {field} must be a valid email address.',
         'Required' => 'The {field} field is required.',
         'RequiredWithAny' => 'The {field} field is required when {values} is present.',
