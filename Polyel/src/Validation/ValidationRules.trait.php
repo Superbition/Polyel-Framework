@@ -7,6 +7,12 @@ use Polyel\Http\File\UploadedFile;
 
 trait ValidationRules
 {
+    protected function validateAccepted($field, $value)
+    {
+        return $this->validateRequired($field, $value) &&
+            in_array($value, ['yes', 'on', '1', 1, true, 'true'], true);
+    }
+
     protected function validateEmail($field, $value, $parameters)
     {
         if(!is_string($value) && empty($value))

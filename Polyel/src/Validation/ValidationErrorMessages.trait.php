@@ -9,9 +9,10 @@ trait ValidationErrorMessages
     use ViewTools;
 
     private $errorMessages = [
-      'Email' => 'Your {field} must be a valid email address.',
-      'Required' => 'The {field} field is required.',
-      'RequiredWithAny' => 'The {field} field is required when {values} is present.',
+        'Accepted' => '{field} must be accepted.',
+        'Email' => 'Your {field} must be a valid email address.',
+        'Required' => 'The {field} field is required.',
+        'RequiredWithAny' => 'The {field} field is required when {values} is present.',
     ];
 
     protected function getRuleErrorMessage(string $rule)
