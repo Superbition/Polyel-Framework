@@ -38,9 +38,19 @@ trait ValidationErrorMessages
             return $errorMessage;
         }
 
+        // Remove any duplicate placeholders where they could be used more than once
+        $placeholders = array_unique($placeholders);
+
+        // For when the number of placeholders or parameters don't match
         if(count($placeholders) !== count($parameters))
         {
+            // Combine all parameters as a string to one single placeholder, due to unequal elements
             $parameters = array_combine($placeholders, $this->reduceParametersToString($parameters));
+        }
+        else
+        {
+            // Combine the found placeholders together with the parameters from the rule
+            $parameters = array_combine($placeholders, $parameters);
         }
 
         foreach($placeholders as $placeholder)
