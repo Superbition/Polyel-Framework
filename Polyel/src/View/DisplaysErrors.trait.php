@@ -170,7 +170,7 @@ trait DisplaysErrors
                     $originalOutput = $output;
 
                     $output = str_replace(
-                        '{{ @message }}', $error[0], $output
+                        '@message', $error[0], $output
                     );
 
                     $this->resource = str_replace(
