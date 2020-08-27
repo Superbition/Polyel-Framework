@@ -92,8 +92,7 @@ class View
             $elementTags = $this->getStringsBetween($this->resource, "{{ @addElement(", ") }}");
             $this->element->processElementsFor($this->resource, $elementTags, $this->HttpKernel);
 
-            $oldRequestDataTags = $this->getStringsBetween($this->resource, "{{ @old(", ") }}");
-            $this->addOldRequestData($oldRequestDataTags);
+            $this->addOldRequestData();
 
             // Process all error tags within the resource and inject any rendered errors...
             $this->processErrors();
@@ -207,10 +206,12 @@ class View
         $this->resource = str_replace("{{ @JS }}", $jsLinks, $this->resource);
     }
 
-    private function addOldRequestData($oldRequestDataTags)
+    private function addOldRequestData()
     {
         if($this->HttpKernel->request->type !== 'api')
         {
+            $oldRequestDataTags = $this->getStringsBetween($this->resource, "{{ @old(", ") }}");
+
             foreach($oldRequestDataTags as $oldRequestDataTag)
             {
                 // Get the parameters from each old data request, set to null if missing
