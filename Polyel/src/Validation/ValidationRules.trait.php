@@ -33,6 +33,49 @@ trait ValidationRules
         return false;
     }
 
+    protected function validateAfter($field, $value, $parameters)
+    {
+        return $this->dateComparison($field, $value, $parameters, '>');
+    }
+
+    protected function dateComparison($field, $value, $parameters, $operator)
+    {
+        if(!is_string($value) && !is_numeric($value))
+        {
+            return false;
+        }
+
+        $firstDate = $this->parseDate($value);
+        $secondDate = $this->parseDate($parameters[0]);
+
+        if(is_numeric($firstDate) && is_numeric($secondDate))
+        {
+            switch($operator)
+            {
+                case '>':
+                    return $firstDate > $secondDate;
+                break;
+            }
+        }
+
+        return false;
+    }
+
+    protected function parseDate($value)
+    {
+        // Try by using the format given first to get a timestamp
+        if($date = strtotime($value))
+        {
+            return $date;
+        }
+
+        // Convert for a valid European datetime format as strtotime uses - for dd/mm/yyy
+        $date = str_replace('/', '-', $value);
+
+        // Return the result for a European formatted datetime
+        return strtotime($date);
+    }
+
     protected function validateEmail($field, $value, $parameters)
     {
         if(!is_string($value) && empty($value))

@@ -11,6 +11,7 @@ trait ValidationErrorMessages
     private $errorMessages = [
         'Accepted' => '{field} must be accepted.',
         'ActiveURL' => '{field} is an invalid URL.',
+        'After' => '{field} must be a date after {date}',
         'Email' => 'Your {field} must be a valid email address.',
         'Required' => 'The {field} field is required.',
         'RequiredWithAny' => 'The {field} field is required when {values} is present.',
