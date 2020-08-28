@@ -190,6 +190,18 @@ class Validator
             $parameters = $this->explodeWildcardParameters($parameters);
         }
 
+        if(exists($parameters))
+        {
+            // Convert any parameters to values if they are a name for another field
+            foreach($parameters as $key => $parameter)
+            {
+                if($anotherFieldValue = $this->getValue($parameters[$key]))
+                {
+                    $parameters[$key] = $anotherFieldValue;
+                }
+            }
+        }
+
         if($value instanceof UploadedFile && $value->isValid() === false && $this->fileIsRequired($rule))
         {
             $this->addError($field, 'Uploaded');
