@@ -119,6 +119,40 @@ trait ValidationRules
         return true;
     }
 
+    protected function validateAlpha($field, $value)
+    {
+        // Match any character from any language with unicode support
+        return is_string($value) && preg_match('/^[\pL\pM]+$/u', $value);
+    }
+
+    protected function validateAlphaDash($field, $value)
+    {
+        // Match any character from any language with unicode support, dashes or underscores
+        return is_string($value) && preg_match('/^[\pL\pM_-]+$/u', $value);
+    }
+
+    protected function validateAlphaNumeric($field, $value)
+    {
+        if(!is_string($value) && !is_numeric($value))
+        {
+            return false;
+        }
+
+        // More than 0 because it can be classed as true
+        return preg_match('/^[\pL\pM\pN]+$/u', $value) > 0;
+    }
+
+    protected function validateAlphaNumericDash($field, $value)
+    {
+        if(!is_string($value) && !is_numeric($value))
+        {
+            return false;
+        }
+
+        // More than 0 because it can be classed as true
+        return preg_match('/^[\pL\pM\pN_-]+$/u', $value) > 0;
+    }
+
     protected function validateRequired($field, $value)
     {
         if(is_null($value))
