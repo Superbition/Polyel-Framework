@@ -38,6 +38,11 @@ trait ValidationRules
         return $this->dateComparison($field, $value, $parameters, '>');
     }
 
+    protected function validateAfterOrEqual($field, $value, $parameters)
+    {
+        return $this->dateComparison($field, $value, $parameters, '>=');
+    }
+
     protected function dateComparison($field, $value, $parameters, $operator)
     {
         if(!is_string($value) && !is_numeric($value))
@@ -54,6 +59,10 @@ trait ValidationRules
             {
                 case '>':
                     return $firstDate > $secondDate;
+                break;
+
+                case '>=':
+                    return $firstDate >= $secondDate;
                 break;
             }
         }
