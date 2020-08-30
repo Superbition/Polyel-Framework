@@ -85,40 +85,6 @@ trait ValidationRules
         return strtotime($date);
     }
 
-    protected function validateEmail($field, $value, $parameters)
-    {
-        if(!is_string($value) && empty($value))
-        {
-            return false;
-        }
-
-        if(filter_var($value, FILTER_VALIDATE_EMAIL) === false)
-        {
-            return false;
-        }
-
-        if(in_array('dns', $parameters))
-        {
-            if(checkdnsrr(explode('@', $value)[1], 'MX') === false)
-            {
-                return false;
-            }
-        }
-
-        if(in_array('spoof', $parameters))
-        {
-            $spoofChecker = new Spoofchecker();
-            $spoofChecker->setChecks(Spoofchecker::SINGLE_SCRIPT);
-
-            if($spoofChecker->isSuspicious($value))
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     protected function validateAlpha($field, $value)
     {
         // Match any character from any language with unicode support
@@ -161,6 +127,40 @@ trait ValidationRules
     protected function validateBreak()
     {
         // Always return true, allowing us to just use Break as a rule
+        return true;
+    }
+
+    protected function validateEmail($field, $value, $parameters)
+    {
+        if(!is_string($value) && empty($value))
+        {
+            return false;
+        }
+
+        if(filter_var($value, FILTER_VALIDATE_EMAIL) === false)
+        {
+            return false;
+        }
+
+        if(in_array('dns', $parameters))
+        {
+            if(checkdnsrr(explode('@', $value)[1], 'MX') === false)
+            {
+                return false;
+            }
+        }
+
+        if(in_array('spoof', $parameters))
+        {
+            $spoofChecker = new Spoofchecker();
+            $spoofChecker->setChecks(Spoofchecker::SINGLE_SCRIPT);
+
+            if($spoofChecker->isSuspicious($value))
+            {
+                return false;
+            }
+        }
+
         return true;
     }
 
