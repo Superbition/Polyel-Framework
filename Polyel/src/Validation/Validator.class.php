@@ -14,6 +14,8 @@ class Validator
 
     private array $rules;
 
+    private array $failedRules;
+
     private string $group;
 
     /*
@@ -137,16 +139,27 @@ class Validator
     {
         foreach($this->rules as $field => $rules)
         {
-
-
             foreach($rules as $rule)
             {
                 $value = $this->getValue($field);
 
                 $this->processRule($field, $rule, $value);
+
+                if($breakPoint = $this->shouldBreakFromValidating($field, $rules))
+                {
+                    if($breakPoint === 'field')
+                    {
+                        // Break on the field and out of the main loop, stopping validation
+                        break 2;
+                    }
+
+                    if($breakPoint === 'rule')
+                    {
+                        // Break on the rule and continue onto the next field to validate
+                        break 1;
+                    }
+                }
             }
-
-
         }
 
         if(empty($this->errors))
@@ -179,6 +192,38 @@ class Validator
 
         // Return the requested configuration level/value
         return $data;
+    }
+
+    protected function shouldBreakFromValidating($field, $rules)
+    {
+        // Available Break rule variations
+        $breakRules = ['Break', 'Break:rule', 'Break:field'];
+
+        // Check if the field is using a Break rule and has an error
+        if(!empty($breakPoint = array_intersect($breakRules, $rules)) && $this->hasError($field))
+        {
+            // Return the breakpoint of either rule or field, default to rule is one is not set
+            return explode(':', current($breakPoint))[1] ?? 'rule';
+        }
+
+        /*
+         * Break at the rule level if the field is using a rule that implies it
+         * is required and that the field has already failed the requirement validation.
+         * We do this because there is no point in continuing validating when the
+         * requirement rule has failed and trying to execute another rule on an empty or
+         * missing field.
+         */
+        if($this->hasRule($field, $this->implicitRules) && $this->hasError($field))
+        {
+            // Only break when the failed rule is actually a implicit rule
+            if($this->hasFailedRule($field, $this->implicitRules))
+            {
+                return 'rule';
+            }
+        }
+
+        // False, we should continue validating rules or onto the next field...
+        return false;
     }
 
     private function processRule($field, $rule, $value)
@@ -229,6 +274,28 @@ class Validator
         }
 
         return [ucwords($rule), $parameters];
+    }
+
+    protected function hasRule($field, $rules)
+    {
+        // Matches a fields rules against the rules provided, checking if any are present
+        if(!empty(array_intersect($this->rules[$field], $rules)))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    protected function hasFailedRule($field, $rules)
+    {
+        // Uses the failedRules array keys to check if a rule has already failed on a field
+        if(!empty(array_intersect(array_keys($this->failedRules[$field]), $rules)))
+        {
+            return true;
+        }
+
+        return false;
     }
 
     protected function dependentOnOtherFields(string $rule)
@@ -284,6 +351,9 @@ class Validator
                 return false;
             }
 
+            // Store which rules have failed for each rule and their parameters
+            $this->failedRules[$field][$rule] = $parameters;
+
             // Store an error message inside a named group if one is set
             if(exists($this->group))
             {
@@ -301,6 +371,21 @@ class Validator
         }
 
         // No matching error message was found for the given rule
+        return false;
+    }
+
+    protected function hasError($field)
+    {
+        if(isset($this->group, $this->errors[$this->group][$field]))
+        {
+            return true;
+        }
+
+        if(isset($this->errors[$field]))
+        {
+            return true;
+        }
+
         return false;
     }
 }

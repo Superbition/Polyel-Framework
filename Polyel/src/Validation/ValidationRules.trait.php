@@ -153,6 +153,12 @@ trait ValidationRules
         return preg_match('/^[\pL\pM\pN_-]+$/u', $value) > 0;
     }
 
+    protected function validateBreak()
+    {
+        // Always return true, allowing us to just use Break as a rule
+        return true;
+    }
+
     protected function validateRequired($field, $value)
     {
         if(is_null($value))
