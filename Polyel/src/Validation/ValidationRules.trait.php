@@ -65,6 +65,10 @@ trait ValidationRules
                 case '>=':
                     return $firstDate >= $secondDate;
                 break;
+
+                case '<':
+                    return $firstDate < $secondDate;
+                break;
             }
         }
 
@@ -125,6 +129,11 @@ trait ValidationRules
     {
         // Always return true, allowing us to just use Break as a rule
         return true;
+    }
+
+    protected function validateBefore($field, $value, $parameters)
+    {
+        return $this->dateComparison($field, $value, $parameters, '<');
     }
 
     protected function validateDateFormat($field, $value, $parameters)
