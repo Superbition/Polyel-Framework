@@ -2,6 +2,7 @@
 
 namespace Polyel\Validation;
 
+use DateTime;
 use Spoofchecker;
 use Polyel\Http\File\UploadedFile;
 
@@ -124,6 +125,15 @@ trait ValidationRules
     {
         // Always return true, allowing us to just use Break as a rule
         return true;
+    }
+
+    protected function validateDateFormat($field, $value, $parameters)
+    {
+        $dateFormat = $parameters[0];
+
+        $date = DateTime::createFromFormat($dateFormat, $value);
+
+        return $date && $date->format($dateFormat) === $value;
     }
 
     protected function validateEmail($field, $value, $parameters)

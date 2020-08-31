@@ -18,6 +18,7 @@ trait ValidationErrorMessages
         'AlphaNumeric' => '{field} must be only alpha-numeric characters.',
         'AlphaNumericDash' => '{field} must be only alpha-numeric characters with dashes or underscores.',
         'Array' => '{field} must be an array.',
+        'DateFormat' => '{field} must use the date format {format}',
         'Email' => 'Your {field} must be a valid email address.',
         'Required' => 'The {field} field is required.',
         'RequiredWithAny' => 'The {field} field is required when {values} is present.',
