@@ -78,11 +78,7 @@ trait ValidationRules
             return $date;
         }
 
-        // Convert for a valid European datetime format as strtotime uses - for dd/mm/yyy
-        $date = str_replace('/', '-', $value);
-
-        // Return the result for a European formatted datetime
-        return strtotime($date);
+        return false;
     }
 
     protected function validateAlpha($field, $value)
