@@ -67,15 +67,11 @@ trait ValidationErrorMessages
         {
             if(array_key_exists($placeholder, $parameters))
             {
-                return str_replace('{' . $placeholder . '}', $parameters[$placeholder], $errorMessage);
+                $errorMessage = str_replace('{' . $placeholder . '}', $parameters[$placeholder], $errorMessage);
             }
         }
 
-        /*
-         * If no placeholders can be matched and replaced, return false, placeholder replacement failed.
-         * Only applies when placeholders are found but no matching parameters can take the placeholder.
-         */
-        return false;
+        return $errorMessage;
     }
 
     protected function reduceParametersToString(array $parameters)
