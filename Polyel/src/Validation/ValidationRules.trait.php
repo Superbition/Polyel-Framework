@@ -252,6 +252,18 @@ trait ValidationRules
         return true;
     }
 
+    protected function validateDigits($field, $value, $parameters)
+    {
+        return !preg_match('/\D/', $value) && strlen((string) $value) == $parameters[0];
+    }
+
+    protected function validateDigitsBetween($field, $value, $parameters)
+    {
+        $length = strlen((string) $value);
+
+        return !preg_match('/\D/', $value) && $length >= $parameters[0] && $length <= $parameters[1];
+    }
+
     protected function validateEmail($field, $value, $parameters)
     {
         if(!is_string($value) && empty($value))

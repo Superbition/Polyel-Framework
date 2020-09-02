@@ -33,6 +33,8 @@ trait ValidationErrorMessages
         'DateFormat' => '{field} must use the date format {format}',
         'DateEquals' => '{field} must be a date equal to {date}',
         'DistinctFrom' => '{field} must be different from {other}',
+        'Digits' => '{field} must be exactly {digits} digits',
+        'DigitsBetween' => '{field} must be between {min} and {max} digits',
         'Email' => 'Your {field} must be a valid email address.',
         'Numeric' => '{field} must be a numeric value',
         'Required' => 'The {field} field is required.',
