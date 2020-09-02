@@ -18,6 +18,8 @@ class Validator
 
     private string $group;
 
+    private string $lastSizeType;
+
     /*
      * The validation rules which can be used with files
      */
@@ -44,6 +46,16 @@ class Validator
         'Before', 'After', 'BeforeOrEqual', 'AfterOrEqual', 'GreaterThan', 'LessThan', 'Gte', 'Lte',
         'ExcludeIf', 'ExcludeUnless',
     ];
+
+    /*
+     * The Numeric validation rules
+     */
+    private $numericRules = ['Numeric', 'Integer'];
+
+    /*
+     * The Size based validation rules
+     */
+    private $sizeRules = ['Size', 'Between', 'Min', 'Max', 'GreaterThan', 'LessThan', 'Gte', 'Lte'];
 
     /*
      * The array of error messages when validation fails for fields
@@ -341,6 +353,12 @@ class Validator
     private function addError(string $field, string $rule, array $parameters = [])
     {
         $errorMessage = $this->getRuleErrorMessage($rule);
+
+        // Used to convert a size rule into its error message...
+        if(is_array($errorMessage) && in_array($rule, $this->sizeRules))
+        {
+            $errorMessage = $this->getSizeErrorMessage($errorMessage);
+        }
 
         if(exists($errorMessage))
         {

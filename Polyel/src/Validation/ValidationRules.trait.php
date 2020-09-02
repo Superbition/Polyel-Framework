@@ -145,6 +145,44 @@ trait ValidationRules
         return $this->dateComparison($field, $value, $parameters, '<=');
     }
 
+    protected function validateBetween($field, $value, $parameters)
+    {
+        $size = $this->getFieldSize($field, $value);
+
+        if($size !== false)
+        {
+            return $size >= $parameters[0] && $size <= $parameters[1];
+        }
+
+        return false;
+    }
+
+    protected function getFieldSize($field, $value)
+    {
+        if(is_numeric($value) && $this->hasRule($field, $this->numericRules))
+        {
+            $this->lastSizeType = 'Numeric';
+            return $value;
+        }
+        else if(is_array($value))
+        {
+            $this->lastSizeType = 'Array';
+            return count($value);
+        }
+        else if($value instanceof UploadedFile)
+        {
+            $this->lastSizeType = 'File';
+            return $value->getSize() / 1024;
+        }
+        else if(is_string($value))
+        {
+            $this->lastSizeType = 'String';
+            return mb_strlen($value);
+        }
+
+        return false;
+    }
+
     protected function validateDateFormat($field, $value, $parameters)
     {
         $dateFormat = $parameters[0];
@@ -186,6 +224,11 @@ trait ValidationRules
         }
 
         return true;
+    }
+
+    protected function validateNumeric($field, $value)
+    {
+        return is_numeric($value);
     }
 
     protected function validateRequired($field, $value)

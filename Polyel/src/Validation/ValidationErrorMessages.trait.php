@@ -20,8 +20,15 @@ trait ValidationErrorMessages
         'Array' => '{field} must be an array.',
         'Before' => '{field} must be a date before {date}',
         'BeforeOrEqual' => '{field} must be a date before or equal to {date}',
+        'Between' => [
+            'Numeric' => '{field} must be between {min} and {max}',
+            'Array' => '{field} must have between {min} and {max} items',
+            'File' => '{field} must be between {min} and {max} kilobytes',
+            'String' => '{field} must be between {min} and {max} characters',
+        ],
         'DateFormat' => '{field} must use the date format {format}',
         'Email' => 'Your {field} must be a valid email address.',
+        'Numeric' => '{field} must be a numeric value',
         'Required' => 'The {field} field is required.',
         'RequiredWithAny' => 'The {field} field is required when {values} is present.',
     ];
@@ -84,6 +91,11 @@ trait ValidationErrorMessages
         }
 
         return [rtrim($values, ', ')];
+    }
+
+    protected function getSizeErrorMessage(array $sizeErrorMessages)
+    {
+        return $sizeErrorMessages[$this->lastSizeType];
     }
 
     public function errors()
