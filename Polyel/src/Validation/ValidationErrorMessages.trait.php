@@ -31,6 +31,7 @@ trait ValidationErrorMessages
         'Match' => '{field} must be the same as {other}',
         'Date' => '{field} must be a valid date',
         'DateFormat' => '{field} must use the date format {format}',
+        'DateEquals' => '{field} must be a date equal to {date}',
         'Email' => 'Your {field} must be a valid email address.',
         'Numeric' => '{field} must be a numeric value',
         'Required' => 'The {field} field is required.',

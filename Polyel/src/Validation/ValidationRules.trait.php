@@ -80,6 +80,10 @@ trait ValidationRules
                 case '<=':
                     return $firstDate <= $secondDate;
                 break;
+
+                case '===':
+                    return $firstDate === $secondDate;
+                break;
             }
         }
 
@@ -226,6 +230,11 @@ trait ValidationRules
         $date = DateTime::createFromFormat('!' . $dateFormat, $value);
 
         return $date && $date->format($dateFormat) === $value;
+    }
+
+    protected function validateDateEquals($field, $value, $parameters)
+    {
+        return $this->dateComparison($field, $value, $parameters, '===');
     }
 
     protected function validateEmail($field, $value, $parameters)
