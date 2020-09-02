@@ -183,6 +183,11 @@ trait ValidationRules
         return false;
     }
 
+    protected function validateBool($field, $value)
+    {
+        return in_array($value, [true, false, 'true', 'false', 0, 1, '0', '1'], true);
+    }
+
     protected function validateDateFormat($field, $value, $parameters)
     {
         $dateFormat = $parameters[0];
