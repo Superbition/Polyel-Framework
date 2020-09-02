@@ -200,6 +200,18 @@ trait ValidationRules
         return $value === $parameters[0];
     }
 
+    protected function validateDate($field, $value)
+    {
+        if((!is_string($value) && !is_numeric($value)) || strtotime($value) === false)
+        {
+            return false;
+        }
+
+        $date = date_parse($value);
+
+        return checkdate($date['month'], $date['day'], $date['year']);
+    }
+
     protected function validateDateFormat($field, $value, $parameters)
     {
         $dateFormat = $parameters[0];

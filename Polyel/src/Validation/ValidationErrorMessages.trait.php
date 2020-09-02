@@ -29,6 +29,7 @@ trait ValidationErrorMessages
         'Bool' => '{field} must be either true or false',
         'Confirmed' => '{field} confirmation does not match',
         'Match' => '{field} must be the same as {other}',
+        'Date' => '{field} must be a valid date',
         'DateFormat' => '{field} must use the date format {format}',
         'Email' => 'Your {field} must be a valid email address.',
         'Numeric' => '{field} must be a numeric value',
