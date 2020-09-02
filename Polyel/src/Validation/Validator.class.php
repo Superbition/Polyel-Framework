@@ -242,13 +242,10 @@ class Validator
     {
         [$rule, $parameters] = $this->parseRule($rule);
 
-        if($this->dependentOnOtherFields($rule))
+        if(exists($parameters) && $this->dependentOnOtherFields($rule))
         {
             $parameters = $this->explodeWildcardParameters($parameters);
-        }
 
-        if(exists($parameters) && in_array($rule, $this->dependentRules))
-        {
             // Convert any parameters to values if they are a name for another field
             foreach($parameters as $key => $parameter)
             {
