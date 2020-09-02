@@ -237,6 +237,21 @@ trait ValidationRules
         return $this->dateComparison($field, $value, $parameters, '===');
     }
 
+    protected function validateDistinctFrom($field, $value, $parameters)
+    {
+        foreach($parameters as $parameter)
+        {
+            $other = $this->getValue($parameter) ?? $parameter;
+
+            if($value === $other)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     protected function validateEmail($field, $value, $parameters)
     {
         if(!is_string($value) && empty($value))
