@@ -188,6 +188,18 @@ trait ValidationRules
         return in_array($value, [true, false, 'true', 'false', 0, 1, '0', '1'], true);
     }
 
+    protected function validateConfirmed($field, $value)
+    {
+        $otherField = $this->getValue("${field}_confirmed");
+
+        return $this->validateMatch($field, $value, [$otherField]);
+    }
+
+    protected function validateMatch($field, $value, $parameters)
+    {
+        return $value === $parameters[0];
+    }
+
     protected function validateDateFormat($field, $value, $parameters)
     {
         $dateFormat = $parameters[0];
