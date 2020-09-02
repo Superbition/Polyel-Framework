@@ -192,7 +192,7 @@ trait ValidationRules
     {
         $dateFormat = $parameters[0];
 
-        $date = DateTime::createFromFormat($dateFormat, $value);
+        $date = DateTime::createFromFormat('!' . $dateFormat, $value);
 
         return $date && $date->format($dateFormat) === $value;
     }
