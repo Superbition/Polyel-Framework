@@ -51,6 +51,13 @@ trait ValidationRules
             return false;
         }
 
+        // Check if the date parameter is a name for another field
+        if($otherFieldValue = $this->getValue($parameters[0]))
+        {
+            // If so get the value from the other field
+            $parameters[0] = $otherFieldValue;
+        }
+
         $firstDate = $this->parseDate($value);
         $secondDate = $this->parseDate($parameters[0]);
 
