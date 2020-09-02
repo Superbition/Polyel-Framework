@@ -247,7 +247,7 @@ class Validator
             $parameters = $this->explodeWildcardParameters($parameters);
         }
 
-        if(exists($parameters))
+        if(exists($parameters) && in_array($rule, $this->dependentRules))
         {
             // Convert any parameters to values if they are a name for another field
             foreach($parameters as $key => $parameter)
