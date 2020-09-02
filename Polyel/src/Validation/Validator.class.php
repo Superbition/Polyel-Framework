@@ -242,9 +242,14 @@ class Validator
     {
         [$rule, $parameters] = $this->parseRule($rule);
 
+        $originalParameters = $parameters;
+
         if(exists($parameters) && $this->dependentOnOtherFields($rule))
         {
             $parameters = $this->explodeWildcardParameters($parameters);
+
+            // Update original parameters with any expanded wildcard parameters
+            $originalParameters = $parameters;
 
             // Convert any parameters to values if they are a name for another field
             foreach($parameters as $key => $parameter)
@@ -267,7 +272,7 @@ class Validator
 
         if($this->$validationMethod($field, $value, $parameters) === false)
         {
-            $this->addError($field, $rule, $parameters);
+            $this->addError($field, $rule, $originalParameters);
         }
     }
 

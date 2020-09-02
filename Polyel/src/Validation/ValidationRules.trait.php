@@ -272,7 +272,7 @@ trait ValidationRules
     {
         foreach($parameters as $parameter)
         {
-            if($this->validateRequired($parameter, $this->getValue($parameter)))
+            if($this->validateRequired(null, $parameter))
             {
                 return false;
             }
