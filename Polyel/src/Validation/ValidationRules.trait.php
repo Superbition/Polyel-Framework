@@ -264,6 +264,64 @@ trait ValidationRules
         return !preg_match('/\D/', $value) && $length >= $parameters[0] && $length <= $parameters[1];
     }
 
+    protected function validateDimensions($field, $value, $parameters)
+    {
+        // Making sure we have a valid uploaded file
+        if($value instanceof UploadedFile && $value->isValid() === false)
+        {
+            return false;
+        }
+
+        if(in_array($value->getMimeType(), ['image/svg+xml', 'image/svg']))
+        {
+            return true;
+        }
+
+        // Make sure we can get the image dimensions
+        if(!$dimensions = getimagesize($value->fullPath()))
+        {
+            return false;
+        }
+
+        [$width, $height] = $dimensions;
+
+        // Convert named parameters where parameters are the array index with their values...
+        $parameters = $this->parseNamedParameters($parameters);
+
+        // Perform a image dimensions check based on the named parameters
+        if($this->imageFailsDimensionChecks($parameters, $width, $height))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function imageFailsDimensionChecks($dimensions, $imgWidth, $imgHeight)
+    {
+        return (isset($dimensions['width']) && $dimensions['width'] != $imgWidth) ||
+               (isset($dimensions['minWidth']) && $dimensions['minWidth'] > $imgWidth) ||
+               (isset($dimensions['maxWidth']) && $dimensions['maxWidth'] < $imgWidth) ||
+               (isset($dimensions['height']) && $dimensions['height'] != $imgHeight) ||
+               (isset($dimensions['minHeight']) && $dimensions['minHeight'] > $imgHeight) ||
+               (isset($dimensions['maxHeight']) && $dimensions['maxHeight'] < $imgHeight);
+    }
+
+    protected function parseNamedParameters(array $parameters)
+    {
+        $parametersParsed = [];
+
+        // Converts named parameters to be used as the array index with their values
+        foreach($parameters as $parameter)
+        {
+            $parameter = explode('=', $parameter);
+
+            $parametersParsed[$parameter[0]] = $parameter[1];
+        }
+
+        return $parametersParsed;
+    }
+
     protected function validateEmail($field, $value, $parameters)
     {
         if(!is_string($value) && empty($value))

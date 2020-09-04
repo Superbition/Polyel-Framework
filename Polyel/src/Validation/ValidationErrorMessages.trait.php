@@ -35,6 +35,7 @@ trait ValidationErrorMessages
         'DistinctFrom' => '{field} must be different from {other}',
         'Digits' => '{field} must be exactly {digits} digits',
         'DigitsBetween' => '{field} must be between {min} and {max} digits',
+        'Dimensions' => 'The {field} has invalid dimensions',
         'Email' => 'Your {field} must be a valid email address.',
         'Numeric' => '{field} must be a numeric value',
         'Required' => 'The {field} field is required.',
