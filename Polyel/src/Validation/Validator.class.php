@@ -153,6 +153,11 @@ class Validator
         {
             foreach($rules as $rule)
             {
+                if($rule === '')
+                {
+                    continue;
+                }
+
                 $value = $this->getValue($field);
 
                 $this->processRule($field, $rule, $value);
