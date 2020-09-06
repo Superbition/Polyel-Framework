@@ -47,24 +47,10 @@ class ValidationException extends Exception
             $this->session->store("old.$group", $this->session->pull('old'));
         }
 
-        foreach($invalidFields as $fieldOrGroup => $errors)
-        {
-            foreach($errors as $groupedField => $error)
-            {
-                $groupedField = (is_string($groupedField)) ? ".$groupedField" : '';
+        // Store the error messages directly in the session
+        $this->session->store("errors", $invalidFields);
 
-                if(!is_array($error))
-                {
-                    $error = [$error];
-                }
-
-                foreach($error as $message)
-                {
-                    $this->session->push("errors.$fieldOrGroup$groupedField", $message);
-                }
-            }
-        }
-
+        // Redirect back to the previous URL with the error messages in the session, ready to be displayed...
         return redirect($this->session->get('previousUrl', $fallbackUri), $status);
     }
 
