@@ -196,7 +196,7 @@ class Validator
         $data = $this->data;
         foreach($keys as $key)
         {
-            if(array_key_exists($key, $data))
+            if(is_array($data) && array_key_exists($key, $data))
             {
                 // Loop through until we get a final value based on the dot syntax
                 $data = $data[$key];
