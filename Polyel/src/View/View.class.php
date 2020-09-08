@@ -228,6 +228,12 @@ class View
                 // Only when old data is present in the session, we inject old data
                 if($oldData = $this->HttpKernel->session->get("old.$oldFieldPath"))
                 {
+                    // Don't output if old data is an array and not a string
+                    if(is_array($oldData))
+                    {
+                        $oldData = '';
+                    }
+
                     $defaultData = exists($defaultData) ? ",$defaultData" : '';
 
                     $this->resource = str_replace("{{ @old($oldField$defaultData) }}", $oldData, $this->resource);
