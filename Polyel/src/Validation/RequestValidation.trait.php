@@ -8,7 +8,9 @@ trait RequestValidation
     {
         $validator = new Validator($this->getRequestDataForValidation(), $rules, $group);
 
-        return $validator->validate();
+        $validator->validate();
+
+        return $validator->data();
     }
 
     protected function getRequestDataForValidation()

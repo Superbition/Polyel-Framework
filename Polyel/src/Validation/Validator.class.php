@@ -139,7 +139,7 @@ class Validator
         }
 
         // Validation has completed without any errors
-        return true;
+        return $this;
     }
 
     public function validationPasses()
@@ -216,6 +216,11 @@ class Validator
 
         // Return the requested configuration level/value
         return $data;
+    }
+
+    public function data()
+    {
+        return $this->data;
     }
 
     protected function getOriginalField($field)
