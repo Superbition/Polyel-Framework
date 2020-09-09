@@ -451,6 +451,32 @@ trait ValidationRules
         return false;
     }
 
+    protected function validateRemoveIf($field, $value, $parameters)
+    {
+        [$otherFieldValue, $values] = $this->prepareRemovalData($parameters);
+
+        // Remove field if other field is equal to any values
+        return !in_array($otherFieldValue, $values);
+    }
+
+    protected function validateRemoveUnless($field, $value, $parameters)
+    {
+        [$otherFieldValue, $values] = $this->prepareRemovalData($parameters);
+
+        // Remove field unless the other field is equal to any values
+        return in_array($otherFieldValue, $values);
+    }
+
+    protected function prepareRemovalData($parameters)
+    {
+        $otherFieldValue = $this->getValue($parameters[0]);
+
+        // Remove the other field from the parameters, so we are left with the values to check against
+        $values = array_slice($parameters, 1);
+
+        return [$otherFieldValue, $values];
+    }
+
     protected function validateNumeric($field, $value)
     {
         return is_numeric($value);

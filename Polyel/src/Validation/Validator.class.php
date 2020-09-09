@@ -16,6 +16,8 @@ class Validator
 
     private array $expandedFields = [];
 
+    private array $fieldsToBeRemoved = [];
+
     private array $failedRules;
 
     private array $uniqueArrayValueCache = [];
@@ -50,6 +52,11 @@ class Validator
         'Before', 'After', 'BeforeOrEqual', 'AfterOrEqual', 'GreaterThan', 'LessThan', 'Gte', 'Lte',
         'ExcludeIf', 'ExcludeUnless',
     ];
+
+    /*
+     * The validation rules which can be used to remove a field and its data
+     */
+    private array $removalRules = ['RemoveIf', 'RemoveUnless',];
 
     /*
      * The Numeric validation rules
@@ -169,6 +176,16 @@ class Validator
 
                 $this->processRule($field, $rule, $value);
 
+                // Determine if a field should be removed if it fails any removal rule
+                if($this->shouldBeRemoved($field))
+                {
+                    // Remove the field data and its rule
+                    $this->removeField($field);
+
+                    // Continue on to the next field to validate
+                    break;
+                }
+
                 if($breakPoint = $this->shouldBreakFromValidating($field, $rules))
                 {
                     if($breakPoint === 'field')
@@ -221,6 +238,16 @@ class Validator
     public function data()
     {
         return $this->data;
+    }
+
+    protected function shouldBeRemoved(string $field)
+    {
+        return in_array($field, $this->fieldsToBeRemoved);
+    }
+
+    protected function removeField(string $field)
+    {
+        unset($this->data[$field], $this->rules[$field]);
     }
 
     protected function getOriginalField($field)
@@ -389,6 +416,13 @@ class Validator
 
     private function addError(string $field, string $rule, array $parameters = [])
     {
+        if(in_array($rule, $this->removalRules))
+        {
+            $this->addFieldToRemovalArray($field);
+
+            return null;
+        }
+
         $errorMessage = $this->getRuleErrorMessage($rule);
 
         // Used to convert a size rule into its error message...
@@ -427,6 +461,11 @@ class Validator
 
         // No matching error message was found for the given rule
         return false;
+    }
+
+    protected function addFieldToRemovalArray($field)
+    {
+        $this->fieldsToBeRemoved[] = $field;
     }
 
     protected function hasError($field)
