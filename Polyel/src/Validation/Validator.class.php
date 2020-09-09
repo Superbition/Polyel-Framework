@@ -14,7 +14,11 @@ class Validator
 
     private array $rules;
 
+    private array $expandedFields = [];
+
     private array $failedRules;
+
+    private array $uniqueArrayValueCache = [];
 
     private string $group;
 
@@ -98,6 +102,9 @@ class Validator
             if(preg_match('/^'. $pattern . '$/', $key))
             {
                 $explodedWildcardRules[$key] = $rules;
+
+                // Store a list of fields and their expanded keys
+                $this->expandedFields[$field][] = $key;
             }
         }
 
@@ -209,6 +216,24 @@ class Validator
 
         // Return the requested configuration level/value
         return $data;
+    }
+
+    protected function getOriginalField($field)
+    {
+        foreach($this->expandedFields as $unexpanded => $expanded)
+        {
+            /*
+             * Return the unexpanded field name if a match is found within the expanded list
+             *
+             * For Example: person.luke.id would become person.*.id
+             */
+            if (in_array($field, $expanded))
+            {
+                return $unexpanded;
+            }
+        }
+
+        return $field;
     }
 
     protected function shouldBreakFromValidating($field, $rules)

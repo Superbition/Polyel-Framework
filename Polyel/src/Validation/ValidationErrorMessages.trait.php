@@ -36,6 +36,7 @@ trait ValidationErrorMessages
         'Digits' => '{field} must be exactly {digits} digits',
         'DigitsBetween' => '{field} must be between {min} and {max} digits',
         'Dimensions' => 'The {field} has invalid dimensions',
+        'UniqueArray' => '{field} cannot have duplicate values',
         'Email' => 'Your {field} must be a valid email address.',
         'Numeric' => '{field} must be a numeric value',
         'Required' => 'The {field} field is required.',

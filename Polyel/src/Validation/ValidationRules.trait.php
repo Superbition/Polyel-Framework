@@ -322,6 +322,69 @@ trait ValidationRules
         return $parametersParsed;
     }
 
+    protected function validateUniqueArray($field, $value, $parameters)
+    {
+        // Get the original field name, so person.luke.email would become person.*.email etc.
+        $originalFieldName = $this->getOriginalField($field);
+
+        // Based on the original field name, get all the data related to that field
+        $data = $this->getUniqueArrayValues($originalFieldName);
+
+        // We don't want to validate data against the actual field we are checking...
+        unset($data[$field]);
+
+        if(in_array('IgnoreCase', $parameters))
+        {
+            // Use grep to perform a case insensitive check
+            return empty(preg_grep('/^'.preg_quote($value, '/').'$/iu', $data));
+        }
+
+        // Check if there are any duplicate values within the data array...
+        return !in_array($value, array_values($data));
+    }
+
+    protected function getUniqueArrayValues($originalFieldName)
+    {
+        // If the data has not already previously been checked, we need to gather it...
+        if(!array_key_exists($originalFieldName, $this->uniqueArrayValueCache))
+        {
+            /*
+             * The leading data path is the path before the wildcard, so job.name.*.id would give job.name
+             * This means we don't have to bother searching through extra data to get to our desired array
+             * level.
+             */
+            $leadingFieldDataPath = rtrim(explode('*', $originalFieldName)[0], '.') ?: null;
+
+            // Based on the leading data path, get a flattered version of the data array
+            $flatteredFieldData = $this->flatternData($this->getValue($leadingFieldDataPath), $leadingFieldDataPath . '.');
+
+            // Prepare the pattern to search for matching keys which match the wildcard field name
+            $fieldNamePattern = str_replace('\*', '[^.]+', preg_quote($originalFieldName, '#'));
+
+            $results = [];
+
+            foreach($flatteredFieldData as $key => $value)
+            {
+                /*
+                 * If a match is found, we add that to our results array as
+                 * it will be apart of the wildcard field name related data we
+                 * want to check for duplicate values... The # delimiter is used
+                 * just in case the ignore case parameter is set and that the
+                 */
+                if(preg_match('#^' . $fieldNamePattern . '\z#u', $key))
+                {
+                    $results[$key] = $value;
+                }
+            }
+
+            // Add the built up data results to the cache, so we don't have to gather the data again
+            $this->uniqueArrayValueCache[$originalFieldName] = $results;
+        }
+
+        // Return the cached unique array data from previous unique validations...
+        return $this->uniqueArrayValueCache[$originalFieldName];
+    }
+
     protected function validateEmail($field, $value, $parameters)
     {
         if(!is_string($value) && empty($value))
