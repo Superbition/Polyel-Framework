@@ -38,6 +38,8 @@ trait ValidationErrorMessages
         'Dimensions' => 'The {field} has invalid dimensions',
         'UniqueArray' => '{field} cannot have duplicate values',
         'Email' => 'Your {field} must be a valid email address.',
+        'StartsWith' => '{field} must start with one of the following: {values}',
+        'EndsWith' => '{field} must end with one of the following: {values}',
         'Numeric' => '{field} must be a numeric value',
         'Required' => 'The {field} field is required.',
         'RequiredWithAny' => 'The {field} field is required when {values} is present.',

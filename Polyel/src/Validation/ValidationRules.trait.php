@@ -419,6 +419,38 @@ trait ValidationRules
         return true;
     }
 
+    protected function validateStartsWith($field, $value, $parameters)
+    {
+        $needles = $parameters;
+        $haystack = $value;
+
+        foreach($needles as $needle)
+        {
+            if($needle !== '' && strncmp($haystack, $needle, strlen($needle)) === 0)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    protected function validateEndsWith($field, $value, $parameters)
+    {
+        $needles = $parameters;
+        $haystack = $value;
+
+        foreach($needles as $needle)
+        {
+            if(substr($haystack, -strlen($needle)) === $needle)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     protected function validateNumeric($field, $value)
     {
         return is_numeric($value);
