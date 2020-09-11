@@ -48,9 +48,9 @@ class Validator
      */
     private array $dependentRules = [
         'RequiredWithAny', 'RequiredWithAll', 'RequiredWithoutAny', 'RequiredWithoutAll',
-        'RequiredIf', 'RequiredUnless', 'Confirmed', 'Match', 'Different', 'Unique',
-        'Before', 'After', 'BeforeOrEqual', 'AfterOrEqual', 'GreaterThan', 'LessThan', 'Gte', 'Lte',
-        'ExcludeIf', 'ExcludeUnless',
+        'RequiredIf', 'RequiredUnless', 'Confirmed', 'Match', 'Different', 'Before', 'After',
+        'BeforeOrEqual', 'AfterOrEqual', 'GreaterThan', 'LessThan', 'Gte', 'Lte', 'ExcludeIf',
+        'ExcludeUnless',
     ];
 
     /*
