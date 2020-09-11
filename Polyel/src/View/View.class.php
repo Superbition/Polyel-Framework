@@ -218,8 +218,10 @@ class View
                 [$oldField, $defaultData] = array_pad(
                     explode(',', $oldRequestDataTag, 2), 2, null);
 
+                $oldFieldPath = $oldField;
+
                 // Check if the old field is part of a group
-                if(strpos($oldField, ':') !== false)
+                if(strpos($oldFieldPath, ':') !== false)
                 {
                     // Convert the group name to work with dot syntax to get the filed from the session later
                     $oldFieldPath = str_replace(':', '.', $oldField);
