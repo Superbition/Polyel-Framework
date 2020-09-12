@@ -585,6 +585,11 @@ trait ValidationRules
         return $field;
     }
 
+    protected function validateFile($field, $value)
+    {
+        return $value instanceof UploadedFile && $value->isValid() && $value->path() !== '';
+    }
+
     protected function validateNumeric($field, $value)
     {
         return is_numeric($value);

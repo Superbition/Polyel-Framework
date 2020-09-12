@@ -42,9 +42,11 @@ trait ValidationErrorMessages
         'EndsWith' => '{field} must end with one of the following: {values}',
         'Exists' => '{field} does not exist',
         'Unique' => '{field} has already been taken',
+        'File' => '{field} must be a valid file',
         'Numeric' => '{field} must be a numeric value',
         'Required' => 'The {field} field is required.',
         'RequiredWithAny' => 'The {field} field is required when {values} is present.',
+        'Uploaded' => 'The {field} file failed to upload',
     ];
 
     protected function getRuleErrorMessage(string $rule)
