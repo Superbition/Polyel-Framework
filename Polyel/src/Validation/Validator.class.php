@@ -49,8 +49,8 @@ class Validator
     private array $dependentRules = [
         'RequiredWithAny', 'RequiredWithAll', 'RequiredWithoutAny', 'RequiredWithoutAll',
         'RequiredIf', 'RequiredUnless', 'Confirmed', 'Match', 'Different', 'Before', 'After',
-        'BeforeOrEqual', 'AfterOrEqual', 'GreaterThan', 'LessThan', 'Gte', 'Lte', 'ExcludeIf',
-        'ExcludeUnless',
+        'BeforeOrEqual', 'AfterOrEqual', 'GreaterThan', 'GreaterThanOrEqual', 'LessThan', 'Lte',
+        'ExcludeIf', 'ExcludeUnless',
     ];
 
     /*
@@ -66,7 +66,7 @@ class Validator
     /*
      * The Size based validation rules
      */
-    private $sizeRules = ['Size', 'Between', 'Min', 'Max', 'GreaterThan', 'LessThan', 'Gte', 'Lte'];
+    private $sizeRules = ['Size', 'Between', 'Min', 'Max', 'GreaterThan', 'GreaterThanOrEqual', 'LessThan', 'Lte'];
 
     /*
      * The array of error messages when validation fails for fields

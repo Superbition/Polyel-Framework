@@ -44,6 +44,18 @@ trait ValidationErrorMessages
         'Unique' => '{field} has already been taken',
         'File' => '{field} must be a valid file',
         'Populated' => '{field} must be populated when given',
+        'GreaterThan' => [
+            'Numeric' => '{field} must be greater than {value}',
+            'Array' => '{field} must have more than {value} items',
+            'File' => '{field} must be greater than {value} kilobytes',
+            'String' => '{field} must be greater than {value} characters',
+        ],
+        'GreaterThanOrEqual' => [
+            'Numeric' => '{field} must be greater than or equal {value}',
+            'Array' => '{field} must have more than or equal {value} items',
+            'File' => '{field} must be greater than or equal {value} kilobytes',
+            'String' => '{field} must be greater than or equal {value} characters',
+        ],
         'Numeric' => '{field} must be a numeric value',
         'Required' => 'The {field} field is required.',
         'RequiredWithAny' => 'The {field} field is required when {values} is present.',
