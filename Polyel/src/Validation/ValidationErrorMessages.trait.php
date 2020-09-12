@@ -43,6 +43,7 @@ trait ValidationErrorMessages
         'Exists' => '{field} does not exist',
         'Unique' => '{field} has already been taken',
         'File' => '{field} must be a valid file',
+        'Populated' => '{field} must be populated when given',
         'Numeric' => '{field} must be a numeric value',
         'Required' => 'The {field} field is required.',
         'RequiredWithAny' => 'The {field} field is required when {values} is present.',

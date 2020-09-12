@@ -590,6 +590,16 @@ trait ValidationRules
         return $value instanceof UploadedFile && $value->isValid() && $value->path() !== '';
     }
 
+    protected function validatePopulated($field, $value)
+    {
+        if(array_key_exists($field, $this->data))
+        {
+            return $this->validateRequired($field, $value);
+        }
+
+        return true;
+    }
+
     protected function validateNumeric($field, $value)
     {
         return is_numeric($value);
