@@ -4,6 +4,7 @@ namespace Polyel\Validation;
 
 use DateTime;
 use Spoofchecker;
+use Polyel\Database\Facade\DB;
 use Polyel\Http\File\UploadedFile;
 
 trait ValidationRules
@@ -475,6 +476,113 @@ trait ValidationRules
         $values = array_slice($parameters, 1);
 
         return [$otherFieldValue, $values];
+    }
+
+    protected function validateExists($field, $value, $parameters)
+    {
+        [$connection, $table] = $this->parseTable($parameters[0]);
+
+        $column = $this->getDatabaseColumn($parameters, $field);
+
+        $query = $connection ? DB::connection($connection, $table) : DB::table($table);
+
+        // Support processing multiple values from an array
+        if(is_array($value))
+        {
+            // The number of expected values to exist
+            $expected = count(array_unique($value));
+
+            foreach($value as $data)
+            {
+                $query->orWhere($column, '=', $data);
+            }
+        }
+        else
+        {
+            $expected = 1;
+
+            $query->where($column, '=', $value);
+        }
+
+        $existsCount = $query->count($column);
+
+        return end($existsCount) >= $expected;
+    }
+
+    protected function validateUnique($field, $value, $parameters)
+    {
+        // The Unique rule does not work with value arrays
+        if(is_array($value))
+        {
+            return false;
+        }
+
+        [$connection, $table] = $this->parseTable($parameters[0]);
+
+        $column = $this->getDatabaseColumn($parameters, $field);
+
+        $query = $connection ? DB::connection($connection, $table) : DB::table($table);
+
+        $query->where($column, '=', $value);
+
+        // Check if an ID to ignore has been passed as a parameter
+        if(isset($parameters[2]) && !empty($parameters[2]))
+        {
+            // Default ID column to ignore
+            $idColumn = 'id';
+
+            // Use the 3rd parameter value as a ignore column name if it has been set
+            if(isset($parameters[3]) && !empty($parameters[3]))
+            {
+                $idColumn = $parameters[3];
+            }
+
+            /*
+             * Set an ID column to ignore so that a false positive is
+             * avoided. For example, if a user updates their profile
+             * and only changes their username, we don't want to fail
+             * on their unchanged email as already existing, as they
+             * already own it.
+             */
+            $query->where($idColumn, '!=', $parameters[2]);
+        }
+
+        $uniqueCount = $query->count($column);
+
+        return (end($uniqueCount) === 0);
+    }
+
+    protected function parseTable($table)
+    {
+        if(strpos($table, '.') !== false)
+        {
+            // A connection is in the format of "connectionName.tableName"
+            return [$connection, $table] = explode('.', $table, 2);
+        }
+
+        // No connection given, only the table
+        return [null, $table];
+    }
+
+    protected function getDatabaseColumn($parameters, $field)
+    {
+        // Return either the column from the parameter or get the column from the field name
+        return (isset($parameters[1]) && $parameters[1] !== null)
+                    ? $parameters[1] : $this->getDatabaseColumnFromField($field);
+    }
+
+    protected function getDatabaseColumnFromField($field)
+    {
+        // Support field names using dot syntax
+        if(strpos($field, '.') !== false)
+        {
+            $column = explode('.', $field);
+
+            // Send back the last name using dot syntax
+            return end($column);
+        }
+
+        return $field;
     }
 
     protected function validateNumeric($field, $value)
