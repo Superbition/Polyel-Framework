@@ -50,7 +50,7 @@ class Validator
         'RequiredWithAny', 'RequiredWithAll', 'RequiredWithoutAny', 'RequiredWithoutAll',
         'RequiredIf', 'RequiredUnless', 'Confirmed', 'Match', 'Different', 'Before', 'After',
         'BeforeOrEqual', 'AfterOrEqual', 'GreaterThan', 'GreaterThanOrEqual', 'LessThan', 'Lte',
-        'ExcludeIf', 'ExcludeUnless',
+        'RemoveIf', 'RemoveUnless',
     ];
 
     /*
