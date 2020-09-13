@@ -51,10 +51,10 @@ trait ValidationErrorMessages
             'String' => '{field} must be greater than {value} characters',
         ],
         'GreaterThanOrEqual' => [
-            'Numeric' => '{field} must be greater than or equal {value}',
-            'Array' => '{field} must have more than or equal {value} items',
-            'File' => '{field} must be greater than or equal {value} kilobytes',
-            'String' => '{field} must be greater than or equal {value} characters',
+            'Numeric' => '{field} must be more than or equal to {value}',
+            'Array' => '{field} must have more than or equal to {value} items',
+            'File' => '{field} must be more than or equal to {value} kilobytes',
+            'String' => '{field} must be more than or equal to {value} characters',
         ],
         'LessThan' => [
             'Numeric' => '{field} must be less than {value}',
