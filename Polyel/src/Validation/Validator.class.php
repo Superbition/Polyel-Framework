@@ -26,6 +26,8 @@ class Validator
 
     private string $lastSizeType;
 
+    private int $lastSizeMetric;
+
     /*
      * The validation rules which can be used with files
      */
@@ -307,6 +309,7 @@ class Validator
     {
         [$rule, $parameters] = $this->parseRule($rule);
 
+        // Original rule parameters that are set from the rule definitions
         $originalParameters = $parameters;
 
         if(exists($parameters) && $this->dependentOnOtherFields($rule))
@@ -337,7 +340,17 @@ class Validator
 
         if($this->$validationMethod($field, $value, $parameters) === false)
         {
-            $this->addError($field, $rule, $originalParameters);
+            // By default error messages use the original parameters from the rule definitions
+            $parameters = $originalParameters;
+
+            // Use the true size values for parameters when adding a new size dependent rule error
+            if(in_array($rule, $this->sizeRules) && in_array($rule, $this->dependentRules))
+            {
+                // Uses the true size value instead of a field name in the error message
+                $parameters = [$this->lastSizeMetric];
+            }
+
+            $this->addError($field, $rule, $parameters);
         }
     }
 

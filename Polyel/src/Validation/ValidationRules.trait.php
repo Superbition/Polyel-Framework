@@ -174,22 +174,32 @@ trait ValidationRules
         if(is_numeric($value) && $this->hasRule($field, $this->numericRules))
         {
             $this->lastSizeType = 'Numeric';
+            $this->lastSizeMetric = $value;
             return $value;
         }
         else if(is_array($value))
         {
             $this->lastSizeType = 'Array';
-            return count($value);
+            $arrayCount = count($value);
+            $this->lastSizeMetric = $arrayCount;
+
+            return $arrayCount;
         }
         else if($value instanceof UploadedFile)
         {
             $this->lastSizeType = 'File';
-            return $value->getSize() / 1024;
+            $fileSize = $value->getSize() / 1024;
+            $this->lastSizeMetric = $fileSize;
+
+            return $fileSize;
         }
         else if(is_string($value))
         {
             $this->lastSizeType = 'String';
-            return mb_strlen($value);
+            $charSize = mb_strlen($value);
+            $this->lastSizeMetric = $charSize;
+
+            return $charSize;
         }
 
         return false;
@@ -617,6 +627,7 @@ trait ValidationRules
         if($this->hasRule($field, $this->numericRules) && is_numeric($value) && is_numeric($comparisionValue))
         {
             $this->lastSizeType = 'Numeric';
+            $this->lastSizeMetric = $comparisionValue;
 
             return $value > $comparisionValue;
         }
@@ -641,6 +652,7 @@ trait ValidationRules
         if($this->hasRule($field, $this->numericRules) && is_numeric($value) && is_numeric($comparisionValue))
         {
             $this->lastSizeType = 'Numeric';
+            $this->lastSizeMetric = $comparisionValue;
 
             return $value >= $comparisionValue;
         }
@@ -665,6 +677,7 @@ trait ValidationRules
         if($this->hasRule($field, $this->numericRules) && is_numeric($value) && is_numeric($comparisionValue))
         {
             $this->lastSizeType = 'Numeric';
+            $this->lastSizeMetric = $comparisionValue;
 
             return $value < $comparisionValue;
         }
@@ -689,6 +702,7 @@ trait ValidationRules
         if($this->hasRule($field, $this->numericRules) && is_numeric($value) && is_numeric($comparisionValue))
         {
             $this->lastSizeType = 'Numeric';
+            $this->lastSizeMetric = $comparisionValue;
 
             return $value <= $comparisionValue;
         }
