@@ -56,6 +56,18 @@ trait ValidationErrorMessages
             'File' => '{field} must be greater than or equal {value} kilobytes',
             'String' => '{field} must be greater than or equal {value} characters',
         ],
+        'LessThan' => [
+            'Numeric' => '{field} must be less than {value}',
+            'Array' => '{field} must have less than {value} items',
+            'File' => '{field} must be less than {value} kilobytes',
+            'String' => '{field} must be less than {value} characters',
+        ],
+        'LessThanOrEqual' => [
+            'Numeric' => '{field} must be less than or equal to {value}',
+            'Array' => '{field} must have less than or equal to {value} items',
+            'File' => '{field} must be less than or equal to {value} kilobytes',
+            'String' => '{field} must be less than or equal to {value} characters',
+        ],
         'Numeric' => '{field} must be a numeric value',
         'Required' => 'The {field} field is required.',
         'RequiredWithAny' => 'The {field} field is required when {values} is present.',

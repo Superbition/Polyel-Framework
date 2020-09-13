@@ -653,6 +653,54 @@ trait ValidationRules
         return $this->getFieldSize($field, $value) >= $this->getFieldSize($field, $comparisionValue);
     }
 
+    protected function validateLessThan($field, $value, $parameters)
+    {
+        if(is_null($value) || is_null($parameters[0]))
+        {
+            return false;
+        }
+
+        $comparisionValue = $parameters[0];
+
+        if($this->hasRule($field, $this->numericRules) && is_numeric($value) && is_numeric($comparisionValue))
+        {
+            $this->lastSizeType = 'Numeric';
+
+            return $value < $comparisionValue;
+        }
+
+        if(gettype($value) !== gettype($comparisionValue))
+        {
+            return false;
+        }
+
+        return $this->getFieldSize($field, $value) < $this->getFieldSize($field, $comparisionValue);
+    }
+
+    protected function validateLessThanOrEqual($field, $value, $parameters)
+    {
+        if(is_null($value) || is_null($parameters[0]))
+        {
+            return false;
+        }
+
+        $comparisionValue = $parameters[0];
+
+        if($this->hasRule($field, $this->numericRules) && is_numeric($value) && is_numeric($comparisionValue))
+        {
+            $this->lastSizeType = 'Numeric';
+
+            return $value <= $comparisionValue;
+        }
+
+        if(gettype($value) !== gettype($comparisionValue))
+        {
+            return false;
+        }
+
+        return $this->getFieldSize($field, $value) <= $this->getFieldSize($field, $comparisionValue);
+    }
+
     protected function validateRequired($field, $value)
     {
         if(is_null($value))
