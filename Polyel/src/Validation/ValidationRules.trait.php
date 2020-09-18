@@ -2,6 +2,7 @@
 
 namespace Polyel\Validation;
 
+use finfo;
 use DateTime;
 use Spoofchecker;
 use Polyel\Database\Facade\DB;
@@ -713,6 +714,47 @@ trait ValidationRules
         }
 
         return $this->getFieldSize($field, $value) <= $this->getFieldSize($field, $comparisionValue);
+    }
+
+    protected function validateImage($field, $value)
+    {
+        if(!$value instanceof UploadedFile || $value->isValid() === false)
+        {
+            return false;
+        }
+
+        $fileInfo = new finfo(FILEINFO_MIME_TYPE);
+
+        if($fileInfo === false)
+        {
+            return false;
+        }
+
+        $fileType = explode('/', $fileInfo->file($value->fullPath()))[1];
+
+        // No SVG as it is deemed an XML file
+        $imageExifConversion = [
+            'jpeg' => 2,
+            'png' => 3,
+            'gif' => 1,
+            'bmp' => 6,
+            'webp' => 18,
+        ];
+
+        // If a matching exif_image type is found, check that the file type and constant values match
+        if(isset($imageExifConversion[$fileType]))
+        {
+            $imageExifType = exif_imagetype($value->fullPath());
+
+            if($imageExifConversion[$fileType] !== $imageExifType)
+            {
+                return false;
+            }
+        }
+
+        $imageTypes = ['jpeg', 'png', 'gif', 'bmp', 'svg', 'webp'];
+
+        return in_array($fileType, $imageTypes, true);
     }
 
     protected function validateRequired($field, $value)
