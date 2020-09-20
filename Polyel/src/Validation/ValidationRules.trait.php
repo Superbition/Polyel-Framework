@@ -834,6 +834,11 @@ trait ValidationRules
         return count($fieldDataBasedOnPath) >= 1 ? $fieldDataBasedOnPath : false;
     }
 
+    protected function validateInteger($field, $value)
+    {
+        return filter_var($value, FILTER_VALIDATE_INT) !== false;
+    }
+
     protected function validateRequired($field, $value)
     {
         if(is_null($value))
