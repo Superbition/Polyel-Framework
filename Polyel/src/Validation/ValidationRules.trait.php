@@ -757,6 +757,24 @@ trait ValidationRules
         return in_array($fileType, $imageTypes, true);
     }
 
+    protected function validateWithin($field, $value, $parameters)
+    {
+        if(is_array($value) && $this->hasRule($field, ['Array']))
+        {
+            foreach($value as $element)
+            {
+                if(is_array($element))
+                {
+                    return false;
+                }
+            }
+
+            return count(array_diff($value, $parameters)) === 0;
+        }
+
+        return !is_array($value) && in_array($value, $parameters);
+    }
+
     protected function validateRequired($field, $value)
     {
         if(is_null($value))

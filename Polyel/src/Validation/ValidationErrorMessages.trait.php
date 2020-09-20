@@ -69,6 +69,7 @@ trait ValidationErrorMessages
             'String' => '{field} must be less than or equal to {value} characters',
         ],
         'Image' => '{field} must be a valid image',
+        'Within' => 'The selected {field} is invalid',
         'Numeric' => '{field} must be a numeric value',
         'Required' => 'The {field} field is required.',
         'RequiredWithAny' => 'The {field} field is required when {values} is present.',
