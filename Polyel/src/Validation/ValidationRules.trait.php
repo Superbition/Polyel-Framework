@@ -775,6 +775,65 @@ trait ValidationRules
         return !is_array($value) && in_array($value, $parameters);
     }
 
+    protected function validateWithinArray($field, $value, $parameters)
+    {
+        if(!exists($parameters[0]))
+        {
+            return false;
+        }
+
+        $otherFieldName = $parameters[0];
+
+        // Add on the wildcard * if only the array name is given
+        if(strpos($otherFieldName, '.*') === false)
+        {
+            $otherFieldName .= '.*';
+        }
+
+        $otherFieldValues = [];
+
+        // Get the other field values we want to check...
+        if($fieldData = $this->getFieldDataFromPath($otherFieldName))
+        {
+            $fieldNamePattern = str_replace('\*', '[^.]+', preg_quote($otherFieldName, '/'));
+
+            // Using a loop and regex check if any keys match our field name pattern and collect the values
+            foreach($fieldData as $key => $data)
+            {
+                if(preg_match('/^' . $fieldNamePattern . '\z/u', $key))
+                {
+                    $otherFieldValues[] = $data;
+                }
+            }
+        }
+
+        // Check if the value is within any of the other fields values
+        return in_array($value, $otherFieldValues);
+    }
+
+    protected function getFieldDataFromPath($originalDataPath)
+    {
+        /*
+         * The leading data path is the path before the wildcard, so job.name.*.id would give job.name
+         * This means we don't have to bother searching through extra data to get to our desired array
+         * level.
+         */
+        $leadingFieldDataPath = rtrim(explode('*', $originalDataPath)[0], '.') ?: null;
+
+        /*
+         * Based on the leading data path, get the fields data in a flattered format which,
+         * allows us to quickly process a fields data quickly instead of using a multi dimensional
+         * array.
+         */
+        $fieldDataBasedOnPath = $this->flatternData(
+            $this->getValue($leadingFieldDataPath),
+            $leadingFieldDataPath . '.'
+        );
+
+        // Making sure we have at least one element in our data array, return the data or false when none at all
+        return count($fieldDataBasedOnPath) >= 1 ? $fieldDataBasedOnPath : false;
+    }
+
     protected function validateRequired($field, $value)
     {
         if(is_null($value))

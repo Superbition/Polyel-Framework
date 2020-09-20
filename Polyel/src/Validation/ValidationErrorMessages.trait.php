@@ -70,6 +70,7 @@ trait ValidationErrorMessages
         ],
         'Image' => '{field} must be a valid image',
         'Within' => 'The selected {field} is invalid',
+        'WithinArray' => '{field} must exist within {other}',
         'Numeric' => '{field} must be a numeric value',
         'Required' => 'The {field} field is required.',
         'RequiredWithAny' => 'The {field} field is required when {values} is present.',
