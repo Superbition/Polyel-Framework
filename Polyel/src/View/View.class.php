@@ -227,8 +227,10 @@ class View
                     $oldFieldPath = str_replace(':', '.', $oldField);
                 }
 
-                // Only when old data is present in the session, we inject old data
-                if($oldData = $this->HttpKernel->session->get("old.$oldFieldPath"))
+                $oldData = $this->HttpKernel->session->get("old.$oldFieldPath");
+
+                // Only when old data exists in the session, we inject old data
+                if(exists($oldData))
                 {
                     // Don't output if old data is an array and not a string
                     if(is_array($oldData))
