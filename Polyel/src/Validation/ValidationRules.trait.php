@@ -839,6 +839,31 @@ trait ValidationRules
         return filter_var($value, FILTER_VALIDATE_INT) !== false;
     }
 
+    protected function validateIP($field, $value)
+    {
+        return filter_var($value, FILTER_VALIDATE_IP) !== false;
+    }
+
+    protected function validateIPv4($field, $value)
+    {
+        return filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false;
+    }
+
+    protected function validateIPv6($field, $value)
+    {
+        return filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false;
+    }
+
+    protected function validateIPNotPriv($field, $value)
+    {
+        return filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE) !== false;
+    }
+
+    protected function validateIPNotRes($field, $value)
+    {
+        return filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE) !== false;
+    }
+
     protected function validateRequired($field, $value)
     {
         if(is_null($value))
