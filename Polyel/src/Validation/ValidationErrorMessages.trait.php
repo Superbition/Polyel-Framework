@@ -77,6 +77,7 @@ trait ValidationErrorMessages
         'IPv6' => '{field} must be a valid IPv6 address',
         'IPNotPriv' => '{field} must not be a private IP address',
         'IPNotRes' => '{field} must not be a reserved IP address',
+        'JSON' => '{field} must be valid JSON input',
         'Numeric' => '{field} must be a numeric value',
         'Required' => 'The {field} field is required.',
         'RequiredWithAny' => 'The {field} field is required when {values} is present.',

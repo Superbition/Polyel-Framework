@@ -5,6 +5,7 @@ namespace Polyel\Validation;
 use finfo;
 use DateTime;
 use Spoofchecker;
+use JsonException;
 use Polyel\Database\Facade\DB;
 use Polyel\Http\File\UploadedFile;
 
@@ -862,6 +863,25 @@ trait ValidationRules
     protected function validateIPNotRes($field, $value)
     {
         return filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE) !== false;
+    }
+
+    protected function validateJSON($field, $value)
+    {
+        if(!is_string($value))
+        {
+            return false;
+        }
+
+        try
+        {
+            json_decode($value, true, 512, JSON_THROW_ON_ERROR);
+        }
+        catch(JsonException $jsonException)
+        {
+            return false;
+        }
+
+        return true;
     }
 
     protected function validateRequired($field, $value)
