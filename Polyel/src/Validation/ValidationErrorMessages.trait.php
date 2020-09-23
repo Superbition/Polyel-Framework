@@ -78,6 +78,12 @@ trait ValidationErrorMessages
         'IPNotPriv' => '{field} must not be a private IP address',
         'IPNotRes' => '{field} must not be a reserved IP address',
         'JSON' => '{field} must be valid JSON input',
+        'Max' => [
+            'Numeric' => '{field} must not be more than {value}',
+            'Array' => '{field} must not have more than {value} items',
+            'File' => '{field} must not be more than {value} kilobytes',
+            'String' => '{field} must not be more than {value} characters',
+        ],
         'Numeric' => '{field} must be a numeric value',
         'Required' => 'The {field} field is required.',
         'RequiredWithAny' => 'The {field} field is required when {values} is present.',
