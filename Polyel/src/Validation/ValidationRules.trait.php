@@ -962,6 +962,11 @@ trait ValidationRules
         return $this->getFieldSize($field, $value) >= $parameters[0];
     }
 
+    protected function validateNotWithin($field, $value, $parameters)
+    {
+        return !$this->validateWithin($field, $value, $parameters);
+    }
+
     protected function validateRequired($field, $value)
     {
         if(is_null($value))
