@@ -84,6 +84,7 @@ trait ValidationErrorMessages
             'File' => '{field} must not be more than {value} kilobytes',
             'String' => '{field} must not be more than {value} characters',
         ],
+        'MimesAllowed' => '{field} must match one of the following file types: {types}',
         'Numeric' => '{field} must be a numeric value',
         'Required' => 'The {field} field is required.',
         'RequiredWithAny' => 'The {field} field is required when {values} is present.',

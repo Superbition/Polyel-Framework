@@ -894,6 +894,64 @@ trait ValidationRules
         return $this->getFieldSize($field, $value) <= $parameters[0];
     }
 
+    protected function validateMimesAllowed($field, $value, $parameters)
+    {
+        // Make sure we have an actual uploaded file that is valid
+        if(!$value instanceof UploadedFile || $value->isValid() === false)
+        {
+            return false;
+        }
+
+        // Check that we have an actual file path
+        if($value->path() === '')
+        {
+            return false;
+        }
+
+        // Get the mime type using this PHP function, to be checked against other sources
+        $mimeContentType = mime_content_type($value->fullPath());
+
+        // Using the PHP-ext finfo we can also get the mime type, working as another source
+        $fileInfoInstance = new finfo(FILEINFO_MIME_TYPE);
+
+        if($fileInfoInstance === false)
+        {
+            return false;
+        }
+
+        // Using the PHP-ext finfo, get the mime-type to use as another source/check
+        $fileInfoMimeType = $fileInfoInstance->file($value->fullPath());
+
+        // Using the Linux 'file' command, get the mime-type from the command line
+        $fileMimeCommand = 'file -b --mime-type %s 2>/dev/null';
+        exec(sprintf($fileMimeCommand, escapeshellarg($value->fullPath())), $mimeTypeFromFileCommand);
+
+        // If the 'file' command return value was valid it will be an array and have one element
+        if(!is_array($mimeTypeFromFileCommand) && !isset($mimeTypeFromFileCommand[0]))
+        {
+            // Return false because if the file command fails, it means we cannot validated the file type fully
+            return false;
+        }
+
+        // The mime type from the file command returns an array, we only need the first element
+        $mimeTypeFromFileCommand = $mimeTypeFromFileCommand[0];
+
+        // Store the detected mime types into an array for easy processing
+        $detectedMimeTypes = explode(' ', "$mimeContentType $fileInfoMimeType $mimeTypeFromFileCommand");
+
+        // Check that all the detected mime types are the same, otherwise it means the file type is ambiguous
+        if(count(array_unique($detectedMimeTypes)) > 1)
+        {
+            return false;
+        }
+
+        // The final detected mime type should be the only mime type from the detected array of mime types
+        $detectedMimeType = $detectedMimeTypes[0];
+
+        // Finally, check to see if the detected mime type matches any of the given parameters
+        return in_array($detectedMimeType, $parameters, true);
+    }
+
     protected function validateRequired($field, $value)
     {
         if(is_null($value))
