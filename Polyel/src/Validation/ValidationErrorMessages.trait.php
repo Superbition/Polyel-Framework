@@ -85,6 +85,12 @@ trait ValidationErrorMessages
             'String' => '{field} must not be more than {value} characters',
         ],
         'MimesAllowed' => '{field} must match one of the following file types: {types}',
+        'Min' => [
+            'Numeric' => '{field} must not be less than {value}',
+            'Array' => '{field} must not have less than {value} items',
+            'File' => '{field} must not be less than {value} kilobytes',
+            'String' => '{field} must not be less than {value} characters',
+        ],
         'Numeric' => '{field} must be a numeric value',
         'Required' => 'The {field} field is required.',
         'RequiredWithAny' => 'The {field} field is required when {values} is present.',

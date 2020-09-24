@@ -952,6 +952,16 @@ trait ValidationRules
         return in_array($detectedMimeType, $parameters, true);
     }
 
+    protected function validateMin($field, $value, $parameters)
+    {
+        if($value instanceof UploadedFile && $value->isValid() === false)
+        {
+            return false;
+        }
+
+        return $this->getFieldSize($field, $value) >= $parameters[0];
+    }
+
     protected function validateRequired($field, $value)
     {
         if(is_null($value))
