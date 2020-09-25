@@ -362,7 +362,20 @@ class Validator
         {
             [$rule, $parameters] = explode(':', $rule);
 
-            $parameters = str_getcsv($parameters);
+            // Regex rules might contain a ',' which would impact the way parameters are captured...
+            if(!in_array($rule, ['Regex', 'RegexNot']))
+            {
+                // Store parameters based on a list split up by ',' into an array
+                $parameters = str_getcsv($parameters);
+            }
+            else
+            {
+                /*
+                 * Some rules are not compatible with parameter splitting because they could contain a ','.
+                 * So we only need to use the parameter string value directly
+                 */
+                $parameters = [$parameters];
+            }
         }
 
         return [ucwords($rule), $parameters];

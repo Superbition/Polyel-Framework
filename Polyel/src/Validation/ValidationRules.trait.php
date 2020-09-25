@@ -967,6 +967,26 @@ trait ValidationRules
         return !$this->validateWithin($field, $value, $parameters);
     }
 
+    protected function validateRegex($field, $value, $parameters)
+    {
+        if(!is_string($value) && !is_numeric($value))
+        {
+            return false;
+        }
+
+        return preg_match($parameters[0], $value) > 0;
+    }
+
+    protected function validateRegexNot($field, $value, $parameters)
+    {
+        if(!is_string($value) && !is_numeric($value))
+        {
+            return false;
+        }
+
+        return preg_match($parameters[0], $value) < 1;
+    }
+
     protected function validateRequired($field, $value)
     {
         if(is_null($value))

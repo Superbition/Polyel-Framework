@@ -92,6 +92,8 @@ trait ValidationErrorMessages
             'String' => '{field} must not be less than {value} characters',
         ],
         'NotWithin' => 'The selected {field} is invalid',
+        'Regex' => 'The selected {field} is invalid',
+        'RegexNot' => 'The selected {field} is invalid',
         'Numeric' => '{field} must be a numeric value',
         'Required' => 'The {field} field is required.',
         'RequiredWithAny' => 'The {field} field is required when {values} is present.',
