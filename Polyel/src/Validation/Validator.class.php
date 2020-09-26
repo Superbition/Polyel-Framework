@@ -218,7 +218,7 @@ class Validator
         return false;
     }
 
-    private function getValue($field)
+    private function getValue($field, $default = null)
     {
         $keys = explode('.', $field);
 
@@ -232,7 +232,7 @@ class Validator
             }
             else
             {
-                return null;
+                return $default;
             }
         }
 
