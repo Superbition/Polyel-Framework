@@ -392,6 +392,7 @@ class Validator
 
     protected function canFieldBeValidated($field, $value, $rule)
     {
+        // Must be validated if the current rule is a removal rule as the field may need to be excluded
         if(in_array($rule, $this->removalRules, true))
         {
             return true;
@@ -402,6 +403,7 @@ class Validator
 
     protected function canBeOptionalIfMarkedAsOptional($field, $rule)
     {
+        // Must be validated if the current rule deems the field as "Required" or when the field is not Optional
         if(in_array($rule, $this->implicitRules) || !$this->hasRule($field, ['Optional']))
         {
             return true;
