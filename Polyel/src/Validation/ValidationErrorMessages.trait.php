@@ -95,6 +95,7 @@ trait ValidationErrorMessages
         'Regex' => 'The selected {field} is invalid',
         'RegexNot' => 'The selected {field} is invalid',
         'Numeric' => '{field} must be a numeric value',
+        'PasswordAuth' => 'The given credentials are incorrect',
         'Required' => 'The {field} field is required.',
         'RequiredWithAny' => 'The {field} field is required when {values} is present.',
         'Uploaded' => 'The {field} file failed to upload',

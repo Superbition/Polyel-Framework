@@ -996,6 +996,46 @@ trait ValidationRules
         return true;
     }
 
+    protected function validatePasswordAuth($field, $value, $parameters)
+    {
+        // We must have the protector that we want to use
+        if(count($parameters) === 0)
+        {
+            return false;
+        }
+
+        // The user must already be logged in
+        if($this->auth->user() === false)
+        {
+            return false;
+        }
+
+        // Validate a users password
+        if($parameters[0] === 'web')
+        {
+            $password = ['password' => $value];
+            $user = $this->auth->user();
+
+            return $this->auth->protector('session')->hasValidCredentials($user, $password);
+        }
+
+        // Validate a given client ID and API key
+        if($parameters[0] === 'api' && is_array($value))
+        {
+            if(!isset($value[0]) && !isset($value[1]))
+            {
+                return false;
+            }
+
+            $apiCredentials['ClientID'] = $value[0];
+            $apiCredentials['Authorization'] = $value[1];
+
+            return $this->auth->protector('token')->attemptTokenAuthentication($apiCredentials);
+        }
+
+        return false;
+    }
+
     protected function validateRequired($field, $value)
     {
         if(is_null($value))

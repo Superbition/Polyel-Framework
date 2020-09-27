@@ -8,6 +8,9 @@ trait RequestValidation
     {
         $validator = new Validator($this->getRequestDataForValidation(), $rules, $group);
 
+        // Some rules require access to the AuthManager
+        $validator->setAuthManager($this->auth);
+
         $validator->validate();
 
         return $validator->data();

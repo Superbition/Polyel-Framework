@@ -2,12 +2,16 @@
 
 namespace Polyel\Http;
 
+use Polyel\Auth\AuthManager;
 use Polyel\Http\File\UploadedFile;
 use Polyel\Validation\RequestValidation;
 
 class Request
 {
     use CookieHandler, RequestValidation;
+
+    // The AuthManager instance
+    private $auth;
 
     public $hostIP;
 
@@ -44,6 +48,11 @@ class Request
     public function __construct()
     {
 
+    }
+
+    public function setAuthManager(AuthManager $auth)
+    {
+        $this->auth = $auth;
     }
 
     public function capture($request)

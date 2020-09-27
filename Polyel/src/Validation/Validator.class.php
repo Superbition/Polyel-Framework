@@ -2,6 +2,7 @@
 
 namespace Polyel\Validation;
 
+use Polyel\Auth\AuthManager;
 use Polyel\Http\File\UploadedFile;
 
 class Validator
@@ -23,6 +24,8 @@ class Validator
     private array $uniqueArrayValueCache = [];
 
     private string $group;
+
+    private object $auth;
 
     private string $lastSizeType;
 
@@ -84,6 +87,14 @@ class Validator
         $this->data = $data;
         $this->rules = $this->prepareRules($rules);
         $this->group = $group;
+    }
+
+    /*
+     * Some rules require use of the AuthManager
+     */
+    public function setAuthManager(AuthManager $auth)
+    {
+        $this->auth = $auth;
     }
 
     protected function prepareRules(array $fieldsAndRules)
