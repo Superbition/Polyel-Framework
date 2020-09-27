@@ -336,9 +336,18 @@ class Validator
             return;
         }
 
+        /*
+         * See if the field and its value can be validated, allowing the validateRule
+         * method to be called. This check is in place to make sure the field is not
+         * marked as optional or null, and performing any pre-validation checks to make
+         * sure the field and its value are usable for any of the validateRule methods.
+         * A true response means the field is validatable and a false means it is not.
+         */
+        $fieldCanBeValidated = $this->canFieldBeValidated($field, $value, $rule);
+
         $validationMethod = "validate{$rule}";
 
-        if($this->$validationMethod($field, $value, $parameters) === false)
+        if($fieldCanBeValidated && $this->$validationMethod($field, $value, $parameters) === false)
         {
             // By default error messages use the original parameters from the rule definitions
             $parameters = $originalParameters;
@@ -379,6 +388,28 @@ class Validator
         }
 
         return [ucwords($rule), $parameters];
+    }
+
+    protected function canFieldBeValidated($field, $value, $rule)
+    {
+        if(in_array($rule, $this->removalRules, true))
+        {
+            return true;
+        }
+
+        return $this->canBeOptionalIfMarkedAsOptional($field, $rule);
+    }
+
+    protected function canBeOptionalIfMarkedAsOptional($field, $rule)
+    {
+        if(in_array($rule, $this->implicitRules) || !$this->hasRule($field, ['Optional']))
+        {
+            return true;
+        }
+
+        $data = $this->getValue($field);
+
+        return !is_null($data) && $data !== '';
     }
 
     protected function hasRule($field, $rules)

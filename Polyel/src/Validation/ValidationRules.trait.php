@@ -987,6 +987,15 @@ trait ValidationRules
         return preg_match($parameters[0], $value) < 1;
     }
 
+    /*
+     * Always returns true because it allows us to use
+     * 'Optional' in the rules for a field.
+     */
+    protected function validateOptional($field, $value)
+    {
+        return true;
+    }
+
     protected function validateRequired($field, $value)
     {
         if(is_null($value))
