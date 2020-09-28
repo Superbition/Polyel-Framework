@@ -129,8 +129,30 @@ trait ValidationErrorMessages
         // For when the number of placeholders or parameters don't match
         if(count($placeholders) !== count($parameters))
         {
-            // Combine all parameters as a string to one single placeholder, due to unequal elements
-            $parameters = array_combine($placeholders, $this->reduceParametersToString($parameters));
+            $combinedParametersAndPlaceholders = [];
+
+            // We reduce by 1 because the last placeholder is always used for any leftover parameters
+            $numberOfPlaceholders = count($placeholders) - 1;
+
+            // Loop through each placeholder and match them with a parameter, in order of the parameters array
+            for($i = 0; $i < $numberOfPlaceholders; $i++)
+            {
+                // Store the placeholder and its parameter value
+                $combinedParametersAndPlaceholders[$placeholders[$i]] = $parameters[$i];
+
+                // Remove the parameter because it has now been paired with a placeholder
+                unset($parameters[$i]);
+            }
+
+            // Combine leftover parameter values as a string to one single placeholder, due to unequal array elements
+            $combinedPlaceholderAndParameters[end($placeholders)] = $this->reduceParametersToString($parameters);
+
+            /*
+             * Finally, our parameter array is made up from paired parameters to placeholders
+             * and when we run out of placeholders, we add all the remaining parameters to
+             * the final placeholder given as a default.
+             */
+            $parameters = array_merge($combinedParametersAndPlaceholders, $combinedPlaceholderAndParameters);
         }
         else
         {
@@ -158,7 +180,7 @@ trait ValidationErrorMessages
             $values .= $parameter . ', ';
         }
 
-        return [rtrim($values, ', ')];
+        return rtrim($values, ', ');
     }
 
     protected function getSizeErrorMessage(array $sizeErrorMessages)
