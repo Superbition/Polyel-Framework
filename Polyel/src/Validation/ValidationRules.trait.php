@@ -1058,6 +1058,53 @@ trait ValidationRules
         return true;
     }
 
+    protected function validateRequiredIf($field, $value, $parameters)
+    {
+        [$parameterValues, $otherFieldValue] = $this->prepareParameterValuesAndOtherFieldValue($parameters);
+
+        if(in_array($otherFieldValue, $parameterValues, true))
+        {
+            return $this->validateRequired($field, $value);
+        }
+
+        return true;
+    }
+
+    protected function prepareParameterValuesAndOtherFieldValue($parameters)
+    {
+        $otherFieldValue = $parameters[0];
+
+        // We don't need the first parameter as it is the name of the other field and not a value
+        $parameterValues = array_slice($parameters, 1);
+
+        // Convert bool values if the other field is using a valid bool type
+        if(is_bool($otherFieldValue))
+        {
+            $parameterValues = $this->convertParameterValuesToProperBooleans($parameterValues);
+        }
+
+        return [$parameterValues, $otherFieldValue];
+    }
+
+    protected function convertParameterValuesToProperBooleans($parameterValues)
+    {
+        return array_map(function($parameterValues)
+        {
+            if($parameterValues === 'true')
+            {
+                return true;
+            }
+
+            if($parameterValues === 'false')
+            {
+                return false;
+            }
+
+            return $parameterValues;
+
+        }, $parameterValues);
+    }
+
     protected function validateRequiredWithAny($field, $value, $parameters)
     {
         if($this->allParametersFailBeingRequired($parameters) === false)
