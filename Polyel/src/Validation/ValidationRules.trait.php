@@ -1127,6 +1127,36 @@ trait ValidationRules
         return true;
     }
 
+    protected function validateRequiredWithAll($field, $value, $parameters)
+    {
+        if($this->anyParametersFailBeingRequired($parameters) === false)
+        {
+            return $this->validateRequired($field, $value);
+        }
+
+        return true;
+    }
+
+    protected function validateRequiredWithoutAny($field, $value, $parameters)
+    {
+        if($this->anyParametersFailBeingRequired($parameters))
+        {
+            return $this->validateRequired($field, $value);
+        }
+
+        return true;
+    }
+
+    protected function validateRequiredWithoutAll($field, $value, $parameters)
+    {
+        if($this->allParametersFailBeingRequired($parameters))
+        {
+            return $this->validateRequired($field, $value);
+        }
+
+        return true;
+    }
+
     protected function allParametersFailBeingRequired(array $parameters)
     {
         foreach($parameters as $parameter)
@@ -1138,6 +1168,19 @@ trait ValidationRules
         }
 
         return true;
+    }
+
+    protected function anyParametersFailBeingRequired(array $parameters)
+    {
+        foreach($parameters as $parameter)
+        {
+            if(!$this->validateRequired(null, $parameter))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function validateString($field, $value)

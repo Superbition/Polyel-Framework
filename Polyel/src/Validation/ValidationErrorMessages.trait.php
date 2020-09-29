@@ -100,6 +100,9 @@ trait ValidationErrorMessages
         'RequiredIf' => '{field} is required when {other} is equal to: {values}',
         'RequiredUnless' => '{field} is required unless {other} is equal to: {values}',
         'RequiredWithAny' => '{field} is required when {values} is present.',
+        'RequiredWithAll' => '{field} is required when any {values} are present',
+        'RequiredWithoutAny' => '{field} is required when any {values} are not present',
+        'RequiredWithoutAll' => '{field} is required when all of {values} are not present',
         'Uploaded' => 'The {field} file failed to upload',
     ];
 
