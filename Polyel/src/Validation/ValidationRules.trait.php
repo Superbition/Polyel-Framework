@@ -1183,6 +1183,12 @@ trait ValidationRules
         return false;
     }
 
+    protected function validateSize($field, $value, $parameters)
+    {
+        // Do not check types here because one may be a string integer and we want them to match freely
+        return $this->getFieldSize($field, $value) == $parameters[0];
+    }
+
     public function validateString($field, $value)
     {
         return is_string($value);

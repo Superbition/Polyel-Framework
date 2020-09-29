@@ -103,6 +103,12 @@ trait ValidationErrorMessages
         'RequiredWithAll' => '{field} is required when any {values} are present',
         'RequiredWithoutAny' => '{field} is required when any {values} are not present',
         'RequiredWithoutAll' => '{field} is required when all of {values} are not present',
+        'Size' => [
+            'Numeric' => '{field} must be {value}',
+            'Array' => '{field} must have {value} items',
+            'File' => '{field} must be {value} kilobytes',
+            'String' => '{field} must be {value} characters',
+        ],
         'Uploaded' => 'The {field} file failed to upload',
     ];
 
