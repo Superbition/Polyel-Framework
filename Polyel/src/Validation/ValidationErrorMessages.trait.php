@@ -109,6 +109,7 @@ trait ValidationErrorMessages
             'File' => '{field} must be {value} kilobytes',
             'String' => '{field} must be {value} characters',
         ],
+        'ValidTimezone' => '{field} must be a valid timezone',
         'Uploaded' => 'The {field} file failed to upload',
     ];
 

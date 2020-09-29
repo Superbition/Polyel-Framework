@@ -1193,4 +1193,9 @@ trait ValidationRules
     {
         return is_string($value);
     }
+
+    protected function validateValidTimezone($field, $value)
+    {
+        return in_array($value, timezone_identifiers_list(), true);
+    }
 }
