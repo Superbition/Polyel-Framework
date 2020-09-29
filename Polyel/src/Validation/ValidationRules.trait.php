@@ -1189,7 +1189,7 @@ trait ValidationRules
         return $this->getFieldSize($field, $value) == $parameters[0];
     }
 
-    public function validateString($field, $value)
+    protected function validateString($field, $value)
     {
         return is_string($value);
     }
