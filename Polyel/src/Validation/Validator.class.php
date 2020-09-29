@@ -333,7 +333,9 @@ class Validator
             // Convert any parameters to values if they are a name for another field
             foreach($parameters as $key => $parameter)
             {
-                if($anotherFieldValue = $this->getValue($parameters[$key]))
+                $anotherFieldValue = $this->getValue($parameters[$key]);
+
+                if(exists($anotherFieldValue) || $anotherFieldValue === '')
                 {
                     $parameters[$key] = $anotherFieldValue;
                 }
