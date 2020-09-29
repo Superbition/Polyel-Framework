@@ -98,6 +98,7 @@ trait ValidationErrorMessages
         'PasswordAuth' => 'The given credentials are incorrect',
         'Required' => 'The {field} field is required.',
         'RequiredIf' => '{field} is required when {other} is equal to: {values}',
+        'RequiredUnless' => '{field} is required unless {other} is equal to: {values}',
         'RequiredWithAny' => 'The {field} field is required when {values} is present.',
         'Uploaded' => 'The {field} file failed to upload',
     ];

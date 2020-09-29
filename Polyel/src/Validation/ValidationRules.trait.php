@@ -1070,6 +1070,18 @@ trait ValidationRules
         return true;
     }
 
+    protected function validateRequiredUnless($field, $value, $parameters)
+    {
+        [$parameterValues, $otherFieldValue] = $this->prepareParameterValuesAndOtherFieldValue($parameters);
+
+        if(!in_array($otherFieldValue, $parameterValues, true))
+        {
+            return $this->validateRequired($field, $value);
+        }
+
+        return true;
+    }
+
     protected function prepareParameterValuesAndOtherFieldValue($parameters)
     {
         $otherFieldValue = $parameters[0];
