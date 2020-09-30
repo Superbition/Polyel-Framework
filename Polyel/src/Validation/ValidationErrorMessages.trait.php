@@ -115,6 +115,26 @@ trait ValidationErrorMessages
         'Uploaded' => 'The {field} file failed to upload',
     ];
 
+    protected function checkForCustomErrorMessage(string $field, string $rule)
+    {
+        if(count($this->customErrorMessages) === 0)
+        {
+            return null;
+        }
+
+        if(array_key_exists($field, $this->customErrorMessages))
+        {
+            $customFieldErrorMessages = $this->customErrorMessages[$field];
+
+            if(array_key_exists($rule, $customFieldErrorMessages))
+            {
+                return $customFieldErrorMessages[$rule];
+            }
+        }
+
+        return null;
+    }
+
     protected function getRuleErrorMessage(string $rule)
     {
         if(array_key_exists($rule, $this->errorMessages))

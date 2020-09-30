@@ -4,9 +4,16 @@ namespace Polyel\Validation;
 
 trait RequestValidation
 {
-    public function validate(array $rules, string $group = '')
+    public function validate(array $rules, $group = '', array $customErrorMessages = [])
     {
-        $validator = new Validator($this->getRequestDataForValidation(), $rules, $group);
+        // Convert group to an empty string if set to null
+        if(is_null($group))
+        {
+            // The validator requires the group to be a string
+            $group = '';
+        }
+
+        $validator = new Validator($this->getRequestDataForValidation(), $rules, $group, $customErrorMessages);
 
         // Some rules require access to the AuthManager
         $validator->setAuthManager($this->auth);

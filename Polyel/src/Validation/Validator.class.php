@@ -25,6 +25,8 @@ class Validator
 
     private string $group;
 
+    private array $customErrorMessages;
+
     private object $auth;
 
     private string $lastSizeType;
@@ -81,12 +83,13 @@ class Validator
      */
     private array $errors = [];
 
-    public function __construct(array $data, array $rules, string $group = '')
+    public function __construct(array $data, array $rules, string $group = '', $customErrorMessages = [])
     {
         $this->flattenedData = $this->flatternData($data);
         $this->data = $data;
         $this->rules = $this->prepareRules($rules);
         $this->group = $group;
+        $this->customErrorMessages = $customErrorMessages;
     }
 
     /*
@@ -498,7 +501,8 @@ class Validator
             return null;
         }
 
-        $errorMessage = $this->getRuleErrorMessage($rule);
+        // First check for any custom message, if no custom message is found, use the rule default
+        $errorMessage = $this->checkForCustomErrorMessage($field, $rule) ?: $this->getRuleErrorMessage($rule);
 
         // Used to convert a size rule into its error message...
         if(is_array($errorMessage) && in_array($rule, $this->sizeRules))
