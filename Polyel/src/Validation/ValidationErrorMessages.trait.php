@@ -111,6 +111,7 @@ trait ValidationErrorMessages
         ],
         'ValidTimezone' => '{field} must be a valid timezone',
         'ValidURL' => '{field} must be a valid URL',
+        'ValidUUID' => '{field} must be a valid UUID',
         'Uploaded' => 'The {field} file failed to upload',
     ];
 

@@ -1231,4 +1231,16 @@ trait ValidationRules
 
         return preg_match($validURLPattern, trim($value)) > 0;
     }
+
+    protected function validateValidUUID($field, $value)
+    {
+        if(!is_string($value))
+        {
+            return false;
+        }
+
+        $uuidPattern = '~^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$~i';
+
+        return preg_match($uuidPattern, $value) > 0;
+    }
 }
