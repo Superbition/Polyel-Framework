@@ -110,6 +110,7 @@ trait ValidationErrorMessages
             'String' => '{field} must be {value} characters',
         ],
         'ValidTimezone' => '{field} must be a valid timezone',
+        'ValidURL' => '{field} must be a valid URL',
         'Uploaded' => 'The {field} file failed to upload',
     ];
 
