@@ -119,19 +119,28 @@ trait ValidationErrorMessages
     {
         if(count($this->customErrorMessages) === 0)
         {
+            // No custom message found
             return null;
         }
 
+        // Try to search for a custom message within a field and then a rule
         if(array_key_exists($field, $this->customErrorMessages))
         {
             $customFieldErrorMessages = $this->customErrorMessages[$field];
 
-            if(array_key_exists($rule, $customFieldErrorMessages))
+            if(is_array($customFieldErrorMessages) & array_key_exists($rule, $customFieldErrorMessages))
             {
                 return $customFieldErrorMessages[$rule];
             }
         }
 
+        // Try to search for a global custom message for a rule
+        if(array_key_exists($rule, $this->customErrorMessages) && is_string($this->customErrorMessages[$rule]))
+        {
+            return $this->customErrorMessages[$rule];
+        }
+
+        // No custom message found
         return null;
     }
 
