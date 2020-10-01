@@ -11,6 +11,7 @@ use Polyel\Http\Response;
 use App\Controllers\Controller;
 use Polyel\Middleware\Middleware;
 use Polyel\Session\SessionManager;
+use Polyel\Validation\ValidationException;
 
 class Router
 {
@@ -109,6 +110,13 @@ class Router
                     // Check for a valid session and update the session data, create one if one doesn't exist
                     $this->sessionManager->startSession($HttpKernel);
 
+                    $response->setSession($HttpKernel->session);
+
+                    if($oldData = $HttpKernel->request->data())
+                    {
+                        $HttpKernel->session->store('old', $oldData);
+                    }
+
                     // Create the CSRF token if it is missing in the clients session data
                     $HttpKernel->session->createCsrfToken();
                 }
@@ -179,8 +187,28 @@ class Router
                         // Resolve and perform method injection when calling the controller action
                         $methodDependencies = $HttpKernel->container->resolveMethodInjection($controllerName, $controllerAction);
 
-                        // Method injection for any services first, then route parameters and get the Controller response
-                        $applicationResponse = $controller->$controllerAction(...$methodDependencies, ...$routeParams);
+                        try
+                        {
+                            // Method injection for any services first, then route parameters and get the Controller response
+                            $applicationResponse = $controller->$controllerAction(...$methodDependencies, ...$routeParams);
+                        }
+                        catch(ValidationException $validator)
+                        {
+                            if($request->expectsJson())
+                            {
+                                $response->build($validator->response(422));
+
+                            }
+                            else
+                            {
+                                $response->build(
+                                    $validator->session($HttpKernel->session)
+                                              ->response(302, $request->uri)
+                                );
+                            }
+
+                            return $response;
+                        }
                     }
 
                     // Capture a response returned from any after middleware if one returns a response...
@@ -201,6 +229,11 @@ class Router
                          */
                         $response->build($applicationResponse);
                     }
+                }
+
+                if($matchedRoute['type'] !== 'API' && config('session.active'))
+                {
+                    $HttpKernel->session->store('previousUrl', $request->uri);
                 }
             }
             else

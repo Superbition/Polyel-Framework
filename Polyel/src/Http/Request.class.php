@@ -2,11 +2,16 @@
 
 namespace Polyel\Http;
 
+use Polyel\Auth\AuthManager;
 use Polyel\Http\File\UploadedFile;
+use Polyel\Validation\RequestValidation;
 
 class Request
 {
-    use CookieHandler;
+    use CookieHandler, RequestValidation;
+
+    // The AuthManager instance
+    private $auth;
 
     public $hostIP;
 
@@ -43,6 +48,11 @@ class Request
     public function __construct()
     {
 
+    }
+
+    public function setAuthManager(AuthManager $auth)
+    {
+        $this->auth = $auth;
     }
 
     public function capture($request)
@@ -360,9 +370,36 @@ class Request
         return new UploadedFile($this->files, $fileName);
     }
 
+    public function files()
+    {
+        if(is_array($this->files) && exists($this->files))
+        {
+            $files = [];
+
+            foreach($this->files as $name => $file)
+            {
+                $files[$name] = new UploadedFile($this->files, $name);
+            }
+
+            return $files;
+        }
+
+        return null;
+    }
+
     public function hasFile($fileName)
     {
         if(exists($this->files) && array_key_exists($fileName, $this->files))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function hasFiles()
+    {
+        if(is_array($this->files) && exists($this->files))
         {
             return true;
         }

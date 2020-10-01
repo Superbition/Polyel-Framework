@@ -3,6 +3,7 @@
 namespace Polyel\Http;
 
 use Polyel\View\View;
+use Polyel\Session\Session;
 use Polyel\Http\Utilities\ResponseUtilities;
 
 class Response
@@ -15,6 +16,8 @@ class Response
 
     // Holds the final response content for the request
     private $response;
+
+    private $session;
 
     // Holds the headers which need to be set for the response before replying to client
     private $headers;
@@ -31,6 +34,11 @@ class Response
     public function __construct(View $view)
     {
         $this->view = $view;
+    }
+
+    public function setSession(Session $session)
+    {
+        $this->session = $session;
     }
 
     public function send($response)
@@ -118,11 +126,32 @@ class Response
         $this->headers[$headerName] = $headerValue;
     }
 
-    public function redirect($url, $statusCode = 302)
+    public function redirect($url, $statusCode = 302, $errors = [], $group = null)
     {
         // Setup a redirection happen when send() is called
         $this->redirection = $url;
         $this->httpStatusCode = $statusCode;
+
+        if(isset($this->session) && exists($errors))
+        {
+            if($group && $oldData = $this->session->pull('old'))
+            {
+                // Add the group name to the old data array if it was set
+                $this->session->store("old.$group", $oldData);
+            }
+
+            if($group)
+            {
+                // Prepare the group name to be used with dot notation if set
+                $group = "$group.";
+            }
+
+            foreach($errors as $field => $message)
+            {
+                // Add each redirect error to the session
+                $this->session->push("errors.$group$field", $message);
+            }
+        }
     }
 
     /*
@@ -159,7 +188,7 @@ class Response
             {
                 if(exists($response->url))
                 {
-                    $this->redirect($response->url, $response->status);
+                    $this->redirect($response->url, $response->status, $response->errors, $response->group);
                     return;
                 }
             }

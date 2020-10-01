@@ -7,7 +7,7 @@ use Polyel\Storage\Facade\Storage;
 
 class View
 {
-    use ViewTools;
+    use ViewTools, DisplaysErrors;
 
     private const RESOURCE_DIR = ROOT_DIR . "/app/resources";
 
@@ -91,6 +91,11 @@ class View
 
             $elementTags = $this->getStringsBetween($this->resource, "{{ @addElement(", ") }}");
             $this->element->processElementsFor($this->resource, $elementTags, $this->HttpKernel);
+
+            $this->addOldRequestData();
+
+            // Process all error tags within the resource and inject any rendered errors...
+            $this->processErrors();
 
             $this->addCsrfTokens();
 
@@ -199,6 +204,62 @@ class View
         }
 
         $this->resource = str_replace("{{ @JS }}", $jsLinks, $this->resource);
+    }
+
+    private function addOldRequestData()
+    {
+        if($this->HttpKernel->request->type !== 'api')
+        {
+            $oldRequestDataTags = $this->getStringsBetween($this->resource, "{{ @old(", ") }}");
+
+            foreach($oldRequestDataTags as $oldRequestDataTag)
+            {
+                // Get the parameters from each old data request, set to null if missing
+                [$oldField, $defaultData] = array_pad(
+                    explode(',', $oldRequestDataTag, 2), 2, null);
+
+                $oldFieldPath = $oldField;
+
+                // Check if the old field is part of a group
+                if(strpos($oldFieldPath, ':') !== false)
+                {
+                    // Convert the group name to work with dot syntax to get the filed from the session later
+                    $oldFieldPath = str_replace(':', '.', $oldField);
+                }
+
+                $oldData = $this->HttpKernel->session->get("old.$oldFieldPath");
+
+                // Only when old data exists in the session, we inject old data
+                if(exists($oldData))
+                {
+                    // Don't output if old data is an array and not a string
+                    if(is_array($oldData))
+                    {
+                        $oldData = '';
+                    }
+
+                    $defaultData = exists($defaultData) ? ",$defaultData" : '';
+
+                    $this->resource = str_replace("{{ @old($oldField$defaultData) }}", $oldData, $this->resource);
+
+                    continue;
+                }
+
+                // If a default is set and no old data is found, we inject the default value
+                if(exists($defaultData))
+                {
+                    $this->resource = str_replace("{{ @old($oldField,$defaultData) }}", trim($defaultData), $this->resource);
+
+                    continue;
+                }
+
+                // Remove the tag when no old data or default value is set
+                $this->resource = str_replace("{{ @old($oldField) }}", '', $this->resource);
+            }
+
+            // Remove any old data that may be left, so it isn't stored for any longer than needed
+            $this->HttpKernel->session->remove('old');
+        }
     }
 
     private function injectDataToView(&$resourceContent, &$resourceTags, $data)

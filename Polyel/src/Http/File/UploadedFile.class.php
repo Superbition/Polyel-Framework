@@ -151,6 +151,11 @@ class UploadedFile extends SplFileInfo
         return $this->extension;
     }
 
+    public function getMimeType()
+    {
+        return $this->polyelType;
+    }
+
     public function save($newFilePath, $diskToSaveTo)
     {
         // Check that the file is valid before trying to move it

@@ -38,6 +38,8 @@ class Kernel
 
         $view = $this->container->get(View::class);
         $view->setHttpKernel($this);
+
+        $this->request->setAuthManager($this->auth);
     }
 
     public function setContainer(Container $container)
