@@ -525,11 +525,23 @@ class Validator
             // Store an error message inside a named group if one is set
             if(exists($this->group))
             {
+                if($this->checkForDuplicateErrorMessage($errorMessage, $this->group))
+                {
+                    // Still add an error for the field but add no error, so we don'get a static duplicate error
+                    $errorMessage = null;
+                }
+
                 // Add the error message to a named form group of fields and their error messages
                 $this->errors[$this->group][$field][] = $errorMessage;
             }
             else
             {
+                if($this->checkForDuplicateErrorMessage($errorMessage))
+                {
+                    // Still add an error for the field but add no error, so we don'get a static duplicate error
+                    $errorMessage = null;
+                }
+
                 // Add the error message to an array of fields and their error messages
                 $this->errors[$field][] = $errorMessage;
             }
@@ -545,6 +557,31 @@ class Validator
     protected function addFieldToRemovalArray($field)
     {
         $this->fieldsToBeRemoved[] = $field;
+    }
+
+    protected function checkForDuplicateErrorMessage($newErrorMessage, $group = null)
+    {
+        if($group && array_key_exists($group, $this->errors))
+        {
+            // Select only messages from a group if one was set
+            $errorMessages = $this->errors[$group];
+        }
+        else
+        {
+            $errorMessages = $this->errors;
+        }
+
+        foreach($errorMessages as $fieldErrors)
+        {
+            if(in_array($newErrorMessage, $fieldErrors))
+            {
+                // A duplicate error message was found
+                return true;
+            }
+        }
+
+        // No duplicate error messages found
+        return false;
     }
 
     protected function hasError($field)
