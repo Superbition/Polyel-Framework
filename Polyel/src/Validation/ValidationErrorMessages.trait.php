@@ -123,6 +123,15 @@ trait ValidationErrorMessages
             return null;
         }
 
+        // Check to see if the field was using a wildcard for array based field names
+        $originalField = $this->getOriginalField($field);
+
+        // If the field was originally using a wildcard, use the original field name instead
+        if($field !== $originalField)
+        {
+            $field = $originalField;
+        }
+
         // Try to search for a custom message within a field and then a rule
         if(array_key_exists($field, $this->customErrorMessages))
         {
