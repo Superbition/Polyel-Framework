@@ -87,8 +87,8 @@ class Database
         // Execute the query but only grab the first record, only one record should be found though
         $user = $query->first();
 
-        // Return the database retrieval result based on credentials
-        return new GenericUser($user);
+        // Return the database retrieval result based on credentials or null if a user does not exist
+        return $user ? new GenericUser($user) : null;
     }
 
     public function getUserByToken($clientId, $conditions  = null)
