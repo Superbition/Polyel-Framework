@@ -51,6 +51,7 @@ trait Aggregates
 
         $this->select($columns);
 
-        return $this->get();
+        // The first element will be the aggregate result
+        return $this->get()[0];
     }
 }
