@@ -482,7 +482,7 @@ trait ValidationRules
 
     protected function prepareRemovalData($parameters)
     {
-        $otherFieldValue = $this->getValue($parameters[0]);
+        $otherFieldValue = $parameters[0];
 
         // Remove the other field from the parameters, so we are left with the values to check against
         $values = array_slice($parameters, 1);
