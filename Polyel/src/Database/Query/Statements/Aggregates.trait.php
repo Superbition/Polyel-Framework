@@ -51,6 +51,6 @@ trait Aggregates
 
         $this->select($columns);
 
-        return $this->get(2);
+        return $this->get();
     }
 }
