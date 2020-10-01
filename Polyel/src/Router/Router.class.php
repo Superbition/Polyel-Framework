@@ -85,16 +85,19 @@ class Router
             if($matchedRoute !== false)
             {
                 // Check if the request is an API registered route...
-                if(isset($matchedRoute['action'][1]) && $matchedRoute['action'][1] === 'API')
+                if(is_array($matchedRoute['action']))
                 {
-                    /*
-                     * When the route is an API request it will contain the API flag as part of the action.
-                     * The first thing to do is replace the action index with only the route action.
-                     * Then set the route type to API because this will let the Router know it is dealing
-                     * with an API registered route.
-                     */
-                    $matchedRoute['action'] = $matchedRoute['action'][0];
-                    $matchedRoute['type'] = 'API';
+                    if(isset($matchedRoute['action'][1]) && $matchedRoute['action'][1] === 'API')
+                    {
+                        /*
+                         * When the route is an API request it will contain the API flag as part of the action.
+                         * The first thing to do is replace the action index with only the route action.
+                         * Then set the route type to API because this will let the Router know it is dealing
+                         * with an API registered route.
+                         */
+                        $matchedRoute['action'] = $matchedRoute['action'][0];
+                        $matchedRoute['type'] = 'API';
+                    }
                 }
                 else
                 {
