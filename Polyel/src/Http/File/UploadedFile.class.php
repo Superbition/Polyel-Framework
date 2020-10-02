@@ -19,6 +19,14 @@ class UploadedFile extends SplFileInfo
     // The type detected by Swoole
     private $swooleType;
 
+    // Swoole has different types for certain file types
+    private array $acceptableSwooleTypes = [
+        'image/svg+xml',
+        'image/bmp',
+        'application/octet-stream',
+        'application/json',
+    ];
+
     // the type detected by Polyel
     private $polyelType;
 
@@ -114,11 +122,15 @@ class UploadedFile extends SplFileInfo
         // Check that both the Swoole and Polyel Mime types are the same
         if($this->swooleType !== $this->polyelType)
         {
-            // Sometimes there is a mismatch between types when a file is uploaded but empty...
-            if($this->polyelType !== "application/x-empty")
+            // Swoole has different MIME types for certain files, check if that is the type mismatch...
+            if(!in_array($this->swooleType, $this->acceptableSwooleTypes, true))
             {
-                $this->isValid = false;
-                $this->addError(3, "Type mismatch found, file not valid for processing");
+                // Sometimes there is a mismatch between types when a file is uploaded but empty...
+                if($this->polyelType !== "application/x-empty")
+                {
+                    $this->isValid = false;
+                    $this->addError(3, "Type mismatch found, file not valid for processing");
+                }
             }
         }
 
