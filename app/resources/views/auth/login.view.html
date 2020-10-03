@@ -162,7 +162,7 @@
 
                 <form action="/login" method="post">
 
-                    <input type="text" class="{{ @error(email, invalid) }}" placeholder="Email" name="email" value="{{ @old(email) }}" required autofocus>
+                    <input type="text" class="{{ @error(email, invalid) }}" placeholder="Email" name="email" value="{{ @old(email) }}" required autofocus onfocus="this.setSelectionRange(this.value.length, this.value.length);">
 
                     <input type="password" class="{{ @error(password, invalid) }}" placeholder="Password" name="password" required>
 

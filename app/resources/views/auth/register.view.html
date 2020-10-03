@@ -131,7 +131,7 @@
 
                 <form action="/register" method="post">
 
-                    <input type="text" class="{{ @error(Username, invalid) }}" placeholder="Username" name="Username" value="{{ @old(Username) }}" required autofocus>
+                    <input type="text" class="{{ @error(Username, invalid) }}" placeholder="Username" name="Username" value="{{ @old(Username) }}" required autofocus onfocus="this.setSelectionRange(this.value.length, this.value.length);">
 
                     <input type="email" class="{{ @error(Email, invalid) }}" placeholder="Email" name="Email" value="{{ @old(Email) }}" required>
 
