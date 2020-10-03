@@ -59,6 +59,11 @@
                 border: 2px solid #858687;
             }
 
+            .invalid:not(#loginFormContainer)
+            {
+                border: 3px solid #e09595;
+            }
+
             #registerFormContainer form input:not(:last-child)
             {
                 margin-bottom: 15px;
@@ -113,17 +118,19 @@
 
             <p id="registerMsg">Register</p>
 
+            {{ @errors(list) }}
+
             <div id="registerFormContainer">
 
                 <form action="/register" method="post">
 
-                    <input type="text" placeholder="Username" name="username" required autofocus>
+                    <input type="text" class="{{ @error(Username, invalid) }}" placeholder="Username" name="Username" value="{{ @old(Username) }}" required autofocus>
 
-                    <input type="text" placeholder="Email" name="email" required>
+                    <input type="email" class="{{ @error(Email, invalid) }}" placeholder="Email" name="Email" value="{{ @old(Email) }}" required>
 
-                    <input type="password" placeholder="Password" name="password" required>
+                    <input type="password" class="{{ @error(Password, invalid) }}" placeholder="Password" name="Password" required>
 
-                    <input type="password" placeholder="Confirm Password" name="passwordConfirmed" required>
+                    <input type="password" class="{{ @error(Password, invalid) }}" placeholder="Confirm Password" name="Password_confirmed" required>
 
                     <div id="formButtonContainer">
 
