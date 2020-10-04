@@ -40,6 +40,8 @@ trait AuthLogin
          */
         $username = $this->username($request);
 
+        $request->validate($this->validation($request));
+
         // See if there are any extra conditions to apply when search for a user in the database
         $additionalConditions = $this->additionalConditions($request);
 

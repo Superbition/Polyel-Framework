@@ -46,6 +46,14 @@ class LoginController extends Controller
         return 'email';
     }
 
+    private function validation(Request $request)
+    {
+        return [
+            $this->username($request) => ['Break:rule', 'Required', 'Email'],
+            'password' => ['Required', 'String'],
+        ];
+    }
+
     /*
      * Use this method to return any additional conditions for when
      * a user is attempting to login to your application. For example you
