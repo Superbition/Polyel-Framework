@@ -35,6 +35,10 @@ class RegisterController extends Controller
         $this->user = $user;
     }
 
+    /*
+     * Setup the rules which validate the
+     * data provided during registration.
+     */
     public function validation()
     {
         return [
@@ -44,6 +48,11 @@ class RegisterController extends Controller
         ];
     }
 
+    /*
+     * Once the registration data is valid, we can
+     * create the new user and store their details in
+     * the database.
+     */
     private function create(array $data)
     {
         return $this->user->create([
@@ -53,6 +62,11 @@ class RegisterController extends Controller
         ]);
     }
 
+    /*
+     * A user has now been successfully created, here
+     * we decide what to do once a new user has been
+     * created.
+     */
     private function registered($request, $id)
     {
         // TODO: Send verification email here after user reg?
