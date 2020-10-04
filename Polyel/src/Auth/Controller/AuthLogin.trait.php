@@ -40,7 +40,7 @@ trait AuthLogin
          */
         $username = $this->username($request);
 
-        $request->validate($this->validation($request));
+        $data = $request->validate($this->validation($request));
 
         // See if there are any extra conditions to apply when search for a user in the database
         $additionalConditions = $this->additionalConditions($request);
@@ -50,8 +50,8 @@ trait AuthLogin
          * Session Protector from the Auth System to try and validate the given
          * credentials, returning true or false as the outcome.
          */
-        $credentials[$username] = $request->data($username);
-        $credentials['password'] = $request->data('password');
+        $credentials[$username] = $data[$username];
+        $credentials['password'] = $data['password'];
         return $this->auth->protector('session')->attemptLogin($credentials, $additionalConditions);
     }
 

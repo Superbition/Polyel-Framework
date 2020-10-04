@@ -17,10 +17,10 @@ trait AuthRegister
     public function register(Request $request)
     {
         // Validate incoming user registration data
-        $request->validate($this->validation());
+        $data = $request->validate($this->validation());
 
         // Let the main Register method actually create the user, just pass the request data over
-        $id = $this->create($request->data());
+        $id = $this->create($data);
 
         // Login the newly created user by their ID
         $this->auth->protector('session')->loginById($id);
