@@ -65,11 +65,13 @@ class RegisterController extends Controller
     /*
      * A user has now been successfully created, here
      * we decide what to do once a new user has been
-     * created.
+     * created. By default if JSON is expected then a
+     * 201 response is sent back or the user is redirected
+     * to the index route. But you may provide your own
+     * custom redirect or response.
      */
     private function registered($request, $id)
     {
         // TODO: Send verification email here after user reg?
-        return redirect('/');
     }
 }

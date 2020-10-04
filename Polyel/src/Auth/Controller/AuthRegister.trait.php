@@ -35,7 +35,12 @@ trait AuthRegister
             return $response;
         }
 
-        // If no response is provided, we send back a normal 201 response to indicate a user was created
-        return response('', 201);
+        /*
+         * If no response is provided, we send back a normal 201 response to indicate a user was created
+         * or redirect the user to the index route.
+         */
+        return $request->expectsJson()
+            ? response('', 201)
+            : redirect('/');
     }
 }

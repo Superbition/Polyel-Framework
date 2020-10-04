@@ -84,9 +84,15 @@ trait AuthLogin
             return $response;
         }
 
-        // No response from the dev, so we send back a basic 401 failed authorization/unauthorized attempt
-        // TODO: Add error msg back to the view
-        return response('', 401);
+        /*
+         * No response from the dev, so we send back a basic 401 failed
+         * authorization/unauthorized attempt or a normal web based
+         * redirect with a added auth error message.
+         */
+        return $request->expectsJson()
+            ? response('', 401)
+            : redirect('/login')->withErrors([
+                'auth' => 'Email or password is incorrect']);
     }
 
     public function logout(Request $request)
