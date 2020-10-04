@@ -16,7 +16,8 @@ trait AuthRegister
 
     public function register(Request $request)
     {
-        // TODO: Add request data validation here for when a user registers
+        // Validate incoming user registration data
+        $request->validate($this->validation());
 
         // Let the main Register method actually create the user, just pass the request data over
         $id = $this->create($request->data());

@@ -37,7 +37,11 @@ class RegisterController extends Controller
 
     public function validation()
     {
-
+        return [
+            'Username' => ['Break:rule', 'Required', 'String', 'Between:3,32'],
+            'Email' => ['Break:rule', 'Required', 'Email'],
+            'Password' => ['Break:rule', 'Required', 'Confirmed', 'Min:6'],
+        ];
     }
 
     private function create(array $data)
