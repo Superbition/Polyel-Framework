@@ -74,7 +74,7 @@ trait AuthLogin
      * The method called when the login was invalid and not successful.
      * Handles how to return a failed login attempt response to the client.
      */
-    private function loginNotSuccessful($request)
+    private function loginNotSuccessful(Request $request)
     {
         // The developer failed method might want to return a response of its own...
         if($response = $this->failed($request))
