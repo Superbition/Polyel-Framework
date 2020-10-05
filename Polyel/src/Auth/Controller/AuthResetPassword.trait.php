@@ -44,17 +44,17 @@ trait AuthResetPassword
                 }
                 else
                 {
-                    $error = 'Invalid reset token';
+                    $error = 'Invalid reset token given';
                 }
             }
             else
             {
-                $error = 'Password reset has expired already';
+                $error = 'Password reset has expired already, please request a new one';
             }
         }
         else
         {
-            $error = 'Incorrect email address';
+            $error = 'Incorrect email address given';
         }
 
         return $this->sendFailedResetResponse($credentials['token'], $error);
@@ -94,8 +94,9 @@ trait AuthResetPassword
 
     private function sendFailedResetResponse($token, $error)
     {
-        // TODO: Add error msg back to the view
-        return redirect('/password/reset/' . $token);
+        return redirect('/password/reset/' . $token)->withErrors([
+            'password_reset' => $error
+        ]);
     }
 
     private function sendSuccessfulResetResponse($message)
