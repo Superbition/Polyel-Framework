@@ -15,6 +15,7 @@ trait AuthVerifyEmail
         // Don't show the email verification view if they are already verified
         if($this->user->hasVerifiedEmail())
         {
+            // TODO: Add msg to indicate their email is already verified
             return redirect($this->redirectTo);
         }
 
