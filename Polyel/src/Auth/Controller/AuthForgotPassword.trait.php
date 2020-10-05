@@ -18,7 +18,7 @@ trait AuthForgotPassword
         $data = $request->validate($this->validation());
 
         // Try to find the user by the provided email
-        $user = $users->getUserByCredentials($this->credentials($request));
+        $user = $users->getUserByCredentials($this->credentials($data));
 
         // If the user exists, we continue validating the request further...
         if(exists($user))
@@ -60,9 +60,9 @@ trait AuthForgotPassword
         // TODO: Add email request validation rules here
     }
 
-    private function credentials(Request $request)
+    private function credentials(array $data)
     {
-        return ['email' => $request->data('email')];
+        return ['email' => $data['email']];
     }
 
     private function tokenRecentlyCreated(string $email, string $table, int $limit = 15)
