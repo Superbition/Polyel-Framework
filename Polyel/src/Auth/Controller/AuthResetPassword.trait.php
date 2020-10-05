@@ -101,7 +101,7 @@ trait AuthResetPassword
 
     private function sendSuccessfulResetResponse($message)
     {
-        // TODO: Add msg back to the view?
+        // TODO: Add flash msg back to the view?
         return redirect('/login');
     }
 
