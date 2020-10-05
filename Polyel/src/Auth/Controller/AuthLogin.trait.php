@@ -68,7 +68,6 @@ trait AuthLogin
         }
 
         // No response from the dev, so we send back a basic 204 no-content/success response
-        // TODO: Add msg back to the view?
         return response('', 204);
     }
 
