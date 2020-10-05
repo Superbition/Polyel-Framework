@@ -55,11 +55,6 @@ trait AuthForgotPassword
         }
     }
 
-    public function validateEmail(Request $request)
-    {
-        // TODO: Add email request validation rules here
-    }
-
     private function credentials(array $data)
     {
         return ['email' => $data['email']];
