@@ -43,13 +43,15 @@ trait AuthConfirmPassword
 
     private function attemptPasswordConfirmation(Request $request, Session $session, Database $users)
     {
+        $data = $request->validate($this->validation());
+
         $userId = $session->user();
 
         if(exists($userId))
         {
             $user = $users->getUserById($userId);
 
-            $PasswordToConfirm['password'] = $request->data('password');
+            $PasswordToConfirm['password'] = $data['password'];
 
             $confirmed = $this->auth->protector('session')->hasValidCredentials($user, $PasswordToConfirm);
 
