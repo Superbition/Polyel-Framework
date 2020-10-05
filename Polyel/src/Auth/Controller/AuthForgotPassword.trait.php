@@ -33,8 +33,8 @@ trait AuthForgotPassword
             // Stop tokens from being re-created too often...
             if($this->tokenRecentlyCreated($email, $resetConfig['table'], $resetConfig['timeout']))
             {
-                // TODO: Return msg that token throttle is active still
-                return;
+                return redirect('/password/reset')->withErrors([
+                        'throttle' => 'You can only request a password reset every ' . $resetConfig['timeout'] . ' minutes']);
             }
             else
             {
