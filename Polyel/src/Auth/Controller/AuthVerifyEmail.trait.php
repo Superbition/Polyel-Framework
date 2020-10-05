@@ -18,7 +18,9 @@ trait AuthVerifyEmail
             return redirect($this->redirectTo);
         }
 
-        return response(view('auth.verification:view'));
+        return response(view('auth.verification:view', [
+            'message' => 'Your email has not been verified, please use the link sent to you or request a new one'
+        ]));
     }
 
     public function verify(Request $request, $id, $hash, $expiration)
