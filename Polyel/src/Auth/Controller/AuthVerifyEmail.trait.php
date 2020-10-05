@@ -42,7 +42,6 @@ trait AuthVerifyEmail
                 return redirect($this->redirectTo);
             }
 
-            // TODO: Add response error if email send fails for some reason
             if($this->user->markEmailAsVerified())
             {
                 if($response = $this->verified($request))
