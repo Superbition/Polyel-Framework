@@ -32,8 +32,9 @@ trait AuthVerifyEmail
             // Checks that the user is verifying against the same ID and email from the URL
             if($this->verificationIsNotForThisUser($id, $hash))
             {
-                // TODO: Add error msg to request here
-                return redirect('/email/verify');
+                return response(view('auth.verification:view', [
+                    'message' => 'Invalid verification details, please request a new verification link'
+                ]));
             }
 
             // Redirect if the user has already got a verified email
@@ -55,8 +56,9 @@ trait AuthVerifyEmail
             }
         }
 
-        // TODO: Add error info to the actual request
-        return redirect('/email/verify');
+        return response(view('auth.verification:view', [
+            'message' => 'Invalid verification link, please request a new verification email'
+        ]));
     }
 
     private function signatureIsValid(Request $request)
