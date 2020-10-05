@@ -15,10 +15,10 @@ trait AuthResetPassword
 
     public function resetPassword(Request $request)
     {
-        // TODO: Validate reset data here
+        $data = $request->validate($this->validation());
 
         // Get the email, new password and token from the request
-        $credentials = $this->credentials($request);
+        $credentials = $this->credentials($data);
 
         $resetConfig = $this->getPasswordResetConfig();
 
@@ -60,12 +60,12 @@ trait AuthResetPassword
         return $this->sendFailedResetResponse($credentials['token'], $error);
     }
 
-    private function credentials(Request $request)
+    private function credentials(array $data)
     {
         return [
-            'email' => $request->data('email'),
-            'password' => $request->data('password'),
-            'token' => $request->data('token'),
+            'email' => $data['Email'],
+            'password' => $data['Password'],
+            'token' => $data['token'],
         ];
     }
 

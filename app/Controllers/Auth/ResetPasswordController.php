@@ -27,4 +27,12 @@ class ResetPasswordController extends Controller
     {
         $this->auth = $auth;
     }
+
+    public function validation()
+    {
+        return [
+            'Email' => ['Required', 'Email:dns,spoof'],
+            'Password' => ['Required', 'String', 'Min:6', 'Confirmed'],
+        ];
+    }
 }
