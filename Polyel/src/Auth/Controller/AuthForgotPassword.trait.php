@@ -15,7 +15,7 @@ trait AuthForgotPassword
 
     public function sendPasswordResetEmail(Request $request, Database $users)
     {
-        // TODO: Validate request email here
+        $data = $request->validate($this->validation());
 
         // Try to find the user by the provided email
         $user = $users->getUserByCredentials($this->credentials($request));
