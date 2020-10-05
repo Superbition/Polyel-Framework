@@ -31,9 +31,8 @@ trait AuthConfirmPassword
             return redirect($session->pull('intendedConfirmURL'));
         }
 
-        // Password confirm was not correct...
-        // TODO: Add error msg onto the view
-        return redirect('/password/confirm');
+        return redirect('/password/confirm')->withErrors([
+            'password' => 'Your password was incorrect']);
     }
 
     private function resetPasswordConfirmationTimeout(Session $session)
