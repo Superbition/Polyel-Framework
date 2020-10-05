@@ -33,6 +33,7 @@ class ResetPasswordController extends Controller
         return [
             'Email' => ['Required', 'Email:dns,spoof'],
             'Password' => ['Required', 'String', 'Min:6', 'Confirmed'],
+            'token' => ['Required'],
         ];
     }
 }
