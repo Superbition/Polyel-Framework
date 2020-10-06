@@ -24,11 +24,6 @@ abstract class MustVerifyEmail implements VerificationOutcomes
     {
         if($this->user->hasVerifiedEmail() === false)
         {
-            if($error = $this->additionalVerification($request))
-            {
-                // TODO: Decide what to do with the returned error
-            }
-
             if($response = $this->verificationFailed($request))
             {
                 return $response;

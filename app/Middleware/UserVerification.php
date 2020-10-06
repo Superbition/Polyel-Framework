@@ -15,13 +15,4 @@ class UserVerification extends MustVerifyEmail
     {
         // ...
     }
-
-    /*
-     * Here you may perform additional verification once the users email address has been
-     * confirmed and validated.
-     */
-    public function additionalVerification(Request $request)
-    {
-        // ...
-    }
 }
