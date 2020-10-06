@@ -8,19 +8,19 @@ use Polyel\Auth\Middleware\MustVerifyEmail;
 class UserVerification extends MustVerifyEmail
 {
     /*
-     * Here you may perform additional verification once the users email address has been
-     * confirmed and validated.
+     * This method is called when email verification has failed.
+     * You can use this method to return a custom response or perform an action.
      */
-    public function additionalVerification(Request $request)
+    public function verificationFailed(Request $request)
     {
         // ...
     }
 
     /*
-     * This method is called when email verification has failed.
-     * You can use this method to return a custom response or perform an action.
+     * Here you may perform additional verification once the users email address has been
+     * confirmed and validated.
      */
-    public function verificationFailed(Request $request)
+    public function additionalVerification(Request $request)
     {
         // ...
     }
