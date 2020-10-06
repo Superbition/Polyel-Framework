@@ -70,7 +70,7 @@ class RegisterController extends Controller
      * to the index route. But you may provide your own
      * custom redirect or response.
      */
-    private function registered($request, $id)
+    private function registered($request, $userID)
     {
         // TODO: Send verification email here after user reg?
     }

@@ -20,17 +20,17 @@ trait AuthRegister
         $data = $request->validate($this->validation());
 
         // Let the main Register method actually create the user, just pass the request data over
-        $id = $this->create($data);
+        $userID = $this->create($data);
 
         // Login the newly created user by their ID
-        $this->auth->protector('session')->loginById($id);
+        $this->auth->protector('session')->loginById($userID);
 
         /*
          * Once the user is created and logged in, run the completed registration
          * function and get the response is one is returned, if one is we use the devs
          * provided response.
          */
-        if($response = $this->registered($request, $id))
+        if($response = $this->registered($request, $userID))
         {
             return $response;
         }
