@@ -34,11 +34,9 @@ abstract class MustVerifyEmail implements VerificationOutcomes
                 return $response;
             }
 
-            // TODO: If Json is expected return a 403: Your email address is not verified.
-
-            // TODO: Add validation msg to the redirect here
-
-            return redirect('/email/verify');
+            return $request->expectsJson()
+                ? response('', 403)
+                : redirect('/email/verify');
         }
     }
 }
