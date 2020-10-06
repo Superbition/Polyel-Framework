@@ -108,8 +108,10 @@ trait AuthVerifyEmail
             return redirect($this->redirectTo);
         }
 
-        // TODO: Check for email errors
-        $this->sendVerificationEmail($this->auth->user()->get('email'));
+        if($this->sendVerificationEmail($this->auth->user()->get('email')) === false)
+        {
+            // TODO: Send back why the email failed to send
+        }
 
         // TODO: Add resend message here
         return redirect('/email/verify');
