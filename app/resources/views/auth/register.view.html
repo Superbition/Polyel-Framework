@@ -1,133 +1,26 @@
+{{ @includeCSS(auth) }}
+
 <!DOCTYPE html>
 <html lang="en">
 
     <head>
 
-        <style>
-
-            *
-            {
-                box-sizing: border-box;
-            }
-
-            html, body
-            {
-                height: 100%;
-                padding: 0;
-                margin: 0;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                background-color: whitesmoke;
-            }
-
-            #registerContainer
-            {
-                display: flex;
-                flex-direction: column;
-                background-color: #dad9e2;
-                height: auto;
-                width: 500px;
-                padding: 12px 10px;
-                font-family: "Arial";
-                color: #707cc3;
-                border: 1px solid #a8aaac;
-                border-radius: 5px;
-                -webkit-box-shadow: 0px 0px 84px -54px rgba(0,0,0,0.75);
-                -moz-box-shadow: 0px 0px 84px -54px rgba(0,0,0,0.75);
-                box-shadow: 0px 0px 84px -54px rgba(0,0,0,0.75);
-            }
-
-            #registerMsg
-            {
-                font-size: 32px;
-                margin: 0 0 21px;
-            }
-
-            #registerFormContainer
-            {
-                width: 300px;
-                align-self: center;
-            }
-
-            #registerFormContainer form input
-            {
-                display: flex;
-                width: 100%;
-                height: 30px;
-                outline: none;
-                padding-left: 16px;
-                border: 2px solid #a8aaac;
-                border-radius: 3px;
-            }
-
-            #registerFormContainer form input:focus
-            {
-                border: 2px solid #858687;
-            }
-
-            #registerFormContainer form input.invalid
-            {
-                border: 3px solid #e09595;
-            }
-
-            #registerFormContainer form input:not(:last-child)
-            {
-                margin-bottom: 15px;
-            }
-
-            #formButtonContainer
-            {
-                display: flex;
-                justify-content: flex-end;
-            }
-
-            #formButtonContainer button
-            {
-                outline: none;
-                background-color: #dad9e2;
-                border: 2px solid #a8aaac;
-                border-radius: 3px;
-                color: grey;
-                padding: 8px 18px;
-                text-align: center;
-                text-decoration: none;
-                display: inline-block;
-                font-size: 12px;
-            }
-
-            #formButtonContainer button:hover
-            {
-                background-color: #cdccd4;
-                cursor: pointer;
-            }
-
-            #formButtonContainer button:active
-            {
-                transform: translateY(3px);
-            }
-
-            #formButtonContainer button:first-child
-            {
-                margin-right: 8px;
-            }
-
-        </style>
-
         <title>Register</title>
         <meta charset="UTF-8">
+
+        {{ @CSS }}
 
     </head>
 
     <body>
 
-        <div id="registerContainer">
+        <div id="authFormOuterContainer">
 
-            <p id="registerMsg">Register</p>
+            <p id="authTitle">Register</p>
 
             {{ @errors(list) }}
 
-            <div id="registerFormContainer">
+            <div id="authFormInnerContainer">
 
                 <form action="/register" method="post">
 
@@ -139,9 +32,9 @@
 
                     <input type="password" class="{{ @error(Password, invalid) }}" placeholder="Confirm Password" name="Password_confirmed" required>
 
-                    <div id="formButtonContainer">
+                    <div id="authFormButtonContainer">
 
-                        <button type="button" onclick="window.location.href='/login';">Login</button>
+                        <button id="loginButton" type="button" onclick="window.location.href='/login';">Login</button>
                         <button type="submit">Register</button>
 
                     </div>
