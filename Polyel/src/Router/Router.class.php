@@ -107,8 +107,8 @@ class Router
                     $request->type = 'web';
                 }
 
-                // Only operate the session system if it is a WEB route and the Session is set to active
-                if($matchedRoute['type'] !== 'API' && config('session.active'))
+                // Only operate the session system if it is a WEB route
+                if($matchedRoute['type'] !== 'API')
                 {
                     // Check for a valid session and update the session data, create one if one doesn't exist
                     $this->sessionManager->startSession($HttpKernel);
@@ -234,7 +234,7 @@ class Router
                     }
                 }
 
-                if($matchedRoute['type'] !== 'API' && config('session.active'))
+                if($matchedRoute['type'] !== 'API')
                 {
                     $HttpKernel->session->store('previousUrl', $request->uri);
                 }

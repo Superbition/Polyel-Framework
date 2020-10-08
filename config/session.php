@@ -4,18 +4,6 @@ return [
 
     /*
     │------------------------------------------------------------------------------
-    │ Session System
-    │------------------------------------------------------------------------------
-    │ Turn on or off the session system, by default the session system is set
-    │ to false, meaning it is not active and session cookies won't be created.
-    │ Change this value to true in order to enable the session system for your
-    │ application.
-    │
-    */
-    'active' => false,
-
-    /*
-    │------------------------------------------------------------------------------
     │ Session System Driver
     │------------------------------------------------------------------------------
     │ The driver used to interact with session data for every request.
