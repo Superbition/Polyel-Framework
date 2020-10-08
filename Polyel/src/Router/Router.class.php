@@ -110,18 +110,8 @@ class Router
                 // Only operate the session system if it is a WEB route
                 if($matchedRoute['type'] !== 'API')
                 {
-                    // Check for a valid session and update the session data, create one if one doesn't exist
-                    $this->sessionManager->startSession($HttpKernel);
-
+                    $this->startSessionSystem($HttpKernel);
                     $response->setSession($HttpKernel->session);
-
-                    if($oldData = $HttpKernel->request->data())
-                    {
-                        $HttpKernel->session->store('old', $oldData);
-                    }
-
-                    // Create the CSRF token if it is missing in the clients session data
-                    $HttpKernel->session->createCsrfToken();
                 }
                 else
                 {
@@ -241,12 +231,29 @@ class Router
             }
             else
             {
+                $this->startSessionSystem($HttpKernel);
+                $response->setSession($HttpKernel->session);
+
                 // Error 404 route not found
                 $response->build(response(view('404:error'), 404));
             }
         }
 
         return $response;
+    }
+
+    private function startSessionSystem($HttpKernel)
+    {
+        // Check for a valid session and update the session data, create one if one doesn't exist
+        $this->sessionManager->startSession($HttpKernel);
+
+        if($oldData = $HttpKernel->request->data())
+        {
+            $HttpKernel->session->store('old', $oldData);
+        }
+
+        // Create the CSRF token if it is missing in the clients session data
+        $HttpKernel->session->createCsrfToken();
     }
 
     private function addRoute($requestMethod, $route, $action)
