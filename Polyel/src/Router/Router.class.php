@@ -117,7 +117,7 @@ class Router
                 {
                     $request->type = 'api';
 
-                    $this->sessionManager->disable();
+                    $HttpKernel->session->disable();
                 }
 
                 // Set the default HTTP status code, might change throughout the request cycle

@@ -3,15 +3,12 @@
 namespace Polyel\Session;
 
 use Polyel;
-use RuntimeException;
 use Polyel\Http\Kernel;
 use Swoole\Timer as Timer;
 
 class SessionManager
 {
     private $driver;
-
-    private $disabled = false;
 
     private $availableDrivers;
 
@@ -33,9 +30,9 @@ class SessionManager
         }
     }
 
-    public function disable()
+    public function driver()
     {
-        $this->disabled = true;
+        return $this->driver;
     }
 
     public function startGc()
@@ -131,16 +128,6 @@ class SessionManager
         ];
 
         $response->queueCookie(...$sessionCookie);
-    }
-
-    public function driver()
-    {
-        if($this->disabled)
-        {
-            throw new RuntimeException('Trying to use Session System during an API request');
-        }
-
-        return $this->driver;
     }
 
     public function generateCsrfToken($length = 64)
