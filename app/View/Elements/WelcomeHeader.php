@@ -28,7 +28,7 @@ class WelcomeHeader extends Element
             $this->appendHtmlTag('<p>', $this->auth->user()->get('email'), '</p>');
 
             $logout = <<<HTML
-                <form action="logout" method="post">
+                <form action="/logout" method="post">
                     
                     <button type="submit">Logout</button>
                     
