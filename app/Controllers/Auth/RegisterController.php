@@ -35,23 +35,46 @@ class RegisterController extends Controller
         $this->user = $user;
     }
 
+    /*
+     * Setup the rules which validate the
+     * data provided during registration.
+     */
     public function validation()
     {
-
+        return [
+            'Username' => ['Break:rule', 'Required', 'String', 'Between:3,32', 'Unique:users,username'],
+            'Email' => ['Break:rule', 'Required', 'Email', 'Unique:users,email'],
+            'Password' => ['Break:rule', 'Required', 'Confirmed', 'Min:6'],
+        ];
     }
 
+    /*
+     * Once the registration data is valid, we can
+     * create the new user and store their details in
+     * the database.
+     */
     private function create(array $data)
     {
         return $this->user->create([
-            'username' => $data['username'],
-            'email' => $data['email'],
-            'password' => Hash::create($data['password']),
+            'username' => $data['Username'],
+            'email' => $data['Email'],
+            'password' => Hash::create($data['Password']),
         ]);
     }
 
-    private function registered($request, $id)
+    /*
+     * A user has now been successfully created, here
+     * we decide what to do once a new user has been
+     * created. By default if JSON is expected then a
+     * 201 response is sent back or the user is redirected
+     * to the index route. But you may provide your own
+     * custom redirect or response.
+     */
+    private function registered($request, $userID)
     {
-        // TODO: Send verification email here after user reg?
-        return redirect('/');
+        if($this->sendVerificationEmail($this->auth->user()->get('email')) === false)
+        {
+            // TODO: Send back why the email failed to send
+        }
     }
 }

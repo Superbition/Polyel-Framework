@@ -16,25 +16,31 @@ trait AuthRegister
 
     public function register(Request $request)
     {
-        // TODO: Add request data validation here for when a user registers
+        // Validate incoming user registration data
+        $data = $request->validate($this->validation());
 
         // Let the main Register method actually create the user, just pass the request data over
-        $id = $this->create($request->data());
+        $userID = $this->create($data);
 
         // Login the newly created user by their ID
-        $this->auth->protector('session')->loginById($id);
+        $this->auth->protector('session')->loginById($userID);
 
         /*
          * Once the user is created and logged in, run the completed registration
          * function and get the response is one is returned, if one is we use the devs
          * provided response.
          */
-        if($response = $this->registered($request, $id))
+        if($response = $this->registered($request, $userID))
         {
             return $response;
         }
 
-        // If no response is provided, we send back a normal 201 response to indicate a user was created
-        return response('', 201);
+        /*
+         * If no response is provided, we send back a normal 201 response to indicate a user was created
+         * or redirect the user to the index route.
+         */
+        return $request->expectsJson()
+            ? response('', 201)
+            : redirect('/');
     }
 }

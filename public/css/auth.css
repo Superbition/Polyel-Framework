@@ -1,0 +1,180 @@
+*
+{
+    box-sizing: border-box;
+}
+
+html, body
+{
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: whitesmoke;
+}
+
+#authFormOuterContainer
+{
+    display: flex;
+    flex-direction: column;
+    background-color: #dad9e2;
+    height: auto;
+    width: 500px;
+    padding: 12px 10px;
+    font-family: "Arial";
+    color: #707cc3;
+    border: 1px solid #a8aaac;
+    border-radius: 5px;
+    -webkit-box-shadow: 0px 0px 84px -54px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 84px -54px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 84px -54px rgba(0,0,0,0.75);
+}
+
+#authTitle
+{
+    font-size: 32px;
+    margin: 0 0 21px;
+}
+
+#authFormInnerContainer
+{
+    width: 300px;
+    align-self: center;
+}
+
+#authFormInnerContainer form input
+{
+    display: flex;
+    width: 100%;
+    height: 30px;
+    outline: none;
+    padding-left: 16px;
+    border: 2px solid #a8aaac;
+    border-radius: 3px;
+    font-size: 13px;
+}
+
+#authFormInnerContainer form input:focus
+{
+    border: 2px solid #858687;
+}
+
+#authFormInnerContainer form input.invalid
+{
+    border: 3px solid #e09595;
+}
+
+#authFormInnerContainer form input:not(:last-child)
+{
+    margin-bottom: 15px;
+}
+
+#authFormButtonContainer
+{
+    display: flex;
+    justify-content: flex-end;
+}
+
+#authFormButtonContainer button
+{
+    outline: none;
+    background-color: #dad9e2;
+    border: 2px solid #a8aaac;
+    border-radius: 3px;
+    color: grey;
+    padding: 8px 18px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 13px;
+}
+
+#authFormButtonContainer button:hover
+{
+    background-color: #cdccd4;
+    cursor: pointer;
+}
+
+#authFormButtonContainer button:active
+{
+    transform: translateY(3px);
+}
+
+#registerButton, #loginButton
+{
+    margin-right: 8px;
+}
+
+#forgotPasswordLink
+{
+    margin-top: 15px;
+    text-align: right;
+    font-size: 13px;
+}
+
+#forgotPasswordLink a:link
+{
+    color: grey;
+    text-decoration: none;
+}
+
+#forgotPasswordLink a:visited
+{
+    color: grey;
+    text-decoration: none;
+}
+
+#forgotPasswordLink a:hover
+{
+    color: #707cc3;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#forgotPasswordLink a:active
+{
+    color: grey;
+    text-decoration: none;
+}
+
+#backToLoginLink
+{
+    align-self: center;
+    margin-right: 18px;
+    font-size: 13px;
+}
+
+#backToLoginLink:link
+{
+    color: grey;
+    text-decoration: none;
+}
+
+#backToLoginLink:visited
+{
+    color: grey;
+    text-decoration: none;
+}
+
+#backToLoginLink:hover
+{
+    color: #707cc3;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#backToLoginLink:active
+{
+    color: grey;
+    text-decoration: none;
+}
+
+#verifyFormMessage
+{
+    margin-top: 0;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #e09595;
+}

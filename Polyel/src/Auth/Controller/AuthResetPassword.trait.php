@@ -15,10 +15,10 @@ trait AuthResetPassword
 
     public function resetPassword(Request $request)
     {
-        // TODO: Validate reset data here
+        $data = $request->validate($this->validation());
 
         // Get the email, new password and token from the request
-        $credentials = $this->credentials($request);
+        $credentials = $this->credentials($data);
 
         $resetConfig = $this->getPasswordResetConfig();
 
@@ -44,28 +44,28 @@ trait AuthResetPassword
                 }
                 else
                 {
-                    $error = 'Invalid reset token';
+                    $error = 'Invalid reset token given';
                 }
             }
             else
             {
-                $error = 'Password reset has expired already';
+                $error = 'Password reset has expired already, please request a new one';
             }
         }
         else
         {
-            $error = 'Incorrect email address';
+            $error = 'Incorrect email address given';
         }
 
         return $this->sendFailedResetResponse($credentials['token'], $error);
     }
 
-    private function credentials(Request $request)
+    private function credentials(array $data)
     {
         return [
-            'email' => $request->data('email'),
-            'password' => $request->data('password'),
-            'token' => $request->data('token'),
+            'email' => $data['Email'],
+            'password' => $data['Password'],
+            'token' => $data['token'],
         ];
     }
 
@@ -94,13 +94,14 @@ trait AuthResetPassword
 
     private function sendFailedResetResponse($token, $error)
     {
-        // TODO: Add error msg back to the view
-        return redirect('/password/reset/' . $token);
+        return redirect('/password/reset/' . $token)->withErrors([
+            'password_reset' => $error
+        ]);
     }
 
     private function sendSuccessfulResetResponse($message)
     {
-        // TODO: Add msg back to the view?
+        // TODO: Add flash msg back to the view?
         return redirect('/login');
     }
 

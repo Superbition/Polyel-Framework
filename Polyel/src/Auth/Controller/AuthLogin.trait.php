@@ -40,6 +40,8 @@ trait AuthLogin
          */
         $username = $this->username($request);
 
+        $data = $request->validate($this->validation($request));
+
         // See if there are any extra conditions to apply when search for a user in the database
         $additionalConditions = $this->additionalConditions($request);
 
@@ -48,8 +50,8 @@ trait AuthLogin
          * Session Protector from the Auth System to try and validate the given
          * credentials, returning true or false as the outcome.
          */
-        $credentials[$username] = $request->data($username);
-        $credentials['password'] = $request->data('password');
+        $credentials[$username] = $data[$username];
+        $credentials['password'] = $data['password'];
         return $this->auth->protector('session')->attemptLogin($credentials, $additionalConditions);
     }
 
@@ -66,7 +68,6 @@ trait AuthLogin
         }
 
         // No response from the dev, so we send back a basic 204 no-content/success response
-        // TODO: Add msg back to the view?
         return response('', 204);
     }
 
@@ -74,7 +75,7 @@ trait AuthLogin
      * The method called when the login was invalid and not successful.
      * Handles how to return a failed login attempt response to the client.
      */
-    private function loginNotSuccessful($request)
+    private function loginNotSuccessful(Request $request)
     {
         // The developer failed method might want to return a response of its own...
         if($response = $this->failed($request))
@@ -82,9 +83,15 @@ trait AuthLogin
             return $response;
         }
 
-        // No response from the dev, so we send back a basic 401 failed authorization/unauthorized attempt
-        // TODO: Add error msg back to the view
-        return response('', 401);
+        /*
+         * No response from the dev, so we send back a basic 401 failed
+         * authorization/unauthorized attempt or a normal web based
+         * redirect with a added auth error message.
+         */
+        return $request->expectsJson()
+            ? response('', 401)
+            : redirect('/login')->withErrors([
+                'auth' => 'Email or password is incorrect']);
     }
 
     public function logout(Request $request)

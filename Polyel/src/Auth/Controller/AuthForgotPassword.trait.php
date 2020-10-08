@@ -15,10 +15,10 @@ trait AuthForgotPassword
 
     public function sendPasswordResetEmail(Request $request, Database $users)
     {
-        // TODO: Validate request email here
+        $data = $request->validate($this->validation());
 
         // Try to find the user by the provided email
-        $user = $users->getUserByCredentials($this->credentials($request));
+        $user = $users->getUserByCredentials($this->credentials($data));
 
         // If the user exists, we continue validating the request further...
         if(exists($user))
@@ -33,8 +33,8 @@ trait AuthForgotPassword
             // Stop tokens from being re-created too often...
             if($this->tokenRecentlyCreated($email, $resetConfig['table'], $resetConfig['timeout']))
             {
-                // TODO: Return msg that token throttle is active still
-                return;
+                return redirect('/password/reset')->withErrors([
+                        'throttle' => 'You can only request a password reset every ' . $resetConfig['timeout'] . ' minutes']);
             }
             else
             {
@@ -50,19 +50,15 @@ trait AuthForgotPassword
             ]);
 
             // TODO: Send reset email here
-            // TODO: Send back msg that password reset was sent...
-            return redirect('/password/reset');
         }
+
+        // TODO: Send back flash msg that password reset was sent/or not...
+        // If the email provided links to an account, a password reset email will be sent
     }
 
-    public function validateEmail(Request $request)
+    private function credentials(array $data)
     {
-        // TODO: Add email request validation rules here
-    }
-
-    private function credentials(Request $request)
-    {
-        return ['email' => $request->data('email')];
+        return ['email' => $data['email']];
     }
 
     private function tokenRecentlyCreated(string $email, string $table, int $limit = 15)

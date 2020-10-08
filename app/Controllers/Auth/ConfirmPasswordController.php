@@ -28,4 +28,11 @@ class ConfirmPasswordController extends Controller
     {
         $this->auth = $auth;
     }
+
+    public function validation()
+    {
+        return [
+            'password' => ['Required', 'String', 'Min:6'],
+        ];
+    }
 }

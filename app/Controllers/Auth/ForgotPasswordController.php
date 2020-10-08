@@ -27,4 +27,11 @@ class ForgotPasswordController extends Controller
     {
         $this->auth = $auth;
     }
+
+    public function validation()
+    {
+        return [
+            'email' => ['Required', 'Email:dns,spoof'],
+        ];
+    }
 }

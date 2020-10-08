@@ -18,7 +18,7 @@ trait SendsVerificationEmail
         {
             $url = $this->verificationUrl($id, $to);
 
-            // TODO: Actually send verification email here
+            // TODO: Actually send verification email here and if the email was successful being sent
         }
 
         return false;

@@ -30,7 +30,6 @@ abstract class ConfirmPassword implements PasswordConfirmationOutcomes
             // Give the developer a chance to perform actions when a password confirmation is triggered
             $this->passwordConfirmationRequired($request);
 
-            // TODO: Add error msg validation so the user knows what happened?
             // If no response is given we redirect to confirm the users password
             return redirect('/password/confirm');
         }

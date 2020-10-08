@@ -1,122 +1,30 @@
+{{ @includeCSS(auth) }}
+
 <!DOCTYPE html>
 <html lang="en">
 
     <head>
 
-        <style>
-
-            *
-            {
-                box-sizing: border-box;
-            }
-
-            html, body
-            {
-                height: 100%;
-                padding: 0;
-                margin: 0;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                background-color: #dad9e2;
-            }
-
-            #verifyContainer
-            {
-                display: flex;
-                flex-direction: column;
-                height: auto;
-                width: 400px;
-                padding: 12px 10px;
-                font-family: "Arial";
-                color: #707cc3;
-                border: 2px solid #a8aaac;
-                border-radius: 5px;
-                -webkit-box-shadow: 0px 0px 84px -54px rgba(0,0,0,0.75);
-                -moz-box-shadow: 0px 0px 84px -54px rgba(0,0,0,0.75);
-                box-shadow: 0px 0px 84px -54px rgba(0,0,0,0.75);
-            }
-
-            #verifyMsg
-            {
-                font-size: 32px;
-                margin: 0 0 21px;
-            }
-
-            #verifyFormContainer form input
-            {
-                display: flex;
-                width: 100%;
-                height: 30px;
-                outline:none;
-                padding-left: 16px;
-                border: 2px solid #a8aaac;
-                border-radius: 3px;
-            }
-
-            #verifyFormContainer form input:focus
-            {
-                border: 2px solid #858687;
-            }
-
-            #verifyMessage
-            {
-                margin-top: 0;
-                margin-left: 3px;
-                color: grey;
-            }
-
-            #formButtonContainer
-            {
-                display: flex;
-                justify-content: flex-end;
-            }
-
-            #formButtonContainer button
-            {
-                outline: none;
-                background-color: #dad9e2;
-                border: 2px solid #a8aaac;
-                border-radius: 3px;
-                color: grey;
-                padding: 8px 18px;
-                text-align: center;
-                text-decoration: none;
-                display: inline-block;
-                font-size: 12px;
-            }
-
-            #formButtonContainer button:hover
-            {
-                background-color: #cdccd4;
-                cursor: pointer;
-            }
-
-            #formButtonContainer button:active
-            {
-                transform: translateY(3px);
-            }
-
-        </style>
-
         <title>User Verification</title>
         <meta charset="UTF-8">
+
+        {{ @CSS }}
 
     </head>
 
     <body>
 
-        <div id="verifyContainer">
+        <div id="authFormOuterContainer">
 
-            <p id="verifyMsg">Email Verification</p>
+            <p id="authTitle">Email Verification</p>
 
-            <div id="verifyFormContainer">
+            <div id="authFormInnerContainer">
 
-                <p id="verifyMessage">{{ message }}</p>
+                <p id="verifyFormMessage">{{ message }}</p>
 
                 <form action="/email/verify/resend" method="post">
 
-                    <div id="formButtonContainer">
+                    <div id="authFormButtonContainer">
 
                         <button type="submit">Resend Verification Email</button>
 

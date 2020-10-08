@@ -47,6 +47,18 @@ class LoginController extends Controller
     }
 
     /*
+     * Setup the rules which validate the
+     * data provided during registration.
+     */
+    private function validation(Request $request)
+    {
+        return [
+            $this->username($request) => ['Break:rule', 'Required', 'Email'],
+            'password' => ['Required', 'String'],
+        ];
+    }
+
+    /*
      * Use this method to return any additional conditions for when
      * a user is attempting to login to your application. For example you
      * could add an extra condition to check if the user is not banned etc.
@@ -58,6 +70,12 @@ class LoginController extends Controller
         //return ['banned' => [0, 'Your account has been banned and you cannot login']];
     }
 
+    /*
+     * A user has provided successful login credentials and have
+     * been logged into your application, now we can decide what
+     * happens next and where they will be directed with a valid
+     * session.
+     */
     private function success(Request $request, $user)
     {
         /*
@@ -72,11 +90,22 @@ class LoginController extends Controller
         return redirect('/');
     }
 
+    /*
+     * You may provide a custom response when the login details are incorrect.
+     * By default the response from Polyel is used, a 401 JSON response is returned
+     * if the request expects a JSON response or an error message using the name
+     * 'auth' is displayed, saying the login details are incorrect.
+     */
     private function failed(Request $request)
     {
-        // TODO: What happens here when login is invalid
+        // ...
     }
 
+    /*
+     * Decide what happens next once a user
+     * has been successfully logged out from their
+     * current session.
+     */
     public function loggedOff(Request $request)
     {
         return redirect('/');
