@@ -92,6 +92,17 @@ trait RouteUtilities
                                     $routeAction = [$routeAction, 'API'];
                                 }
 
+                                /*
+                                 * Add an ending slash on the URI so that middleware
+                                 * routes will match with registered routes because
+                                 * not knowing if the end slash is there or not is
+                                 * ambiguous.
+                                 */
+                                if($regURL[-1] !== '/')
+                                {
+                                    $regURL .= '/';
+                                }
+
                                 // A match was found, return the action and parameters if there are any
                                 $routeMatched["action"] = $routeAction;
                                 $routeMatched["params"] = $params;
@@ -106,6 +117,17 @@ trait RouteUtilities
                         }
                         else
                         {
+                            /*
+                             * Add an ending slash on the URI so that middleware
+                             * routes will match with registered routes because
+                             * not knowing if the end slash is there or not is
+                             * ambiguous.
+                             */
+                            if($regURL[-1] !== '/')
+                            {
+                                $regURL .= '/';
+                            }
+
                             /*
                              * Else the route value is not an array, because this is a single tree with no
                              * other routes at the same level, a match was found, return the action and parameters.

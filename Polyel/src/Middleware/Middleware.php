@@ -38,6 +38,17 @@ class Middleware
 
     public function register($requestMethod, $uri, $middleware)
     {
+        /*
+         * Add an ending slash on the URI so that middleware
+         * routes will match with registered routes because
+         * not knowing if the end slash is there or not is
+         * ambiguous.
+         */
+        if($uri[-1] !== '/')
+        {
+            $uri .= '/';
+        }
+
         $this->middlewares[$requestMethod][$uri] = $middleware;
     }
 
