@@ -15,6 +15,10 @@ class RedirectBuilder
 
     public $group = null;
 
+    public $flashType = null;
+
+    public $flashMessage = null;
+
     public function __construct($url, $status)
     {
         $this->url = $url;
@@ -26,6 +30,15 @@ class RedirectBuilder
         $this->errors = $errors;
 
         $this->group = $group;
+
+        return $this;
+    }
+
+    public function andFlash($flashType, $flashMessage)
+    {
+        $this->flashType = $flashType;
+
+        $this->flashMessage = $flashMessage;
 
         return $this;
     }
