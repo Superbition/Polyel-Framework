@@ -6,11 +6,14 @@ trait DisplaysFlashMessages
 {
     protected function processFlashMessages()
     {
-        if($flashMessages = $this->getStringsBetween($this->resource, "{{ @flash(", ") }}"))
+        if($this->HttpKernel->request->type !== 'api')
         {
-            foreach($flashMessages as $flashMessageType)
+            if($flashMessages = $this->getStringsBetween($this->resource, "{{ @flash(", ") }}"))
             {
-                $this->renderFlashMessage($flashMessageType);
+                foreach($flashMessages as $flashMessageType)
+                {
+                    $this->renderFlashMessage($flashMessageType);
+                }
             }
         }
     }
