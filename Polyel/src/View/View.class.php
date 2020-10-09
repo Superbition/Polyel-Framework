@@ -7,7 +7,7 @@ use Polyel\Storage\Facade\Storage;
 
 class View
 {
-    use ViewTools, DisplaysErrors;
+    use ViewTools, DisplaysErrors, DisplaysFlashMessages;
 
     private const RESOURCE_DIR = ROOT_DIR . "/app/resources";
 
@@ -96,6 +96,8 @@ class View
 
             // Process all error tags within the resource and inject any rendered errors...
             $this->processErrors();
+
+            $this->processFlashMessages();
 
             $this->addCsrfTokens();
 
