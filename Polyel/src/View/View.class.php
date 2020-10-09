@@ -53,7 +53,7 @@ class View
         if($resource->isValid())
         {
             // Set the template type
-            $type = $resource->type;
+            $type = $resource->extensionType;
 
             /*
              * Format the resource file path and get the resource from the local disk
