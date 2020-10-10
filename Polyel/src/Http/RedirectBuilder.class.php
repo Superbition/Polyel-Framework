@@ -32,7 +32,7 @@ class RedirectBuilder
         return $this;
     }
 
-    public function andFlash($flashType, $flashMessage)
+    public function withFlash($flashType, $flashMessage)
     {
         $this->flashMessage['type'] = $flashType;
 
