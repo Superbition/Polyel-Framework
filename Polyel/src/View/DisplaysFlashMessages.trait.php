@@ -15,6 +15,8 @@ trait DisplaysFlashMessages
                     $this->renderFlashMessage($flashMessageType);
                 }
             }
+
+            $this->HttpKernel->session->remove('flashMessages');
         }
     }
 
@@ -37,7 +39,5 @@ trait DisplaysFlashMessages
         {
             $this->resource = str_replace("{{ @flash($flashMessageType) }}", '', $this->resource);
         }
-
-        $this->HttpKernel->session->remove('flashMessages');
     }
 }
