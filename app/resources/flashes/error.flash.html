@@ -1,0 +1,44 @@
+<style>
+
+    #flashMessageContainer
+    {
+        display: flex;
+        justify-content: center;
+        color: white;
+        background-color: #de2c2c;
+        border-bottom: 5px solid #cb3535;
+        -webkit-box-shadow: 0px 5px 8px -8px rgba(0,0,0,0.75);
+        -moz-box-shadow: 0px 5px 8px -8px rgba(0,0,0,0.75);
+        box-shadow: 0px 5px 8px -8px rgba(0,0,0,0.75);
+        margin-left: 6%;
+        margin-right: 6%;
+        border-radius: 0 0 10px 10px;
+    }
+
+    #flashMessageExitBtn
+    {
+        font-weight: bold;
+        margin-right: auto;
+        position: relative;
+        left: 3%;
+    }
+
+    #flashMessageExitBtn:hover
+    {
+        cursor: pointer;
+    }
+
+    #flashMessage
+    {
+        margin-right: auto;
+    }
+
+</style>
+
+<div id="flashMessageContainer">
+
+    <p id="flashMessageExitBtn" onClick="document.getElementById('flashMessageContainer').style.display='none'">x</p>
+
+    <p id="flashMessage"><strong>@message</strong></p>
+
+</div>
