@@ -121,7 +121,10 @@
 
     <body>
 
+        {{ @flash(info) }}
         {{ @flash(success) }}
+        {{ @flash(warning) }}
+        {{ @flash(error) }}
 
         {{ @addElement(WelcomeHeader) }}
 
