@@ -103,7 +103,7 @@ class View
                 $this->processFlashMessages();
             }
 
-            $this->addCsrfTokens();
+            $this->addCsrfTokenOrRemoveTag();
 
             return $this->resource;
         }
@@ -289,7 +289,7 @@ class View
         }
     }
 
-    private function addCsrfTokens()
+    private function addCsrfTokenOrRemoveTag()
     {
         // CSRF Tokens are not needed when handling a API request...
         if($this->HttpKernel->request->type !== 'api')
