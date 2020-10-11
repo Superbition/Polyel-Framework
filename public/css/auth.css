@@ -9,8 +9,7 @@ html, body
     padding: 0;
     margin: 0;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
     background-color: whitesmoke;
 }
 
@@ -18,6 +17,7 @@ html, body
 {
     display: flex;
     flex-direction: column;
+    margin: auto;
     background-color: #dad9e2;
     height: auto;
     width: 500px;
