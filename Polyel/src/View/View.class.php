@@ -103,6 +103,8 @@ class View
                 $this->processFlashMessages();
             }
 
+            $this->convertHttpMethodTags();
+
             $this->addCsrfTokenOrRemoveTag();
 
             return $this->resource;
@@ -302,6 +304,18 @@ class View
         {
             // Remove the CSRF Token tag from the HTML view if no token is needed or not found
             $this->resource = str_replace("{{ @csrfToken }}", '', $this->resource);
+        }
+    }
+
+    private function convertHttpMethodTags()
+    {
+        $httpMethodTags = $this->getStringsBetween($this->resource, "{{ @method(", ") }}");
+
+        foreach($httpMethodTags as $methodTag)
+        {
+            $methodHtmlInput = "<input type=\"hidden\" name=\"http_method\" value=\"$methodTag\">";
+
+            $this->resource = str_replace("{{ @method($methodTag) }}", $methodHtmlInput, $this->resource);
         }
     }
 

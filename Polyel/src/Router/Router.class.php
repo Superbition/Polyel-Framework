@@ -74,6 +74,14 @@ class Router
                 return $response;
             }
 
+            if($httpSpoofMethod = $request->data('http_method'))
+            {
+                if(in_array(strtolower($httpSpoofMethod), ['put', 'patch', 'delete']))
+                {
+                    $request->method = strtoupper($httpSpoofMethod);
+                }
+            }
+
             /*
              * Search for a registered route based on the request method and URI.
              * If a route is found, route information is returned, controller, action, parameters and URL.
