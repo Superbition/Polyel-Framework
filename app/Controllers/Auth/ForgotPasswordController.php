@@ -23,6 +23,9 @@ class ForgotPasswordController extends Controller
 
     private $auth;
 
+    // Used when redirecting after a reset email has been sent
+    private $redirectTo = '/';
+
     public function __construct(AuthManager $auth)
     {
         $this->auth = $auth;
