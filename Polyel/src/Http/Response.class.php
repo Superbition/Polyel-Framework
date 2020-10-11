@@ -126,30 +126,38 @@ class Response
         $this->headers[$headerName] = $headerValue;
     }
 
-    public function redirect($url, $statusCode = 302, $errors = [], $group = null)
+    public function redirect($url, $statusCode = 302, $errors = [], $group = null, $flashMessage = [])
     {
         // Setup a redirection happen when send() is called
         $this->redirection = $url;
         $this->httpStatusCode = $statusCode;
 
-        if(isset($this->session) && exists($errors))
+        if(isset($this->session))
         {
-            if($group && $oldData = $this->session->pull('old'))
+            if(exists($errors))
             {
-                // Add the group name to the old data array if it was set
-                $this->session->store("old.$group", $oldData);
+                if($group && $oldData = $this->session->pull('old'))
+                {
+                    // Add the group name to the old data array if it was set
+                    $this->session->store("old.$group", $oldData);
+                }
+
+                if($group)
+                {
+                    // Prepare the group name to be used with dot notation if set
+                    $group = "$group.";
+                }
+
+                foreach($errors as $field => $message)
+                {
+                    // Add each redirect error to the session
+                    $this->session->push("errors.$group$field", $message);
+                }
             }
 
-            if($group)
+            if(exists($flashMessage))
             {
-                // Prepare the group name to be used with dot notation if set
-                $group = "$group.";
-            }
-
-            foreach($errors as $field => $message)
-            {
-                // Add each redirect error to the session
-                $this->session->push("errors.$group$field", $message);
+                $this->session->store("flashMessages.{$flashMessage['type']}", $flashMessage['message']);
             }
         }
     }
@@ -188,7 +196,13 @@ class Response
             {
                 if(exists($response->url))
                 {
-                    $this->redirect($response->url, $response->status, $response->errors, $response->group);
+                    $this->redirect(
+                        $response->url,
+                        $response->status,
+                        $response->errors,
+                        $response->group,
+                        $response->flashMessage,
+                    );
                     return;
                 }
             }

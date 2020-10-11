@@ -216,6 +216,11 @@ class Session
         $this->store($keys, $value);
     }
 
+    public function flash($type, $message)
+    {
+        $this->store("flashMessages.$type", $message);
+    }
+
     /*
      * Pulls out data based on a given key but removes the key and its data from the session.
      * Returns a default value if the given key does not exist. Accepts dot syntax.

@@ -20,8 +20,11 @@ class ViewBuilder
     // Used to set if the view requested is valid
     private $valid = false;
 
-    // The template type
-    public $type;
+    // The template extension type
+    public $extensionType;
+
+    // The file path template direction name
+    public $filePathDirName;
 
     // The data which needs to be exchanged with the template
     public $data;
@@ -39,7 +42,7 @@ class ViewBuilder
             }
 
             $this->resource = $resourceAndType[0];
-            $this->type = $resourceAndType[1];
+            $this->extensionType = $resourceAndType[1];
         }
         catch(Exception $e)
         {
@@ -53,12 +56,19 @@ class ViewBuilder
          * The template is either a view or an error.
          * Work out based on the type if the resource is a view or and error and check if they exist on file.
          */
-        if($this->type === 'view' && file_exists($this->resourceDir . '/views/' . $this->resource . '.view.html'))
+        if($this->extensionType === 'view' && file_exists($this->resourceDir . '/views/' . $this->resource . '.view.html'))
         {
+            $this->filePathDirName = 'views';
             $this->valid = true;
         }
-        else if($this->type === 'error' && file_exists($this->resourceDir . '/errors/' . $this->resource . '.error.html'))
+        else if($this->extensionType === 'error' && file_exists($this->resourceDir . '/errors/' . $this->resource . '.error.html'))
         {
+            $this->filePathDirName = 'errors';
+            $this->valid = true;
+        }
+        else if($this->extensionType === 'flash' && file_exists($this->resourceDir . '/flashes/' . $this->resource . '.flash.html'))
+        {
+            $this->filePathDirName = 'flashes';
             $this->valid = true;
         }
 
@@ -71,7 +81,12 @@ class ViewBuilder
 
     public function __toString()
     {
-        return (string) file_get_contents($this->resourceDir . "/{$this->type}s/" . $this->resource . ".{$this->type}.html");
+        return (string) file_get_contents(
+            $this->resourceDir .
+            "/{$this->filePathDirName}/" .
+            $this->resource .
+            ".{$this->extensionType}.html"
+        );
     }
 
     public function extending($extendingView, $extendingViewData = null)
