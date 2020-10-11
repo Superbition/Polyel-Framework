@@ -15,8 +15,7 @@ trait AuthVerifyEmail
         // Don't show the email verification view if they are already verified
         if($this->user->hasVerifiedEmail())
         {
-            // TODO: Add msg to indicate their email is already verified
-            return redirect($this->redirectTo);
+            return redirect($this->redirectTo)->withFlash('success', 'Your email has already been verified');
         }
 
         return response(view('auth.verification:view', [
@@ -40,8 +39,7 @@ trait AuthVerifyEmail
             // Redirect if the user has already got a verified email
             if($this->user->hasVerifiedEmail())
             {
-                // TODO: Add a flash msg to say their email is already verified...
-                return redirect($this->redirectTo);
+                return redirect($this->redirectTo)->withFlash('success', 'Your email has already been verified');
             }
 
             if($this->user->markEmailAsVerified())
@@ -51,8 +49,7 @@ trait AuthVerifyEmail
                     return $response;
                 }
 
-                // TODO: Add msg to say email was verified, banner, flash msg?
-                return redirect($this->redirectTo);
+                return redirect($this->redirectTo)->withFlash('success', 'Your email has now successfully been verified');
             }
         }
 
@@ -104,8 +101,7 @@ trait AuthVerifyEmail
         // Don't resend verification URLs if they are already verified
         if($this->user->hasVerifiedEmail())
         {
-            // TODO: Add msg to indicate their email is already verified
-            return redirect($this->redirectTo);
+            return redirect($this->redirectTo)->withFlash('success', 'Your email has already been verified');
         }
 
         if($this->sendVerificationEmail($this->auth->user()->get('email')) === false)
@@ -113,7 +109,9 @@ trait AuthVerifyEmail
             // TODO: Send back why the email failed to send
         }
 
-        // TODO: Add resend message here
-        return redirect('/email/verify');
+        return redirect('/email/verify')->withFlash(
+            'success',
+            'A new verification email has been sent, please use the link to verify your email'
+        );
     }
 }

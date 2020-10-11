@@ -52,8 +52,10 @@ trait AuthForgotPassword
             // TODO: Send reset email here
         }
 
-        // TODO: Send back flash msg that password reset was sent/or not...
-        // If the email provided links to an account, a password reset email will be sent
+        return redirect($this->redirectTo)->withFlash(
+            'success',
+            'If the email provided links to an account, a password reset email will be sent'
+        );
     }
 
     private function credentials(array $data)

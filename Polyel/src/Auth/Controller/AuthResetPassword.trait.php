@@ -40,7 +40,7 @@ trait AuthResetPassword
 
                     $this->deleteToken($credentials['email'], $resetConfig['table']);
 
-                    return $this->sendSuccessfulResetResponse('Your password has been reset, please login');
+                    return $this->sendSuccessfulResetResponse('Your password has been reset, please login with your new password');
                 }
                 else
                 {
@@ -101,8 +101,7 @@ trait AuthResetPassword
 
     private function sendSuccessfulResetResponse($message)
     {
-        // TODO: Add flash msg back to the view?
-        return redirect('/login');
+        return redirect('/login')->withFlash('success', $message);
     }
 
     public function getPasswordResetConfig($config = null)
