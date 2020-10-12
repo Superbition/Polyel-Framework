@@ -32,11 +32,10 @@ return [
     [
         "before" => [
             "ValidateCsrfToken",
-            //"BeforeMiddlewareExample",
         ],
 
         "after" => [
-            //"AfterMiddlewareExample",
+            // ...
         ],
     ],
 
