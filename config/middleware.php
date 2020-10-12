@@ -17,10 +17,6 @@ return [
         "IsVerified" => \App\Middleware\UserVerificationMiddleware::class,
 
         "ConfirmPassword" => \App\Middleware\ConfirmPasswordMiddleware::class,
-
-        "BeforeMiddlewareExample" => \App\Middleware\BeforeExampleMiddleware::class,
-
-        "AfterMiddlewareExample" => \App\Middleware\AfterExampleMiddleware::class,
     ],
 
     /*
