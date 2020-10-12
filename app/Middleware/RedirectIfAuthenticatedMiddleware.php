@@ -4,7 +4,7 @@ namespace App\Middleware;
 
 use Polyel\Auth\AuthManager;
 
-class RedirectIfAuthenticated
+class RedirectIfAuthenticatedMiddleware
 {
     public $middlewareType = "before";
 

@@ -2,9 +2,9 @@
 
 namespace App\Middleware;
 
-use Polyel\Auth\Middleware\Authenticate as AuthenticationMiddleware;
+use Polyel\Auth\Middleware\Authenticate as PolyelAuthenticationMiddleware;
 
-class Authenticate extends AuthenticationMiddleware
+class AuthenticateMiddleware extends PolyelAuthenticationMiddleware
 {
     /*
      * Called when a web request is not authenticated, the user is not logged in

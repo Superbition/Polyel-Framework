@@ -3,9 +3,9 @@
 namespace App\Middleware;
 
 use Polyel\Http\Request;
-use Polyel\Auth\Middleware\ConfirmPassword as ConfirmPasswordMiddleware;
+use Polyel\Auth\Middleware\ConfirmPassword as PolyelConfirmPasswordMiddleware;
 
-class ConfirmPassword extends ConfirmPasswordMiddleware
+class ConfirmPasswordMiddleware extends PolyelConfirmPasswordMiddleware
 {
     /*
      * Perform any actions when a password confirmation has

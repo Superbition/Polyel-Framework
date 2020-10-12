@@ -2,9 +2,9 @@
 
 namespace App\Middleware;
 
-use Polyel\Middleware\CsrfTokenVerifier as CsrfTokenVerifierMiddleware;
+use Polyel\Middleware\CsrfTokenVerifier as PolyelCsrfTokenVerifierMiddleware;
 
-class ValidateCsrfToken extends CsrfTokenVerifierMiddleware
+class ValidateCsrfTokenMiddleware extends PolyelCsrfTokenVerifierMiddleware
 {
     /*
      * URIs that shall be excluded from CSRF Token verification.
