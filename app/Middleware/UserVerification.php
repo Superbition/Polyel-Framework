@@ -3,9 +3,9 @@
 namespace App\Middleware;
 
 use Polyel\Http\Request;
-use Polyel\Auth\Middleware\MustVerifyEmail;
+use Polyel\Auth\Middleware\MustVerifyEmail as MustVerifyEmailMiddleware;
 
-class UserVerification extends MustVerifyEmail
+class UserVerification extends MustVerifyEmailMiddleware
 {
     /*
      * This method is called when email verification has failed.
