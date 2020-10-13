@@ -4,7 +4,7 @@ namespace App\Middleware;
 
 use Polyel\Http\Middleware\Middleware;
 
-class {{ DefaultMiddleware }} extends Middleware
+class {{ MiddlewareName }}
 {
     public $middlewareType = "{{ MiddlewareType }}";
 
