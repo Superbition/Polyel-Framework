@@ -1,6 +1,6 @@
 <?php
 
-namespace Polyel\Middleware;
+namespace Polyel\Http\Middleware;
 
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;

@@ -9,7 +9,7 @@ use Polyel\Http\Kernel;
 use Polyel\Http\Request;
 use Polyel\Http\Response;
 use App\Controllers\Controller;
-use Polyel\Middleware\Middleware;
+use Polyel\Http\Middleware\Middleware;
 use Polyel\Session\SessionManager;
 use Polyel\Validation\ValidationException;
 

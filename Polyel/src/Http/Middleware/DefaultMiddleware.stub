@@ -2,7 +2,7 @@
 
 namespace App\Middleware;
 
-use Polyel\Middleware\Middleware;
+use Polyel\Http\Middleware\Middleware;
 
 class {{ DefaultMiddleware }} extends Middleware
 {

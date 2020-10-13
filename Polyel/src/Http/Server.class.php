@@ -11,7 +11,7 @@ use Swoole\Coroutine as Swoole;
 use Polyel\Hashing\Facade\Hash;
 use Polyel\View\Element\Element;
 use Polyel\Controller\Controller;
-use Polyel\Middleware\Middleware;
+use Polyel\Http\Middleware\Middleware;
 use Polyel\Session\SessionManager;
 use Polyel\Encryption\Facade\Crypt;
 use Polyel\Database\DatabaseManager;
