@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Middleware;
+namespace App\Http\Middleware;
 
 use Polyel\Auth\AuthManager;
 

@@ -8,15 +8,15 @@ return [
      */
     "keys" =>
     [
-        "ValidateCsrfToken" => \App\Middleware\ValidateCsrfTokenMiddleware::class,
+        "ValidateCsrfToken" => \App\Http\Middleware\ValidateCsrfTokenMiddleware::class,
 
-        "RedirectIfAuthenticated" => \App\Middleware\RedirectIfAuthenticatedMiddleware::class,
+        "RedirectIfAuthenticated" => \App\Http\Middleware\RedirectIfAuthenticatedMiddleware::class,
 
-        "Auth" => \App\Middleware\AuthenticateMiddleware::class,
+        "Auth" => \App\Http\Middleware\AuthenticateMiddleware::class,
 
-        "IsVerified" => \App\Middleware\UserVerificationMiddleware::class,
+        "IsVerified" => \App\Http\Middleware\UserVerificationMiddleware::class,
 
-        "ConfirmPassword" => \App\Middleware\ConfirmPasswordMiddleware::class,
+        "ConfirmPassword" => \App\Http\Middleware\ConfirmPasswordMiddleware::class,
     ],
 
     /*
