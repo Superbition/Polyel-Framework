@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Controllers\Auth;
+namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
 use Polyel\Auth\AuthManager;
-use App\Controllers\Controller;
 use Polyel\Hashing\Facade\Hash;
+use App\Http\Controllers\Controller;
 use Polyel\Auth\Controller\AuthRegister;
 
 class RegisterController extends Controller

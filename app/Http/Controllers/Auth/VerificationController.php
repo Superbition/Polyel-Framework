@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Controllers\Auth;
+namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
 use Polyel\Http\Request;
 use Polyel\Auth\AuthManager;
-use App\Controllers\Controller;
+use App\Http\Controllers\Controller;
 use Polyel\Auth\Controller\AuthVerifyEmail;
 
 class VerificationController extends Controller

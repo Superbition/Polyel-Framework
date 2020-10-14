@@ -8,7 +8,7 @@ use Polyel\Debug\Debug;
 use Polyel\Http\Kernel;
 use Polyel\Http\Request;
 use Polyel\Http\Response;
-use App\Controllers\Controller;
+use App\Http\Controllers\Controller;
 use Polyel\Http\Middleware\Middleware;
 use Polyel\Session\SessionManager;
 use Polyel\Validation\ValidationException;
@@ -151,7 +151,7 @@ class Router
                     list($controller, $controllerAction) = $matchedRoute['action'];
 
                     //The controller namespace and getting its instance from the container using ::call
-                    $controllerName = "App\Controllers\\" . $controller;
+                    $controllerName = "App\Http\Controllers\\" . $controller;
                     $controller = $HttpKernel->container->resolveClass($controllerName);
 
                     // Set the route action to the resolved controller

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Controllers\Auth;
+namespace App\Http\Controllers\Auth;
 
 use Polyel\Auth\AuthManager;
-use App\Controllers\Controller;
+use App\Http\Controllers\Controller;
 use Polyel\Auth\Controller\AuthForgotPassword;
 
 class ForgotPasswordController extends Controller
