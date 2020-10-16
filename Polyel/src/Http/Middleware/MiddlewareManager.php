@@ -5,7 +5,7 @@ namespace Polyel\Http\Middleware;
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
 
-class Middleware
+class MiddlewareManager
 {
     private $middlewareDirectory = ROOT_DIR . "/app/Http/Middleware/";
 

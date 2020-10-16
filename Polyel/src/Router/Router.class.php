@@ -9,9 +9,9 @@ use Polyel\Http\Kernel;
 use Polyel\Http\Request;
 use Polyel\Http\Response;
 use App\Http\Controllers\Controller;
-use Polyel\Http\Middleware\Middleware;
 use Polyel\Session\SessionManager;
 use Polyel\Validation\ValidationException;
+use Polyel\Http\Middleware\MiddlewareManager;
 
 class Router
 {
@@ -41,7 +41,7 @@ class Router
     // The Middleware service
     private $middleware;
 
-    public function __construct(SessionManager $sessionManager, Debug $debug, Middleware $middleware)
+    public function __construct(SessionManager $sessionManager, Debug $debug, MiddlewareManager $middleware)
     {
         $this->sessionManager = $sessionManager;
         $this->debug = $debug;
