@@ -24,6 +24,10 @@ class Kernel
     // The AuthManager service
     public $auth;
 
+    protected array $globalMiddlewareStack = [];
+
+    protected array $routeMiddlewareAliases = [];
+
     public function __construct(Session $session, Request $request, Response $response, AuthManager $auth)
     {
         $this->session = $session;
