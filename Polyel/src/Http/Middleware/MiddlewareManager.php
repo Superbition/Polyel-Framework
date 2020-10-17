@@ -175,48 +175,4 @@ class MiddlewareManager
             }
         }
     }
-
-    public function runAnyBefore($HttpKernel, $requestMethod, $route)
-    {
-        $globalResponse = $this->runGlobalMiddleware($HttpKernel, 'before');
-
-        if(exists($globalResponse))
-        {
-            // Halt any more execution and send back a response...
-            return $globalResponse;
-        }
-
-        $beforeResponse = $this->runMiddleware($HttpKernel, "before", $requestMethod, $route);
-
-        if(exists($beforeResponse))
-        {
-            // Halt any more execution and send back a response...
-            return $beforeResponse;
-        }
-
-        // No Middleware has formed a response to be sent back
-        return null;
-    }
-
-    public function runAnyAfter($HttpKernel, $requestMethod, $route)
-    {
-        $globalResponse = $this->runGlobalMiddleware($HttpKernel, "after");
-
-        if(exists($globalResponse))
-        {
-            // Halt any more execution and send back a response...
-            return $globalResponse;
-        }
-
-        $afterResponse = $this->runMiddleware($HttpKernel, "after", $requestMethod, $route);
-
-        if(exists($afterResponse))
-        {
-            // Halt any more execution and send back a response...
-            return $afterResponse;
-        }
-
-        // No Middleware has formed a response to be sent back
-        return null;
-    }
 }
