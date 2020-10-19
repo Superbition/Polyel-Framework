@@ -133,8 +133,6 @@ class MiddlewareManager
 
     public function executeLayersWithCoreAction($HttpKernel, $middlewareStack, $coreAction)
     {
-        $middlewareStack = array_reverse($middlewareStack);
-
         $middlewareStackWithCore = array_reduce($middlewareStack, function($nextMiddleware, $middleware) use($HttpKernel)
         {
             return $this->createMiddlewareLayer($nextMiddleware, $middleware, $HttpKernel->response);
