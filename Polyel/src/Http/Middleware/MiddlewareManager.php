@@ -4,6 +4,7 @@ namespace Polyel\Http\Middleware;
 
 use RuntimeException;
 use Polyel\Http\Request;
+use Polyel\Http\Response;
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
 
