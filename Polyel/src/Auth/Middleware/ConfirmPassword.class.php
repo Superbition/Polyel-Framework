@@ -2,14 +2,14 @@
 
 namespace Polyel\Auth\Middleware;
 
+use Closure;
+use Polyel\Http\Request;
 use Polyel\Session\Session;
 use Polyel\Auth\AuthManager as Auth;
 use Polyel\Auth\Middleware\Contracts\PasswordConfirmationOutcomes;
 
 abstract class ConfirmPassword implements PasswordConfirmationOutcomes
 {
-    public $middlewareType = "before";
-
     protected $auth;
 
     private $session;
@@ -20,7 +20,7 @@ abstract class ConfirmPassword implements PasswordConfirmationOutcomes
         $this->session = $session;
     }
 
-    public function process($request)
+    public function process(Request $request, Closure $nextMiddleware)
     {
         if($this->requiresPasswordConfirmation())
         {
@@ -33,6 +33,8 @@ abstract class ConfirmPassword implements PasswordConfirmationOutcomes
             // If no response is given we redirect to confirm the users password
             return redirect('/password/confirm');
         }
+
+        return $nextMiddleware($request);
     }
 
     private function requiresPasswordConfirmation()

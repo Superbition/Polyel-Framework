@@ -2,12 +2,12 @@
 
 namespace App\Http\Middleware;
 
+use Closure;
+use Polyel\Http\Request;
 use Polyel\Auth\AuthManager;
 
 class RedirectIfAuthenticatedMiddleware
 {
-    public $middlewareType = "before";
-
     // Where to redirect the user if they are already authenticated
     private string $home = '/';
 
@@ -18,11 +18,13 @@ class RedirectIfAuthenticatedMiddleware
         $this->auth = $auth;
     }
 
-    public function process($request)
+    public function process(Request $request, Closure $nextMiddleware)
     {
         if($this->auth->protector('session')->check())
         {
             return redirect($this->home);
         }
+
+        return $nextMiddleware($request);
     }
 }
