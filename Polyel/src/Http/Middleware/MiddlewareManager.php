@@ -2,6 +2,7 @@
 
 namespace Polyel\Http\Middleware;
 
+use RuntimeException;
 use Polyel\Http\Request;
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
@@ -153,7 +154,14 @@ class MiddlewareManager
         // Creates a middleware layer which gets executed later, returning the middleware response
         return function(Request $request) use($nextMiddleware, $middleware)
         {
-            return $middleware['class']->process($request, $nextMiddleware, ...$middleware['params']);
+            $middlewareResponse = $middleware['class']->process($request, $nextMiddleware, ...$middleware['params']);
+
+            if(is_null($middlewareResponse))
+            {
+                throw new RuntimeException('Middleware must always return a response');
+            }
+
+            return $middlewareResponse;
         };
     }
 }
