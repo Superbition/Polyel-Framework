@@ -2,6 +2,7 @@
 
 namespace Polyel\Http\Middleware;
 
+use Polyel\Http\Request;
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
 
@@ -74,105 +75,79 @@ class MiddlewareManager
         return [];
     }
 
-    public function runGlobalMiddleware($HttpKernel, $middlewareType)
+    public function prepareStack($HttpKernel, $routeMiddlewareStack, $routeMiddlewareAliases, $globalMiddlewareStack)
     {
-        $globalBeforeMiddleware = config("middleware.global." . $middlewareType);
+        // Combined prepared route and global middleware stack array
+        $preparedMiddlewareStack = [];
 
-        foreach($globalBeforeMiddleware as $middlewareKey)
+        $middlewareStack = array_merge($routeMiddlewareStack, $globalMiddlewareStack);
+
+        foreach($middlewareStack as $middleware)
         {
-            // Extract any middleware params and put the middleware key on its own...
-            $middlewareParams = $this->getMiddlewareParamsFromKey($middlewareKey);
+            $middlewareParams = [];
 
-            // Use config() to get the full namespace based on the middleware key
-            $middlewareKey = config("middleware.keys." . $middlewareKey);
-
-            // Call Polyel and get the middleware class from the container
-            $middlewareToRun = $HttpKernel->container->resolveClass($middlewareKey);
-
-            // Based on the passed in middleware type, execute if both types match
-            if($middlewareToRun->middlewareType === $middlewareType)
+            // A string means we have found a route middleware key with potential middleware parameters
+            if(is_string($middleware))
             {
-                // Only the after Middleware type can use the $response service
-                if($middlewareType === 'before')
-                {
-                    // Process the middleware if the request types match up
-                    $response = $middlewareToRun->process($HttpKernel->request, ...$middlewareParams);
-                }
-                else
-                {
-                    // Process the middleware if the request types match up
-                    $response = $middlewareToRun->process($HttpKernel->request, $HttpKernel->response, ...$middlewareParams);
-                }
+                // Extract any middleware parameters and convert the middleware key on its own...
+                $middlewareParams = $this->getMiddlewareParamsFromKey($middleware);
 
-                // If a Middleware wants to return a response early, halt and send it back
-                if(exists($response))
+                if(array_key_exists($middleware, $routeMiddlewareAliases))
                 {
-                    // Halt any more execution and send back a response...
-                    return $response;
+                    // Get the middleware full namespace using the middleware alias
+                    $middleware = $routeMiddlewareAliases[$middleware];
                 }
             }
+
+            $middleware = $HttpKernel->container->resolveClass($middleware);
+
+            $preparedMiddlewareStack[] = ['class' => $middleware, 'params' => $middlewareParams];
         }
+
+        return $preparedMiddlewareStack;
     }
 
-    /*
-     * Runs any middleware based on the type passed in and processes the stage of the application,
-     * before or after. $applicationStage is the request or response service that gets passed in to
-     * allow a middleware to process its correct type.
-     */
-    private function runMiddleware($HttpKernel, $type, $requestMethod, $route)
+    public function generateStackForRoute($requestMethod, $requestUrl)
     {
+        $middlewareRouteKeys = [];
+
         // Check if a middleware exists for the request method, GET, POST etc.
         if(array_key_exists($requestMethod, $this->middlewares))
         {
             // Then check for a middleware inside that request method, for a route...
-            if(array_key_exists($route, $this->middlewares[$requestMethod]))
+            if(array_key_exists($requestUrl, $this->middlewares[$requestMethod]))
             {
                 // Get the middleware key(s) set for this request method and route
-                $middlewareKeys = $this->middlewares[$requestMethod][$route];
+                $middlewareRouteKeys = $this->middlewares[$requestMethod][$requestUrl];
 
                 // Turn the middleware key into a array if its only one middleware
-                if(!is_array($middlewareKeys))
+                if(!is_array($middlewareRouteKeys))
                 {
-                    // An array makes it easier to process single and multiple middlewares, no duplicate code...
-                    $middlewareKeys = [$middlewareKeys];
-                }
-
-                // Process each middleware and run process() from each middleware
-                foreach($middlewareKeys as $middlewareKey)
-                {
-                    // Extract any middleware params and put the middleware key on its own...
-                    $middlewareParams = $this->getMiddlewareParamsFromKey($middlewareKey);
-
-                    // Use config() to get the full namespace based on the middleware key
-                    $middleware = config("middleware.keys." . $middlewareKey);
-
-                    // Call Polyel and get the middleware class from the container
-                    $middlewareToRun = $HttpKernel->container->resolveClass($middleware);
-
-                    // Based on the passed in middleware type, execute if both types match
-                    if($middlewareToRun->middlewareType === $type)
-                    {
-                        // Only the after Middleware type can use the $response service
-                        if($type === 'before')
-                        {
-                            // Process the middleware if the request types match up
-                            $response = $middlewareToRun->process($HttpKernel->request, ...$middlewareParams);
-                        }
-                        else
-                        {
-                            // Process the middleware if the request types match up
-                            $response = $middlewareToRun->process($HttpKernel->request, $HttpKernel->response, ...$middlewareParams);
-                        }
-
-                        // If a Middleware wants to return a response early, halt and send it back
-                        if(exists($response))
-                        {
-                            // Halt any more execution and send back a response...
-                            return $response;
-                        }
-                    }
+                    $middlewareRouteKeys = [$middlewareRouteKeys];
                 }
             }
         }
+
+        return $middlewareRouteKeys;
+    }
+
+    public function executeLayersWithCoreAction($HttpKernel, $middlewareStack, $coreAction)
+    {
+        $middlewareStack = array_reverse($middlewareStack);
+
+        $middlewareStackWithCore = array_reduce($middlewareStack, function($nextMiddleware, $middleware)
+        {
+            return $this->createMiddlewareLayer($nextMiddleware, $middleware);
+        }, $coreAction);
+
+        return $middlewareStackWithCore($HttpKernel->request);
+    }
+
+    private function createMiddlewareLayer($nextMiddleware, $middleware)
+    {
+        return function(Request $request) use($nextMiddleware, $middleware)
+        {
+            return $middleware['class']->process($request, $nextMiddleware, ...$middleware['params']);
+        };
     }
 }

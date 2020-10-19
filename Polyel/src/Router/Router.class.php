@@ -8,9 +8,7 @@ use Polyel\Debug\Debug;
 use Polyel\Http\Kernel;
 use Polyel\Http\Request;
 use Polyel\Http\Response;
-use App\Http\Controllers\Controller;
 use Polyel\Session\SessionManager;
-use Polyel\Validation\ValidationException;
 use Polyel\Http\Middleware\MiddlewareManager;
 
 class Router
@@ -131,106 +129,8 @@ class Router
                 // Set the default HTTP status code, might change throughout the request cycle
                 $response->setStatusCode(200);
 
-                // URL route parameters from request
-                $routeParams = $matchedRoute['params'];
-
-                /*
-                 * The route action is either a a Closure or Controller
-                 */
-                if($matchedRoute['action'] instanceof Closure)
-                {
-                    // Get the Closure and set it as the route action
-                    $routeAction = $matchedRoute['action'];
-                }
-                else if(is_string($matchedRoute['action']))
-                {
-                    // Extract the controller and action and set them so the class has access to them
-                    $matchedRoute['action'] = explode("@", $matchedRoute['action']);
-
-                    // Get the current matched controller and route action
-                    list($controller, $controllerAction) = $matchedRoute['action'];
-
-                    //The controller namespace and getting its instance from the container using ::call
-                    $controllerName = "App\Http\Controllers\\" . $controller;
-                    $controller = $HttpKernel->container->resolveClass($controllerName);
-
-                    // Set the route action to the resolved controller
-                    $routeAction = $controller;
-                }
-
-                // Check that the controller exists
-                if(isset($routeAction) && !empty($routeAction))
-                {
-                    // Capture a response from a before middleware if one returns a response
-                    $beforeMiddlewareResponse = $this->middleware->runAnyBefore($HttpKernel, $request->method, $matchedRoute['url']);
-
-                    // If a before middleware wants to return a response early in the app process...
-                    if(exists($beforeMiddlewareResponse))
-                    {
-                        // Build the response from a before middleware and return to halt execution of the app
-                        $response->build($beforeMiddlewareResponse);
-                        return $response;
-                    }
-
-                    /*
-                     * The route action is either a a Closure or Controller
-                     */
-                    if($routeAction instanceof Closure)
-                    {
-                        // Resolve and perform method injection when calling the Closure
-                        $closureDependencies = $HttpKernel->container->resolveClosureDependencies($routeAction);
-
-                        // Method injection for any services first, then route parameters and get the Closure response
-                        $applicationResponse = $routeAction(...$closureDependencies, ...$routeParams);
-                    }
-                    else if($routeAction instanceof Controller)
-                    {
-                        // Resolve and perform method injection when calling the controller action
-                        $methodDependencies = $HttpKernel->container->resolveMethodInjection($controllerName, $controllerAction);
-
-                        try
-                        {
-                            // Method injection for any services first, then route parameters and get the Controller response
-                            $applicationResponse = $controller->$controllerAction(...$methodDependencies, ...$routeParams);
-                        }
-                        catch(ValidationException $validator)
-                        {
-                            if($request->expectsJson())
-                            {
-                                $response->build($validator->response(422));
-
-                            }
-                            else
-                            {
-                                $response->build(
-                                    $validator->session($HttpKernel->session)
-                                              ->response(302, $request->uri)
-                                );
-                            }
-
-                            return $response;
-                        }
-                    }
-
-                    // Capture a response returned from any after middleware if one returns a response...
-                    $afterMiddlewareResponse = $this->middleware->runAnyAfter($HttpKernel, $request->method, $matchedRoute['url']);
-
-                    // After middleware takes priority over the controller when returning a response
-                    if(exists($afterMiddlewareResponse))
-                    {
-                        // If a after middleware wants to return a response, send it off to get built...
-                        $response->build($afterMiddlewareResponse);
-                    }
-                    else
-                    {
-                        /*
-                         * Execution reaches this level when no before or after middleware wants to return a response,
-                         * meaning the controller action can return its response for the request that was sent.
-                         * Give the response service the response the controller wants to send back to the client
-                         */
-                        $response->build($applicationResponse);
-                    }
-                }
+                // Get a response either from middleware or the core route action (closure or controller)
+                $response = $HttpKernel->executeMiddlewareWithCoreAction($request->method, $matchedRoute);
 
                 if($matchedRoute['type'] !== 'API')
                 {
