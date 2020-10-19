@@ -127,7 +127,7 @@ class MiddlewareManager
         return $routeMiddlewareStack;
     }
 
-    public function executeStackWithCoreAction($HttpKernel, $middlewareStack, $coreAction)
+    public function executeStackWithCoreAction(Request $request, $middlewareStack, $coreAction)
     {
         /*
          * Create a middleware stack where the core action is in the centre
@@ -147,7 +147,7 @@ class MiddlewareManager
          * down the request object, then the final response to be built
          * is returned.
          */
-        return $middlewareStackWithCore($HttpKernel->request);
+        return $middlewareStackWithCore($request);
     }
 
     private function createMiddlewareLayer($nextMiddleware, $middleware)

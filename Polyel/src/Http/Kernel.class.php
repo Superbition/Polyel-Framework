@@ -74,7 +74,7 @@ class Kernel
         $coreAction = $this->prepareCoreAction($matchedRoute);
 
         // Execute a middleware stack with the prepared core action: closure or controller and get the response
-        $response = MiddlewareManager::executeStackWithCoreAction($this, $middlewareStack, $coreAction);
+        $response = MiddlewareManager::executeStackWithCoreAction($this->request, $middlewareStack, $coreAction);
 
         // Build the response returned by either middleware or the core action
         $this->response->build($response);
