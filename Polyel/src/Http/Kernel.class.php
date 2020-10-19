@@ -71,12 +71,7 @@ class Kernel
 
         $coreAction = $this->prepareCoreAction($matchedRoute);
 
-        $response = MiddlewareManager::executeLayersWithCoreAction($this, $middlewareStack, $coreAction);
-
-        if(!$response instanceof  Response)
-        {
-            $this->response->build($response);
-        }
+        MiddlewareManager::executeLayersWithCoreAction($this, $middlewareStack, $coreAction);
 
         return $this->response;
     }

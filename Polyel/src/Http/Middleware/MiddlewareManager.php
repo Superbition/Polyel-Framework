@@ -135,19 +135,23 @@ class MiddlewareManager
     {
         $middlewareStack = array_reverse($middlewareStack);
 
-        $middlewareStackWithCore = array_reduce($middlewareStack, function($nextMiddleware, $middleware)
+        $middlewareStackWithCore = array_reduce($middlewareStack, function($nextMiddleware, $middleware) use($HttpKernel)
         {
-            return $this->createMiddlewareLayer($nextMiddleware, $middleware);
+            return $this->createMiddlewareLayer($nextMiddleware, $middleware, $HttpKernel->response);
         }, $coreAction);
 
         return $middlewareStackWithCore($HttpKernel->request);
     }
 
-    private function createMiddlewareLayer($nextMiddleware, $middleware)
+    private function createMiddlewareLayer($nextMiddleware, $middleware, $response)
     {
-        return function(Request $request) use($nextMiddleware, $middleware)
+        return function(Request $request) use($nextMiddleware, $middleware, $response)
         {
-            return $middleware['class']->process($request, $nextMiddleware, ...$middleware['params']);
+            $middlewareResponse = $middleware['class']->process($request, $nextMiddleware, ...$middleware['params']);
+
+            $response->build($middlewareResponse);
+
+            return $response;
         };
     }
 }
