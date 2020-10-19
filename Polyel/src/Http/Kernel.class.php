@@ -73,7 +73,11 @@ class Kernel
         // A core action would be either a closure or a controller
         $coreAction = $this->prepareCoreAction($matchedRoute);
 
-        MiddlewareManager::executeStackWithCoreAction($this, $middlewareStack, $coreAction);
+        // Execute a middleware stack with the prepared core action: closure or controller and get the response
+        $response = MiddlewareManager::executeStackWithCoreAction($this, $middlewareStack, $coreAction);
+
+        // Build the response returned by either middleware or the core action
+        $this->response->build($response);
 
         return $this->response;
     }
@@ -134,26 +138,19 @@ class Kernel
                 {
                     if($this->request->expectsJson())
                     {
-                        $this->response->build($validator->response(422));
+                        // Return the response from the validation service
+                        return $validator->response(422);
 
                     }
-                    else
-                    {
-                        $this->response->build(
-                            $validator->session($this->session)
-                                ->response(302, $this->request->uri)
-                        );
-                    }
 
-                    // Return the response built from the validation service
-                    return $this->response;
+                    // Return the response from the validation service
+                    return $validator->session($this->session)
+                                     ->response(302, $this->request->uri);
                 }
             }
 
-            $this->response->build($coreActionResponse);
-
             // return the built core action response
-            return $this->response;
+            return $coreActionResponse;
         };
     }
 }

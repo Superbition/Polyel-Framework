@@ -135,9 +135,9 @@ class MiddlewareManager
          * request is passed along to the next middleware and the final layer,
          * will be the core action, at the end.
          */
-        $middlewareStackWithCore = array_reduce($middlewareStack, function($nextMiddleware, $middleware) use($HttpKernel)
+        $middlewareStackWithCore = array_reduce($middlewareStack, function($nextMiddleware, $middleware)
         {
-            return $this->createMiddlewareLayer($nextMiddleware, $middleware, $HttpKernel->response);
+            return $this->createMiddlewareLayer($nextMiddleware, $middleware);
         }, $coreAction);
 
         /*
@@ -148,16 +148,12 @@ class MiddlewareManager
         return $middlewareStackWithCore($HttpKernel->request);
     }
 
-    private function createMiddlewareLayer($nextMiddleware, $middleware, $response)
+    private function createMiddlewareLayer($nextMiddleware, $middleware)
     {
         // Creates a middleware layer which gets executed later, returning the middleware response
-        return function(Request $request) use($nextMiddleware, $middleware, $response)
+        return function(Request $request) use($nextMiddleware, $middleware)
         {
-            $middlewareResponse = $middleware['class']->process($request, $nextMiddleware, ...$middleware['params']);
-
-            $response->build($middlewareResponse);
-
-            return $response;
+            return $middleware['class']->process($request, $nextMiddleware, ...$middleware['params']);
         };
     }
 }
