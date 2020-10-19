@@ -131,7 +131,7 @@ class MiddlewareManager
         return $middlewareRouteKeys;
     }
 
-    public function executeLayersWithCoreAction($HttpKernel, $middlewareStack, $coreAction)
+    public function executeStackWithCoreAction($HttpKernel, $middlewareStack, $coreAction)
     {
         $middlewareStackWithCore = array_reduce($middlewareStack, function($nextMiddleware, $middleware) use($HttpKernel)
         {
