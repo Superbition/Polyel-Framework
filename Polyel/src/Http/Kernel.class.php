@@ -62,6 +62,7 @@ class Kernel
 
     public function executeMiddlewareWithCoreAction($requestMethod, $matchedRoute)
     {
+        // Create a middleware stack to execute against the request
         $middlewareStack = MiddlewareManager::prepareStack(
             $this,
             MiddlewareManager::generateStackForRoute($requestMethod, $matchedRoute['url']),
@@ -69,6 +70,7 @@ class Kernel
             $this->globalMiddlewareStack
         );
 
+        // A core action would be either a closure or a controller
         $coreAction = $this->prepareCoreAction($matchedRoute);
 
         MiddlewareManager::executeStackWithCoreAction($this, $middlewareStack, $coreAction);

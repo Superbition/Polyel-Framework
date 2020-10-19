@@ -109,40 +109,48 @@ class MiddlewareManager
 
     public function generateStackForRoute($requestMethod, $requestUrl)
     {
-        $middlewareRouteKeys = [];
+        $routeMiddlewareStack = [];
 
-        // Check if a middleware exists for the request method, GET, POST etc.
+        // Check if a middleware stack exists for the request method, GET, POST etc.
         if(array_key_exists($requestMethod, $this->middlewares))
         {
-            // Then check for a middleware inside that request method, for a route...
+            // Then check for a middleware stack inside that request method, for a route (URL)...
             if(array_key_exists($requestUrl, $this->middlewares[$requestMethod]))
             {
-                // Get the middleware key(s) set for this request method and route
-                $middlewareRouteKeys = $this->middlewares[$requestMethod][$requestUrl];
-
-                // Turn the middleware key into a array if its only one middleware
-                if(!is_array($middlewareRouteKeys))
-                {
-                    $middlewareRouteKeys = [$middlewareRouteKeys];
-                }
+                // Get the middleware stack for this request method and route (URL)
+                $routeMiddlewareStack = $this->middlewares[$requestMethod][$requestUrl];
             }
         }
 
-        return $middlewareRouteKeys;
+        return $routeMiddlewareStack;
     }
 
     public function executeStackWithCoreAction($HttpKernel, $middlewareStack, $coreAction)
     {
+        /*
+         * Create a middleware stack where the core action is in the centre
+         * and the core gets wrapped with all the middleware from the stack.
+         * Each layer will have its own closure function which can execute
+         * its middleware operation. If no middleware returns a response, the
+         * request is passed along to the next middleware and the final layer,
+         * will be the core action, at the end.
+         */
         $middlewareStackWithCore = array_reduce($middlewareStack, function($nextMiddleware, $middleware) use($HttpKernel)
         {
             return $this->createMiddlewareLayer($nextMiddleware, $middleware, $HttpKernel->response);
         }, $coreAction);
 
+        /*
+         * With all the closure layers, execute each layer and pass
+         * down the request object, then the final response to be built
+         * is returned.
+         */
         return $middlewareStackWithCore($HttpKernel->request);
     }
 
     private function createMiddlewareLayer($nextMiddleware, $middleware, $response)
     {
+        // Creates a middleware layer which gets executed later, returning the middleware response
         return function(Request $request) use($nextMiddleware, $middleware, $response)
         {
             $middlewareResponse = $middleware['class']->process($request, $nextMiddleware, ...$middleware['params']);
