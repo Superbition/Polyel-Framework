@@ -80,7 +80,7 @@ class MiddlewareManager
         // Combined prepared route and global middleware stack array
         $preparedMiddlewareStack = [];
 
-        $middlewareStack = array_merge($routeMiddlewareStack, $globalMiddlewareStack);
+        $middlewareStack = array_merge($globalMiddlewareStack, $routeMiddlewareStack);
 
         foreach($middlewareStack as $middleware)
         {
