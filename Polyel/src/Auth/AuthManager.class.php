@@ -79,7 +79,7 @@ class AuthManager
             return $user->get('id');
         }
 
-        return false;
+        return null;
     }
 
     public function logout()
