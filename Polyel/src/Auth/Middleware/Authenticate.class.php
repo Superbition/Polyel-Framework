@@ -52,15 +52,15 @@ abstract class Authenticate implements AuthenticationOutcomes
             return $this->unauthenticated();
         }
 
-        if($request->type === 'api')
+        if($request->type === 'api' && $apiAuthResponse = $this->authorized())
         {
-            return $this->authorized();
+            return $apiAuthResponse;
         }
 
         // Return an authenticated web response from the App perspective
-        if($authResponse = $this->authenticated())
+        if($webAuthResponse = $this->authenticated())
         {
-            return $authResponse;
+            return $webAuthResponse;
         }
 
         return $nextMiddleware($request);
