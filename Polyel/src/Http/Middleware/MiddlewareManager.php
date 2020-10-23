@@ -81,6 +81,7 @@ class MiddlewareManager
         // Combined prepared route and global middleware stack array
         $preparedMiddlewareStack = [];
 
+        // The global middleware stack comes first
         $middlewareStack = array_merge($globalMiddlewareStack, $routeMiddlewareStack);
 
         /*
@@ -143,8 +144,8 @@ class MiddlewareManager
          * and the core gets wrapped with all the middleware from the stack.
          * Each layer will have its own closure function which can execute
          * its middleware operation. If no middleware returns a response, the
-         * request is passed along to the next middleware and the final layer,
-         * will be the core action, at the end.
+         * request is passed along to the next middleware and the final layer
+         * will be the core action at the end.
          */
         $middlewareStackWithCore = array_reduce($middlewareStack, function($nextMiddleware, $middleware)
         {
