@@ -84,6 +84,16 @@ class MiddlewareManager
 
         $middlewareStack = array_merge($globalMiddlewareStack, $routeMiddlewareStack);
 
+        /*
+         * We have to reverse the stack before we use it because when the layers
+         * are created it will start with the first item in the array, meaning the
+         * first item will be the closest to the core action, which would be wrong as it
+         * does not respect the middleware order from how they are assigned in the Kernel
+         * and with routes. So we flip the array so that the first item will be the last
+         * outer middleware to be executed when our layered are created.
+         */
+        $middlewareStack = array_reverse($middlewareStack);
+
         foreach($middlewareStack as $middleware)
         {
             $middlewareParams = [];
