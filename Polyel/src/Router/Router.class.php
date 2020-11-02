@@ -336,7 +336,7 @@ class Router
         array_pop($this->groupStack);
     }
 
-    public function middleware($middlewareKeys)
+    public function middleware(array $middlewareKeys)
     {
         $requestMethod = array_key_first($this->lastAddedRoute);
         $routeUri = $this->lastAddedRoute[$requestMethod];
