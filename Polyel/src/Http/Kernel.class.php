@@ -30,6 +30,8 @@ class Kernel
 
     protected array $globalMiddlewareStack = [];
 
+    protected array $middlewareGroups = [];
+
     protected array $routeMiddlewareAliases = [];
 
     public function __construct(Session $session, Request $request, Response $response, AuthManager $auth)
@@ -67,7 +69,8 @@ class Kernel
             $this,
             MiddlewareManager::generateStackForRoute($requestMethod, $matchedRoute['url']),
             $this->routeMiddlewareAliases,
-            $this->globalMiddlewareStack
+            $this->globalMiddlewareStack,
+            $this->middlewareGroups,
         );
 
         // A core action would be either a closure or a controller

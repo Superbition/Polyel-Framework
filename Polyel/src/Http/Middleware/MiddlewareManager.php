@@ -51,7 +51,19 @@ class MiddlewareManager
             $uri .= '/';
         }
 
-        $this->middlewares[$requestMethod][$uri] = $middleware;
+        /*
+         * Register a new middleware and assign it to the given request
+         * method and URI or append the middleware to an existing URI which
+         * is already part of a request method like GET, POST or PUT etc.
+         */
+        if(!isset($this->middlewares[$requestMethod][$uri]))
+        {
+            $this->middlewares[$requestMethod][$uri] = $middleware;
+        }
+        else
+        {
+            $this->middlewares[$requestMethod][$uri] = array_merge($this->middlewares[$requestMethod][$uri], $middleware);
+        }
     }
 
     private function getMiddlewareParamsFromKey(&$middlewareKey)
@@ -76,13 +88,29 @@ class MiddlewareManager
         return [];
     }
 
-    public function prepareStack($HttpKernel, $routeMiddlewareStack, $routeMiddlewareAliases, $globalMiddlewareStack)
+    public function prepareStack($HttpKernel, $routeMiddlewareStack, $routeMiddlewareAliases, $globalMiddlewareStack, $middlewareGroups)
     {
         // Combined prepared route and global middleware stack array
         $preparedMiddlewareStack = [];
 
         // The global middleware stack comes first
         $middlewareStack = array_merge($globalMiddlewareStack, $routeMiddlewareStack);
+        /*
+         * Scan the stack for any middleware group names, if
+         * middleware group names are found, merge that middleware
+         * group into the stack, using the object namespaces from the group.
+         */
+        foreach($middlewareStack as $key => $middleware)
+        {
+            if(array_key_exists($middleware, $middlewareGroups))
+            {
+                // Using the group name, place the group stack in position of where the group name is within the stack array
+                array_splice($middlewareStack, $key, 0, $middlewareGroups[$middleware]);
+
+                // Remove the name of the group from the stack
+                unset($middlewareStack[$key + 1]);
+            }
+        }
 
         /*
          * We have to reverse the stack before we use it because when the layers

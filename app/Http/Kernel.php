@@ -8,7 +8,23 @@ class Kernel extends HttpKernel
 {
     protected array $globalMiddlewareStack = [
 
-        \App\Http\Middleware\ValidateCsrfTokenMiddleware::class,
+        // ...
+
+    ];
+
+    protected array $middlewareGroups = [
+
+        'web' => [
+
+            \App\Http\Middleware\ValidateCsrfTokenMiddleware::class,
+
+        ],
+
+        'api' => [
+
+            // ...
+
+        ],
 
     ];
 

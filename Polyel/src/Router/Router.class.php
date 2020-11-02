@@ -237,6 +237,17 @@ class Router
         // Keep a list of all the added routes
         $this->listOfAddedRoutes[$requestMethod][] = $route;
 
+        if(!$this->registeringApiRoutes)
+        {
+            // Assign the web middleware group to web only routes
+            $this->middleware(['web']);
+        }
+        else
+        {
+            // Assign the api middleware group to api only routes
+            $this->middleware(['api']);
+        }
+
         // Register any group middleware if they exist, they will set on the last added route
         if(isset($groupMiddleware))
         {
