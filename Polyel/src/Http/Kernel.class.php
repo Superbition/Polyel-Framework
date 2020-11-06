@@ -156,4 +156,14 @@ class Kernel
             return $coreActionResponse;
         };
     }
+
+    public function getMiddlewareGroups()
+    {
+        return $this->middlewareGroups;
+    }
+
+    public function getRouteMiddlewareAliases()
+    {
+        return $this->routeMiddlewareAliases;
+    }
 }
