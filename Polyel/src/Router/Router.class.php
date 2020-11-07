@@ -251,15 +251,34 @@ class Router
         // Register any group middleware if they exist, they will set on the last added route
         if(isset($groupMiddleware))
         {
+            $middlewareList = [];
+
             // Support adding nested grouped middleware
             foreach($groupMiddleware as $middleware)
             {
-                // Build up all the keys from the group stack
-                $middlewareKeys[] = $middleware;
+                // An array here means we have a group with more than one middleware to add
+                if(is_array($middleware))
+                {
+                    /*
+                     * When registering middleware inside a route group and the
+                     * group is registering multiple middleware at a time, an array
+                     * is required so that a list of middleware can be defined. However,
+                     * this means we will end up with an array that is 1 level too deep.
+                     * To fix the array from being 1 level too deep, we extract the values
+                     * only of the middleware group array and merge them at a single
+                     * dimensional level.
+                     */
+                    $middlewareList = array_merge(array_column($middleware, null), $middlewareList);
+                }
+                else
+                {
+                    // Build up all the keys from the group stack
+                    $middlewareList[] = $middleware;
+                }
             }
 
-            // Add all middleware to the route
-            $this->middleware($middlewareKeys);
+            // Add all middleware to the route which is apart of a group(s)
+            $this->middleware($middlewareList);
         }
     }
 
