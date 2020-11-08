@@ -396,5 +396,7 @@ class Router
         $this->registeringApiRoutes = true;
         require ROOT_DIR . "/app/routing/api.php";
         $this->registeringApiRoutes = false;
+
+        $this->middleware->optimiseRegisteredMiddleware();
     }
 }

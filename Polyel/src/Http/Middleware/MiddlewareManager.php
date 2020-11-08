@@ -2,6 +2,7 @@
 
 namespace Polyel\Http\Middleware;
 
+use Polyel;
 use RuntimeException;
 use Polyel\Http\Request;
 use RecursiveIteratorIterator;
@@ -66,51 +67,139 @@ class MiddlewareManager
         }
     }
 
-    private function getMiddlewareParamsFromKey(&$middlewareKey)
+    public function optimiseRegisteredMiddleware()
+    {
+        // We need the App Kernel so we can process the defined middleware within the Kernel
+        $httpKernel = Polyel::resolveClass(\App\Http\Kernel::class);
+
+        // Loop through each HTTP method and the routes that have middleware
+        foreach($this->middlewares as $method => $routes)
+        {
+            // Each registered route will contain some middleware
+            foreach($routes as $route => $middleware)
+            {
+                // Foreach middleware stack, optimise and return back the middleware stack
+                $optimisedMiddleware = $this->convertMiddlewareIfNotANamespace(
+                    $middleware,
+                    $httpKernel->getMiddlewareGroups(),
+                    $httpKernel->getRouteMiddlewareAliases(),
+                );
+
+                if(!empty($optimisedMiddleware))
+                {
+                    $this->middlewares[$method][$route] = $optimisedMiddleware;
+                }
+            }
+        }
+    }
+
+    private function convertMiddlewareIfNotANamespace(array $middlewares, array $middlewareGroups, array $routeMiddlewareAliases)
+    {
+        // Inject any middleware groups into the stack...
+        foreach($middlewares as $key => &$middleware)
+        {
+            // Check to make sure the middleware is a group name...
+            if(array_key_exists($middleware, $middlewareGroups))
+            {
+                /*
+                 * Using the group name, place the middleware group stack in the position of
+                 * where the group name is within the stack array, injecting the middleware
+                 * group into the stack. Array splice uses the array key from the loop to
+                 * insert at the correct position.
+                 *
+                 * By defining the length as 1 the splice will remove the
+                 * middleware group name from the stack and replace it with the
+                 * actual group middleware stack.
+                 */
+                array_splice($middlewares, $key, 1, $middlewareGroups[$middleware]);
+            }
+        }
+
+        // break the reference with the last element because the above foreach loop uses a reference to the value
+        unset($middleware);
+
+        /*
+         * Once we have checked to see if any middleware groups are
+         * being used, we can now get onto converting middleware aliases
+         * and aliases that are using middleware parameters to actual
+         * full class namespaces, so that none of this conversion has to
+         * be done during a request, saving time and reducing the request cycle.
+         */
+
+        $optimisedMiddleware = [];
+
+        // Optimise each middleware and make sure it is using a full class namespace...
+        foreach($middlewares as $middleware)
+        {
+            // If the class can not be defined it means it is not a full class path/ namespace
+            if(!class_exists($middleware, false))
+            {
+                // Extract any middleware parameters and convert the middleware key on its own...
+                [$middlewareName, $middlewareParams] = $this->getMiddlewareParamsFromKey($middleware);
+
+                // If a middleware alias is found...
+                if(array_key_exists($middlewareName, $routeMiddlewareAliases))
+                {
+                    // If we have middleware parameters...
+                    if(count($middlewareParams) >= 1)
+                    {
+                        // Set the middleware full namespace using the middleware alias and params
+                        $optimisedMiddleware[] = [$routeMiddlewareAliases[$middlewareName], $middlewareParams];
+                    }
+                    else
+                    {
+                        // Else no parameters, just the full class namespace
+                        $optimisedMiddleware[] = $routeMiddlewareAliases[$middlewareName];
+                    }
+
+                    // Move onto the next middleware as we have already optimised by this point for the current element
+                    continue;
+                }
+            }
+
+            /*
+             * Some middleware may not need to be processed as it
+             * already may have been defined as a full namespace, but any
+             * middleware which has been converted into a full namespace is collected
+             * and stored with middleware which is already been defined in an
+             * optimised state and returned once this loop has completed.
+             */
+            $optimisedMiddleware[] = $middleware;
+        }
+
+        // Return the array of optimised middleware
+        return $optimisedMiddleware;
+    }
+
+    private function getMiddlewareParamsFromKey($middlewareName)
     {
         /*
          * The middleware key will contain first, the middleware name itself, then any params after a ':'
          * Also remove any whitespace from the middleware key before exploding into an array.
          */
-        $keys = explode(':', preg_replace('/\s+/', '', $middlewareKey));
+        $keys = explode(':', preg_replace('/\s+/', '', $middlewareName));
 
         // The first key is always the name of the middleware, the key is changed by ref here
-        $middlewareKey = $keys[0];
+        $middlewareName = $keys[0];
 
         // If keys is more than 1 element, it means we have middleware parameters to process...
         if(count($keys) > 1)
         {
             // Return all the middleware parameters, splitting on commas for multiple params
-            return explode(',', $keys[1]);
+            return [$middlewareName, explode(',', $keys[1])];
         }
 
         // No middleware params were set, return an empty param array...
-        return [];
+        return [$middlewareName, []];
     }
 
-    public function prepareStack($HttpKernel, $routeMiddlewareStack, $routeMiddlewareAliases, $globalMiddlewareStack, $middlewareGroups)
+    public function prepareStack($HttpKernel, $routeMiddlewareStack, $globalMiddlewareStack)
     {
         // Combined prepared route and global middleware stack array
         $preparedMiddlewareStack = [];
 
         // The global middleware stack comes first
         $middlewareStack = array_merge($globalMiddlewareStack, $routeMiddlewareStack);
-        /*
-         * Scan the stack for any middleware group names, if
-         * middleware group names are found, merge that middleware
-         * group into the stack, using the object namespaces from the group.
-         */
-        foreach($middlewareStack as $key => $middleware)
-        {
-            if(array_key_exists($middleware, $middlewareGroups))
-            {
-                // Using the group name, place the group stack in position of where the group name is within the stack array
-                array_splice($middlewareStack, $key, 0, $middlewareGroups[$middleware]);
-
-                // Remove the name of the group from the stack
-                unset($middlewareStack[$key + 1]);
-            }
-        }
 
         /*
          * We have to reverse the stack before we use it because when the layers
@@ -124,21 +213,20 @@ class MiddlewareManager
 
         foreach($middlewareStack as $middleware)
         {
+            // By default we start off with no parameters
             $middlewareParams = [];
 
-            // A string means we have found a route middleware key with potential middleware parameters
-            if(is_string($middleware))
+            /*
+             * An array indicates that we have the middleware class path and parameters.
+             * If the middleware has no parameters, then it will just be a string of the class path.
+             */
+            if(is_array($middleware))
             {
-                // Extract any middleware parameters and convert the middleware key on its own...
-                $middlewareParams = $this->getMiddlewareParamsFromKey($middleware);
-
-                if(array_key_exists($middleware, $routeMiddlewareAliases))
-                {
-                    // Get the middleware full namespace using the middleware alias
-                    $middleware = $routeMiddlewareAliases[$middleware];
-                }
+                // Get the individual values as $middleware is an array
+                [$middleware, $middlewareParams] = $middleware;
             }
 
+            // Create a new class instance that can be used during the current request
             $middleware = $HttpKernel->container->resolveClass($middleware);
 
             $preparedMiddlewareStack[] = ['class' => $middleware, 'params' => $middlewareParams];

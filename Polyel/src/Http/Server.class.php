@@ -53,11 +53,11 @@ class Server
     {
         $this->config->load();
 
+        $this->middleware->loadAllMiddleware();
+
         $this->router->loadRoutes();
 
         $this->controller->loadAllControllers();
-
-        $this->middleware->loadAllMiddleware();
 
         $this->sessionManager->setDriver(config('session.driver'));
 
