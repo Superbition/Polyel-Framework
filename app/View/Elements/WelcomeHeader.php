@@ -6,7 +6,7 @@ use Polyel\Auth\AuthManager;
 
 class WelcomeHeader extends Element
 {
-    // Set the element template relative to /app/resources/elements/
+    // Set the element template relative to /resources/elements/
     public $element = 'welcomeHeader';
 
     private $auth;

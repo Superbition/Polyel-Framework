@@ -9,7 +9,7 @@ class View
 {
     use ViewTools, DisplaysErrors, DisplaysFlashMessages;
 
-    private const RESOURCE_DIR = ROOT_DIR . "/app/resources";
+    private const RESOURCE_DIR = ROOT_DIR . "/resources";
 
     // Holds the template name and eventually the file path
     private $resource;

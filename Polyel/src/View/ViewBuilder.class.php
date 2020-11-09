@@ -9,7 +9,7 @@ class ViewBuilder
     // The template name, which is also the location and type
     public $resource;
 
-    private $resourceDir = ROOT_DIR . '/app/resources';
+    private $resourceDir = ROOT_DIR . '/resources';
 
     // If set, will hold the extending view name
     public $extendingView = false;
