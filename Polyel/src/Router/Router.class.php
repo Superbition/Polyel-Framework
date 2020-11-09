@@ -390,11 +390,11 @@ class Router
         $this->initialiseHttpVerbs();
 
         // Load web routes...
-        require ROOT_DIR . "/app/routing/web.php";
+        require ROOT_DIR . "/routing/web.php";
 
         // Load api routes...
         $this->registeringApiRoutes = true;
-        require ROOT_DIR . "/app/routing/api.php";
+        require ROOT_DIR . "/routing/api.php";
         $this->registeringApiRoutes = false;
 
         $this->middleware->optimiseRegisteredMiddleware();
