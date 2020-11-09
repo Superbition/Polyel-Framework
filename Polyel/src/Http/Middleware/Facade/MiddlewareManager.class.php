@@ -9,7 +9,7 @@ use Polyel;
  *
  * @method static generateStackForRoute($requestMethod, $requestUrl)
  *
- * @method static prepareStack($HttpKernel, $routeMiddlewareStack, $globalMiddlewareStack)
+ * @method static prepareStack($HttpKernel, $routeMiddlewareStack)
  *
  * @method static executeStackWithCoreAction($HttpKernel, $middlewareStack, $coreAction)
  */

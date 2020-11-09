@@ -81,6 +81,7 @@ class MiddlewareManager
                 // Foreach middleware stack, optimise and return back the middleware stack
                 $optimisedMiddleware = $this->convertMiddlewareIfNotANamespace(
                     $middleware,
+                    $httpKernel->getGlobalMiddleware(),
                     $httpKernel->getMiddlewareGroups(),
                     $httpKernel->getRouteMiddlewareAliases(),
                 );
@@ -93,7 +94,7 @@ class MiddlewareManager
         }
     }
 
-    private function convertMiddlewareIfNotANamespace(array $middlewares, array $middlewareGroups, array $routeMiddlewareAliases)
+    private function convertMiddlewareIfNotANamespace(array $middlewares, array $globalMiddleware, array $middlewareGroups, array $routeMiddlewareAliases)
     {
         // Inject any middleware groups into the stack...
         foreach($middlewares as $key => &$middleware)
@@ -127,6 +128,16 @@ class MiddlewareManager
          */
 
         $optimisedMiddleware = [];
+
+        // The global middleware stack comes first if its not the global middleware stack being optimised
+        if(!empty($globalMiddleware))
+        {
+            // Put the global middleware at the start but optimise the global stack before the merge
+            $optimisedMiddleware = array_merge(
+                $this->convertMiddlewareIfNotANamespace($globalMiddleware, [], $middlewareGroups, $routeMiddlewareAliases),
+                $optimisedMiddleware
+            );
+        }
 
         // Optimise each middleware and make sure it is using a full class namespace...
         foreach($middlewares as $middleware)
@@ -193,15 +204,14 @@ class MiddlewareManager
         return [$middlewareName, []];
     }
 
-    public function prepareStack($HttpKernel, $routeMiddlewareStack, $globalMiddlewareStack)
+    public function prepareStack($HttpKernel, $routeMiddlewareStack)
     {
         // Combined prepared route and global middleware stack array
         $preparedMiddlewareStack = [];
 
-        // The global middleware stack comes first
-        $middlewareStack = array_merge($globalMiddlewareStack, $routeMiddlewareStack);
-
         /*
+         * Global middleware is preprocessed during server boot time.
+         *
          * We have to reverse the stack before we use it because when the layers
          * are created it will start with the first item in the array, meaning the
          * first item will be the closest to the core action, which would be wrong as it
@@ -209,7 +219,7 @@ class MiddlewareManager
          * and with routes. So we flip the array so that the first item will be the last
          * outer middleware to be executed when our layered are created.
          */
-        $middlewareStack = array_reverse($middlewareStack);
+        $middlewareStack = array_reverse($routeMiddlewareStack);
 
         foreach($middlewareStack as $middleware)
         {
