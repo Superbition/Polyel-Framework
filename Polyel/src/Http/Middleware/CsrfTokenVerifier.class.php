@@ -1,13 +1,13 @@
 <?php
 
-namespace Polyel\Middleware;
+namespace Polyel\Http\Middleware;
 
+use Closure;
+use Polyel\Http\Request;
 use Polyel\Session\Session;
 
 class CsrfTokenVerifier
 {
-    public $middlewareType = "before";
-
     /*
      * URIs that shall be excluded from CSRF Token verification.
      * Set within the Middleware at the App level.
@@ -25,7 +25,7 @@ class CsrfTokenVerifier
     /*
      * The main Middleware process function which runs before the App
      */
-    public function process($request)
+    public function process(Request $request, Closure $nextMiddleware)
     {
         /*
          * First check the request is not a HTTP read verb and that the URI is not in the exception list.
@@ -40,6 +40,8 @@ class CsrfTokenVerifier
                 return response(view('401:error'), 401);
             }
         }
+
+        return $nextMiddleware($request);
     }
 
     /*

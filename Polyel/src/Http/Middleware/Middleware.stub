@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Middleware;
+namespace App\Http\Middleware;
 
-use Polyel\Middleware\Middleware;
+use Polyel\Http\Middleware\Middleware;
 
-class {{ DefaultMiddleware }} extends Middleware
+class {{ MiddlewareName }}
 {
     public $middlewareType = "{{ MiddlewareType }}";
 

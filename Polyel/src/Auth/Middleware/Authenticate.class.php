@@ -2,14 +2,14 @@
 
 namespace Polyel\Auth\Middleware;
 
+use Closure;
+use Polyel\Http\Request;
 use Polyel\Session\Session;
 use Polyel\Auth\AuthManager as Auth;
 use Polyel\Auth\Middleware\Contracts\AuthenticationOutcomes;
 
 abstract class Authenticate implements AuthenticationOutcomes
 {
-    public $middlewareType = "before";
-
     protected $auth;
 
     protected $session;
@@ -20,7 +20,7 @@ abstract class Authenticate implements AuthenticationOutcomes
         $this->session = $session;
     }
 
-    public function process($request, $protector = null)
+    public function process(Request $request, Closure $nextMiddleware, $protector = null)
     {
         // Get the default protector is one is not provided...
         $protector = $protector ?: $this->getDefaultProtector();
@@ -52,13 +52,18 @@ abstract class Authenticate implements AuthenticationOutcomes
             return $this->unauthenticated();
         }
 
-        if($request->type === 'api')
+        if($request->type === 'api' && $apiAuthResponse = $this->authorized())
         {
-            return $this->authorized();
+            return $apiAuthResponse;
         }
 
-        // Return an authenticated web response
-        return $this->authenticated();
+        // Return an authenticated web response from the App perspective
+        if($webAuthResponse = $this->authenticated())
+        {
+            return $webAuthResponse;
+        }
+
+        return $nextMiddleware($request);
     }
 
     private function authenticate($request, $protector)

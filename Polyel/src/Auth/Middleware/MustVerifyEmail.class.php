@@ -2,14 +2,14 @@
 
 namespace Polyel\Auth\Middleware;
 
+use Closure;
 use App\Models\User;
+use Polyel\Http\Request;
 use Polyel\Auth\AuthManager as Auth;
 use Polyel\Auth\Middleware\Contracts\VerificationOutcomes;
 
 abstract class MustVerifyEmail implements VerificationOutcomes
 {
-    public $middlewareType = "before";
-
     protected $auth;
 
     protected $user;
@@ -20,7 +20,7 @@ abstract class MustVerifyEmail implements VerificationOutcomes
         $this->user = $user;
     }
 
-    public function process($request)
+    public function process(Request $request, Closure $nextMiddleware)
     {
         if($this->user->hasVerifiedEmail() === false)
         {
@@ -33,5 +33,7 @@ abstract class MustVerifyEmail implements VerificationOutcomes
                 ? response('', 403)
                 : redirect('/email/verify');
         }
+
+        return $nextMiddleware($request);
     }
 }

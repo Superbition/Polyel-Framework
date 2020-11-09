@@ -8,10 +8,8 @@ use Polyel\Debug\Debug;
 use Polyel\Http\Kernel;
 use Polyel\Http\Request;
 use Polyel\Http\Response;
-use App\Controllers\Controller;
-use Polyel\Middleware\Middleware;
 use Polyel\Session\SessionManager;
-use Polyel\Validation\ValidationException;
+use Polyel\Http\Middleware\MiddlewareManager;
 
 class Router
 {
@@ -41,7 +39,7 @@ class Router
     // The Middleware service
     private $middleware;
 
-    public function __construct(SessionManager $sessionManager, Debug $debug, Middleware $middleware)
+    public function __construct(SessionManager $sessionManager, Debug $debug, MiddlewareManager $middleware)
     {
         $this->sessionManager = $sessionManager;
         $this->debug = $debug;
@@ -131,106 +129,8 @@ class Router
                 // Set the default HTTP status code, might change throughout the request cycle
                 $response->setStatusCode(200);
 
-                // URL route parameters from request
-                $routeParams = $matchedRoute['params'];
-
-                /*
-                 * The route action is either a a Closure or Controller
-                 */
-                if($matchedRoute['action'] instanceof Closure)
-                {
-                    // Get the Closure and set it as the route action
-                    $routeAction = $matchedRoute['action'];
-                }
-                else if(is_string($matchedRoute['action']))
-                {
-                    // Extract the controller and action and set them so the class has access to them
-                    $matchedRoute['action'] = explode("@", $matchedRoute['action']);
-
-                    // Get the current matched controller and route action
-                    list($controller, $controllerAction) = $matchedRoute['action'];
-
-                    //The controller namespace and getting its instance from the container using ::call
-                    $controllerName = "App\Controllers\\" . $controller;
-                    $controller = $HttpKernel->container->resolveClass($controllerName);
-
-                    // Set the route action to the resolved controller
-                    $routeAction = $controller;
-                }
-
-                // Check that the controller exists
-                if(isset($routeAction) && !empty($routeAction))
-                {
-                    // Capture a response from a before middleware if one returns a response
-                    $beforeMiddlewareResponse = $this->middleware->runAnyBefore($HttpKernel, $request->method, $matchedRoute['url']);
-
-                    // If a before middleware wants to return a response early in the app process...
-                    if(exists($beforeMiddlewareResponse))
-                    {
-                        // Build the response from a before middleware and return to halt execution of the app
-                        $response->build($beforeMiddlewareResponse);
-                        return $response;
-                    }
-
-                    /*
-                     * The route action is either a a Closure or Controller
-                     */
-                    if($routeAction instanceof Closure)
-                    {
-                        // Resolve and perform method injection when calling the Closure
-                        $closureDependencies = $HttpKernel->container->resolveClosureDependencies($routeAction);
-
-                        // Method injection for any services first, then route parameters and get the Closure response
-                        $applicationResponse = $routeAction(...$closureDependencies, ...$routeParams);
-                    }
-                    else if($routeAction instanceof Controller)
-                    {
-                        // Resolve and perform method injection when calling the controller action
-                        $methodDependencies = $HttpKernel->container->resolveMethodInjection($controllerName, $controllerAction);
-
-                        try
-                        {
-                            // Method injection for any services first, then route parameters and get the Controller response
-                            $applicationResponse = $controller->$controllerAction(...$methodDependencies, ...$routeParams);
-                        }
-                        catch(ValidationException $validator)
-                        {
-                            if($request->expectsJson())
-                            {
-                                $response->build($validator->response(422));
-
-                            }
-                            else
-                            {
-                                $response->build(
-                                    $validator->session($HttpKernel->session)
-                                              ->response(302, $request->uri)
-                                );
-                            }
-
-                            return $response;
-                        }
-                    }
-
-                    // Capture a response returned from any after middleware if one returns a response...
-                    $afterMiddlewareResponse = $this->middleware->runAnyAfter($HttpKernel, $request->method, $matchedRoute['url']);
-
-                    // After middleware takes priority over the controller when returning a response
-                    if(exists($afterMiddlewareResponse))
-                    {
-                        // If a after middleware wants to return a response, send it off to get built...
-                        $response->build($afterMiddlewareResponse);
-                    }
-                    else
-                    {
-                        /*
-                         * Execution reaches this level when no before or after middleware wants to return a response,
-                         * meaning the controller action can return its response for the request that was sent.
-                         * Give the response service the response the controller wants to send back to the client
-                         */
-                        $response->build($applicationResponse);
-                    }
-                }
+                // Get a response either from middleware or the core route action (closure or controller)
+                $response = $HttpKernel->executeMiddlewareWithCoreAction($request->method, $matchedRoute);
 
                 if($matchedRoute['type'] !== 'API')
                 {
@@ -337,18 +237,48 @@ class Router
         // Keep a list of all the added routes
         $this->listOfAddedRoutes[$requestMethod][] = $route;
 
+        if(!$this->registeringApiRoutes)
+        {
+            // Assign the web middleware group to web only routes
+            $this->middleware(['web']);
+        }
+        else
+        {
+            // Assign the api middleware group to api only routes
+            $this->middleware(['api']);
+        }
+
         // Register any group middleware if they exist, they will set on the last added route
         if(isset($groupMiddleware))
         {
+            $middlewareList = [];
+
             // Support adding nested grouped middleware
             foreach($groupMiddleware as $middleware)
             {
-                // Build up all the keys from the group stack
-                $middlewareKeys[] = $middleware;
+                // An array here means we have a group with more than one middleware to add
+                if(is_array($middleware))
+                {
+                    /*
+                     * When registering middleware inside a route group and the
+                     * group is registering multiple middleware at a time, an array
+                     * is required so that a list of middleware can be defined. However,
+                     * this means we will end up with an array that is 1 level too deep.
+                     * To fix the array from being 1 level too deep, we extract the values
+                     * only of the middleware group array and merge them at a single
+                     * dimensional level.
+                     */
+                    $middlewareList = array_merge(array_column($middleware, null), $middlewareList);
+                }
+                else
+                {
+                    // Build up all the keys from the group stack
+                    $middlewareList[] = $middleware;
+                }
             }
 
-            // Add all middleware to the route
-            $this->middleware($middlewareKeys);
+            // Add all middleware to the route which is apart of a group(s)
+            $this->middleware($middlewareList);
         }
     }
 
@@ -436,7 +366,7 @@ class Router
         array_pop($this->groupStack);
     }
 
-    public function middleware($middlewareKeys)
+    public function middleware(array $middlewareKeys)
     {
         $requestMethod = array_key_first($this->lastAddedRoute);
         $routeUri = $this->lastAddedRoute[$requestMethod];
@@ -466,5 +396,7 @@ class Router
         $this->registeringApiRoutes = true;
         require ROOT_DIR . "/app/routing/api.php";
         $this->registeringApiRoutes = false;
+
+        $this->middleware->optimiseRegisteredMiddleware();
     }
 }

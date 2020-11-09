@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Middleware;
+namespace App\Http\Middleware;
 
 use Polyel\Http\Request;
 use Polyel\Auth\Middleware\MustVerifyEmail as PolyelMustVerifyEmailMiddleware;

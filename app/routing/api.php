@@ -12,9 +12,12 @@ use Polyel\Router\Facade\Route;
 | You may use the group method to assign a prefix or a set of middleware
 | to multiple API routes at a time. An example has been defined below...
 |
-| Note: API registered routes are treated as stateless, so they do not have
+| API registered routes are treated as stateless, so they do not have
 | access to the Session System. By default '/api/*' is added to the CSRF
-| protection as well.
+| middleware protection as well.
+|
+| All API registered routes are automatically assigned the 'api'
+| middleware group which can be found in your applications HTTP Kernel.
 │
 */
 

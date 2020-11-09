@@ -11,11 +11,11 @@ use Swoole\Coroutine as Swoole;
 use Polyel\Hashing\Facade\Hash;
 use Polyel\View\Element\Element;
 use Polyel\Controller\Controller;
-use Polyel\Middleware\Middleware;
 use Polyel\Session\SessionManager;
 use Polyel\Encryption\Facade\Crypt;
 use Polyel\Database\DatabaseManager;
 use Swoole\HTTP\Server as SwooleHTTPServer;
+use Polyel\Http\Middleware\MiddlewareManager;
 
 class Server
 {
@@ -37,7 +37,7 @@ class Server
   
     private $sessionManager;
 
-    public function __construct(Config $config, Router $router, Controller $controller, Middleware $middleware, DatabaseManager $databaseManager, SessionManager $sessionManager)
+    public function __construct(Config $config, Router $router, Controller $controller, MiddlewareManager $middleware, DatabaseManager $databaseManager, SessionManager $sessionManager)
     {
         cli_set_process_title("Polyel-HTTP-Server");
 
@@ -53,11 +53,11 @@ class Server
     {
         $this->config->load();
 
+        $this->middleware->loadAllMiddleware();
+
         $this->router->loadRoutes();
 
         $this->controller->loadAllControllers();
-
-        $this->middleware->loadAllMiddleware();
 
         $this->sessionManager->setDriver(config('session.driver'));
 

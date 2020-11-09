@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Middleware;
+namespace App\Http\Middleware;
 
-use Polyel\Middleware\CsrfTokenVerifier as PolyelCsrfTokenVerifierMiddleware;
+use Polyel\Http\Middleware\CsrfTokenVerifier as PolyelCsrfTokenVerifierMiddleware;
 
 class ValidateCsrfTokenMiddleware extends PolyelCsrfTokenVerifierMiddleware
 {
