@@ -67,7 +67,7 @@ class Kernel
         // Create a middleware stack to execute against the request
         $middlewareStack = MiddlewareManager::prepareStack(
             $this,
-            MiddlewareManager::generateStackForRoute($requestMethod, $matchedRoute['url'])
+            MiddlewareManager::getStackForRoute($requestMethod, $matchedRoute['url'])
         );
 
         // A core action would be either a closure or a controller

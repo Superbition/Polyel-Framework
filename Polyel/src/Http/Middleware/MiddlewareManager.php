@@ -245,7 +245,7 @@ class MiddlewareManager
         return $preparedMiddlewareStack;
     }
 
-    public function generateStackForRoute($requestMethod, $requestUrl)
+    public function getStackForRoute($requestMethod, $requestUrl)
     {
         $routeMiddlewareStack = [];
 

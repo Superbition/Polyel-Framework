@@ -7,7 +7,7 @@ use Polyel;
 /**
  * Class MiddlewareManager
  *
- * @method static generateStackForRoute($requestMethod, $requestUrl)
+ * @method static getStackForRoute($requestMethod, $requestUrl)
  *
  * @method static prepareStack($HttpKernel, $routeMiddlewareStack)
  *
