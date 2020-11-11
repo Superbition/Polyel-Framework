@@ -12,10 +12,24 @@ $traits = [];
 $interfaces = [];
 $polyelSourceFiles = [];
 
+// Service directories to exclude when loading the framework
+$exclusions = [
+    'Console',
+];
+
 echo "Building Polyel Framework source map:";
 foreach ($pathIterator as $file)
 {
     $currentFile = $file->getPathname();
+
+    // Check each exclusion and skip the current file if it matches any exclusions
+    foreach($exclusions as $exclusion)
+    {
+        if(strpos($currentFile, "src/$exclusion/") !== false)
+        {
+            continue 2;
+        }
+    }
 
     // Build up a class/ source map of the Polyel Framework.
     if(preg_match('/^.+\.php$/i', $currentFile))
