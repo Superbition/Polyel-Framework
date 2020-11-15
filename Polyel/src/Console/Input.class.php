@@ -15,8 +15,28 @@ class Input
         // Only process arguments if they exist after the script name
         if($argc > 1)
         {
-            // Get the name of the command to run and remove the script name and command name from the list of arguments
-            $this->command = array_splice($argv, 0, 2)[1];
+            /*
+             * Remove the script name and first argument in
+             * order to check if the name of the command to run has
+             * been given.
+             */
+            $command = array_splice($argv, 0, 2)[1];
+
+            // Only assign a command if it is not an option as it is possible that no command is given, only options
+            if($this->isNotAnOption($command))
+            {
+                $this->command = $command;
+            }
+            else
+            {
+                /*
+                 * Else the first argument is not a command
+                 * but an option, so we shift it back onto the
+                 * argv array to be parsed. At this stage it means
+                 * only options and or sub arguments were given.
+                 */
+                array_unshift($argv, $command);
+            }
 
             // Send the rest of argv to be parsed and processed into command segments
             $this->parseCommandInput($argv);
