@@ -135,7 +135,7 @@ class Input
     private function isAnOption($arg)
     {
         // Supports short and long options: -b or --bar etc.
-        return strpos($arg, '-') === 0 || strpos($arg, '--') === 0;
+        return $this->isAShortOption($arg) || $this->isALongOption($arg);
     }
 
     private function isNotAnOption($arg)
