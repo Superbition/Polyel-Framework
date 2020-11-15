@@ -4,7 +4,7 @@ namespace Polyel\Console;
 
 class Input
 {
-    public string $command;
+    public string $command = '';
 
     public array $arguments = [];
 
@@ -12,11 +12,15 @@ class Input
 
     public function __construct(array $argv, int $argc)
     {
-        // Get the name of the command to run and remove the script name and command name from the list of arguments
-        $this->command = array_splice($argv, 0, 2)[1];
+        // Only process arguments if they exist after the script name
+        if($argc > 1)
+        {
+            // Get the name of the command to run and remove the script name and command name from the list of arguments
+            $this->command = array_splice($argv, 0, 2)[1];
 
-        // Send the rest of argv to be parsed and processed into command segments
-        $this->parseCommandInput($argv);
+            // Send the rest of argv to be parsed and processed into command segments
+            $this->parseCommandInput($argv);
+        }
 
         //var_dump($argv);
     }
