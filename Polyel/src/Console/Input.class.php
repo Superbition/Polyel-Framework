@@ -36,17 +36,25 @@ class Input
             /*
              * Detect when an option is waiting for its value as the
              * flag $optionIsWaitingForValue will be set to true and the
-             * current argument won't be an option.
+             * current argument won't be an option. Or we will have
+             * encountered an argument separator which will be '--'.
              */
-            if($optionIsWaitingForValue && $this->isNotAnOption($arg))
+            if(($optionIsWaitingForValue && $this->isNotAnOption($arg)) || $this->isArgumentSeparator($arg))
             {
-                // Get the last added option and set its value using the current argument value.
-                $lastAddedOption = array_key_last($parsedCommandSegments['options']);
-                $parsedCommandSegments['options'][$lastAddedOption] = $arg;
+                // Only assign the value to the option if the current argument is not an argument separator
+                if($this->isNotArgumentSeparator($arg))
+                {
+                    // Get the last added option and set its value using the current argument value.
+                    $lastAddedOption = array_key_last($parsedCommandSegments['options']);
+                    $parsedCommandSegments['options'][$lastAddedOption] = $arg;
+                }
 
                 $optionIsWaitingForValue = false;
 
-                // We have collected the option value, move onto the next argument in the array
+                /*
+                 * We have collected the option's value or found an argument
+                 * separator, we can now move onto the next argument in the array
+                 */
                 continue;
             }
 
@@ -119,5 +127,15 @@ class Input
     private function isALongOption($arg)
     {
         return strpos($arg, '--') === 0;
+    }
+
+    private function isArgumentSeparator($arg)
+    {
+        return $arg === '--';
+    }
+
+    private function isNotArgumentSeparator($arg)
+    {
+        return !$this->isArgumentSeparator($arg);
     }
 }
