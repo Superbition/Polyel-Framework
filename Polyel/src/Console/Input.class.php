@@ -29,22 +29,22 @@ class Input
             'options' => [],
         ];
 
-        $optionWaitingForValue = false;
+        $optionIsWaitingForValue = false;
 
         foreach($argv as $key => $arg)
         {
             /*
              * Detect when an option is waiting for its value as the
-             * flag $optionWaitingForValue will be set to true and the
+             * flag $optionIsWaitingForValue will be set to true and the
              * current argument won't be an option.
              */
-            if($optionWaitingForValue && $this->isNotAnOption($arg))
+            if($optionIsWaitingForValue && $this->isNotAnOption($arg))
             {
                 // Get the last added option and set its value using the current argument value.
                 $lastAddedOption = array_key_last($parsedCommandSegments['options']);
                 $parsedCommandSegments['options'][$lastAddedOption] = $arg;
 
-                $optionWaitingForValue = false;
+                $optionIsWaitingForValue = false;
 
                 // We have collected the option value, move onto the next argument in the array
                 continue;
@@ -85,7 +85,7 @@ class Input
                  * Set the flag that an option is waiting for its value
                  * so it can get picked up during the next loop cycle.
                  */
-                $optionWaitingForValue = true;
+                $optionIsWaitingForValue = true;
                 continue;
             }
 
