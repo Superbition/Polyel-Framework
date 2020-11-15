@@ -98,10 +98,10 @@ class Input
                 // Supports the use of -bValue or -fValue etc.
                 if(!strpos($arg, '=') !== false && strlen($arg) > 2 && $this->isAShortOption($arg))
                 {
-                    $output[0] = substr($arg, 0, 2);
-                    $output[1] = substr($arg, 2, strlen($arg));
+                    $option[0] = substr($arg, 0, 2);
+                    $option[1] = substr($arg, 2, strlen($arg));
 
-                    $parsedCommandSegments['options'][$output[0]] = $output[1];
+                    $parsedCommandSegments['options'][$option[0]] = $option[1];
 
                     continue;
                 }
