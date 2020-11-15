@@ -145,11 +145,13 @@ class Input
 
     private function isAShortOption($arg)
     {
-        return strpos($arg, '--') !== 0;
+        // Make sure the argument doesn't start with two hyphens but does start with one hyphen
+        return strpos($arg, '--') !== 0 && strpos($arg, '-') === 0;
     }
 
     private function isALongOption($arg)
     {
+        // Make sure the argument starts with two hyphens
         return strpos($arg, '--') === 0;
     }
 
