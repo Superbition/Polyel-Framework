@@ -79,7 +79,7 @@ class Input
                  * using a space to indicate that the next argument in
                  * the array is its value e.g. --bar foo or -bar "foo bar" etc.
                  */
-                $parsedCommandSegments['options'][$arg] = null;
+                $parsedCommandSegments['options'][$arg] = true;
 
                 /*
                  * Set the flag that an option is waiting for its value
