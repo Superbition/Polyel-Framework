@@ -110,6 +110,21 @@ class Input
                 // Supports the use of -bValue or -fValue etc.
                 if(!strpos($arg, '=') !== false && strlen($arg) > 2 && $this->isAShortOption($arg))
                 {
+                    // Check if we are dealing with a cumulative short option like -vvv for example
+                    if(preg_match('/^-(.)\1*$/m', $arg))
+                    {
+                        // Remove the short option hyphen
+                        $arg = ltrim($arg, '-');
+
+                        // Count how many cumulative characters there are, so vvv would equal 3
+                        $optionValue = strlen($arg);
+
+                        // Set the new option with its cumulative value
+                        $parsedCommandSegments = $this->setANewOption($arg, $optionValue, $parsedCommandSegments);
+
+                        continue;
+                    }
+
                     $option[0] = substr($arg, 0, 2);
                     $option[1] = substr($arg, 2, strlen($arg));
 
