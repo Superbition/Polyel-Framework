@@ -10,6 +10,8 @@ class Input
 
     public array $options = [];
 
+    private array $optionCount = [];
+
     public function __construct(array $argv, int $argc)
     {
         // Only process arguments if they exist after the script name
@@ -53,9 +55,13 @@ class Input
             'options' => [],
         ];
 
+        // Used to detect when an option is waiting for a value during a loop cycle
         $optionIsWaitingForValue = false;
 
-        foreach($argv as $key => $arg)
+        // Used to keep track of the previous argument in the loop
+        $lastArgument = null;
+
+        foreach($argv as $arg)
         {
             /*
              * Detect when an option is waiting for its value as the
@@ -68,9 +74,12 @@ class Input
                 // Only assign the value to the option if the current argument is not an argument separator
                 if($this->isNotArgumentSeparator($arg))
                 {
-                    // Get the last added option and set its value using the current argument value.
-                    $lastAddedOption = array_key_last($parsedCommandSegments['options']);
-                    $parsedCommandSegments['options'][$lastAddedOption] = $arg;
+                    /*
+                     * We use the last argument name because at this stage we already have the
+                     * last arguments value but we need the previous argument name in order
+                     * to set a new option and its value.
+                     */
+                    $parsedCommandSegments = $this->setANewOption($lastArgument, $arg, $parsedCommandSegments);
                 }
 
                 $optionIsWaitingForValue = false;
@@ -82,6 +91,9 @@ class Input
                 continue;
             }
 
+            // Always keep track of what the previous argument is
+            $lastArgument = $arg;
+
             // Matches options that start with a - or --
             if($this->isAnOption($arg))
             {
@@ -90,7 +102,7 @@ class Input
                 {
                     $arg = explode('=', $arg);
 
-                    $parsedCommandSegments['options'][$arg[0]] = $arg[1];
+                    $parsedCommandSegments = $this->setANewOption($arg[0], $arg[1], $parsedCommandSegments);
 
                     continue;
                 }
@@ -101,17 +113,32 @@ class Input
                     $option[0] = substr($arg, 0, 2);
                     $option[1] = substr($arg, 2, strlen($arg));
 
-                    $parsedCommandSegments['options'][$option[0]] = $option[1];
+                    $parsedCommandSegments = $this->setANewOption($option[0], $option[1], $parsedCommandSegments);
 
                     continue;
                 }
 
                 /*
-                 * If we get to this stage, it means we have a option
-                 * using a space to indicate that the next argument in
-                 * the array is its value e.g. --bar foo or -bar "foo bar" etc.
+                 * If the option already exists and is waiting for a value
+                 * as the next argument, it means we should not set the
+                 * default 'true' value because the option has been used
+                 * more than once, indicting that it should now become an
+                 * array of values.
+                 *
+                 * This supports the usage of --domain example.com --domain example.co.uk etc.
                  */
-                $parsedCommandSegments['options'][$arg] = true;
+                if(!isset($parsedCommandSegments['options'][$arg]))
+                {
+                    /*
+                     * If we get to this stage, it means we have a option
+                     * using a space to indicate that the next argument in
+                     * the array is its value e.g. --bar foo or -bar "foo bar" etc.
+                     * So as a default value, we set the option to 'true' as it
+                     * is already present, this is also the default value for
+                     * an option.
+                     */
+                    $parsedCommandSegments['options'][$arg] = true;
+                }
 
                 /*
                  * Set the flag that an option is waiting for its value
@@ -163,5 +190,45 @@ class Input
     private function isNotArgumentSeparator($arg)
     {
         return !$this->isArgumentSeparator($arg);
+    }
+
+    private function setANewOption($optionName, $optionValue, $parsedCommandSegments)
+    {
+        // Create the option count for the option if it doesn't already exist
+        if(!isset($this->optionCount[$optionName]))
+        {
+            $this->optionCount[$optionName] = 0;
+        }
+
+        // Increasing the option count means we are tracking how many times an option is used
+        $this->optionCount[$optionName]++;
+
+        /*
+         * If the option count is more than 1, it means we have an
+         * option that has been defined more than once, so we shall turn that
+         * option and its values into an array, saving any previous defined values.
+         *
+         * This supports the usage of --domain example.com --domain example.co.uk etc.
+         */
+        if($this->optionCount[$optionName] > 1 && isset($parsedCommandSegments['options'][$optionName]))
+        {
+            // Create the array if it hasn't already been done...
+            if(!is_array($parsedCommandSegments['options'][$optionName]))
+            {
+                // Get the current value from the option and convert it into an array so it doesn't get overwritten.
+                $currentOptionValue = $parsedCommandSegments['options'][$optionName];
+                $parsedCommandSegments['options'][$optionName] = [$currentOptionValue];
+            }
+
+            // Append new option values onto the array...
+            $parsedCommandSegments['options'][$optionName][] = $optionValue;
+        }
+        else
+        {
+            // Create a new option and assign its value
+            $parsedCommandSegments['options'][$optionName] = $optionValue;
+        }
+
+        return $parsedCommandSegments;
     }
 }
