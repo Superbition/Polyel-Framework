@@ -111,8 +111,11 @@ class Input
                         // Count how many cumulative characters there are, so vvv would equal 3
                         $optionValue = strlen($arg);
 
-                        // Set the new option with its cumulative value
-                        $this->setANewOption($arg, $optionValue);
+                        /*
+                         * Set the new option with its cumulative value, only set the option
+                         * using the first char, so -vvv would become -v = 3
+                         */
+                        $this->setANewOption("-$arg[0]", $optionValue);
 
                         continue;
                     }
