@@ -47,12 +47,6 @@ class Input
 
     private function parseCommandInput(array $argv)
     {
-        // The different segments to split the command input into
-        $parsedCommandSegments = [
-            'arguments' => [],
-            'options' => [],
-        ];
-
         // Used to detect when an option is waiting for a value during a loop cycle
         $optionIsWaitingForValue = false;
 
@@ -77,7 +71,7 @@ class Input
                      * last arguments value but we need the previous argument name in order
                      * to set a new option and its value.
                      */
-                    $parsedCommandSegments = $this->setANewOption($lastArgument, $arg, $parsedCommandSegments);
+                    $this->setANewOption($lastArgument, $arg);
                 }
 
                 $optionIsWaitingForValue = false;
@@ -100,7 +94,7 @@ class Input
                 {
                     $arg = explode('=', $arg);
 
-                    $parsedCommandSegments = $this->setANewOption($arg[0], $arg[1], $parsedCommandSegments);
+                    $this->setANewOption($arg[0], $arg[1]);
 
                     continue;
                 }
@@ -118,7 +112,7 @@ class Input
                         $optionValue = strlen($arg);
 
                         // Set the new option with its cumulative value
-                        $parsedCommandSegments = $this->setANewOption($arg, $optionValue, $parsedCommandSegments);
+                        $this->setANewOption($arg, $optionValue);
 
                         continue;
                     }
@@ -126,7 +120,7 @@ class Input
                     $option[0] = substr($arg, 0, 2);
                     $option[1] = substr($arg, 2, strlen($arg));
 
-                    $parsedCommandSegments = $this->setANewOption($option[0], $option[1], $parsedCommandSegments);
+                    $this->setANewOption($option[0], $option[1]);
 
                     continue;
                 }
@@ -140,7 +134,7 @@ class Input
                  *
                  * This supports the usage of --domain example.com --domain example.co.uk etc.
                  */
-                if(!isset($parsedCommandSegments['options'][$arg]))
+                if(!isset($this->options[$arg]))
                 {
                     /*
                      * If we get to this stage, it means we have a option
@@ -150,7 +144,7 @@ class Input
                      * is already present, this is also the default value for
                      * an option.
                      */
-                    $parsedCommandSegments['options'][$arg] = true;
+                    $this->options[$arg] = true;
                 }
 
                 /*
@@ -165,7 +159,7 @@ class Input
              * At this stage we have a normal positional argument and not an option.
              * So we can store the argument and continue onto the next.
              */
-            $parsedCommandSegments['arguments'][] = $arg;
+            $this->arguments[] = $arg;
             continue;
         }
 
@@ -205,7 +199,7 @@ class Input
         return !$this->isArgumentSeparator($arg);
     }
 
-    private function setANewOption($optionName, $optionValue, $parsedCommandSegments)
+    private function setANewOption($optionName, $optionValue)
     {
         // Create the option count for the option if it doesn't already exist
         if(!isset($this->optionCount[$optionName]))
@@ -223,25 +217,23 @@ class Input
          *
          * This supports the usage of --domain example.com --domain example.co.uk etc.
          */
-        if($this->optionCount[$optionName] > 1 && isset($parsedCommandSegments['options'][$optionName]))
+        if($this->optionCount[$optionName] > 1 && isset($this->options[$optionName]))
         {
             // Create the array if it hasn't already been done...
-            if(!is_array($parsedCommandSegments['options'][$optionName]))
+            if(!is_array($this->options[$optionName]))
             {
                 // Get the current value from the option and convert it into an array so it doesn't get overwritten.
-                $currentOptionValue = $parsedCommandSegments['options'][$optionName];
-                $parsedCommandSegments['options'][$optionName] = [$currentOptionValue];
+                $currentOptionValue = $this->options[$optionName];
+                $this->options[$optionName] = [$currentOptionValue];
             }
 
             // Append new option values onto the array...
-            $parsedCommandSegments['options'][$optionName][] = $optionValue;
+            $this->options[$optionName][] = $optionValue;
         }
         else
         {
             // Create a new option and assign its value
-            $parsedCommandSegments['options'][$optionName] = $optionValue;
+            $this->options[$optionName] = $optionValue;
         }
-
-        return $parsedCommandSegments;
     }
 }
