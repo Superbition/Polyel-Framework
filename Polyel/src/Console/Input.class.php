@@ -43,8 +43,6 @@ class Input
             // Send the rest of argv to be parsed and processed into command segments
             $this->parseCommandInput($argv);
         }
-
-        //var_dump($argv);
     }
 
     private function parseCommandInput(array $argv)
