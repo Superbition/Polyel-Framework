@@ -6,11 +6,7 @@ class ConsoleApplication
 {
     private array $commands = [];
 
-    private string $lastAddedCommand = '';
-
     private array $signatures = [];
-
-    private array $actions = [];
 
     public function __construct()
     {
@@ -48,23 +44,7 @@ class ConsoleApplication
         }
 
         $this->commands[] = $commandName;
-        $this->lastAddedCommand = $commandName;
 
         return $this;
-    }
-
-    /**
-     * Link an action to the last registered console command.
-     *
-     * @param mixed $action
-     */
-    public function action($action)
-    {
-        if(!empty($this->lastAddedCommand))
-        {
-            $this->actions[$this->lastAddedCommand] = $action;
-
-            $this->lastAddedCommand = '';
-        }
     }
 }
