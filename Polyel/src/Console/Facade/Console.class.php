@@ -7,7 +7,7 @@ use Polyel;
 /**
  * Class Command
  *
- * @method static command($signature)
+ * @method static Polyel\Console\ConsoleApplication command($signature)
  *
  */
 class Console
