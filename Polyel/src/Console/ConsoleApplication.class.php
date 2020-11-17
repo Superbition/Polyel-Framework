@@ -32,7 +32,7 @@ class ConsoleApplication
     public function command(string $signature)
     {
         // Only split the command name and its signature up if there is a space to indicate a signature...
-        if(preg_match('/\s/','list'))
+        if(preg_match('/\s/', $signature))
         {
             // A command name and a signature is split up by a space
             [$commandName, $signature] = explode(' ', $signature, 2);
