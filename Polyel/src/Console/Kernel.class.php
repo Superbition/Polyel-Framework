@@ -8,7 +8,7 @@ class Kernel
 
     protected string $defaultCommand = 'list';
 
-    protected array $commandAliases = [];
+    protected array $commandActions = [];
 
     public function __construct(ConsoleApplication $console)
     {
@@ -16,7 +16,7 @@ class Kernel
         $this->console->loadCommandsFrom('/routing/console.php');
         $this->console->loadCommandsFrom('/Polyel/src/Console/Commands/console.php');
 
-        $this->registerInternalCommandAliases();
+        $this->registerInternalcommandActions();
     }
 
     public function process(Input $input)
@@ -29,9 +29,9 @@ class Kernel
         }
     }
 
-    private function registerInternalCommandAliases()
+    private function registerInternalcommandActions()
     {
-        $this->commandAliases = array_merge($this->commandAliases, [
+        $this->commandActions = array_merge($this->commandActions, [
 
             'list' => Commands\ListCommand::class,
 
