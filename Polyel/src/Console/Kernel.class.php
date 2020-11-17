@@ -22,6 +22,11 @@ class Kernel
     public function process(Input $input)
     {
         $input->parseCommandInput();
+
+        if(!exists($input->command))
+        {
+            $input->command = $this->defaultCommand;
+        }
     }
 
     private function registerInternalCommandAliases()
