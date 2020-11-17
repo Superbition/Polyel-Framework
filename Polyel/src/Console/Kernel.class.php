@@ -6,7 +6,7 @@ class Kernel
 {
     protected $console;
 
-    protected $defaultCommand = 'list';
+    protected string $defaultCommand = 'list';
 
     protected array $commandAliases = [];
 
