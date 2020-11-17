@@ -4,6 +4,10 @@ namespace Polyel\Console;
 
 class Input
 {
+    private $argv = [];
+
+    private int $argc = 0;
+
     public string $command = '';
 
     public array $arguments = [];
@@ -40,12 +44,12 @@ class Input
                 array_unshift($argv, $command);
             }
 
-            // Send the rest of argv to be parsed and processed into command segments
-            $this->parseCommandInput($argv);
+            $this->argv = $argv;
+            $this->argc = $argc;
         }
     }
 
-    private function parseCommandInput(array $argv)
+    public function parseCommandInput()
     {
         // Used to detect when an option is waiting for a value during a loop cycle
         $optionIsWaitingForValue = false;
@@ -53,7 +57,7 @@ class Input
         // Used to keep track of the previous argument in the loop
         $lastArgument = null;
 
-        foreach($argv as $arg)
+        foreach($this->argv as $arg)
         {
             /*
              * Detect when an option is waiting for its value as the
