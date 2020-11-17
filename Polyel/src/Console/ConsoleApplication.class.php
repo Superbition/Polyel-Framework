@@ -31,13 +31,24 @@ class ConsoleApplication
      */
     public function command(string $signature)
     {
-        [$commandName, $signature] = explode(' ', $signature, 2);
+        // Only split the command name and its signature up if there is a space to indicate a signature...
+        if(preg_match('/\s/','list'))
+        {
+            // A command name and a signature is split up by a space
+            [$commandName, $signature] = explode(' ', $signature, 2);
 
-        $commandName = trim($commandName);
+            $commandName = trim($commandName);
+            $this->signatures[$commandName] = trim($signature);
+        }
+        else
+        {
+            // Else just get the command name and set the commands signature to null
+            $commandName = $signature;
+            $this->signatures[$commandName] = null;
+        }
 
         $this->commands[] = $commandName;
         $this->lastAddedCommand = $commandName;
-        $this->signatures[$commandName] = trim($signature);
 
         return $this;
     }
