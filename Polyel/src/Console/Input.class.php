@@ -169,8 +169,6 @@ class Input
             $this->arguments[] = $arg;
             continue;
         }
-
-        var_dump($parsedCommandSegments);
     }
 
     private function isAnOption($arg)
