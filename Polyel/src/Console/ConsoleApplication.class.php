@@ -23,7 +23,6 @@ class ConsoleApplication
      *
      * @param string $signature
      *
-     * @return $this
      */
     public function command(string $signature)
     {
@@ -44,7 +43,5 @@ class ConsoleApplication
         }
 
         $this->commands[] = $commandName;
-
-        return $this;
     }
 }
