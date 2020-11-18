@@ -59,4 +59,14 @@ class Kernel
 
         ]);
     }
+
+    public function getCommandAction($alias)
+    {
+        if(array_key_exists($alias, $this->commandActions))
+        {
+            return $this->commandActions[$alias];
+        }
+
+        return false;
+    }
 }
