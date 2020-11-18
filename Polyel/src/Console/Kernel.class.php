@@ -2,6 +2,9 @@
 
 namespace Polyel\Console;
 
+use RecursiveIteratorIterator;
+use RecursiveDirectoryIterator;
+
 class Kernel
 {
     protected $console;
