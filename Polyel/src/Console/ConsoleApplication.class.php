@@ -140,4 +140,77 @@ class ConsoleApplication
          */
         return $parsedCommandSignature;
     }
+
+    private function checkCommandInputValidity(array $inputArguments, array $inputOptions, array $commandSignature)
+    {
+        // A set of arrays to store valid command input that has been matched against a command signature
+        $processedInputArguments = [];
+        $processedInputOptions = [];
+
+        /*
+         * Process all the command arguments, figuring out which
+         * are required and which are optional. Also if a default value
+         * is given.
+         */
+        foreach($commandSignature['arguments'] as $key => $arg)
+        {
+            // Save a required argument if it is present and not empty
+            if($arg['Optionality'] === 'required' && isset($inputArguments[$key]) && !empty($inputArguments[$key]))
+            {
+                $processedInputArguments[$arg['name']] = $inputArguments[$key];
+
+                continue;
+            }
+
+            // Save a optional argument either using the given value or the default value
+            if($arg['Optionality'] === 'optional')
+            {
+                if(!isset($inputArguments[$key]) && isset($arg['default']))
+                {
+                    $processedInputArguments[$arg['name']] = $arg['default'];
+                }
+                else if(isset($inputArguments[$key]))
+                {
+                    $processedInputArguments[$arg['name']] = $inputArguments[$key];
+                }
+
+                continue;
+            }
+
+            // Error: The argument is required and not present and not optional
+            return false;
+        }
+
+        /*
+         * Process all options that are defined as required, making
+         * sure that they are present and not empty.
+         */
+        foreach($commandSignature['options']['required'] as $option)
+        {
+            if(isset($inputOptions[$option]) && !empty($inputOptions[$option]))
+            {
+                $processedInputOptions[$option] = $inputOptions[$option];
+
+                continue;
+            }
+
+            // Error: THe option is required but is not present or is empty
+            return false;
+        }
+
+        /*
+         * Process all options that are defined as optional and
+         * either using the given value or the default value if
+         * not present.
+         */
+        foreach($commandSignature['options']['optional'] as $option)
+        {
+            if(!isset($inputOptions[$option['name']]) && empty($inputOptions[$option['name']]))
+            {
+                $processedInputOptions[$option['name']] = $option['default'];
+            }
+        }
+
+        return [$processedInputArguments, $processedInputOptions];
+    }
 }
