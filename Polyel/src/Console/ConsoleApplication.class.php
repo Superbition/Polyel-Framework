@@ -209,6 +209,10 @@ class ConsoleApplication
             {
                 $processedInputOptions[$option['name']] = $option['default'];
             }
+            else
+            {
+                $processedInputOptions[$option['name']] = $inputOptions[$option['name']];
+            }
         }
 
         return [$processedInputArguments, $processedInputOptions];
