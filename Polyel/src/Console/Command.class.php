@@ -4,16 +4,19 @@ namespace Polyel\Console;
 
 class Command
 {
-    private array $commandInput;
+    private array $arguments;
+
+    private array $options;
 
     public function __construct()
     {
 
     }
 
-    public function useInput(array $commandInput)
+    public function useInput(array $arguments, array $options)
     {
-        $this->commandInput = $commandInput;
+        $this->arguments = $arguments;
+        $this->options = $options;
 
         return $this;
     }
