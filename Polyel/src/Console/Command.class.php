@@ -20,4 +20,14 @@ class Command
 
         return $this;
     }
+
+    protected function argument($argumentName)
+    {
+        return $this->arguments[$argumentName] ?? null;
+    }
+
+    protected function arguments()
+    {
+        return $this->arguments;
+    }
 }
