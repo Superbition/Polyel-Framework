@@ -30,4 +30,14 @@ class Command
     {
         return $this->arguments;
     }
+
+    protected function option($optionName)
+    {
+        return $this->options[$optionName] ?? null;
+    }
+
+    protected function options()
+    {
+        return $this->options;
+    }
 }
