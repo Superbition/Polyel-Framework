@@ -215,7 +215,7 @@ class ConsoleApplication
         foreach($commandSignature['options']['required'] as $option)
         {
             // When checking for required options, it could be a short and or long notation that is used...
-            if($options = $this->shortOrLongOptionIsPresent($option, $inputOptions))
+            if($options = $this->isShortOrLongOptionPresent($option, $inputOptions))
             {
                 foreach($options['notations'] as $notation)
                 {
@@ -240,7 +240,7 @@ class ConsoleApplication
         foreach($commandSignature['options']['optional'] as $option)
         {
             // Options can use a short and or long syntax, but we need to detect both notations
-            if($options = $this->shortOrLongOptionIsPresent($option['name'], $inputOptions, 'optional'))
+            if($options = $this->isShortOrLongOptionPresent($option['name'], $inputOptions, 'optional'))
             {
                 foreach($options['notations'] as $notation)
                 {
@@ -262,7 +262,7 @@ class ConsoleApplication
         return [$processedInputArguments, $processedInputOptions];
     }
 
-    private function shortOrLongOptionIsPresent(string $optionName, array $inputOptions, $optionality = 'required')
+    private function isShortOrLongOptionPresent(string $optionName, array $inputOptions, $optionality = 'required')
     {
         // A pipe symbol means we have short and long notations specified
         if(strpos($optionName, '|') !== false)
