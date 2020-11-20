@@ -75,10 +75,35 @@ class ConsoleApplication
             // Process all command option definitions
             if($this->isAnOption($commandDefinition))
             {
+                $optionShortcut = false;
+
+                // If a pipe symbol is present it means we have a defined short and long notation
+                if(strpos($commandDefinition, '|') !== false)
+                {
+                    // Split up the command definition to get the short and long option separately
+                    $commandDefinition = explode('|', $commandDefinition);
+
+                    // Save the short option but remove the additional hyphen
+                    $optionShortcut = '-' . ltrim($commandDefinition[0], '-');
+
+                    // Save the long option as the main command definition
+                    $commandDefinition = "--$commandDefinition[1]";
+                }
+
                 // An equals sign must always be present as it indicates if the option is required or not...
                 if(strpos($commandDefinition, '=') !== false)
                 {
                     $commandDefinition = explode('=', $commandDefinition);
+
+                    /*
+                     * When a shortcut option is set, include both the short and long
+                     * notation as the command definition, splitting them up with a
+                     * pipe symbol.
+                     */
+                    if($optionShortcut !== false)
+                    {
+                        $commandDefinition[0] = "$optionShortcut|$commandDefinition[0]";
+                    }
 
                     // If no default is given after the = sign, it means the option is required
                     if(empty($commandDefinition[1]))
@@ -183,13 +208,20 @@ class ConsoleApplication
 
         /*
          * Process all options that are defined as required, making
-         * sure that they are present and not empty.
+         * sure that they are present and not empty. Supports
+         * both the short and long notation of option names. If both
+         * notations are used, they're values are combined.
          */
         foreach($commandSignature['options']['required'] as $option)
         {
-            if(isset($inputOptions[$option]) && !empty($inputOptions[$option]))
+            // When checking for required options, it could be a short and or long notation that is used...
+            if($options = $this->shortOrLongOptionIsPresent($option, $inputOptions))
             {
-                $processedInputOptions[$option] = $inputOptions[$option];
+                foreach($options['notations'] as $notation)
+                {
+                    // Even if both notations for short or long are used, they should still contain the same values
+                    $processedInputOptions[$notation] = $options['values'];
+                }
 
                 continue;
             }
@@ -201,20 +233,97 @@ class ConsoleApplication
         /*
          * Process all options that are defined as optional and
          * either using the given value or the default value if
-         * not present.
+         * not present but, the options value will be the same
+         * regardless if both short or long notations were
+         * used or not.
          */
         foreach($commandSignature['options']['optional'] as $option)
         {
-            if(!isset($inputOptions[$option['name']]) && empty($inputOptions[$option['name']]))
+            // Options can use a short and or long syntax, but we need to detect both notations
+            if($options = $this->shortOrLongOptionIsPresent($option['name'], $inputOptions, 'optional'))
             {
-                $processedInputOptions[$option['name']] = $option['default'];
-            }
-            else
-            {
-                $processedInputOptions[$option['name']] = $inputOptions[$option['name']];
+                foreach($options['notations'] as $notation)
+                {
+                    // Use the values provided if any have been set, otherwise use the optional default value
+                    if(!isset($options['values']) && empty($options['values']))
+                    {
+                        // The default value that is assigned from the command definition
+                        $processedInputOptions[$notation] = $option['default'];
+                    }
+                    else
+                    {
+                        // The values that were given from the command input
+                        $processedInputOptions[$notation] = $options['values'];
+                    }
+                }
             }
         }
 
         return [$processedInputArguments, $processedInputOptions];
+    }
+
+    private function shortOrLongOptionIsPresent(string $optionName, array $inputOptions, $optionality = 'required')
+    {
+        // A pipe symbol means we have short and long notations specified
+        if(strpos($optionName, '|') !== false)
+        {
+            // Split up the option notations that are set
+            $optionNotations = explode('|', $optionName);
+        }
+        else
+        {
+            $optionNotations = [$optionName];
+        }
+
+        // An array to store both short and long options and their values
+        $shortOrLongOption = [];
+
+        // Process each present option notations one at a time
+        foreach($optionNotations as $notation)
+        {
+            // Always add a option notation even if it is not used, otherwise it won't get assigned any values
+            $shortOrLongOption['notations'][] = $notation;
+
+            if(isset($inputOptions[$notation]) && !empty($inputOptions[$notation]))
+            {
+                $shortOrLongOption['values'][] = $inputOptions[$notation];
+            }
+        }
+
+        if(isset($shortOrLongOption['values']) && !empty($shortOrLongOption['values']))
+        {
+            // If our option values is an array we need to do some clean up...
+            if(is_array($shortOrLongOption['values']))
+            {
+                // If we only have one value present, there is no need to use an array, flatten down to just the value
+                if(count($shortOrLongOption['values']) === 1)
+                {
+                    $shortOrLongOption['values'] = $shortOrLongOption['values'][0];
+                }
+                else if(count($shortOrLongOption['values']) > 1)
+                {
+                    // We need to flatten the array to make it a single dimension as we have multiple values
+                    $flatteredOptionValues = [];
+                    array_walk_recursive($shortOrLongOption['values'], function($value) use(&$flatteredOptionValues)
+                    {
+                        $flatteredOptionValues[] = $value;
+                    });
+
+                    $shortOrLongOption['values'] = $flatteredOptionValues;
+                }
+            }
+
+            return $shortOrLongOption;
+        }
+
+        // Return option notations defined for when optional option values have not been set
+        if($optionality === 'optional')
+        {
+            // Optional options can use their default value if not set, but they still need their defined notations
+            return $shortOrLongOption;
+        }
+
+        // No short or long option is present with any values for a required option
+        return false;
     }
 }
