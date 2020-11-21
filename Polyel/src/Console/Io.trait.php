@@ -53,7 +53,10 @@ trait Io
 
     public function error(string $error)
     {
-        fwrite(STDERR, "\e[1;37;41m[Error]$this->defaultStyle $error\n");
+        if($this->verbosityLevel !== -1)
+        {
+            fwrite(STDERR, "\e[1;37;41m[Error]$this->defaultStyle $error\n");
+        }
     }
 
     public function fatal(string $fatal)
