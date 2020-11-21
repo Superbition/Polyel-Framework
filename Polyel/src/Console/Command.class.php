@@ -4,6 +4,8 @@ namespace Polyel\Console;
 
 class Command
 {
+    use Io;
+
     private array $arguments;
 
     private array $options;
