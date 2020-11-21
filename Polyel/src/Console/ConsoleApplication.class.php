@@ -144,7 +144,7 @@ class ConsoleApplication
                     }
 
                     // If no default is given after the = sign, it means the option is required
-                    if(empty($commandDefinition[1]))
+                    if(!exists($commandDefinition[1]))
                     {
                         // Store the option as required
                         $parsedCommandSignature['options']['required'][] = $commandDefinition[0];
