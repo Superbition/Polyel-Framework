@@ -85,7 +85,10 @@ class ConsoleApplication
                 [$processedInputArguments, $processedInputOptions] = [];
             }
 
-            $consoleCommand->useInput($processedInputArguments, $processedInputOptions)->execute();
+            $consoleCommand
+                ->useInput($processedInputArguments, $processedInputOptions)
+                ->setVerbosity($processedInputOptions['-v'], $processedInputOptions['-q'])
+                ->execute();
         }
 
         return ['code' => 0];

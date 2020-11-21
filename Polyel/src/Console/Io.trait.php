@@ -8,18 +8,24 @@ trait Io
 
     public function writeLine(string $output)
     {
-        $output .= $this->defaultStyle;
+        if($this->verbosityLevel !== -1)
+        {
+            $output .= $this->defaultStyle;
 
-        fwrite(STDOUT, $output);
+            fwrite(STDOUT, $output);
+        }
     }
 
     public function writeNewLine(string $output, int $newLines = 1)
     {
-        $output .= $this->defaultStyle;
+        if($this->verbosityLevel !== -1)
+        {
+            $output .= $this->defaultStyle;
 
-        $output .= str_repeat("\n", $newLines);
+            $output .= str_repeat("\n", $newLines);
 
-        fwrite(STDOUT, $output);
+            fwrite(STDOUT, $output);
+        }
     }
 
     public function info(string $info)
@@ -32,9 +38,12 @@ trait Io
         $this->writeNewLine("\e[0;37;44m[Notice]$this->defaultStyle $notice");
     }
 
-    public function debug(string $debug, $verbosity = 1)
+    public function debug(string $debug, int $verbosity = 1)
     {
-        $this->writeNewLine("\e[0;30;42m[Debug]$this->defaultStyle $debug");
+        if($this->verbosityLevel > 0 && $this->verbosityLevel >= $verbosity)
+        {
+            $this->writeNewLine("\e[0;30;42m[Debug]$this->defaultStyle $debug");
+        }
     }
 
     public function warning(string $warning)

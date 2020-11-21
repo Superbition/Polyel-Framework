@@ -10,6 +10,8 @@ class Command
 
     private array $options;
 
+    private int $verbosityLevel = 0;
+
     public function __construct()
     {
 
@@ -19,6 +21,25 @@ class Command
     {
         $this->arguments = $arguments;
         $this->options = $options;
+
+        return $this;
+    }
+
+    public function setVerbosity($verbosityLevel, $quietOption)
+    {
+        // Set verbosity to -1 because the quiet option is present
+        if(is_bool($quietOption) && $quietOption === true)
+        {
+            $verbosityLevel = -1;
+        }
+
+        // If verbosity is set to true, convert it to level 1
+        if(is_bool($verbosityLevel) && $verbosityLevel)
+        {
+            $verbosityLevel = 1;
+        }
+
+        $this->verbosityLevel = $verbosityLevel;
 
         return $this;
     }
