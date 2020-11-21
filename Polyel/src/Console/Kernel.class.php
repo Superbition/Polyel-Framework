@@ -49,6 +49,15 @@ class Kernel
         {
             $input->command = $this->defaultCommand;
         }
+
+        $status = $this->console->run(
+            $input->command,
+            $this->getCommandAction($input->command),
+            $input->arguments,
+            $input->options
+        );
+
+        return $status['code'];
     }
 
     private function registerInternalcommandActions()
