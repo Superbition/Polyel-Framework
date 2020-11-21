@@ -50,6 +50,44 @@ class ConsoleApplication
         $this->commands[] = $commandName;
     }
 
+    public function run(string $commandName, string $commandFQN, array $arguments, array $options): array
+    {
+        // The command fully qualified namespace will be false if one was not found
+        if($commandFQN === false)
+        {
+            return ['code' => 1, 'message' => "The command $commandName has no registered command action."];
+        }
+
+        // Make sure the command we want to run exists within the list of registered commands
+        if(in_array($commandName, $this->commands, true))
+        {
+            $consoleCommand = Polyel::resolveClass($commandFQN);
+
+            $parsedCommandSignature = $this->parseCommandSignature($this->signatures[$commandName]);
+
+            if(!empty($parsedCommandSignature))
+            {
+                // Match the command input to the command signature if a signature exists
+                $validatedCommandInput = $this->checkCommandInputValidity($arguments, $options, $parsedCommandSignature);
+
+                if($validatedCommandInput === false)
+                {
+                    $validatedCommandInput = [];
+                }
+
+                [$processedInputArguments, $processedInputOptions] = $validatedCommandInput;
+            }
+            else
+            {
+                [$processedInputArguments, $processedInputOptions] = [];
+            }
+
+            $consoleCommand->useInput($processedInputArguments, $processedInputOptions)->execute();
+        }
+
+        return ['code' => 0];
+    }
+
     private function parseCommandSignature($commandSignature)
     {
         // Return an empty parsed signature if one doesn't exist as a command may not have one
