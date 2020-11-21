@@ -63,7 +63,10 @@ class ConsoleApplication
         {
             $consoleCommand = Polyel::resolveClass($commandFQN);
 
-            $parsedCommandSignature = $this->parseCommandSignature($this->signatures[$commandName]);
+            // Add core native/reserved options to the signature
+            $commandSignature = $this->includeReservedOptions($this->signatures[$commandName]);
+
+            $parsedCommandSignature = $this->parseCommandSignature($commandSignature);
 
             if(!empty($parsedCommandSignature))
             {
@@ -86,6 +89,12 @@ class ConsoleApplication
         }
 
         return ['code' => 0];
+    }
+
+    private function includeReservedOptions($signature)
+    {
+        // Add core native/reserved options to the signature
+        return $signature . '{--v|verbostity=0} {--h|help=false}';
     }
 
     private function parseCommandSignature($commandSignature)
