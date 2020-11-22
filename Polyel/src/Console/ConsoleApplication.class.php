@@ -58,6 +58,9 @@ class ConsoleApplication
             return ['code' => 1, 'message' => "The command $commandName has no registered command action."];
         }
 
+        // The starting status is success and no message
+        $status = ['code' => 0, 'message' => ''];
+
         // Make sure the command we want to run exists within the list of registered commands
         if(in_array($commandName, $this->commands, true))
         {
@@ -85,13 +88,29 @@ class ConsoleApplication
                 [$processedInputArguments, $processedInputOptions] = [];
             }
 
-            $consoleCommand
-                ->useInput($processedInputArguments, $processedInputOptions)
-                ->setVerbosity($processedInputOptions['-v'], $processedInputOptions['-q'])
-                ->execute();
+            /*
+             * Run the console command inside a coroutine but
+             * catch any Swoole Exit Exceptions and return a proper console status code.
+             */
+            go(function() use($consoleCommand, &$status, $processedInputArguments, $processedInputOptions)
+            {
+                try
+                {
+                    $consoleCommand
+                        ->useInput($processedInputArguments, $processedInputOptions)
+                        ->setVerbosity($processedInputOptions['-v'], $processedInputOptions['-q'])
+                        ->execute();
+                }
+                catch(\Swoole\ExitException $exception)
+                {
+                    fwrite(STDERR, 'Exception: ' . $exception->getStatus());
+
+                    $status['code'] = 1;
+                }
+            });
         }
 
-        return ['code' => 0];
+        return $status;
     }
 
     private function includeReservedOptions($signature)
