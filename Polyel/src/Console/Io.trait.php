@@ -62,6 +62,6 @@ trait Io
     public function fatal(string $fatal)
     {
         fwrite(STDERR, "\e[41;1;33m[Fatal]$this->defaultStyle $fatal\n");
-        exit('Exiting early because of fatal error!');
+        exit("Exiting early because of fatal error!\n\n");
     }
 }
