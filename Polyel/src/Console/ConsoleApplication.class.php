@@ -2,7 +2,10 @@
 
 namespace Polyel\Console;
 
+use Co;
 use Polyel;
+use RuntimeException;
+use Swoole\Coroutine\WaitGroup;
 
 class ConsoleApplication
 {
@@ -89,24 +92,48 @@ class ConsoleApplication
             }
 
             /*
-             * Run the console command inside a coroutine but
-             * catch any Swoole Exit Exceptions and return a proper console status code.
+             * Create a new coroutine context container.
+             * This allows us to wait for the command status response before
+             * we continue and return control back to the console kernel.
              */
-            go(function() use($consoleCommand, &$status, $processedInputArguments, $processedInputOptions)
+            Co\Run(function() use($consoleCommand, &$status, $processedInputArguments, $processedInputOptions)
             {
-                try
-                {
-                    $consoleCommand
-                        ->useInput($processedInputArguments, $processedInputOptions)
-                        ->setVerbosity($processedInputOptions['-v'], $processedInputOptions['-q'])
-                        ->execute();
-                }
-                catch(\Swoole\ExitException $exception)
-                {
-                    fwrite(STDERR, 'Exception: ' . $exception->getStatus());
+                // A new coroutine waiting group
+                $commandWaitGroup = new WaitGroup();
 
-                    $status['code'] = 1;
-                }
+                /*
+                 * Run the console command inside a coroutine but
+                 * catch any Swoole Exit Exceptions and return a proper console status code.
+                 */
+                go(function() use($consoleCommand, $commandWaitGroup, &$status, $processedInputArguments, $processedInputOptions)
+                {
+                    $commandWaitGroup->add();
+
+                    try
+                    {
+                        $consoleCommand
+                            ->useInput($processedInputArguments, $processedInputOptions)
+                            ->setVerbosity($processedInputOptions['-v'], $processedInputOptions['-q'])
+                            ->execute();
+                    }
+                    catch(\Swoole\ExitException $exception)
+                    {
+                        fwrite(STDERR, 'Exit Exception: ' . $exception->getStatus());
+
+                        $status['code'] = 1;
+                    }
+                    catch(RuntimeException $exception)
+                    {
+                        fwrite(STDERR, $exception->getMessage());
+
+                        $status['code'] = 1;
+                    }
+
+                    $commandWaitGroup->done();
+                });
+
+                // Wait until the command inside the coroutine has completed before we continue
+                $commandWaitGroup->wait();
             });
         }
 
