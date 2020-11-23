@@ -69,6 +69,8 @@ class ConsoleApplication
         {
             $consoleCommand = Polyel::resolveClass($commandFQN);
 
+            $commandDependencies = Polyel::resolveClassMethod($commandFQN, 'execute');
+
             // Add core native/reserved options to the signature
             $commandSignature = $this->includeReservedOptions($this->signatures[$commandName]);
 
@@ -96,7 +98,7 @@ class ConsoleApplication
              * This allows us to wait for the command status response before
              * we continue and return control back to the console kernel.
              */
-            Co\Run(function() use($consoleCommand, &$status, $processedInputArguments, $processedInputOptions)
+            Co\Run(function() use($consoleCommand, $commandDependencies, &$status, $processedInputArguments, $processedInputOptions)
             {
                 // A new coroutine waiting group
                 $commandWaitGroup = new WaitGroup();
@@ -105,7 +107,7 @@ class ConsoleApplication
                  * Run the console command inside a coroutine but
                  * catch any Swoole Exit Exceptions and return a proper console status code.
                  */
-                go(function() use($consoleCommand, $commandWaitGroup, &$status, $processedInputArguments, $processedInputOptions)
+                go(function() use($consoleCommand, $commandDependencies, $commandWaitGroup, &$status, $processedInputArguments, $processedInputOptions)
                 {
                     $commandWaitGroup->add();
 
@@ -114,7 +116,7 @@ class ConsoleApplication
                         $consoleCommand
                             ->useInput($processedInputArguments, $processedInputOptions)
                             ->setVerbosity($processedInputOptions['-v'], $processedInputOptions['-q'])
-                            ->execute();
+                            ->execute(...$commandDependencies);
                     }
                     catch(\Swoole\ExitException $exception)
                     {
