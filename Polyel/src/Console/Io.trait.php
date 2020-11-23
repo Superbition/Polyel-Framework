@@ -31,6 +31,52 @@ trait Io
         }
     }
 
+    public function section(string $section)
+    {
+        // The section top and bottom is surrounded by the following char
+        $sectionTopAndBottom = str_repeat('─', 58);
+
+        /*
+         * Calculate the left section spacing in order to get the section text to be centre.
+         * We set the width to 58 because the section text includes a left and right │ char
+         * which makes up the total width of 60.
+         */
+        $leftSectionSpacing = round(((58 - strlen($section)) / 2), 0, PHP_ROUND_HALF_DOWN);
+
+        // To work out the correct right spacing, find the remaining amount to get to the total of 60 width
+        $rightSectionSpacing = 58 - ($leftSectionSpacing + strlen($section));
+
+        $SectionSides = str_repeat(' ', 58);
+        $leftSectionSpacing = str_repeat(' ', $leftSectionSpacing);
+        $rightSectionSpacing = str_repeat(' ', $rightSectionSpacing);
+
+        $this->writeNewLine('┌' . $sectionTopAndBottom . '┐');
+        $this->writeNewLine('│' . $SectionSides . '│');
+        $this->writeNewLine('│' . $leftSectionSpacing . "\e[1m" . $section . "\e[0m" . $rightSectionSpacing . '│');
+        $this->writeNewLine('│' . $SectionSides . '│');
+        $this->writeNewLine('└' . $sectionTopAndBottom . '┘');
+    }
+
+    public function title(string $title)
+    {
+        /*
+         * Calculate the left section spacing in order to get the title text to be centre.
+         * We set the width to 58 because the title text includes a left and right [ or ] char
+         * which makes up the total width of 60.
+         */
+        $leftTitleSpacing = round(((58 - strlen($title)) / 2), 0, PHP_ROUND_HALF_DOWN);
+
+        // To work out the correct right spacing, find the remaining amount to get to the total of 60 width
+        $rightTitleSpacing = 58 - ($leftTitleSpacing + strlen($title));
+
+        $leftTitleSpacing = str_repeat(' ', $leftTitleSpacing);
+        $rightTitleSpacing = str_repeat(' ', $rightTitleSpacing);
+
+        $title = $leftTitleSpacing . $title . $rightTitleSpacing;
+
+        $this->writeNewLine('[' . "\e[1m" . $title . "\e[0m" . ']');
+    }
+
     public function info(string $info)
     {
         $this->writeNewLine("\e[1;30m[Info] $info");
