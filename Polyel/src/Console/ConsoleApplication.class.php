@@ -173,19 +173,17 @@ class ConsoleApplication
             // Process all command option definitions
             if($this->isAnOption($commandDefinition))
             {
-                $optionShortcut = false;
-
                 // If a pipe symbol is present it means we have a defined short and long notation
                 if(strpos($commandDefinition, '|') !== false)
                 {
                     // Split up the command definition to get the short and long option separately
                     $commandDefinition = explode('|', $commandDefinition);
 
-                    // Save the short option but remove the additional hyphen
-                    $optionShortcut = '-' . ltrim($commandDefinition[0], '-');
+                    // Save the short option but remove the additional hyphen as short options only use 1 hyphen
+                    $optionShortcut = ltrim($commandDefinition[0], '-');
 
-                    // Save the long option as the main command definition
-                    $commandDefinition = "--$commandDefinition[1]";
+                    // Save the short and long option notations as the main command definition but in the correct format
+                    $commandDefinition = "-$optionShortcut|--$commandDefinition[1]";
                 }
 
                 // An equals sign must always be present as it indicates if the option is required or not...
