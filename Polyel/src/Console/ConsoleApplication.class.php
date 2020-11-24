@@ -333,7 +333,7 @@ class ConsoleApplication
             }
 
             // Error: The option is required but is not present or is empty
-            return ['status' => false, 'error' => "The option: $option is required but not passed."];
+            return ['status' => false, 'error' => "The option: $option is required but not given."];
         }
 
         /*
