@@ -211,34 +211,53 @@ class ConsoleApplication
                     $commandDefinition = "$requiredDefinition-$optionShortcut|--$commandDefinition[1]";
                 }
 
-                // An equals sign must always be present as it indicates if the option is required or not...
-                if(strpos($commandDefinition, '=') !== false)
+                // By default, options are classed as optional at first
+                $optionOptionality = 'optional';
+
+                // A ! at the start of a option means it has been defined as required
+                if($commandDefinition[0] === '!')
                 {
-                    $commandDefinition = explode('=', $commandDefinition);
+                    // Declare this option as required
+                    $optionOptionality = 'required';
 
-                    /*
-                     * When a shortcut option is set, include both the short and long
-                     * notation as the command definition, splitting them up with a
-                     * pipe symbol.
-                     */
-                    if($optionShortcut !== false)
-                    {
-                        $commandDefinition[0] = "$optionShortcut|$commandDefinition[0]";
-                    }
+                    // Remove the ! from the command definition
+                    $commandDefinition = ltrim($commandDefinition, '!');
+                }
 
-                    // If no default is given after the = sign, it means the option is required
-                    if(!exists($commandDefinition[1]))
-                    {
-                        // Store the option as required
-                        $parsedCommandSignature['options']['required'][] = $commandDefinition[0];
+                // Option defaults are declared as false if they don't have one
+                $defaultOptionValue = false;
 
-                        continue;
-                    }
+                // An optional option must have a = sign to set a default value
+                if($optionOptionality === 'optional' && strpos($commandDefinition, '=') !== false)
+                {
+                    // Left of the '=' is the command name, right side of '=' is the default value
+                    [$commandDefinition, $defaultOptionValue] = explode('=', $commandDefinition);
+                }
 
+                // Required options are not allowed to set default values as they are required
+                if($optionOptionality === 'required' && strpos($commandDefinition, '=') !== false)
+                {
+                    $parsedCommandSignature['error'] = "Option: $commandDefinition defined as required but trying to set a default value";
+                    return $parsedCommandSignature;
+                }
+
+                /*
+                 * Save our option using its declared optionality type.
+                 *
+                 * We store either required or optional options with default
+                 * values.
+                 */
+                if($optionOptionality === 'required')
+                {
                     // Else it means the option has a default value and is optional
-                    $parsedCommandSignature['options']['optional'][] = [
-                        'name' => $commandDefinition[0],
-                        'default' => $commandDefinition[1],
+                    $parsedCommandSignature['options'][$optionOptionality][] = $commandDefinition;
+                }
+                else if($optionOptionality === 'optional')
+                {
+                    // Else it means the option has a default value and is optional
+                    $parsedCommandSignature['options'][$optionOptionality][] = [
+                        'name' => $commandDefinition,
+                        'default' => $defaultOptionValue,
                     ];
                 }
             }
