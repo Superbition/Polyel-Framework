@@ -81,9 +81,9 @@ class ConsoleApplication
                 // Match the command input to the command signature if a signature exists
                 $validatedCommandInput = $this->checkCommandInputValidity($arguments, $options, $parsedCommandSignature);
 
-                if($validatedCommandInput === false)
+                if(isset($validatedCommandInput['status']) && $validatedCommandInput['status'] === false)
                 {
-                    $validatedCommandInput = [];
+                    return ['code' => 1, 'message' => $validatedCommandInput['error']];
                 }
 
                 [$processedInputArguments, $processedInputOptions] = $validatedCommandInput;
@@ -301,7 +301,7 @@ class ConsoleApplication
             }
 
             // Error: The argument is required and not present and not optional
-            return false;
+            return ['status' => false, 'error' => "The argument: $arg is required but not passed."];
         }
 
         /*
@@ -324,8 +324,8 @@ class ConsoleApplication
                 continue;
             }
 
-            // Error: THe option is required but is not present or is empty
-            return false;
+            // Error: The option is required but is not present or is empty
+            return ['status' => false, 'error' => "The option: $option is required but not passed."];
         }
 
         /*
