@@ -76,7 +76,13 @@ class ConsoleApplication
 
             $parsedCommandSignature = $this->parseCommandSignature($commandSignature);
 
-            if(!empty($parsedCommandSignature))
+            /*
+             * Only continue processing and matching up
+             * command inputs to the command definition
+             * if the parsed signature is not empty and
+             * that no errors are set.
+             */
+            if(!empty($parsedCommandSignature) && !isset($parsedCommandSignature['error']))
             {
                 // Match the command input to the command signature if a signature exists
                 $validatedCommandInput = $this->checkCommandInputValidity($arguments, $options, $parsedCommandSignature);
@@ -87,6 +93,10 @@ class ConsoleApplication
                 }
 
                 [$processedInputArguments, $processedInputOptions] = $validatedCommandInput;
+            }
+            else if(isset($parsedCommandSignature['error']))
+            {
+                return ['code' => 1, 'message' => $parsedCommandSignature['error']];
             }
             else
             {
