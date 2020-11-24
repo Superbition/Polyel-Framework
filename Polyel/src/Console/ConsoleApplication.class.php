@@ -186,6 +186,21 @@ class ConsoleApplication
                 // If a pipe symbol is present it means we have a defined short and long notation
                 if(strpos($commandDefinition, '|') !== false)
                 {
+                    // By default options are always deemed as optional first
+                    $requiredDefinition = '';
+
+                    if($commandDefinition[0] === '!')
+                    {
+                        $commandDefinition = ltrim($commandDefinition, '!');
+
+                        /*
+                         * An ! means the option is defined as required, this
+                         * goes at the start of an option in front of
+                         * any option hyphens.
+                         */
+                        $requiredDefinition = '!';
+                    }
+
                     // Split up the command definition to get the short and long option separately
                     $commandDefinition = explode('|', $commandDefinition);
 
