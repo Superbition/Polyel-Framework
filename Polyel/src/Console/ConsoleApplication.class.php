@@ -208,7 +208,7 @@ class ConsoleApplication
                     $optionShortcut = ltrim($commandDefinition[0], '-');
 
                     // Save the short and long option notations as the main command definition but in the correct format
-                    $commandDefinition = "-$optionShortcut|--$commandDefinition[1]";
+                    $commandDefinition = "$requiredDefinition-$optionShortcut|--$commandDefinition[1]";
                 }
 
                 // An equals sign must always be present as it indicates if the option is required or not...
