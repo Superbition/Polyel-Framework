@@ -343,7 +343,7 @@ class ConsoleApplication
             }
 
             // Error: The argument is required and not present and not optional
-            return ['status' => false, 'error' => "The argument: $arg is required but not passed."];
+            return ['status' => false, 'error' => "The argument: $arg[name] is required but not passed."];
         }
 
         /*
