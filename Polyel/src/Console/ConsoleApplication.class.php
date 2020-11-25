@@ -288,6 +288,13 @@ class ConsoleApplication
                     continue;
                 }
 
+                // Required arguments are not allowed to set default values as they are required
+                if($argumentOptionality === 'required' && strpos($commandDefinition, '=') !== false)
+                {
+                    $parsedCommandSignature['error'] = "Argument: $commandDefinition defined as required but trying to set a default value";
+                    return $parsedCommandSignature;
+                }
+
                 // At this stage it means we are dealing with a required argument, so we set the argument as required
                 $parsedCommandSignature['arguments'][] = [
                     'Optionality' => $argumentOptionality,
