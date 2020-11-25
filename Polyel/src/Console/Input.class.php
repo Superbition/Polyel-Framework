@@ -79,6 +79,14 @@ class Input
                      */
                     $this->setANewOption($lastArgument, $arg);
                 }
+                else
+                {
+                    /*
+                     * Store the argument separator to respect its position.
+                     * Used to separate argument arrays from other arguments.
+                     */
+                    $this->arguments[] = $arg;
+                }
 
                 $optionIsWaitingForValue = false;
 
