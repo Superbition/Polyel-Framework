@@ -291,8 +291,12 @@ class ConsoleApplication
                 // Required arguments are not allowed to set default values as they are required
                 if($argumentOptionality === 'required' && strpos($commandDefinition, '=') !== false)
                 {
-                    $parsedCommandSignature['error'] = "Argument: $commandDefinition defined as required but trying to set a default value";
-                    return $parsedCommandSignature;
+                    // However, the argument is allowed to set the input array wildcard
+                    if(strpos($commandDefinition, '=*') === false)
+                    {
+                        $parsedCommandSignature['error'] = "Argument: $commandDefinition defined as required but trying to set a default value";
+                        return $parsedCommandSignature;
+                    }
                 }
 
                 // At this stage it means we are dealing with a required argument, so we set the argument as required
@@ -326,6 +330,84 @@ class ConsoleApplication
          */
         foreach($commandSignature['arguments'] as $key => $arg)
         {
+            // We have found a argument expecting array index if the * wildcard is found...
+            if(strpos($arg['name'], '=*') !== false)
+            {
+                /*
+                 * Save the original index name for the argument that
+                 * expects array input, as we need to keep saving
+                 * values to it.
+                 */
+                $argumentArrayIndex = rtrim($arg['name'], '=*');
+
+                /*
+                 * Remove all of the used arguments up until
+                 * the point of our array input index. If we
+                 * don't remove the previous array elements
+                 * we would start collecting values for our
+                 * argument array from the wrong index.
+                 */
+                array_splice($inputArguments, 0, $key);
+
+                // Loop through and collect argument values for the argument that expects an array
+                foreach($inputArguments as $inputKey => $inputValue)
+                {
+                    /*
+                     * The only way to stop collecting values is if we
+                     * encounter a argument separator or if we reach the
+                     * end of the arguments.
+                     */
+                    if($this->isArgumentSeparator($inputValue))
+                    {
+                        unset($inputArguments[$inputKey]);
+
+                        break;
+                    }
+
+                    // Save an argument as part of the array...
+                    $processedInputArguments[$argumentArrayIndex][] = $inputValue;
+
+                    // Remove the saved argument value, we don't want it showing up in other arguments
+                    unset($inputArguments[$inputKey]);
+                }
+
+                /*
+                 * Reset the input arguments array to re-sync it back up with
+                 * the number of parsed arguments from the command definition.
+                 * The array_combine re-syncs the input arguments up with the
+                 * foreach loop with the command definition arguments again.
+                 * If there are any arguments after argument array values, then
+                 * the argument data will match up with the number of arguments
+                 * from the definition. The range starts the index from the
+                 * correct position with the amount of left over input arguments,
+                 * if any are left.
+                 */
+                if(!empty($inputArguments))
+                {
+                    // Key is the index of the current argument from the command definition
+                    $inputArgumentStartIndex = $key;
+
+                    $inputArgumentCount = count($inputArguments);
+
+                    // We can only increase the start index if there is another argument to process
+                    if($inputArgumentCount >= 1)
+                    {
+                        $inputArgumentStartIndex++;
+
+                        // Re-balance the argument end index if the start is more
+                        if($inputArgumentStartIndex > $inputArgumentCount)
+                        {
+                            $inputArgumentCount++;
+                        }
+                    }
+
+                    // Re-sync the input arguments with the command definition key index
+                    $inputArguments = array_combine(range($inputArgumentStartIndex, $inputArgumentCount), $inputArguments);
+                }
+
+                continue;
+            }
+
             // Save a required argument if it is present and not empty
             if($arg['Optionality'] === 'required' && isset($inputArguments[$key]) && !empty($inputArguments[$key]))
             {
