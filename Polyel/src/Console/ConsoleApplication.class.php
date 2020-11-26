@@ -11,10 +11,13 @@ class ConsoleApplication
 {
     use InputMethods;
     use Polyel\View\ViewTools;
+    use CommandDefinitionRules;
 
     private array $commands = [];
 
     private array $signatures = [];
+
+    private array $optionsThatAcceptArrays = [];
 
     public function __construct()
     {
@@ -223,6 +226,9 @@ class ConsoleApplication
                     // Remove the ! from the command definition
                     $commandDefinition = ltrim($commandDefinition, '!');
                 }
+
+                // Check the command definition to keep track of options that accept arrays
+                $this->processOptionsThatAcceptArrays($commandDefinition);
 
                 // Option defaults are declared as false if they don't have one
                 $defaultOptionValue = false;
@@ -452,6 +458,12 @@ class ConsoleApplication
                     $processedInputOptions[$notation] = $options['values'];
                 }
 
+                // Check if the option is defined to accept arrays, if an array is set
+                if($error = $this->doesOptionExpectAnArray($options['values'], $options['notations']))
+                {
+                    return ['status' => false, 'error' => $error];
+                }
+
                 continue;
             }
 
@@ -484,6 +496,12 @@ class ConsoleApplication
                         // The values that were given from the command input
                         $processedInputOptions[$notation] = $options['values'];
                     }
+                }
+
+                // Check if the option is defined to accept arrays, if an array is set
+                if(isset($options['values']) && $error = $this->doesOptionExpectAnArray($options['values'], $options['notations']))
+                {
+                    return ['status' => false, 'error' => $error];
                 }
             }
         }
