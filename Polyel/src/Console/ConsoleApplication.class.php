@@ -158,7 +158,7 @@ class ConsoleApplication
     private function includeReservedOptions($signature)
     {
         // Add core native/reserved options to the signature
-        return $signature . '{--v|verbostity=0} {--q|quiet=false} {--h|help=false}';
+        return $signature . '{--h|help=false} {--q|quiet=false} {--v|verbostity=0}';
     }
 
     private function parseCommandSignature($commandSignature)
