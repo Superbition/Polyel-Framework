@@ -28,15 +28,19 @@ class Command
     public function setVerbosity($verbosityLevel, $quietOption)
     {
         // Set verbosity to -1 because the quiet option is present
-        if(is_bool($quietOption) && $quietOption === true)
+        if($quietOption === true)
         {
             $verbosityLevel = -1;
         }
 
         // If verbosity is set to true, convert it to level 1
-        if(is_bool($verbosityLevel) && $verbosityLevel)
+        if($verbosityLevel === true)
         {
             $verbosityLevel = 1;
+        }
+        else if($verbosityLevel === false || $verbosityLevel === 'false')
+        {
+            $verbosityLevel = 0;
         }
 
         $this->verbosityLevel = $verbosityLevel;
