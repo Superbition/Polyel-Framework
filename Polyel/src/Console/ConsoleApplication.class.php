@@ -637,4 +637,14 @@ class ConsoleApplication
         // No short or long option is present with any values for a required option
         return false;
     }
+
+    public function getCommandSignatureFor($command)
+    {
+        if(array_key_exists($command, $this->signatures))
+        {
+            return $this->signatures[$command];
+        }
+
+        return false;
+    }
 }
