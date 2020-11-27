@@ -4,7 +4,7 @@ namespace Polyel\View;
 
 trait ViewTools
 {
-    private function getStringsBetween($string, $startDelimiter, $endDelimiter): array
+    private function getStringsBetween($string, $startDelimiter, $endDelimiter, $trimStrings = true): array
     {
         $matches = [];
         $startDelimiterLength = strlen($startDelimiter);
@@ -21,7 +21,14 @@ trait ViewTools
                 break;
             }
 
-            $matches[] = trim(substr($string, $stringStart, $stringEnd - $stringStart));
+            $match = substr($string, $stringStart, $stringEnd - $stringStart);
+
+            if($trimStrings)
+            {
+                $match = trim($match);
+            }
+
+            $matches[] = $match;
             $startFrom = $stringEnd + $endDelimiterLength;
         }
 

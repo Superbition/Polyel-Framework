@@ -179,7 +179,11 @@ class ConsoleApplication
                 'required' => [],
                 'optional' => [],
             ],
+
+            'descriptions' => [],
         ];
+
+        [$parsedCommandSignature['descriptions'], $commandDefinitions] = $this->processInputDescriptions($commandDefinitions);
 
         foreach($commandDefinitions as $commandDefinition)
         {
@@ -321,6 +325,66 @@ class ConsoleApplication
          * arguments are not etc.
          */
         return $parsedCommandSignature;
+    }
+
+    private function processInputDescriptions(array $commandDefinitions)
+    {
+        $descriptions = [];
+
+        foreach($commandDefinitions as &$definition)
+        {
+            // If we find a ':' it means we have a input description
+            if(strpos($definition, ':') !== false)
+            {
+                [$definition, $inputDesc] = explode(':', $definition);
+
+                // Remove left over whitespace
+                $definition = trim($definition);
+
+                // Check if the definition contains a default value that is between " "
+                if(strpos($definition, '"') !== false && strpos($definition, '=') !== false)
+                {
+                    // Getting the default value between quotes helps maintain intended whitespace
+                    $inputDefaultValue = $this->getStringsBetween($definition, '"', '"', false)[0];
+
+                    $definition = explode('=', $definition)[0];
+                    $definition .= '=' . $inputDefaultValue;
+                }
+
+                $inputName = trim($definition);
+
+                // Remove any optional or required markers
+                $inputName = ltrim($inputName, '?');
+                $inputName = ltrim($inputName, '!');
+
+                // Extract the input name and leave the default value
+                $inputName = explode('=', $inputName)[0];
+
+                // Convert the input name into an array based on if a short and long option is used
+                $inputName = explode('|', $inputName);
+
+                // A count of more than 1 means we have a short and long option
+                if(count($inputName) > 1)
+                {
+                    // Convert each notation to use the correct number of hyphen e.g. -a --all
+                    $inputName[0] = '-' . ltrim($inputName[0], '-');
+                    $inputName[1] = "--$inputName[1]";
+                }
+
+                $inputDesc = trim($inputDesc);
+
+                // For each input notation if they were found, set its name with a description
+                foreach($inputName as $name)
+                {
+                    $descriptions[$name] = $inputDesc;
+                }
+            }
+        }
+
+        // Break the call by ref link
+        unset($definition);
+
+        return [$descriptions, $commandDefinitions];
     }
 
     private function checkCommandInputValidity(array $inputArguments, array $inputOptions, array $commandSignature)
