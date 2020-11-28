@@ -92,4 +92,9 @@ class Kernel
 
         return false;
     }
+
+    public function getAllCommandActions()
+    {
+        return $this->commandActions;
+    }
 }
