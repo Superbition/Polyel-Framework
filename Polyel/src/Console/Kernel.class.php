@@ -50,6 +50,14 @@ class Kernel
             $input->command = $this->defaultCommand;
         }
 
+        // Re-route the request command to display the help text instead if the help options are present
+        if(isset($input->options['-h']) || isset($input->options['--help']))
+        {
+            // Convert the command to run the help command against the request command
+            $input->arguments = [$input->command];
+            $input->command = 'help';
+        }
+
         $status = $this->console->run(
             $input->command,
             $this->getCommandAction($input->command),
@@ -70,6 +78,7 @@ class Kernel
         $this->commandActions = array_merge($this->commandActions, [
 
             'list' => Commands\ListCommand::class,
+            'help' => Commands\HelpCommand::class,
 
         ]);
     }
