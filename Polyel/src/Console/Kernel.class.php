@@ -65,7 +65,7 @@ class Kernel
             $input->options
         );
 
-        if($status['code'] > 0)
+        if($status['code'] > 0 && isset($status['message']) && !empty($status['message']))
         {
             fwrite(STDERR, "\e[41;1;33m[Fatal]\e[0m " . $status['message'] . "\n\n");
         }

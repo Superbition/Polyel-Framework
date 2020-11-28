@@ -110,8 +110,8 @@ trait Io
 
     public function fatal(string $fatal)
     {
-        fwrite(STDERR, "\e[41;1;33m[Fatal]$this->defaultStyle $fatal\n");
-        exit("Exiting early because of fatal error!\n\n");
+        fwrite(STDERR, "\e[41;1;33m[Fatal]$this->defaultStyle $fatal\n\n");
+        exit(1);
     }
 
     public function ask($question)
