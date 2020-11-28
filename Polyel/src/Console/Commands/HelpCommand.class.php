@@ -122,7 +122,7 @@ class HelpCommand extends Command
         $this->writeNewLine($optionDescription, 2);
     }
 
-    private function processOptionsIntoADescription($options, $optionDescriptions)
+    public function processOptionsIntoADescription($options, $optionDescriptions)
     {
         $description = '';
 
