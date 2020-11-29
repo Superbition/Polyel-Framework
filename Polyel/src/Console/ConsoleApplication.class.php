@@ -133,7 +133,7 @@ class ConsoleApplication
                     }
                     catch(\Swoole\ExitException $exception)
                     {
-                        fwrite(STDERR, 'Exit Exception: ' . $exception->getStatus());
+                        fwrite(STDERR, 'Exit Exception: ' . $exception->getStatus() . "\n\n");
 
                         $status['code'] = 1;
                     }
