@@ -1,0 +1,19 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Polyel\Http\Request;
+
+class {{ MiddlewareClassName }}
+{
+    public function __construct()
+    {
+
+    }
+
+    public function process(Request $request, Closure $nextMiddleware)
+    {
+        return $nextMiddleware($request);
+    }
+}
