@@ -46,6 +46,13 @@ class Polyel
         return $HttpKernel;
     }
 
+    public static function newConsoleKernel()
+    {
+        require_once ROOT_DIR . '/app/Console/Kernel.php';
+
+        return self::resolveClass(App\Console\Kernel::class);
+    }
+
     public static function resolveMethod($class, $method)
     {
         return self::$container->resolveMethodInjection($class, $method);
