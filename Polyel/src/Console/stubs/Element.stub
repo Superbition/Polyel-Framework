@@ -5,7 +5,7 @@ namespace App\View\Elements;
 class {{ ElementClassName }} extends Element
 {
     // Set the element template relative to /resources/elements/
-    public $element = '';
+    public $element = {{ ElementTemplate }};
 
     public function __construct()
     {
