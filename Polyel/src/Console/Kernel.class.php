@@ -79,6 +79,11 @@ class Kernel
 
             'list' => Commands\ListCommand::class,
             'help' => Commands\HelpCommand::class,
+            'create:command' => Commands\CreateCommandCommand::class,
+            'create:controller' => Commands\CreateControllerCommand::class,
+            'create:middleware' => Commands\CreateMiddlewareCommand::class,
+            'create:element' => Commands\CreateElementCommand::class,
+            'key:generate' => Commands\GenerateEncryptionKeyCommand::class,
 
         ]);
     }
