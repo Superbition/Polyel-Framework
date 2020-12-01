@@ -23,3 +23,16 @@ $coreServices = [
     Polyel\Hashing\HashManager::class,
 
 ];
+
+$coreConsoleServices = [
+
+    Polyel\Config\Config::class,
+    Polyel\Debug\Debug::class,
+    Polyel\Storage\Storage::class,
+    Polyel\Database\Database::class,
+    Polyel\View\View::class,
+    Polyel\Encryption\EncryptionManager::class,
+    Polyel\Hashing\HashManager::class,
+    Polyel\Console\ConsoleApplication::class,
+
+];
