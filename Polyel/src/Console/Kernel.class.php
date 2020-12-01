@@ -84,6 +84,7 @@ class Kernel
 
             'list' => Commands\ListCommand::class,
             'help' => Commands\HelpCommand::class,
+            'version' => Commands\VersionCommand::class,
             'create:command' => Commands\CreateCommandCommand::class,
             'create:controller' => Commands\CreateControllerCommand::class,
             'create:middleware' => Commands\CreateMiddlewareCommand::class,
