@@ -151,6 +151,10 @@ class ConsoleApplication
                 $commandWaitGroup->wait();
             });
         }
+        else
+        {
+            return ['code' => 1, 'message' => 'Unknown command: ' . $commandName];
+        }
 
         return $status;
     }
