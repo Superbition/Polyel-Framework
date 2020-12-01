@@ -50,6 +50,11 @@ class Kernel
             $input->command = $this->defaultCommand;
         }
 
+        if(isset($input->options['-V']) || isset($input->options['--version']))
+        {
+            $input->command = 'version';
+        }
+
         // Re-route the request command to display the help text instead if the help options are present
         if(isset($input->options['-h']) || isset($input->options['--help']))
         {

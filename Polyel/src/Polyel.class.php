@@ -4,13 +4,13 @@ use Polyel\Container\Container;
 
 class Polyel
 {
-    private static $polyelVersion = "";
+    private const version = '0.0.0';
 
     private static $container;
 
     public static function version()
     {
-        return self::$polyelVersion;
+        return self::version;
     }
 
     public static function createContainer($baseClass)

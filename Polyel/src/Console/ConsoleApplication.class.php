@@ -162,7 +162,7 @@ class ConsoleApplication
     public function includeReservedOptions($signature)
     {
         // Add core native/reserved options to the signature
-        return $signature . '{--h|help=false : Shows this help message} {--q|quiet=false : Turn off all console output except fatal errors} {--v|verbosity=false : Increase the output of debug messages e.g. -v or -vvv...}';
+        return $signature . '{--h|help=false : Shows this help message} {--q|quiet=false : Turn off all console output except fatal errors} {--V|version=false : Displays the current installed version of Polyel} {--v|verbosity=false : Increase the output of debug messages e.g. -v or -vvv...}';
     }
 
     public function parseCommandSignature($commandSignature)

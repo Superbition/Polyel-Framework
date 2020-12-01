@@ -6,6 +6,8 @@ Console::command('list');
 
 Console::command('help {command : The command you want to display help text for}');
 
+Console::command('version');
+
 Console::command('create:command {command-name : The name of the new command to create}');
 
 Console::command('create:controller {controller-name : The name of the new controller to create}
