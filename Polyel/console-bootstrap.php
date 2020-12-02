@@ -1,9 +1,20 @@
 <?php
 
-echo "Loading the Polyel class auto loader\n";
-require "autoloader.php";
+use Swoole\Runtime;
+use Polyel\Storage\Storage;
+use Polyel\Hashing\Facade\Hash;
+use Polyel\View\Element\Element;
+use Polyel\Encryption\Facade\Crypt;
 
-echo "Bootstrap process started...\n\n";
+// Services and functionality that is not needed when running console commands
+$exclusions = [
+    'Auth/Middleware/',
+    'Controller/',
+    'Console/Commands/console.php',
+    'Router/',
+    'Session/',
+    'Http/Middleware/',
+];
 
 $startingDirectory = new RecursiveDirectoryIterator(__DIR__ . "/src/");
 $pathIterator = new RecursiveIteratorIterator($startingDirectory);
@@ -12,20 +23,14 @@ $traits = [];
 $interfaces = [];
 $polyelSourceFiles = [];
 
-// Service directories to exclude when loading the framework
-$exclusions = [
-    'Console',
-];
-
-echo "Building Polyel Framework source map:";
-foreach ($pathIterator as $file)
+foreach($pathIterator as $file)
 {
     $currentFile = $file->getPathname();
 
     // Check each exclusion and skip the current file if it matches any exclusions
     foreach($exclusions as $exclusion)
     {
-        if(strpos($currentFile, "src/$exclusion/") !== false)
+        if(strpos($currentFile, "src/$exclusion") !== false)
         {
             continue 2;
         }
@@ -53,7 +58,8 @@ foreach ($pathIterator as $file)
         $polyelSourceFiles[] = $currentFile;
     }
 }
-echo " Done.\n";
+
+require "autoloader.php";
 
 // Put all interfaces at the start of the source map so they are available first
 $polyelSourceFiles = array_merge($interfaces, $polyelSourceFiles);
@@ -62,13 +68,13 @@ $polyelSourceFiles = array_merge($interfaces, $polyelSourceFiles);
 $polyelSourceFiles = array_merge($traits, $polyelSourceFiles);
 
 // Loop through each source file and load them in.
-foreach ($polyelSourceFiles as $file)
+foreach($polyelSourceFiles as $file)
 {
     // Load each Polyel Framework core PHP file to make them available using the class map.
-    if (file_exists($file))
+    if(file_exists($file))
     {
         // Use a green terminal colour. Reset the terminal style at the end
-        echo "\e[32m Loading: " . $file . "\n" . "\e[39m";
+        //echo "\e[32m Loading: " . $file . "\n" . "\e[39m";
 
         /*
          * Each class uses a NS which follows the file path, we need the segmented path to grab the NS of a class.
@@ -112,12 +118,12 @@ foreach ($polyelSourceFiles as $file)
         if($classNamespace[1] === "class" && class_exists($classNamespace[0], false))
         {
             // Class was defined by the autoloader, output message and bypass trying to load the class again...
-            echo "\e[33m     └---> Autoloaded: " . $classNamespace[0] . "\n" . "\e[39m";
+            //echo "\e[33m     └---> Autoloaded: " . $classNamespace[0] . "\n" . "\e[39m";
         }
         else if($classNamespace[1] === "trait" && trait_exists($classNamespace[0], false))
         {
             // Class was defined by the autoloader, output message and bypass trying to load the class again...
-            echo "\e[33m     └---> Autoloaded: " . $classNamespace[0] . "\n" . "\e[39m";
+            //echo "\e[33m     └---> Autoloaded: " . $classNamespace[0] . "\n" . "\e[39m";
         }
         else
         {
@@ -131,14 +137,16 @@ foreach ($polyelSourceFiles as $file)
     }
 }
 
-// Reset terminal colour back to normal.
-echo "\e[39m";
+Polyel::createContainer($coreConsoleServices);
 
-echo "Completed framework file loading\n";
+Polyel::call(\Polyel\Config\Config::class)->load();
 
-/*
- * Create the DIC and pass in an array of core services to be resolved.
- * Core services are loaded from the services.php file and used here.
- */
-echo "Preparing to startup HTTP server\n";
-Polyel::createContainer($coreServices);
+Crypt::setup();
+
+Hash::setup();
+
+Storage::setup();
+
+Element::loadClassElements();
+
+Runtime::enableCoroutine();

@@ -1,0 +1,15 @@
+<?php
+
+namespace Polyel\Console\Commands;
+
+use Polyel\Console\Command;
+
+class {{ CommandClassName }} extends Command
+{
+    public string $description = '';
+
+    public function execute()
+    {
+
+    }
+}

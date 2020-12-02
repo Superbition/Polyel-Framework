@@ -4,13 +4,13 @@ use Polyel\Container\Container;
 
 class Polyel
 {
-    private static $polyelVersion = "";
+    private const version = '0.0.0';
 
     private static $container;
 
     public static function version()
     {
-        return self::$polyelVersion;
+        return self::version;
     }
 
     public static function createContainer($baseClass)
@@ -21,6 +21,11 @@ class Polyel
     public static function resolveClass($classToResolve)
     {
         return self::$container->resolveClass($classToResolve);
+    }
+
+    public static function resolveClassMethod($class, $methodToResolve)
+    {
+        return self::$container->resolveMethodInjection($class, $methodToResolve);
     }
 
     public static function call($requestedClass)
@@ -44,6 +49,13 @@ class Polyel
         $HttpKernel->setup();
 
         return $HttpKernel;
+    }
+
+    public static function newConsoleKernel()
+    {
+        require_once ROOT_DIR . '/app/Console/Kernel.php';
+
+        return self::resolveClass(App\Console\Kernel::class);
     }
 
     public static function resolveMethod($class, $method)
