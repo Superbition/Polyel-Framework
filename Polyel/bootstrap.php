@@ -136,6 +136,9 @@ echo "\e[39m";
 
 echo "Completed framework file loading\n";
 
+echo "Loading the application HTTP kernel\n";
+require_once ROOT_DIR . '/app/Http/Kernel.php';
+
 /*
  * Create the DIC and pass in an array of core services to be resolved.
  * Core services are loaded from the services.php file and used here.
