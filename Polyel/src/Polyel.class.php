@@ -40,9 +40,9 @@ class Polyel
 
     public static function newHttpKernel()
     {
-        $kernelContainer = new Container(Polyel\Http\Kernel::class);
+        $kernelContainer = new Container(App\Http\Kernel::class);
 
-        $HttpKernel = $kernelContainer->get(Polyel\Http\Kernel::class);
+        $HttpKernel = $kernelContainer->get(App\Http\Kernel::class);
 
         $HttpKernel->setContainer($kernelContainer);
 
