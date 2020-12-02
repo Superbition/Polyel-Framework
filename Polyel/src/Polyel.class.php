@@ -6,7 +6,7 @@ class Polyel
 {
     private const version = '0.0.0';
 
-    private static $container;
+    private static Polyel\Container\Container $container;
 
     public static function version()
     {
