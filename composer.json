@@ -1,0 +1,20 @@
+{
+  "name": "Superbition/Polyel_Framework",
+  "description": "Polyel PHP Framework",
+  "homepage": "https://polyel.io/",
+  "minimum-stability": "dev",
+  "license": "Apache-2.0",
+  "authors": [
+    {
+      "name": "Luke Embrey",
+      "email": "luke@superbition.com"
+    },
+    {
+      "name": "Daniel Share",
+      "email": "dan@superbition.com"
+    }
+  ],
+  "require": {
+    "php": "^7.4"
+  }
+}
