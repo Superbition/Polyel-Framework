@@ -11,7 +11,7 @@ class GenerateEncryptionKeyCommand extends Command
 
     public function execute(EncryptionManager $encryptionManager)
     {
-        if(!file_exists(ROOT_DIR . '/config/env/.env'))
+        if(!file_exists(APP_DIR . '/config/env/.env'))
         {
             $this->fatal("Cannot generate encryption key, no .env file exists! \n\n\tPlease create one at: /config/env/.env");
         }
@@ -28,7 +28,7 @@ class GenerateEncryptionKeyCommand extends Command
          */
         $this->writeNewLine('Accessing the .env file');
         $currentKey = env('Encryption.KEY', null);
-        $envFile = parse_ini_file(ROOT_DIR . '/config/env/.env', true);
+        $envFile = parse_ini_file(APP_DIR . '/config/env/.env', true);
 
         if(is_null($currentKey))
         {
@@ -77,7 +77,7 @@ class GenerateEncryptionKeyCommand extends Command
         $iniComments = [];
 
         // Loop through the INI file line by line, checking for comments...
-        $envFile = fopen(ROOT_DIR . '/config/env/.env', 'rb+');
+        $envFile = fopen(APP_DIR . '/config/env/.env', 'rb+');
         while(($line = stream_get_line($envFile, 1024 * 1024, "\n")) !== false)
         {
             // Keep track of newlines before comments, these get added in when a comment is found
@@ -164,7 +164,7 @@ class GenerateEncryptionKeyCommand extends Command
 
     private function saveIniFile(array $iniData)
     {
-        if(!file_exists(ROOT_DIR . '/config/env/.env'))
+        if(!file_exists(APP_DIR . '/config/env/.env'))
         {
             $this->fatal("Cannot save new encryption key, no .env file found!");
         }
@@ -183,13 +183,13 @@ class GenerateEncryptionKeyCommand extends Command
             $newIniFile .= "[$section]\n$sectionKeyValues\n";
         }
 
-        file_put_contents(ROOT_DIR . '/config/env/.env', $newIniFile);
+        file_put_contents(APP_DIR . '/config/env/.env', $newIniFile);
     }
 
     private function reSaveIniComments(array $comments)
     {
         // Convert the .env file into a line by line array
-        $env = file(ROOT_DIR . '/config/env/.env');
+        $env = file(APP_DIR . '/config/env/.env');
 
         // Reverse the array to get the comments in the correct order from top to bottom
         $comments = array_reverse($comments);
@@ -218,6 +218,6 @@ class GenerateEncryptionKeyCommand extends Command
         }
 
         // Finally save the .env file with the comments reinserted
-        file_put_contents(ROOT_DIR . '/config/env/.env', $env);
+        file_put_contents(APP_DIR . '/config/env/.env', $env);
     }
 }

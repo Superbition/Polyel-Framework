@@ -201,14 +201,14 @@ class LocalStorageDriver
             // When the filePath is a single string
             if(!is_array($filePath))
             {
-                unlink(ROOT_DIR . $filePath);
+                unlink(APP_DIR . $filePath);
             }
             else
             {
                 // For when an array of filePaths are passed in for deletion
                 foreach ($filePath as $path)
                 {
-                    unlink(ROOT_DIR . $path);
+                    unlink(APP_DIR . $path);
                 }
             }
         });

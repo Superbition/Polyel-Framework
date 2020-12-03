@@ -6,11 +6,11 @@ class Config
 {
     // Config holds the whole application configuration values
     private $config;
-    private $configDirPath = ROOT_DIR . "/config";
+    private $configDirPath = APP_DIR . "/config";
 
     // env config holds the whole env configuration
     private $envConfig;
-    private $envPath = ROOT_DIR . "/config/env/.env";
+    private $envPath = APP_DIR . "/config/env/.env";
 
     public function __construct()
     {

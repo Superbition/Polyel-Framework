@@ -14,8 +14,8 @@ class CreateElementCommand extends Command
         $elementTemplate = $this->option('--element-template');
 
         $this->writeNewLine('Building View Element stub source and destination file paths');
-        $sourceStub = ROOT_DIR . '/Polyel/src/Console/stubs/Element.stub';
-        $distElement = ROOT_DIR . "/app/View/Elements/$elementName.php";
+        $sourceStub = APP_DIR . '/Polyel/src/Console/stubs/Element.stub';
+        $distElement = APP_DIR . "/app/View/Elements/$elementName.php";
 
         $this->writeNewLine('Generating a new Element class...');
         copy($sourceStub, $distElement);
@@ -26,7 +26,7 @@ class CreateElementCommand extends Command
         if($elementTemplate !== false)
         {
             $this->info('Template element name given, creating template file as well');
-            file_put_contents(ROOT_DIR . "/resources/elements/$elementTemplate.html", '');
+            file_put_contents(APP_DIR . "/resources/elements/$elementTemplate.html", '');
 
             $newElementClass = str_replace('{{ ElementTemplate }}', "'$elementTemplate'", $newElementClass);
         }

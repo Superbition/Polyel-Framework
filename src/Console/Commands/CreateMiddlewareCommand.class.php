@@ -13,8 +13,8 @@ class CreateMiddlewareCommand extends Command
         $middlewareName = $this->argument('middleware-name');
 
         $this->writeNewLine('Building Middleware stub source and destination file paths');
-        $sourceStub = ROOT_DIR . '/Polyel/src/Console/stubs/Middleware.stub';
-        $distMiddleware = ROOT_DIR . "/app/Http/Middleware/$middlewareName.php";
+        $sourceStub = APP_DIR . '/Polyel/src/Console/stubs/Middleware.stub';
+        $distMiddleware = APP_DIR . "/app/Http/Middleware/$middlewareName.php";
 
         $this->writeNewLine('Generating a new Middleware class...');
         copy($sourceStub, $distMiddleware);

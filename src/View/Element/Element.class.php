@@ -7,7 +7,7 @@ use RecursiveDirectoryIterator;
 
 class Element
 {
-    private const ELEMENT_CLASS_DIR = ROOT_DIR . "/app/View/Elements";
+    private const ELEMENT_CLASS_DIR = APP_DIR . "/app/View/Elements";
 
     public function __construct()
     {

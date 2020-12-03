@@ -7,7 +7,7 @@ use RecursiveDirectoryIterator;
 
 class Controller
 {
-    private $controllerDir = __DIR__ . "/../../../app/Http/Controllers/";
+    private $controllerDir = APP_DIR . "/app/Http/Controllers/";
 
     public function __construct()
     {

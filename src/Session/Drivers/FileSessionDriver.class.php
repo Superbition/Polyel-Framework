@@ -7,7 +7,7 @@ use Polyel\Storage\Facade\Storage;
 
 class FileSessionDriver implements SessionDriver
 {
-    private $sessionFileStorage = ROOT_DIR . '/storage/polyel/sessions/';
+    private $sessionFileStorage = APP_DIR . '/storage/polyel/sessions/';
 
     private $jsonEncodeOptions = JSON_INVALID_UTF8_SUBSTITUTE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES;
 
@@ -113,14 +113,14 @@ class FileSessionDriver implements SessionDriver
 
         $sessionData = json_encode($sessionData, $this->jsonEncodeOptions, 1024);
 
-        Storage::access('local', ROOT_DIR . '/storage/polyel/sessions/')->write($sessionID, $sessionData);
+        Storage::access('local', APP_DIR . '/storage/polyel/sessions/')->write($sessionID, $sessionData);
     }
 
     public function saveSessionData($sessionID, $sessionData)
     {
         $sessionData = json_encode($sessionData, $this->jsonEncodeOptions, 1024);
 
-        Storage::access('local', ROOT_DIR . '/storage/polyel/sessions/')->write($sessionID, $sessionData);
+        Storage::access('local', APP_DIR . '/storage/polyel/sessions/')->write($sessionID, $sessionData);
     }
 
     public function getSessionData($sessionID)

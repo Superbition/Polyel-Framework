@@ -53,7 +53,7 @@ class Polyel
 
     public static function newConsoleKernel()
     {
-        require_once ROOT_DIR . '/app/Console/Kernel.php';
+        require_once APP_DIR . '/app/Console/Kernel.php';
 
         return self::resolveClass(App\Console\Kernel::class);
     }

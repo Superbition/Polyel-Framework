@@ -159,7 +159,7 @@ class ResponseBuilder
             $filePath = rtrim($filePath, "/");
 
             // Build up the file path
-            $filePath = ROOT_DIR . "/storage/" . $filePath;
+            $filePath = APP_DIR . "/storage/" . $filePath;
 
             // Perform an early return if the file cannot be found
             if(!file_exists($filePath))

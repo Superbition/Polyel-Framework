@@ -19,7 +19,7 @@ class Element
     // When a new element is created, its data is stored here for rendering later
     private $elementBlockData;
 
-    private $elementTemplateDir = ROOT_DIR . "/resources/elements";
+    private $elementTemplateDir = APP_DIR . "/resources/elements";
 
     public function __construct()
     {

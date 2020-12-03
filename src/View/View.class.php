@@ -9,7 +9,7 @@ class View
 {
     use ViewTools, DisplaysErrors, DisplaysFlashMessages;
 
-    private const RESOURCE_DIR = ROOT_DIR . "/resources";
+    private const RESOURCE_DIR = APP_DIR . "/resources";
 
     // Holds the template name and eventually the file path
     private $resource;
@@ -181,7 +181,7 @@ class View
             $cssLocation = config('view.cssDirectory') . '/' . $cssFilePath . '.css';
 
             // Only include CSS link if the file actually exists
-            if(file_exists(ROOT_DIR . '/public' . $cssLocation))
+            if(file_exists(APP_DIR . '/public' . $cssLocation))
             {
                 $cssLinks .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"${cssLocation}\">";
             }
@@ -203,7 +203,7 @@ class View
             $jsLocation = config('view.jsDirectory') . '/' . $jsFilePath . '.js';
 
             // Only include JS link if the file actually exists
-            if(file_exists(ROOT_DIR . '/public' . $jsLocation))
+            if(file_exists(APP_DIR . '/public' . $jsLocation))
             {
                 $jsLinks .= "<script src=\"${jsLocation}\"></script>";
             }

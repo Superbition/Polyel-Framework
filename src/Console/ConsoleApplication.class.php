@@ -26,7 +26,7 @@ class ConsoleApplication
 
     public function loadCommandsFrom(string $path)
     {
-        require_once ROOT_DIR . $path;
+        require_once APP_DIR . $path;
     }
 
     /**

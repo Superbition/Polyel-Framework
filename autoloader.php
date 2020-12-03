@@ -13,7 +13,7 @@ spl_autoload_register(static function($fullClassNamespace)
         __DIR__ . '/src',
 
         // The application directory
-        __DIR__ . '/../app',
+        APP_DIR . '/app',
 
     ];
 

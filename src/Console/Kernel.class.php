@@ -17,14 +17,14 @@ class Kernel
     {
         $this->console = $console;
         $this->console->loadCommandsFrom('/routing/console.php');
-        $this->console->loadCommandsFrom('/Polyel/src/Console/Commands/console.php');
+        $this->console->loadCommandsFrom('/vendor/superbition/polyel-framework/src/Console/Commands/console.php');
 
         $this->registerInternalcommandActions();
     }
 
     private function defineConsoleCommands(string $directory)
     {
-        $consoleDir = new RecursiveDirectoryIterator(ROOT_DIR . $directory);
+        $consoleDir = new RecursiveDirectoryIterator(APP_DIR . $directory);
         $consoleDir = new RecursiveIteratorIterator($consoleDir);
 
         foreach($consoleDir as $commandFile)
@@ -41,7 +41,7 @@ class Kernel
     public function process(Input $input)
     {
         $this->defineConsoleCommands('/app/Console/Commands/');
-        $this->defineConsoleCommands('/Polyel/src/Console/Commands/');
+        $this->defineConsoleCommands('/vendor/superbition/polyel-framework/src/Console/Commands/');
 
         $input->parseCommandInput();
 

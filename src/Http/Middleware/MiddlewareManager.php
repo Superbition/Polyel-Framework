@@ -10,7 +10,7 @@ use RecursiveDirectoryIterator;
 
 class MiddlewareManager
 {
-    private $middlewareDirectory = ROOT_DIR . "/app/Http/Middleware/";
+    private $middlewareDirectory = APP_DIR . "/app/Http/Middleware/";
 
     // Holds all registered Middlewares, in the format of [requestMethod][uri] = middleware
     private $middlewares = [];
