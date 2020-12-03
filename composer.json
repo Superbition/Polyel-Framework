@@ -1,5 +1,6 @@
 {
   "name": "superbition/polyel-framework",
+  "type": "library",
   "description": "Polyel PHP Framework",
   "homepage": "https://polyel.io/",
   "minimum-stability": "dev",
