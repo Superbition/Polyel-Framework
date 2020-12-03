@@ -4,6 +4,10 @@
   "homepage": "https://polyel.io/",
   "minimum-stability": "dev",
   "license": "Apache-2.0",
+  "support": {
+    "issues": "https://github.com/Superbition/Polyel-Framework/issues",
+    "source": "https://github.com/Superbition/Polyel-Framework"
+  },
   "authors": [
     {
       "name": "Luke Embrey",
