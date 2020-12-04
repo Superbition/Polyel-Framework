@@ -1,5 +1,18 @@
 <?php
 
+// Generated using https://www.ascii-art-generator.org/
+echo "
+     _____      _            _          ___   ___   __ 
+    |  __ \    | |          | |        / _ \ |__ \ /_ |
+    | |__) |__ | |_   _  ___| | __   _| | | |   ) | | |
+    |  ___/ _ \| | | | |/ _ \ | \ \ / / | | |  / /  | |
+    | |  | (_) | | |_| |  __/ |  \ V /| |_| | / /_ _| |
+    |_|   \___/|_|\__, |\___|_|   \_/  \___(_)____(_)_|
+                   __/ |                               
+                  |___/ 
+                                                 
+";
+
 echo "Loading the Polyel class auto loader\n";
 require "autoloader.php";
 
