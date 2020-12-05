@@ -124,7 +124,7 @@ class SessionManager
             $domain = config('session.domain'),
             $secure = config('session.secure'),
             $httpOnly = config('session.httpOnly'),
-            $sameSite = 'None',
+            $sameSite = 'Strict',
         ];
 
         $response->queueCookie(...$sessionCookie);
