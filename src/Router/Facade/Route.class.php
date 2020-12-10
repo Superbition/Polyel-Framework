@@ -11,7 +11,6 @@ use Closure;
  * @method static put($route, $action)
  * @method static patch($route, $action)
  * @method static delete($route, $action)
- * @method static prepend($filePath, $contents)
  * @method static group($attributes, Closure $routes)
  * @method static addAuthRoutes()
  */
