@@ -38,6 +38,10 @@ The planned development feature list for the Polyel framework:
 
 Join the [PHPNexus.io](https://PHPNexus.io) community and come talk about Polyel, PHP or Swoole.
 
+# Versioning
+
+The Polyel project is following [Semantic Versioning 2.0](https://semver.org/)
+
 # Licence
 
 Polyel uses the [Apache License Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
