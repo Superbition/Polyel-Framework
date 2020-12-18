@@ -161,7 +161,33 @@ class Router
         }
 
         // Create the CSRF token if it is missing in the clients session data
-        $HttpKernel->session->createCsrfToken();
+        $csrfToken = $HttpKernel->session->createCsrfToken();
+
+        // False means that a token has already been created and queued as a cookie before
+        if($csrfToken !== false)
+        {
+            // Use the same lifetime as the session cookie
+            $csrfTokenLifetime = config('session.lifetime');
+
+            if($csrfTokenLifetime !== 0 && is_numeric($csrfTokenLifetime))
+            {
+                $csrfTokenLifetime *= 60;
+            }
+
+            $csrfTokenCookie = [
+                $name = config('session.xsrfCookieName'),
+                $value = $csrfToken,
+                $expire = $csrfTokenLifetime,
+                $path = config('session.cookiePath'),
+                $domain = config('session.domain'),
+                $secure = config('session.secure'),
+                $httpOnly = false,
+                $sameSite = 'Strict',
+            ];
+
+            // The CSRF cookie can be used to allow JavaScript requests to make valid HTTP requests with a CSRF token
+            $HttpKernel->response->queueCookie(...$csrfTokenCookie);
+        }
     }
 
     private function addRoute($requestMethod, $route, $action)
