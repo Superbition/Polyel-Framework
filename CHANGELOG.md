@@ -1,5 +1,25 @@
 # Release Notes for the Polyel Framework
 
+## [v0.4.0 (2020-12-18)](https://github.com/Superbition/Polyel-Framework/releases/tag/v0.4.0)
+
+### Added
+
+- Polyel now stores the generated CSRF token in a cookie so that JavaScript can use it to make valid
+HTTP requests. The previous recommended way was to use a HTML meta tag, which is still possible but 
+having a cookie makes this process much easier
+- Added note on the README that Polyel is following SemVar versioning
+- Composer requirement for Swoole version `^4.*`
+
+### Changed
+
+- The method `createCsrfToken` from the Session class will now return the newly generated CSRF token if one has not
+already been created, if a token has already been created, `false` is returned instead.
+
+### Fixed
+
+- Incorrect PHPDoc method removed from the Route Facade, it had a method called `prepend` which is not
+available in that class
+
 ## [v0.3.0 (2020-12-05)](https://github.com/Superbition/Polyel-Framework/releases/tag/v0.3.0)
 
 ### Added
