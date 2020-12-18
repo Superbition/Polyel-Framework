@@ -360,6 +360,10 @@ class Session
             $csrfToken = $this->sessionManager->generateCsrfToken();
 
             $this->store('CSRF-TOKEN', $csrfToken);
+
+            return $csrfToken;
         }
+
+        return false;
     }
 }
