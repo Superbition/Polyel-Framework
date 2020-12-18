@@ -1,5 +1,11 @@
 # Release Notes for the Polyel Framework
 
+## [v0.4.1 (2020-12-18)](https://github.com/Superbition/Polyel-Framework/releases/tag/v0.4.1)
+
+### Fixed
+
+- Fix invalid version constraint format for ext-swoole in the `composer.json` file
+
 ## [v0.4.0 (2020-12-18)](https://github.com/Superbition/Polyel-Framework/releases/tag/v0.4.0)
 
 ### Added
