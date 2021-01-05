@@ -90,6 +90,7 @@ class Kernel
             'create:middleware' => Commands\CreateMiddlewareCommand::class,
             'create:element' => Commands\CreateElementCommand::class,
             'key:generate' => Commands\GenerateEncryptionKeyCommand::class,
+            'flush:sessions' => Commands\FlushSessionsCommand::class,
 
         ]);
     }
