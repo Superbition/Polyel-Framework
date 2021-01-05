@@ -20,3 +20,5 @@ Console::command('create:element {element-name : The name of the new view elemen
                                          {--element-template : Set to create the element view template file as well}');
 
 Console::command('key:generate');
+
+Console::command('flush:sessions');
