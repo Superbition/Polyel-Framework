@@ -98,9 +98,9 @@ class Server
             echo "\n";
 
             echo "------------------------------------------------------------------------\n";
-            echo " Polyel Version: " . Polyel::version() . "\n";
+            echo " Polyel: " . Polyel::version() . "\n";
             echo " Swoole: " . swoole_version() . "\n";
-            echo " PHP Version: " . phpversion() . "\n";
+            echo " PHP: " . phpversion() . "\n";
             echo " \e[36mPolyel HTTP server started at http://" .
                 $this->config->get("server.serverIP") . ":" .
                 $this->config->get("server.serverPort") . "\e[30m\e[0m";
