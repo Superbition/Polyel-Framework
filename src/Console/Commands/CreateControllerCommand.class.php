@@ -14,7 +14,7 @@ class CreateControllerCommand extends Command
         $controllerActionName = $this->option('--action');
 
         $this->writeNewLine('Building Controller stub source and destination file paths');
-        $sourceStub = APP_DIR . '/Polyel/src/Console/stubs/Controller.stub';
+        $sourceStub = APP_DIR . "/$this->vendorStubPath/Controller.stub";
         $distController = APP_DIR . "/app/Http/Controllers/$controllerName.php";
 
         $this->writeNewLine('Generating a new Controller...');
