@@ -98,6 +98,7 @@ class Server
             echo "\n";
 
             echo "------------------------------------------------------------------------\n";
+            echo " Polyel Version: " . Polyel::version() . "\n";
             echo " Swoole: " . swoole_version() . "\n";
             echo " PHP Version: " . phpversion() . "\n";
             echo " \e[36mPolyel HTTP server started at http://" .
