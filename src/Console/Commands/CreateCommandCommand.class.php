@@ -13,7 +13,7 @@ class CreateCommandCommand extends Command
         $commandName = $this->argument('command-name');
 
         $this->writeNewLine('Building Command stub source and destination file paths');
-        $sourceStub = APP_DIR . '/Polyel/src/Console/stubs/Command.stub';
+        $sourceStub = APP_DIR . "/$this->vendorStubPath/Command.stub";
         $distCommand = APP_DIR . "/app/Console/Commands/$commandName.php";
 
         $this->writeNewLine('Generating a new Command...');

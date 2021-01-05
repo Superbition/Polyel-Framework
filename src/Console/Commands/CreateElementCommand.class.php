@@ -14,7 +14,7 @@ class CreateElementCommand extends Command
         $elementTemplate = $this->option('--element-template');
 
         $this->writeNewLine('Building View Element stub source and destination file paths');
-        $sourceStub = APP_DIR . '/Polyel/src/Console/stubs/Element.stub';
+        $sourceStub = APP_DIR . "/$this->vendorStubPath/Element.stub";
         $distElement = APP_DIR . "/app/View/Elements/$elementName.php";
 
         $this->writeNewLine('Generating a new Element class...');
