@@ -12,6 +12,8 @@ class Command
 
     private int $verbosityLevel = 0;
 
+    protected string $vendorStubPath = '/vendor/superbition/Polyel-Framework/src/Console/stubs';
+
     public function __construct()
     {
 
