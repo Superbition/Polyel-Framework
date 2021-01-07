@@ -8,4 +8,6 @@ abstract class ServiceSupplier
     {
 
     }
+
+    abstract public function register();
 }
