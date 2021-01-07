@@ -10,33 +10,12 @@ use RecursiveDirectoryIterator;
 
 class MiddlewareManager
 {
-    private $middlewareDirectory = APP_DIR . "/app/Http/Middleware/";
-
     // Holds all registered Middlewares, in the format of [requestMethod][uri] = middleware
     private $middlewares = [];
 
     public function __construct()
     {
 
-    }
-
-    public function loadAllMiddleware()
-    {
-        $middlewareDir = new RecursiveDirectoryIterator($this->middlewareDirectory);
-        $pathIterator = new RecursiveIteratorIterator($middlewareDir);
-
-        // Search through the Middleware directory for .php files to preload as Middleware
-        foreach($pathIterator as $middleware)
-        {
-            $middlewareFilePath = $middleware->getPathname();
-
-            // Only match .php files
-            if(preg_match('/^.+\.php$/i', $middlewareFilePath))
-            {
-                // Make the class available by declaring it
-                require_once $middlewareFilePath;
-            }
-        }
     }
 
     public function register($requestMethod, $uri, $middleware)

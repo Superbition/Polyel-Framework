@@ -14,6 +14,7 @@ use Polyel\Controller\Controller;
 use Polyel\Session\SessionManager;
 use Polyel\Encryption\Facade\Crypt;
 use Polyel\Database\DatabaseManager;
+use Polyel\System\ApplicationLoader;
 use Swoole\HTTP\Server as SwooleHTTPServer;
 use Polyel\Http\Middleware\MiddlewareManager;
 
@@ -28,23 +29,19 @@ class Server
     // The Route instance from the container
     private $router;
 
-    // The Controller instance from the container
-    private $controller;
-
-    private $middleware;
+    private $applicationLoader;
 
     private $databaseManager;
   
     private $sessionManager;
 
-    public function __construct(Config $config, Router $router, Controller $controller, MiddlewareManager $middleware, DatabaseManager $databaseManager, SessionManager $sessionManager)
+    public function __construct(Config $config, Router $router, ApplicationLoader $applicationLoader, DatabaseManager $databaseManager, SessionManager $sessionManager)
     {
         cli_set_process_title("Polyel-HTTP-Server");
 
         $this->config = $config;
         $this->router = $router;
-        $this->controller = $controller;
-        $this->middleware = $middleware;
+        $this->applicationLoader = $applicationLoader;
         $this->databaseManager = $databaseManager;
         $this->sessionManager = $sessionManager;
     }
@@ -53,11 +50,9 @@ class Server
     {
         $this->config->load();
 
-        $this->middleware->loadAllMiddleware();
+        $this->applicationLoader->load();
 
         $this->router->loadRoutes();
-
-        $this->controller->loadAllControllers();
 
         $this->sessionManager->setDriver(config('session.driver'));
 
@@ -66,8 +61,6 @@ class Server
         Hash::setup();
 
         Storage::setup();
-
-        Element::loadClassElements();
 
         Runtime::enableCoroutine();
 
