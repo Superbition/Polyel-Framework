@@ -9,14 +9,11 @@ use Polyel\Config\Config;
 use Polyel\Storage\Storage;
 use Swoole\Coroutine as Swoole;
 use Polyel\Hashing\Facade\Hash;
-use Polyel\View\Element\Element;
-use Polyel\Controller\Controller;
 use Polyel\Session\SessionManager;
 use Polyel\Encryption\Facade\Crypt;
 use Polyel\Database\DatabaseManager;
 use Polyel\System\ApplicationLoader;
 use Swoole\HTTP\Server as SwooleHTTPServer;
-use Polyel\Http\Middleware\MiddlewareManager;
 
 class Server
 {
