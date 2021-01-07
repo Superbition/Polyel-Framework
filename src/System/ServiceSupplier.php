@@ -2,7 +2,7 @@
 
 namespace Polyel\System;
 
-class ServiceSupplier
+abstract class ServiceSupplier
 {
     public function __construct()
     {
