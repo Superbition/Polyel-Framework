@@ -6,7 +6,11 @@ use Closure;
 
 abstract class ServiceSupplier
 {
-    private array $registeredService;
+    private array $binds = [];
+
+    private array $requestSingletons = [];
+
+    private array $serverSingletons = [];
 
     public function __construct()
     {
@@ -17,28 +21,16 @@ abstract class ServiceSupplier
 
     protected function registerBind(string $classToBind, Closure $classServiceSupplier)
     {
-        $this->registeredService = [
-            'type' => 'bind',
-            'class' => $classToBind,
-            'supplier' => $classServiceSupplier
-        ];
+        $this->binds[] = ['class' => $classToBind, 'supplier' => $classServiceSupplier];
     }
 
     protected function registerRequestSingleton(string $requestSingletonClass, Closure $requestSingletonSupplier)
     {
-        $this->registeredService = [
-            'type' => 'requestSingleton',
-            'class' => $requestSingletonClass,
-            'supplier' => $requestSingletonSupplier
-        ];
+        $this->requestSingletons[] = ['class' => $requestSingletonClass, 'supplier' => $requestSingletonSupplier];
     }
 
     protected function registerServerSingleton(string $serverSingletonClass, Closure $serverSingletonSupplier)
     {
-        $this->registeredService = [
-            'type' => 'serverSingleton',
-            'class' => $serverSingletonClass,
-            'supplier' => $serverSingletonSupplier
-        ];
+        $this->serverSingletons[] = ['class' => $serverSingletonClass, 'supplier' => $serverSingletonSupplier];
     }
 }
