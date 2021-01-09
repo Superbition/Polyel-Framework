@@ -8,8 +8,14 @@ use ReflectionFunction;
 
 class Container
 {
+    use RegistersServices;
+
     // Holds all the registered class instances
     private $container = [];
+
+    private array $binds = [];
+
+    private array $singletons = [];
 
     // Can be passed an array of starting classes to resolve and be placed in the container
     public function __construct($classesToResolve = null)
