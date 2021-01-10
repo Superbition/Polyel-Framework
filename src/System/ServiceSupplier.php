@@ -8,9 +8,9 @@ abstract class ServiceSupplier
 {
     private array $binds = [];
 
-    private array $requestSingletons = [];
-
     private array $serverSingletons = [];
+
+    private array $requestSingletons = [];
 
     public function __construct()
     {
