@@ -21,24 +21,22 @@ abstract class ServiceSupplier
 
     abstract public function register();
 
-    public function defer()
-    {
-        if(!is_null($this->lastAddedSingletonType))
-        {
-            if($this->lastAddedSingletonType === 'server')
-            {
-                $this->serverSingletons[array_key_last($this->serverSingletons)]['defer'] = true;
-            }
-            else if($this->lastAddedSingletonType === 'request')
-            {
-                $this->requestSingletons[array_key_last($this->requestSingletons)]['defer'] = true;
-            }
-        }
-    }
-
     protected function registerBind(string $classToBind, Closure $classServiceSupplier)
     {
         $this->binds[] = ['class' => $classToBind, 'closure' => $classServiceSupplier];
+    }
+
+    protected function registerServerSingleton(string $serverSingletonClass, Closure $serverSingletonSupplier)
+    {
+        $this->serverSingletons[] = [
+            'class' => $serverSingletonClass,
+            'closure' => $serverSingletonSupplier,
+            'defer' => false
+        ];
+
+        $this->lastAddedSingletonType = 'server';
+
+        return $this;
     }
 
     protected function registerRequestSingleton(string $requestSingletonClass, Closure $requestSingletonSupplier)
@@ -54,17 +52,19 @@ abstract class ServiceSupplier
         return $this;
     }
 
-    protected function registerServerSingleton(string $serverSingletonClass, Closure $serverSingletonSupplier)
+    public function defer()
     {
-        $this->serverSingletons[] = [
-            'class' => $serverSingletonClass,
-            'closure' => $serverSingletonSupplier,
-            'defer' => false
-        ];
-
-        $this->lastAddedSingletonType = 'server';
-
-        return $this;
+        if(!is_null($this->lastAddedSingletonType))
+        {
+            if($this->lastAddedSingletonType === 'server')
+            {
+                $this->serverSingletons[array_key_last($this->serverSingletons)]['defer'] = true;
+            }
+            else if($this->lastAddedSingletonType === 'request')
+            {
+                $this->requestSingletons[array_key_last($this->requestSingletons)]['defer'] = true;
+            }
+        }
     }
 
     public function getServicesToRegister()
