@@ -12,8 +12,6 @@ abstract class ServiceSupplier
 
     private array $serverSingletons = [];
 
-    private string $lastAddedSingletonType;
-
     public function __construct()
     {
 
@@ -30,11 +28,8 @@ abstract class ServiceSupplier
     {
         $this->serverSingletons[] = [
             'class' => $serverSingletonClass,
-            'closure' => $serverSingletonSupplier,
-            'defer' => false
+            'closure' => $serverSingletonSupplier
         ];
-
-        $this->lastAddedSingletonType = 'server';
 
         return $this;
     }
@@ -47,23 +42,14 @@ abstract class ServiceSupplier
             'defer' => false
         ];
 
-        $this->lastAddedSingletonType = 'request';
-
         return $this;
     }
 
     public function defer()
     {
-        if(!is_null($this->lastAddedSingletonType))
+        if(!empty($this->requestSingletons))
         {
-            if($this->lastAddedSingletonType === 'server')
-            {
-                $this->serverSingletons[array_key_last($this->serverSingletons)]['defer'] = true;
-            }
-            else if($this->lastAddedSingletonType === 'request')
-            {
-                $this->requestSingletons[array_key_last($this->requestSingletons)]['defer'] = true;
-            }
+            $this->requestSingletons[array_key_last($this->requestSingletons)]['defer'] = true;
         }
     }
 
