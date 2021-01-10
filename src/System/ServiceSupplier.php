@@ -19,7 +19,7 @@ abstract class ServiceSupplier
 
     abstract public function register();
 
-    protected function registerBind(string $classToBind, Closure $classServiceSupplier)
+    protected function bind(string $classToBind, Closure $classServiceSupplier)
     {
         $this->binds[] = ['class' => $classToBind, 'closure' => $classServiceSupplier];
     }
