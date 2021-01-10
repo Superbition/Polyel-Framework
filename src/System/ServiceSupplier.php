@@ -66,4 +66,30 @@ abstract class ServiceSupplier
 
         return $this;
     }
+
+    public function getServicesToRegister()
+    {
+        $registeredServices = [
+            'binds' => [],
+            'serverSingletons' => [],
+            'requestSingletons' => []
+        ];
+
+        if(!empty($this->binds))
+        {
+            $registeredServices['binds'] = $this->binds;
+        }
+
+        if(!empty($this->serverSingletons))
+        {
+            $registeredServices['serverSingletons'] = $this->serverSingletons;
+        }
+
+        if(!empty($this->requestSingletons))
+        {
+            $registeredServices['requestSingletons'] = $this->requestSingletons;
+        }
+
+        return $registeredServices;
+    }
 }
