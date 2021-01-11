@@ -279,16 +279,35 @@ class Container
         return false;
     }
 
-    // Used to retrieve class instances from the container.
+    /*
+     * Used to retrieve class instances from the container but
+     * will also check if the requested class is registered as a
+     * bind or singleton object first before trying to retrieve
+     * the class from the container.
+     */
     public function get($className)
     {
+        // Check if the requested class is a bind object...
+        if($resolvedBind = $this->resolvableBindObject($className))
+        {
+            // A bind means the instance is recreated every time, so we return a new instance
+            return $resolvedBind;
+        }
+
+        // Check if the requested class is listed as a deferred singleton...
+        if($resolvedSingleton = $this->resolvableDeferredSingletonObject($className))
+        {
+            // Return a resolved singleton because it was defined as deferred and is now stored within the container
+            return $resolvedSingleton;
+        }
+
         // Return a class instance if it exists inside the container
         if(array_key_exists($className, $this->container))
         {
             return $this->container[$className];
         }
 
-        // For when the requested class does not exist inside the container...
+        // For when the requested class does not exist inside the container or cannot be resolved properly...
         return null;
     }
 
