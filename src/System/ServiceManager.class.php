@@ -6,9 +6,9 @@ use Polyel;
 
 class ServiceManager
 {
-    private array $registeredBinds;
+    private array $binds;
 
-    private array $registeredRequestSingletons;
+    private array $localSingletons;
 
     public function __construct()
     {
@@ -36,23 +36,23 @@ class ServiceManager
             Polyel::registerBindService($bindService['class'], $bindService['closure']);
         }
 
-        $this->registeredBinds = $registeredServices['binds'];
+        $this->binds = $registeredServices['binds'];
 
         foreach($registeredServices['globalSingletons'] as $serverSingleton)
         {
             Polyel::registerSingletonService($serverSingleton['class'], $serverSingleton['closure']);
         }
 
-        $this->registeredRequestSingletons = $registeredServices['localSingletons'];
+        $this->localSingletons = $registeredServices['localSingletons'];
     }
 
-    public function getRegisteredBinds()
+    public function getBinds()
     {
-        return $this->registeredBinds;
+        return $this->binds;
     }
 
-    public function getRegisteredRequestSingletons()
+    public function getLocalSingletons()
     {
-        return $this->registeredRequestSingletons;
+        return $this->localSingletons;
     }
 }
