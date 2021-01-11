@@ -173,7 +173,7 @@ class Container
                     $methodDependency = $this->get($methodDependencyName);
 
                     // Sometimes the method param dependency might not exist yet, try to resolve it...
-                    if(!isset($methodDependency))
+                    if(is_null($methodDependency))
                     {
                         // Try to resolve a class that may not have been initiated
                         $this->checkForDependencies($methodDependencyName);
@@ -219,7 +219,7 @@ class Container
                 $closureDependency = $this->get($closureDependencyName);
 
                 // Sometimes the Closure param dependency might not exist yet, try to resolve it...
-                if(!isset($closureDependency))
+                if(is_null($closureDependency))
                 {
                     // Try to resolve a class that may not have been initiated
                     $this->checkForDependencies($closureDependencyName);
