@@ -18,6 +18,16 @@ class Polyel
         self::$container = new Container($baseClass);
     }
 
+    public static function registerBindService(string $class, Closure $service)
+    {
+        self::$container->bind($class, $service);
+    }
+
+    public static function registerSingletonService(string $class, Closure $service)
+    {
+        self::$container->singleton($class, $service, false, true);
+    }
+
     public static function resolveClass($classToResolve)
     {
         return self::$container->resolveClass($classToResolve);
