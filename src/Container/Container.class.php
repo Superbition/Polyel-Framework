@@ -11,7 +11,7 @@ class Container
     use RegistersServices;
 
     // Holds all the registered class instances
-    private $container = [];
+    private array $container = [];
 
     private array $binds = [];
 
