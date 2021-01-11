@@ -20,6 +20,29 @@ class ApplicationLoader
         $this->loadControllers();
     }
 
+    public function loadOnly(array $inclusions)
+    {
+        if(in_array('elements', $inclusions, true))
+        {
+            $this->loadElementLogicClasses();
+        }
+
+        if(in_array('services', $inclusions, true))
+        {
+            $this->loadServices();
+        }
+
+        if(in_array('middleware', $inclusions, true))
+        {
+            $this->loadMiddleware();
+        }
+
+        if(in_array('controllers', $inclusions, true))
+        {
+            $this->loadControllers();
+        }
+    }
+
     private function loadDirectory($directory)
     {
         $recursiveDirectory = new RecursiveDirectoryIterator($directory);
