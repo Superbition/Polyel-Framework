@@ -13,10 +13,13 @@ class Container
     // Holds all the registered class instances
     private array $container = [];
 
+    // Services which are defined as binds, allow the creation of new objects each time
     private array $binds = [];
 
+    // Services which won't be defined a new instance until they are requested from the container
     private array $deferredSingletons = [];
 
+    // Objects which can be shared outside the container, mainly so other containers can use these objects
     private array $shareableObjects = [];
 
     // Can be passed an array of starting classes to resolve and be placed in the container
