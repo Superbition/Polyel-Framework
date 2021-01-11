@@ -22,9 +22,11 @@ trait RegistersServices
      * Register a class as a singleton to the container, meaning a class is
      * declared and is persistent across a the lifetime of the container.
      * A singleton can also be set to be deferred and only declared when it
-     * is first used before storing it in the container.
+     * is first used before storing it in the container. Also Keep a list of
+     * objects which have been defined as shareable, meaning they can be shared
+     * with another container.
      */
-    public function singleton(string $singletonClass, Closure $singletonServiceSupplier, $defer = false)
+    public function singleton(string $singletonClass, Closure $singletonServiceSupplier, $defer = false, $shareable = false)
     {
         if($defer)
         {
@@ -33,6 +35,11 @@ trait RegistersServices
         else
         {
             $this->container[$singletonClass] = $singletonServiceSupplier($this);
+        }
+
+        if($shareable)
+        {
+            $this->shareableObjects[] = $singletonClass;
         }
     }
 }

@@ -17,6 +17,8 @@ class Container
 
     private array $deferredSingletons = [];
 
+    private array $shareableObjects = [];
+
     // Can be passed an array of starting classes to resolve and be placed in the container
     public function __construct($classesToResolve = null, $binds = [], $singletons = [], $loadableObjects = [])
     {
@@ -359,6 +361,29 @@ class Container
 
         // For when the requested class does not exist inside the container or cannot be resolved properly...
         return null;
+    }
+
+    /*
+     * Return an array of key value pairs of sharable objects
+     * from the container where a singleton has been defined as
+     * 'sharable'. This method is used to get a list of objects
+     * where they are apart of a service and have been allowed to
+     * be shared, meaning they can be used with another container
+     * instance, this method enables access to those 'sharable'
+     * objects.
+     */
+    public function getShareableObjects()
+    {
+        $sharableObjects = [];
+
+        // A list of class names which are allowed to be shared are stored in $shareableObjects
+        foreach($this->shareableObjects as $persistentObject)
+        {
+            // Get the sharable object from the container, which would be a ref to the original object
+            $sharableObjects[$persistentObject] = $this->container[$persistentObject];
+        }
+
+        return $sharableObjects;
     }
 
     // Used to resolve and create a new class without storing it inside the container
