@@ -235,6 +235,50 @@ class Container
         return $closureDependencyList;
     }
 
+    /*
+     * Used to check if a requested class is a resolvable
+     * bind object. The class is resolved if it is registered
+     * as a bind object and returned.
+     */
+    private function resolvableBindObject(string $classToResolve)
+    {
+        if(isset($this->binds[$classToResolve]))
+        {
+            // Call the bind objects closure to resolve its instance
+            return $this->binds[$classToResolve]($this);
+        }
+
+        // No, is not a bind object
+        return false;
+    }
+
+    /*
+     * Used to check if the requested class is a resolvable
+     * singleton object that has been defined as deferred. The
+     * class is resolved from the singleton closure, removed
+     * from the list of singletons and returned. Also store the
+     * resolved singleton inside the container.
+     */
+    private function resolvableDeferredSingletonObject(string $classToResolve)
+    {
+        if(isset($this->singletons[$classToResolve]))
+        {
+            // Call the registered closure to resolve the singleton and its instance
+            $resolvedSingleton = $this->singletons[$classToResolve]($this);
+
+            // Because we have resolved the object, it doesn't need to be stored anymore
+            unset($this->singletons[$classToResolve]);
+
+            // The resolved singleton is now stored inside the container
+            $this->container[$classToResolve] = $resolvedSingleton;
+
+            return $resolvedSingleton;
+        }
+
+        // No, is not a singleton object
+        return false;
+    }
+
     // Used to retrieve class instances from the container.
     public function get($className)
     {
