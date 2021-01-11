@@ -18,7 +18,7 @@ class Container
     private array $singletons = [];
 
     // Can be passed an array of starting classes to resolve and be placed in the container
-    public function __construct($classesToResolve = null, $binds = [], $singletons = [])
+    public function __construct($classesToResolve = null, $binds = [], $singletons = [], $loadableObjects = [])
     {
         /*
          * Register any starting objects defined as a bind so
@@ -30,6 +30,23 @@ class Container
             foreach($binds as $bind)
             {
                 $this->bind($bind['class'], $bind['closure']);
+            }
+        }
+
+        /*
+         * If already defined objects have been passed in through the constructor, load
+         * them into the container so that they can be used if requested. This allows the
+         * container to start with pre defined objects that have been declared outside
+         * the container.
+         */
+        if(!empty($loadableObjects))
+        {
+            foreach($loadableObjects as $className => $loadableObject)
+            {
+                if(is_object($loadableObject))
+                {
+                    $this->container[$className] = $loadableObject;
+                }
             }
         }
 
