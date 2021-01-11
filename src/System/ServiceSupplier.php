@@ -8,9 +8,7 @@ abstract class ServiceSupplier
 {
     private array $binds = [];
 
-    private array $serverSingletons = [];
-
-    private array $requestSingletons = [];
+    private array $singletons = [];
 
     public function __construct()
     {
@@ -24,32 +22,31 @@ abstract class ServiceSupplier
         $this->binds[] = ['class' => $classToBind, 'closure' => $classServiceSupplier];
     }
 
-    protected function registerServerSingleton(string $serverSingletonClass, Closure $serverSingletonSupplier)
+    protected function singleton(string $serverSingletonClass, Closure $serverSingletonSupplier)
     {
-        $this->serverSingletons[] = [
+        $this->singletons[] = [
             'class' => $serverSingletonClass,
-            'closure' => $serverSingletonSupplier
-        ];
-
-        return $this;
-    }
-
-    protected function registerRequestSingleton(string $requestSingletonClass, Closure $requestSingletonSupplier)
-    {
-        $this->requestSingletons[] = [
-            'class' => $requestSingletonClass,
-            'closure' => $requestSingletonSupplier,
+            'closure' => $serverSingletonSupplier,
+            'scope' => 'local',
             'defer' => false
         ];
 
         return $this;
     }
 
+    public function global()
+    {
+        if(!empty($this->singletons))
+        {
+            $this->singletons[array_key_last($this->singletons)]['scope'] = 'global';
+        }
+    }
+
     public function defer()
     {
-        if(!empty($this->requestSingletons))
+        if(!empty($this->singletons))
         {
-            $this->requestSingletons[array_key_last($this->requestSingletons)]['defer'] = true;
+            $this->singletons[array_key_last($this->singletons)]['defer'] = true;
         }
     }
 
@@ -57,8 +54,8 @@ abstract class ServiceSupplier
     {
         $registeredServices = [
             'binds' => [],
-            'serverSingletons' => [],
-            'requestSingletons' => []
+            'globalSingletons' => [],
+            'localSingletons' => []
         ];
 
         if(!empty($this->binds))
@@ -66,14 +63,16 @@ abstract class ServiceSupplier
             $registeredServices['binds'] = $this->binds;
         }
 
-        if(!empty($this->serverSingletons))
+        foreach($this->singletons as $singleton)
         {
-            $registeredServices['serverSingletons'] = $this->serverSingletons;
-        }
-
-        if(!empty($this->requestSingletons))
-        {
-            $registeredServices['requestSingletons'] = $this->requestSingletons;
+            if($singleton['scope'] === 'global')
+            {
+                $registeredServices['globalSingletons'][] = $singleton;
+            }
+            else
+            {
+                $registeredServices['localSingletons'][] = $singleton;
+            }
         }
 
         return $registeredServices;
