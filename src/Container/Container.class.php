@@ -134,6 +134,13 @@ class Container
     // Public facing function to externally resolve a class
     public function resolveClass($classToResolve)
     {
+        // Calling get here checks if the requested class is a bind or singleton object
+        if($class = $this->get($classToResolve))
+        {
+            // Either a class is resolved from a bind or singleton or is already inside the container...
+            return $class;
+        }
+
         $this->checkForDependencies($classToResolve);
 
         return $this->get($classToResolve);
