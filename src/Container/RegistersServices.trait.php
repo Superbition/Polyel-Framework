@@ -3,6 +3,7 @@
 namespace Polyel\Container;
 
 use Closure;
+use RuntimeException;
 
 trait RegistersServices
 {
@@ -39,7 +40,21 @@ trait RegistersServices
 
         if($shareable)
         {
-            $this->shareableObjects[] = $singletonClass;
+            /*
+             * Deferred singletons can not be defined as sharable because
+             * it makes it difficult to share a closure which resolves a
+             * class because then we don't really know where it came from.
+             * Plus sharable objects should really only be persistent
+             * indefinitely rather than a per "session" use case.
+             */
+            if($defer === false)
+            {
+                $this->shareableObjects[] = $singletonClass;
+            }
+            else
+            {
+                throw new RuntimeException("Cannot define $singletonClass as sharable and deferred at the same time!");
+            }
         }
     }
 }
