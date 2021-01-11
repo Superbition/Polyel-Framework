@@ -15,7 +15,7 @@ class Container
 
     private array $binds = [];
 
-    private array $singletons = [];
+    private array $deferredSingletons = [];
 
     // Can be passed an array of starting classes to resolve and be placed in the container
     public function __construct($classesToResolve = null, $binds = [], $singletons = [], $loadableObjects = [])
@@ -311,13 +311,13 @@ class Container
      */
     private function resolvableDeferredSingletonObject(string $classToResolve)
     {
-        if(isset($this->singletons[$classToResolve]))
+        if(isset($this->deferredSingletons[$classToResolve]))
         {
             // Call the registered closure to resolve the singleton and its instance
-            $resolvedSingleton = $this->singletons[$classToResolve]($this);
+            $resolvedSingleton = $this->deferredSingletons[$classToResolve]($this);
 
             // Because we have resolved the object, it doesn't need to be stored anymore
-            unset($this->singletons[$classToResolve]);
+            unset($this->deferredSingletons[$classToResolve]);
 
             // The resolved singleton is now stored inside the container
             $this->container[$classToResolve] = $resolvedSingleton;

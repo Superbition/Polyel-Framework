@@ -28,7 +28,7 @@ trait RegistersServices
     {
         if($defer)
         {
-            $this->singletons[$singletonClass] = $singletonServiceSupplier;
+            $this->deferredSingletons[$singletonClass] = $singletonServiceSupplier;
         }
         else
         {
