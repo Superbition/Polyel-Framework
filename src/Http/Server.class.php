@@ -63,6 +63,8 @@ class Server
 
         Storage::setup();
 
+        $this->serviceManager->processServiceSuppliers();
+
         Runtime::enableCoroutine();
 
         $this->server = new SwooleHTTPServer(
