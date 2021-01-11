@@ -18,8 +18,34 @@ class Container
     private array $singletons = [];
 
     // Can be passed an array of starting classes to resolve and be placed in the container
-    public function __construct($classesToResolve = null)
+    public function __construct($classesToResolve = null, $binds = [], $singletons = [])
     {
+        /*
+         * Register any starting objects defined as a bind so
+         * they can be resolved by returning a new instance
+         * each time they are requested and not from the container.
+         */
+        if(!empty($binds))
+        {
+            foreach($binds as $bind)
+            {
+                $this->bind($bind['class'], $bind['closure']);
+            }
+        }
+
+        /*
+         * Register any singletons that are defined as being deferred
+         * until requested or if they should be resolved into the container
+         * straight away because they are not defined as deferred.
+         */
+        if(!empty($singletons))
+        {
+            foreach($singletons as $singleton)
+            {
+                $this->singleton($singleton['class'], $singleton['closure'], $singleton['defer']);
+            }
+        }
+
         if(isset($classesToResolve))
         {
             if(!is_array($classesToResolve))
