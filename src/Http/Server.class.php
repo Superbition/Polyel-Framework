@@ -9,6 +9,7 @@ use Polyel\Config\Config;
 use Polyel\Storage\Storage;
 use Swoole\Coroutine as Swoole;
 use Polyel\Hashing\Facade\Hash;
+use Polyel\System\ServiceManager;
 use Polyel\Session\SessionManager;
 use Polyel\Encryption\Facade\Crypt;
 use Polyel\Database\DatabaseManager;
@@ -28,17 +29,20 @@ class Server
 
     private $applicationLoader;
 
+    private $serviceManager;
+
     private $databaseManager;
   
     private $sessionManager;
 
-    public function __construct(Config $config, Router $router, ApplicationLoader $applicationLoader, DatabaseManager $databaseManager, SessionManager $sessionManager)
+    public function __construct(Config $config, Router $router, ApplicationLoader $applicationLoader, serviceManager $serviceManager, DatabaseManager $databaseManager, SessionManager $sessionManager)
     {
         cli_set_process_title("Polyel-HTTP-Server");
 
         $this->config = $config;
         $this->router = $router;
         $this->applicationLoader = $applicationLoader;
+        $this->serviceManager = $serviceManager;
         $this->databaseManager = $databaseManager;
         $this->sessionManager = $sessionManager;
     }
@@ -103,7 +107,11 @@ class Server
 
             $this->runDebug();
 
-            $HttpKernel = Polyel::newHttpKernel();
+            // Retrieve service binds and singletons to make them available during the request life cycle
+            $HttpKernel = Polyel::newHttpKernel(
+                $this->serviceManager->getBinds(),
+                $this->serviceManager->getLocalSingletons()
+            );
 
             $HttpKernel->request->capture($HttpRequest);
 

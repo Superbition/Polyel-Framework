@@ -48,9 +48,23 @@ class Polyel
         return self::$container->new($class);
     }
 
-    public static function newHttpKernel()
+    public static function newHttpKernel(array $binds, array $requestSingletons)
     {
-        $kernelContainer = new Container(App\Http\Kernel::class);
+        /*
+         * Create a new container for each new HTTP Kernel
+         * that handles a request. Pass in the application Kernel
+         * class to start off with and the registered service
+         * singletons that are local to a request.
+         * Also include sharable server objects which are just global
+         * singleton services resolved from the main Polyel
+         * container instance.
+         */
+        $kernelContainer = new Container(
+            App\Http\Kernel::class,
+            $binds,
+            $requestSingletons,
+            self::$container->getShareableObjects()
+        );
 
         $HttpKernel = $kernelContainer->get(App\Http\Kernel::class);
 
