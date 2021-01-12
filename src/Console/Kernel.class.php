@@ -4,6 +4,7 @@ namespace Polyel\Console;
 
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
+use Polyel\System\ApplicationLoader;
 
 class Kernel
 {
@@ -13,8 +14,10 @@ class Kernel
 
     protected array $commandActions = [];
 
-    public function __construct(ConsoleApplication $console)
+    public function __construct(ApplicationLoader $applicationLoader, ConsoleApplication $console)
     {
+        $applicationLoader->loadOnly(['elements', 'services']);
+
         $this->console = $console;
         $this->console->loadCommandsFrom('/routing/console.php');
         $this->console->loadCommandsFrom('/vendor/superbition/polyel-framework/src/Console/Commands/console.php');
