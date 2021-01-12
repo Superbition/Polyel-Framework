@@ -23,9 +23,9 @@ class Polyel
         self::$container->bind($class, $service);
     }
 
-    public static function registerSingletonService(string $class, Closure $service)
+    public static function registerSingletonService(string $class, Closure $service, $defer = false, $sharable = true)
     {
-        self::$container->singleton($class, $service, false, true);
+        self::$container->singleton($class, $service, $defer, $sharable);
     }
 
     public static function resolveClass($classToResolve)
