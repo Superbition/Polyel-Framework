@@ -95,6 +95,7 @@ class Kernel
             'create:controller' => Commands\CreateControllerCommand::class,
             'create:middleware' => Commands\CreateMiddlewareCommand::class,
             'create:element' => Commands\CreateElementCommand::class,
+            'create:service' => Commands\CreateServiceCommand::class,
             'key:generate' => Commands\GenerateEncryptionKeyCommand::class,
             'flush:sessions' => Commands\FlushSessionsCommand::class,
 

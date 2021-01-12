@@ -1,0 +1,13 @@
+<?php
+
+namespace App\Services;
+
+use Polyel\System\ServiceSupplier;
+
+class {{ ServiceSupplierClassName }} extends ServiceSupplier
+{
+    public function register()
+    {
+
+    }
+}
