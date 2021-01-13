@@ -8,12 +8,66 @@ use ReflectionFunction;
 
 class Container
 {
+    use RegistersServices;
+
     // Holds all the registered class instances
-    private $container = [];
+    private array $container = [];
+
+    // Services which are defined as binds, allow the creation of new objects each time
+    private array $binds = [];
+
+    // Services which won't be defined a new instance until they are requested from the container
+    private array $deferredSingletons = [];
+
+    // Objects which can be shared outside the container, mainly so other containers can use these objects
+    private array $shareableObjects = [];
 
     // Can be passed an array of starting classes to resolve and be placed in the container
-    public function __construct($classesToResolve = null)
+    public function __construct($classesToResolve = null, $binds = [], $singletons = [], $loadableObjects = [])
     {
+        /*
+         * Register any starting objects defined as a bind so
+         * they can be resolved by returning a new instance
+         * each time they are requested and not from the container.
+         */
+        if(!empty($binds))
+        {
+            foreach($binds as $bind)
+            {
+                $this->bind($bind['class'], $bind['closure']);
+            }
+        }
+
+        /*
+         * If already defined objects have been passed in through the constructor, load
+         * them into the container so that they can be used if requested. This allows the
+         * container to start with pre defined objects that have been declared outside
+         * the container.
+         */
+        if(!empty($loadableObjects))
+        {
+            foreach($loadableObjects as $className => $loadableObject)
+            {
+                if(is_object($loadableObject))
+                {
+                    $this->container[$className] = $loadableObject;
+                }
+            }
+        }
+
+        /*
+         * Register any singletons that are defined as being deferred
+         * until requested or if they should be resolved into the container
+         * straight away because they are not defined as deferred.
+         */
+        if(!empty($singletons))
+        {
+            foreach($singletons as $singleton)
+            {
+                $this->singleton($singleton['class'], $singleton['closure'], $singleton['defer']);
+            }
+        }
+
         if(isset($classesToResolve))
         {
             if(!is_array($classesToResolve))
@@ -128,6 +182,13 @@ class Container
     // Public facing function to externally resolve a class
     public function resolveClass($classToResolve)
     {
+        // Calling get here checks if the requested class is a bind or singleton object
+        if($class = $this->get($classToResolve))
+        {
+            // Either a class is resolved from a bind or singleton or is already inside the container...
+            return $class;
+        }
+
         $this->checkForDependencies($classToResolve);
 
         return $this->get($classToResolve);
@@ -167,7 +228,7 @@ class Container
                     $methodDependency = $this->get($methodDependencyName);
 
                     // Sometimes the method param dependency might not exist yet, try to resolve it...
-                    if(!isset($methodDependency))
+                    if(is_null($methodDependency))
                     {
                         // Try to resolve a class that may not have been initiated
                         $this->checkForDependencies($methodDependencyName);
@@ -213,7 +274,7 @@ class Container
                 $closureDependency = $this->get($closureDependencyName);
 
                 // Sometimes the Closure param dependency might not exist yet, try to resolve it...
-                if(!isset($closureDependency))
+                if(is_null($closureDependency))
                 {
                     // Try to resolve a class that may not have been initiated
                     $this->checkForDependencies($closureDependencyName);
@@ -229,17 +290,103 @@ class Container
         return $closureDependencyList;
     }
 
-    // Used to retrieve class instances from the container.
+    /*
+     * Used to check if a requested class is a resolvable
+     * bind object. The class is resolved if it is registered
+     * as a bind object and returned.
+     */
+    private function resolvableBindObject(string $classToResolve)
+    {
+        if(isset($this->binds[$classToResolve]))
+        {
+            // Call the bind objects closure to resolve its instance
+            return $this->binds[$classToResolve]($this);
+        }
+
+        // No, is not a bind object
+        return false;
+    }
+
+    /*
+     * Used to check if the requested class is a resolvable
+     * singleton object that has been defined as deferred. The
+     * class is resolved from the singleton closure, removed
+     * from the list of singletons and returned. Also store the
+     * resolved singleton inside the container.
+     */
+    private function resolvableDeferredSingletonObject(string $classToResolve)
+    {
+        if(isset($this->deferredSingletons[$classToResolve]))
+        {
+            // Call the registered closure to resolve the singleton and its instance
+            $resolvedSingleton = $this->deferredSingletons[$classToResolve]($this);
+
+            // Because we have resolved the object, it doesn't need to be stored anymore
+            unset($this->deferredSingletons[$classToResolve]);
+
+            // The resolved singleton is now stored inside the container
+            $this->container[$classToResolve] = $resolvedSingleton;
+
+            return $resolvedSingleton;
+        }
+
+        // No, is not a singleton object
+        return false;
+    }
+
+    /*
+     * Used to retrieve class instances from the container but
+     * will also check if the requested class is registered as a
+     * bind or singleton object first before trying to retrieve
+     * the class from the container.
+     */
     public function get($className)
     {
+        // Check if the requested class is a bind object...
+        if($resolvedBind = $this->resolvableBindObject($className))
+        {
+            // A bind means the instance is recreated every time, so we return a new instance
+            return $resolvedBind;
+        }
+
+        // Check if the requested class is listed as a deferred singleton...
+        if($resolvedSingleton = $this->resolvableDeferredSingletonObject($className))
+        {
+            // Return a resolved singleton because it was defined as deferred and is now stored within the container
+            return $resolvedSingleton;
+        }
+
         // Return a class instance if it exists inside the container
         if(array_key_exists($className, $this->container))
         {
             return $this->container[$className];
         }
 
-        // For when the requested class does not exist inside the container...
+        // For when the requested class does not exist inside the container or cannot be resolved properly...
         return null;
+    }
+
+    /*
+     * Return an array of key value pairs of sharable objects
+     * from the container where a singleton has been defined as
+     * 'sharable'. This method is used to get a list of objects
+     * where they are apart of a service and have been allowed to
+     * be shared, meaning they can be used with another container
+     * instance, this method enables access to those 'sharable'
+     * objects.
+     */
+    public function getShareableObjects()
+    {
+        $sharableObjects = [];
+
+        // A list of class names which are allowed to be shared are stored in $shareableObjects
+        foreach($this->shareableObjects as $persistentObject)
+        {
+            // Get the sharable object from the container, which would be a ref to the original object
+            $sharableObjects[$persistentObject] = $this->container[$persistentObject];
+        }
+
+        return $sharableObjects;
     }
 
     // Used to resolve and create a new class without storing it inside the container

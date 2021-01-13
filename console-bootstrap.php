@@ -3,7 +3,6 @@
 use Swoole\Runtime;
 use Polyel\Storage\Storage;
 use Polyel\Hashing\Facade\Hash;
-use Polyel\View\Element\Element;
 use Polyel\Encryption\Facade\Crypt;
 
 // Services and functionality that is not needed when running console commands
@@ -146,7 +145,5 @@ Crypt::setup();
 Hash::setup();
 
 Storage::setup();
-
-Element::loadClassElements();
 
 Runtime::enableCoroutine();

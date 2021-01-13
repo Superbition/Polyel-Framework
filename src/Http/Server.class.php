@@ -9,13 +9,12 @@ use Polyel\Config\Config;
 use Polyel\Storage\Storage;
 use Swoole\Coroutine as Swoole;
 use Polyel\Hashing\Facade\Hash;
-use Polyel\View\Element\Element;
-use Polyel\Controller\Controller;
+use Polyel\System\ServiceManager;
 use Polyel\Session\SessionManager;
 use Polyel\Encryption\Facade\Crypt;
 use Polyel\Database\DatabaseManager;
+use Polyel\System\ApplicationLoader;
 use Swoole\HTTP\Server as SwooleHTTPServer;
-use Polyel\Http\Middleware\MiddlewareManager;
 
 class Server
 {
@@ -28,23 +27,22 @@ class Server
     // The Route instance from the container
     private $router;
 
-    // The Controller instance from the container
-    private $controller;
+    private $applicationLoader;
 
-    private $middleware;
+    private $serviceManager;
 
     private $databaseManager;
   
     private $sessionManager;
 
-    public function __construct(Config $config, Router $router, Controller $controller, MiddlewareManager $middleware, DatabaseManager $databaseManager, SessionManager $sessionManager)
+    public function __construct(Config $config, Router $router, ApplicationLoader $applicationLoader, serviceManager $serviceManager, DatabaseManager $databaseManager, SessionManager $sessionManager)
     {
         cli_set_process_title("Polyel-HTTP-Server");
 
         $this->config = $config;
         $this->router = $router;
-        $this->controller = $controller;
-        $this->middleware = $middleware;
+        $this->applicationLoader = $applicationLoader;
+        $this->serviceManager = $serviceManager;
         $this->databaseManager = $databaseManager;
         $this->sessionManager = $sessionManager;
     }
@@ -53,11 +51,9 @@ class Server
     {
         $this->config->load();
 
-        $this->middleware->loadAllMiddleware();
+        $this->applicationLoader->load();
 
         $this->router->loadRoutes();
-
-        $this->controller->loadAllControllers();
 
         $this->sessionManager->setDriver(config('session.driver'));
 
@@ -67,7 +63,7 @@ class Server
 
         Storage::setup();
 
-        Element::loadClassElements();
+        $this->serviceManager->processServiceSuppliers();
 
         Runtime::enableCoroutine();
 
@@ -113,7 +109,11 @@ class Server
 
             $this->runDebug();
 
-            $HttpKernel = Polyel::newHttpKernel();
+            // Retrieve service binds and singletons to make them available during the request life cycle
+            $HttpKernel = Polyel::newHttpKernel(
+                $this->serviceManager->getBinds(),
+                $this->serviceManager->getLocalSingletons()
+            );
 
             $HttpKernel->request->capture($HttpRequest);
 

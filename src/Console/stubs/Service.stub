@@ -1,8 +1,8 @@
 <?php
 
-namespace Polyel\Controller;
+namespace App\Services;
 
-class Controller
+class {{ ServiceClassName }}
 {
     public function __construct()
     {

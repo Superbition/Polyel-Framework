@@ -4,6 +4,8 @@ namespace Polyel\Console;
 
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
+use Polyel\System\ServiceManager;
+use Polyel\System\ApplicationLoader;
 
 class Kernel
 {
@@ -13,8 +15,12 @@ class Kernel
 
     protected array $commandActions = [];
 
-    public function __construct(ConsoleApplication $console)
+    public function __construct(ApplicationLoader $applicationLoader, ServiceManager $serviceManager, ConsoleApplication $console)
     {
+        $applicationLoader->loadOnly(['elements', 'services']);
+
+        $serviceManager->processServiceSuppliers(true);
+
         $this->console = $console;
         $this->console->loadCommandsFrom('/routing/console.php');
         $this->console->loadCommandsFrom('/vendor/superbition/polyel-framework/src/Console/Commands/console.php');
@@ -89,6 +95,7 @@ class Kernel
             'create:controller' => Commands\CreateControllerCommand::class,
             'create:middleware' => Commands\CreateMiddlewareCommand::class,
             'create:element' => Commands\CreateElementCommand::class,
+            'create:service' => Commands\CreateServiceCommand::class,
             'key:generate' => Commands\GenerateEncryptionKeyCommand::class,
             'flush:sessions' => Commands\FlushSessionsCommand::class,
 

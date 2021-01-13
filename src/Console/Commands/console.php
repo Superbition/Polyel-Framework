@@ -19,6 +19,10 @@ Console::command('create:middleware {middleware-name : The name of the new middl
 Console::command('create:element {element-name : The name of the new view element to create}
                                          {--element-template : Set to create the element view template file as well}');
 
+Console::command('create:service {service-name : The name of the service you want to create}
+                                         {--service-only : Only create the service class and not the supplier}                                 
+');
+
 Console::command('key:generate');
 
 Console::command('flush:sessions');
