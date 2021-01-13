@@ -1,5 +1,29 @@
 # Release Notes for the Polyel Framework
 
+## [v0.5.0 (2021-01-13)](https://github.com/Superbition/Polyel-Framework/releases/tag/v0.5.0)
+
+### Added
+
+- Show the Polyel framework version on the console when the server has started
+- New console command `flush:session` which deletes all sessions based on the selected session driver
+- Add support for container services, the framework can now manage service binds and singletons. By registering a
+service supplier, more complicated services/classes can be formed. Support for deferred singleton services and global
+server wide services. Visit the online documentation for more info: https://polyel.io/docs/using_polyel/services/
+- The service can now accept loadable objects from another container, allowing services to be shared between containers
+
+### Changed
+
+- Some wording on the console output after the server has started
+- Moved the loading logic of application files like `controllers` or `middleware` etc. into an application loader class,
+makes way for more updates later on to improve application and framework file loading
+
+### Fixed
+
+- Fixed incorrect/broken directory path for `create:command`
+- Fixed incorrect/broken directory path for `create:controller`
+- Fixed incorrect/broken directory path for `create:element`
+- Fixed incorrect/broken directory path for `create:middleware`
+
 ## [v0.4.1 (2020-12-18)](https://github.com/Superbition/Polyel-Framework/releases/tag/v0.4.1)
 
 ### Fixed
