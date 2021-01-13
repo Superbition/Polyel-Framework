@@ -1,5 +1,12 @@
 # Release Notes for the Polyel Framework
 
+## [v0.5.1 (2021-01-13)](https://github.com/Superbition/Polyel-Framework/releases/tag/v0.5.1)
+
+### Fixed
+
+- Fix fatal server error for when no service suppliers are registered, caused the bind and singleton
+class properties to be accessed when they are not initialised yet
+
 ## [v0.5.0 (2021-01-13)](https://github.com/Superbition/Polyel-Framework/releases/tag/v0.5.0)
 
 ### Added
