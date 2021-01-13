@@ -6,9 +6,9 @@ use Polyel;
 
 class ServiceManager
 {
-    private array $binds;
+    private array $binds = [];
 
-    private array $localSingletons;
+    private array $localSingletons = [];
 
     public function __construct()
     {
@@ -19,6 +19,11 @@ class ServiceManager
     {
         $serviceSuppliers = config('main.servicesSuppliers');
 
+        if(empty($serviceSuppliers))
+        {
+            return false;
+        }
+
         foreach($serviceSuppliers as $serviceSupplier)
         {
             $supplier = new $serviceSupplier();
@@ -27,6 +32,8 @@ class ServiceManager
 
             $this->resolveServicesIntoContainer($supplier->getServicesToRegister(), $consoleRequest);
         }
+
+        return true;
     }
 
     protected function resolveServicesIntoContainer(array $registeredServices, bool $consoleRequest = false)
