@@ -16,7 +16,7 @@ class properties to be accessed when they are not initialised yet
 - Add support for container services, the framework can now manage service binds and singletons. By registering a
 service supplier, more complicated services/classes can be formed. Support for deferred singleton services and global
 server wide services. Visit the online documentation for more info: https://polyel.io/docs/using_polyel/services/
-- The service can now accept loadable objects from another container, allowing services to be shared between containers
+- The service container can now accept loadable objects from another container, allowing services to be shared between containers
 
 ### Changed
 
