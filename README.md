@@ -1,4 +1,4 @@
-# Polyel
+# ⚡️ Polyel
 > This repository is the core framework for Polyel, if you are looking to create a project using Polyel, you will need to check out the [Polyel Skeleton](https://github.com/Superbition/Polyel).
 
 A PHP framework for building beautiful, expressive and fast web applications, based on the Swoole networking library
