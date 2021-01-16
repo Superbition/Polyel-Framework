@@ -15,26 +15,29 @@ A framework that brings everything together, providing features to make web deve
 
 Allowing you to create highly scalable applications and with support for web sockets, concurrent connections, Task workers, connection pools, async MySQL and non-blocking I/O programming.
 
+# Features
+
+- Fast, easy to use Routing Engine with built in automatic caching
+- An async database query builder
+- Database read & write connection pool
+- Custom built DIC (Container) where everything is preloaded (even controllers), speeding up requests
+- Easy to use and fast session management system
+- MVC framework model built around a async paradigm
+- Quick, elegant and simple built in view templating engine
+- Simple configuration management right from the start
+- Built in Coroutine support based on Swoole PHP
+- Fast Middleware system, preloaded during server boot up
+- File storage service (Planned support for FTP and cloud storage)
+- Automatic XSS filtering & CSRF protection
+- Element templates; handles rendering dynamic page components with logic and data
+
 # Planned Features & Roadmap
 The planned development feature list for the Polyel framework:
-- [x] Fast, easy to use Routing Engine with built in automatic caching
-- [x] An async database query builder
-- [x] Database read & write connection pool
-- [x] Custom built DIC (Container) where everything is preloaded (even controllers), speeding up requests
-- [ ] A complete HTTP server with built-in support for Ajax & web sockets
-- [x] Easy to use session management system
-- [x] OOP MVC framework model built around a async paradigm
-- [x] Quick, elegant and simple built in templating engine
-- [x] Simple configuration management right from the start
-- [x] Built in Coroutine support based on Swoole PHP
-- [ ] Redis client which supports different use cases
-- [ ] Powerful and flexible built-in logger
-- [x] Middleware system
-- [ ] Built-in feature rich modules such as: Time processing, message system, flash messaging, markdown parser, email sending, data validation, pagination etc.
-- [x] File storage service (Planned support for FTP and cloud storage)
-- [ ] Automatic XSS filtering & CSRF protection
-- [ ] Automatic SSL assigning using Let's Encrypt
-- [x] Element templates; handles rendering dynamic page components with logic and data
+- A complete HTTP server with built-in support for Ajax & web sockets
+- Redis client which supports different use cases
+- Powerful and flexible built-in logger
+- Built-in feature rich modules such as: Time processing, message system, flash messaging, markdown parser, email sending, data validation, pagination etc.
+- Automatic SSL assigning using Let's Encrypt
 
 # Community
 
