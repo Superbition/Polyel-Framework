@@ -32,6 +32,7 @@ Allowing you to create highly scalable applications and with support for web soc
 - File storage service (Planned support for FTP and cloud storage)
 - Automatic XSS filtering & CSRF protection
 - Element templates; handles rendering dynamic page components with logic and data
+- MVC Services built around the Swoole async model, services can be local and global
 
 # Planned Features & Roadmap
 The planned development feature list for the Polyel framework:
