@@ -41,6 +41,12 @@ The planned development feature list for the Polyel framework:
 - Powerful and flexible built-in logger
 - Built-in feature rich modules such as: Time processing, message system, flash messaging, markdown parser, email sending, data validation, pagination etc.
 - Automatic SSL assigning using Let's Encrypt
+- Job task system
+- Cache service
+- Specifically designed debug methods to support the Swoole paradigm
+- Async event system
+
+With many more features planned...
 
 # Community
 
