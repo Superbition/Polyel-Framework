@@ -10,10 +10,6 @@ A PHP framework for building beautiful, expressive and fast web applications, ba
 [![PHP Version](https://img.shields.io/badge/PHP-%3E=7.3-brightgreen.svg?maxAge=2592000)](https://secure.php.net/)
 [![Swoole Version](https://img.shields.io/badge/swoole-%3E=4.2.1-brightgreen.svg?maxAge=2592000)](https://github.com/swoole/swoole-src)
 
-**Another framework you ask?** Well, this project originally started as a set of classes to test the features of the Swoole networking library for PHP. Overtime as more services were built which were used to try out the ability of Swoole, the project formed into a fully featured web framework based on a new async/coroutine programming model that has not really been seen before with PHP. 
-
-Compared to other frameworks or adaptors based around Swoole, Polyel is built from the ground up, supporting the event-driven, asynchronous, non-blocking I/O nature of Swooles programming model. Polyel aims to be a fully featured option for when you want to build a modern PHP web application with Swoole, Polyel is designed to have minimal dependencies other than Swoole, making it easy and flexible to adapt and move forward with the async/coroutine paradigm that Swoole provides, also following mature standards and best practices, so you may find Polyel very similar to other frameworks, helping adoption and enabling developers to get started quickly.
-
 # What can be done with Polyel?
 Polyel is an MVC (Model-View-Controller) PHP framework based on the Swoole networking library, which is a C++ extension written for PHP and runs as a CLI application, allowing you to build high-performance web applications using both synchronous and asynchronous programming.
 
@@ -51,6 +47,11 @@ The planned development feature list for the Polyel framework:
 - Async event system
 
 With many more features planned...
+
+# Motivation
+**Another framework you ask?** Well, this project originally started as a set of classes to test the features of the Swoole networking library for PHP. Overtime as more services were built which were used to try out the ability of Swoole, the project formed into a fully featured web framework based on a new async/coroutine programming model that has not really been seen before with PHP. 
+
+Compared to other frameworks or adaptors based around Swoole, Polyel is built from the ground up, supporting the event-driven, asynchronous, non-blocking I/O nature of Swooles programming model. Polyel aims to be a fully featured option for when you want to build a modern PHP web application with Swoole, Polyel is designed to have minimal dependencies other than Swoole, making it easy and flexible to adapt and move forward with the async/coroutine paradigm that Swoole provides, also following mature standards and best practices, so you may find Polyel very similar to other frameworks, helping adoption and enabling developers to get started quickly.
 
 # Community
 
