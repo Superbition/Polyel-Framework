@@ -1,5 +1,27 @@
 # Release Notes for the Polyel Framework
 
+## [v0.5.2 (2021-01-21)](https://github.com/Superbition/Polyel-Framework/releases/tag/v0.5.2)
+
+## Added
+
+- Added README message about using the Polyel Skeleton to create a new project
+- Add a note about working towards MVP version of the framework
+- Add a link to Polyel framework documentation
+- Added Polyel services to the list of features
+- Added motivation behind framework message
+
+## Changed
+
+- Moved completed roadmap features into their own list of features for the README
+- Update the planned features to-do list
+- Do not use strict type checking with `RequiredIf` and `RequiredUnless` validation rules, let PHP
+handle the type checking when using `in_array`. By using strict type checking, it caused these rules 
+to not work as intended.
+
+## Fixed
+
+- Fixed a sentence which didn't make any sense within the v0.5.0 release notes
+
 ## [v0.5.1 (2021-01-13)](https://github.com/Superbition/Polyel-Framework/releases/tag/v0.5.1)
 
 ### Fixed
