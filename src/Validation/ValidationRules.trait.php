@@ -1062,7 +1062,7 @@ trait ValidationRules
     {
         [$parameterValues, $otherFieldValue] = $this->prepareParameterValuesAndOtherFieldValue($parameters);
 
-        if(in_array($otherFieldValue, $parameterValues, true))
+        if(in_array($otherFieldValue, $parameterValues, false))
         {
             return $this->validateRequired($field, $value);
         }
@@ -1074,7 +1074,7 @@ trait ValidationRules
     {
         [$parameterValues, $otherFieldValue] = $this->prepareParameterValuesAndOtherFieldValue($parameters);
 
-        if(!in_array($otherFieldValue, $parameterValues, true))
+        if(!in_array($otherFieldValue, $parameterValues, false))
         {
             return $this->validateRequired($field, $value);
         }
