@@ -385,7 +385,8 @@ class Validator
 
         if(strpos($rule, ':') !== false)
         {
-            [$rule, $parameters] = explode(':', $rule);
+            // Only explode on the first occurrence of ':' as parameters may contain one as well
+            [$rule, $parameters] = explode(':', $rule, 2);
 
             // Regex rules might contain a ',' which would impact the way parameters are captured...
             if(!in_array($rule, ['Regex', 'RegexNot']))
