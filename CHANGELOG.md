@@ -1,5 +1,16 @@
 # Release Notes for the Polyel Framework
 
+## [v0.5.3 (2021-01-22)](https://github.com/Superbition/Polyel-Framework/releases/tag/v0.5.3)
+
+### Fixed
+
+- Fix validation rules not parsing correctly when a parameter uses a colon, sometimes a rule like
+`DateFormat` or `Regex` may contain a `:` and the validator would parse the rules incorrectly and
+not explode rule strings properly, this has now been fixed and only the first occurrence of a `:`
+is used.
+  
+- Fixed `CHANGELOG` formatting for v0.5.2 release notes
+
 ## [v0.5.2 (2021-01-21)](https://github.com/Superbition/Polyel-Framework/releases/tag/v0.5.2)
 
 ### Added
