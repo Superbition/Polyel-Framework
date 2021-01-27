@@ -82,30 +82,35 @@ class ApplicationLoader
 
     public function loadThirdPartyPackages()
     {
-        // We need to check if Composer is available, if not, we don't need to try and load third part packages
-        exec('su $(logname) -c "composer about"', $output, $composerGlobalCheckExitCode);
-        if($composerGlobalCheckExitCode > 0 && !file_exists(APP_DIR . '/composer.phar'))
-        {
-            echo "Could not find usable Composer binary, not loading third part packages\n";
-            return 1;
-        }
-
-        echo "\nPreparing to preload and define third party Composer packages\n";
-
-        // Making sure the Composer classmap that will be used to preload packages is up-to-date
-        echo "Regenerating Composer classmap, will be used to load Composer packages...\n";
-        exec('su $(logname) -c "composer dumpautoload -o"', $output, $composerDumpExitCode);
-
-        // Make sure that the Composer classmap was generated and exists for us to use
-        echo "Checking that the Composer classmap exists... ";
         $composerClassmapFileLocation = APP_DIR . '/vendor/composer/autoload_classmap.php';
-        if(!file_exists($composerClassmapFileLocation))
-        {
-            echo "\n";
-            return 2;
-        }
 
-        echo "It does!\n";
+        // Only regenerate the Composer classmap automatically if set to do so
+        if(config('main.autoGenerateComposerClassmap') === true)
+        {
+            // We need to check if Composer is available, if not, we don't need to try and load third part packages
+            exec('su $(logname) -c "composer about"', $output, $composerGlobalCheckExitCode);
+            if($composerGlobalCheckExitCode > 0 && !file_exists(APP_DIR . '/composer.phar'))
+            {
+                echo "Could not find usable Composer binary, not loading third part packages\n";
+                return 1;
+            }
+
+            echo "\nPreparing to preload and define third party Composer packages\n";
+
+            // Making sure the Composer classmap that will be used to preload packages is up-to-date
+            echo "Regenerating Composer classmap, will be used to load Composer packages...\n";
+            exec('su $(logname) -c "composer dumpautoload -o"', $output, $composerDumpExitCode);
+
+            // Make sure that the Composer classmap was generated and exists for us to use
+            echo "Checking that the Composer classmap exists... ";
+            if(!file_exists($composerClassmapFileLocation))
+            {
+                echo "\n";
+                return 2;
+            }
+
+            echo "It does!\n";
+        }
 
         // Getting the classmap array so we can use it to preload each class
         echo "Attempting to grab the Composer autoload classmap...\n";
