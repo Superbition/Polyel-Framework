@@ -52,6 +52,7 @@ class Server
         $this->config->load();
 
         $this->applicationLoader->load();
+        $this->applicationLoader->loadThirdPartyPackages();
 
         echo "\nPreparing to startup HTTP server\n";
 
