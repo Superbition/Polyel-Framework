@@ -1,5 +1,29 @@
 # Release Notes for the Polyel Framework
 
+## [v0.6.0 (2021-01-27)](https://github.com/Superbition/Polyel-Framework/releases/tag/v0.6.0)
+
+### Added
+
+- Added additional server startup messages, allowing a user to see the startup process in more
+detail
+  
+- Added support for preloading third party Composer packages. Polyel now has the ability to preload all 
+  Composer packages using the generated classmap by Composer itself. Composer packages can now be 
+  preloaded during the server startup phase, everything is loaded using `require_once` thus, 
+  making all packages available before the server can accept requests, this means none of this work has
+  to be done during a request, no classmap lookup or filesystem check has to be done in order to
+  use a third party package during a HTTP request. This solves a lot of performance issues for when your 
+  classmap is huge and contains thousands of classes to load. Because of this addition, it also means you
+  can create services based on any Composer packages in your application and make them global etc. Look out
+  for the new config option inside of `main.php` called `autoGenerateComposerClassmap`, allowing you to
+  control when Polyel regenerates the Composer classmap again.
+  
+- Added the package `nesbot/carbon` dependency to the Polyel framework
+
+### Changed
+
+- Reorganised and changed some server startup console messages
+
 ## [v0.5.3 (2021-01-22)](https://github.com/Superbition/Polyel-Framework/releases/tag/v0.5.3)
 
 ### Fixed
