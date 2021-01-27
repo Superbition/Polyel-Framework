@@ -53,8 +53,12 @@ class Server
 
         $this->applicationLoader->load();
 
+        echo "\nPreparing to startup HTTP server\n";
+
+        echo "Loading all registered routes\n";
         $this->router->loadRoutes();
 
+        echo "Setting up the selected session driver\n";
         $this->sessionManager->setDriver(config('session.driver'));
 
         Crypt::setup();
@@ -63,8 +67,10 @@ class Server
 
         Storage::setup();
 
+        echo "Contacting the service manager, processing suppliers...\n";
         $this->serviceManager->processServiceSuppliers();
 
+        echo "Enabling the Swoole RunTime Hook\n";
         Runtime::enableCoroutine();
 
         $this->server = new SwooleHTTPServer(
@@ -73,6 +79,7 @@ class Server
             SWOOLE_PROCESS
         );
 
+        echo "Setting up the HTTP server configuration\n";
         $this->server->set([
             'worker_num' => swoole_cpu_num(),
             'package_max_length' => config("server.maxUploadSize"),
@@ -132,6 +139,7 @@ class Server
 
     public function run()
     {
+        echo "Starting the HTTP server...\n";
         $this->server->start();
     }
 

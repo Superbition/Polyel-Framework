@@ -156,5 +156,5 @@ require_once APP_DIR . '/app/Http/Kernel.php';
  * Create the DIC and pass in an array of core services to be resolved.
  * Core services are loaded from the services.php file and used here.
  */
-echo "Preparing to startup HTTP server\n";
+echo "Creating core server container and services\n";
 Polyel::createContainer($coreServices);
