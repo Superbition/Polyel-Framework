@@ -44,7 +44,7 @@ spl_autoload_register(static function($fullClassNamespace)
         if($root === APP_DIR . '/vendor')
         {
             // Get the Composer auto-load classmap, we can use this to know where to load the class from
-            $composerAutoloadClassmap = require(APP_DIR . '/vendor/composer/autoload_classmap.php');
+            $composerAutoloadClassmap = require APP_DIR . '/vendor/composer/autoload_classmap.php';
 
             // The Composer classmap uses double slashes for namespaces e.g. Foo\\Bar\\Bin
             $composerCompatibleNamespace = str_replace("\/", "/\/\/", $fullClassNamespace);
