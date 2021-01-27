@@ -111,6 +111,10 @@ class ApplicationLoader
 
             echo "It does!\n";
         }
+        else
+        {
+            echo "\e[33mComposer classmap autogenerate is turned off, please make sure your classmap is up-to-date\e[39m\n";
+        }
 
         // Getting the classmap array so we can use it to preload each class
         echo "Attempting to grab the Composer autoload classmap...\n";
