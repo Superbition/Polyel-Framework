@@ -1,5 +1,17 @@
 # Release Notes for the Polyel Framework
 
+## [v0.6.1 (2021-01-28)](https://github.com/Superbition/Polyel-Framework/releases/tag/v0.6.1)
+
+### Changed
+
+- Some improvements to code formatting and styling
+
+### Fixed
+
+- Fixed a bug where some third party Composer packages failed to be preloaded due to the library using a
+  function which initiates calls to the autoloader, meaning any missing object errors could not be caught inside a
+  Try Block by Polyel and thus, result in an unhandled fatal error.
+
 ## [v0.6.0 (2021-01-27)](https://github.com/Superbition/Polyel-Framework/releases/tag/v0.6.0)
 
 ### Added
