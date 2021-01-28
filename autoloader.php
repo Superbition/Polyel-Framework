@@ -132,5 +132,4 @@ spl_autoload_register(static function($fullClassNamespace)
             break;
         }
     }
-
 });
