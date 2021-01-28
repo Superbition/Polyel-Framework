@@ -68,6 +68,30 @@ spl_autoload_register(static function($fullClassNamespace)
             }
 
             /*
+             * Sometimes when loading library code they will use PHP functions which
+             * by default, call the registered autoloader and by doing that it means
+             * the ThirdPartyUnknownFileException won't be within a Try Catch block.
+             * When that happens we assume the library at question is trying to check
+             * if a object of some kind exists and if it does, then do something about
+             * it. So the safest option is to let the library handle the result and not
+             * to throw an error about a missing object. We break out of the loop and
+             * don't do anything about the missing object if it is not found before.
+             *
+             * Using a backtrace we can detect what function call caused the autoloader
+             * to be called and if it is a native PHP function which by default calls
+             * the autoloader we just ignore it if the object was not found through the
+             * classmap. For performance reasons we don't include object back traces and
+             * ignore arguments and finally limit by 3 as the 3rd element should always
+             * be the caller which initiated the autoloader.
+             */
+            $trace = debug_backtrace(!DEBUG_BACKTRACE_PROVIDE_OBJECT|DEBUG_BACKTRACE_IGNORE_ARGS, 3);
+            if(isset($trace[2]) && $trace[2]['function'] === 'interface_exists')
+            {
+                // Let the library (which called the autoloader) handle the result of a missing class
+                break;
+            }
+
+            /*
              * Getting to this stage means we have tried to load a
              * third party Composer package class which is likely
              * only used for package development or testing and thus,
