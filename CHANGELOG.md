@@ -1,5 +1,12 @@
 # Release Notes for the Polyel Framework
 
+## [v0.6.2 (2021-02-23)](https://github.com/Superbition/Polyel-Framework/releases/tag/v0.6.2)
+
+### Fixed
+
+- Fixed an issue with Composer packages being preloaded, before only the classmap was used to preload packages but
+some use standalone files. Now, Polyel will preload all package files as well.
+
 ## [v0.6.1 (2021-01-28)](https://github.com/Superbition/Polyel-Framework/releases/tag/v0.6.1)
 
 ### Changed
