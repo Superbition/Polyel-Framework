@@ -165,6 +165,18 @@ class ApplicationLoader
             }
         }
 
+        $composerFileMapLocation = APP_DIR . '/vendor/composer/autoload_files.php';
+
+        echo "Attempting to grab the Composer autoload file map...\n";
+        $composerAutoloadFiles = require $composerFileMapLocation;
+
+        echo "Loading autoload files...";
+        foreach($composerAutoloadFiles as $composerAutoloadFile)
+        {
+            require_once $composerAutoloadFile;
+        }
+        echo " Done.\n";
+
         // Successful, all packages loaded without any problems
         return 0;
     }
