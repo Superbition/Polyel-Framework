@@ -156,7 +156,7 @@ class View
             $includeLocation = "/${includeType}s/" . $resourceFileNamePath . '.view.html';
 
             // Check if the include exists on local disk
-            if(file_exists($includeLocation))
+            if(file_exists(APP_DIR . '/resources/' . $includeLocation))
             {
                 // Get the resource content include from file and inject it into the main template
                 $includeContent = Storage::access('local', static::RESOURCE_DIR)->read($includeLocation);
