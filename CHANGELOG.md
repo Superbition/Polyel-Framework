@@ -1,5 +1,11 @@
 # Release Notes for the Polyel Framework
 
+## [v0.6.3 (2021-03-27)](https://github.com/Superbition/Polyel-Framework/releases/tag/v0.6.3)
+
+### Fixed
+
+- Fix view includes using a broken file path, causing them to not render and not being able to use sub-views
+
 ## [v0.6.2 (2021-02-23)](https://github.com/Superbition/Polyel-Framework/releases/tag/v0.6.2)
 
 ### Fixed
