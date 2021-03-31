@@ -52,6 +52,32 @@ class DatabaseSessionDriver implements SessionDriver
         $this->saveSessionData($sessionID, $sessionData);
     }
 
+    public function gc()
+    {
+        go(function()
+        {
+            DB::table('session')->orderBy('id')->chunk(100, function($sessions) {
+
+                $lifetime = config('session.lifetime');
+
+                foreach($sessions as $session)
+                {
+                    // Setup the expired date format
+                    $expiredTime = strtotime("-$lifetime minutes");
+
+                    // If the session has passed the lifetime timestamp, it is invalid and old, delete it
+                    if($expiredTime > strtotime($session['last_active']))
+                    {
+                        DB::table('session')
+                            ->where('id', '=', $session['id'])
+                            ->delete();
+                    }
+                }
+
+            });
+        });
+    }
+
     public function saveSessionData($sessionID, $sessionData)
     {
         $sessionData = json_encode($sessionData, $this->jsonEncodeOptions, 1024);
