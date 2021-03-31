@@ -17,7 +17,8 @@ class SessionManager
     public function __construct()
     {
         $this->availableDrivers = [
-          'file' => Polyel\Session\Drivers\FileSessionDriver::class,
+            'file' => Polyel\Session\Drivers\FileSessionDriver::class,
+            'database' => Polyel\Session\Drivers\DatabaseSessionDriver::class,
         ];
     }
 
