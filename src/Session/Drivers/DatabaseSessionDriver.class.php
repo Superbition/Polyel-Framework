@@ -122,4 +122,31 @@ class DatabaseSessionDriver implements SessionDriver
 
         return null;
     }
+
+    public function destroySession($sessionID, $destroyCookie = true)
+    {
+        if($this->isValid($sessionID))
+        {
+            DB::table('session')
+                ->where('id', '=', $sessionID)
+                ->delete();
+        }
+
+        if($destroyCookie)
+        {
+            $sessionCookie = [
+                $name = config('session.cookieName'),
+                $value = null,
+                $expire = -1,
+                $path = config('session.cookiePath'),
+                $domain = config('session.domain'),
+                $secure = config('session.secure'),
+                $httpOnly = config('session.httpOnly'),
+                $sameSite = 'None',
+            ];
+
+            // TODO: review this method of queuing a cookie
+            Cookie::queue(...$sessionCookie);
+        }
+    }
 }
