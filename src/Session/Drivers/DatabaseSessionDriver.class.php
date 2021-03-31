@@ -6,6 +6,10 @@ use Polyel\Database\Facade\DB;
 
 class DatabaseSessionDriver implements SessionDriver
 {
+    private $jsonEncodeOptions = JSON_INVALID_UTF8_SUBSTITUTE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES;
+
+    private $jsonDecodeOptions = JSON_INVALID_UTF8_SUBSTITUTE;
+
     public function __construct()
     {
 
