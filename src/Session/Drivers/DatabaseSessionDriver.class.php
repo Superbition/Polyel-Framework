@@ -99,7 +99,7 @@ class DatabaseSessionDriver implements SessionDriver
 
     public function getSessionData($sessionID)
     {
-        if($sessionData = DB::table('session')->where('id', '=', $sessionID)->first())
+        if($sessionData = DB::table('session')->select('*')->where('id', '=', $sessionID)->first())
         {
             // TODO: Check if need to decode JSON here
 
