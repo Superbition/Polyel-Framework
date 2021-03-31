@@ -40,4 +40,16 @@ class DatabaseSessionDriver implements SessionDriver
         // If nothing fails within this function, the session is deemed valid
         return true;
     }
+
+    public function getSessionData($sessionID)
+    {
+        if($sessionData = DB::table('session')->where('id', '=', $sessionID)->first())
+        {
+            // TODO: Check if need to decode JSON here
+
+            return $sessionData;
+        }
+
+        return null;
+    }
 }
