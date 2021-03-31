@@ -41,6 +41,15 @@ class DatabaseSessionDriver implements SessionDriver
         return true;
     }
 
+    public function saveSessionData($sessionID, $sessionData)
+    {
+        $sessionData = json_encode($sessionData, $this->jsonEncodeOptions, 1024);
+
+        DB::table('session')
+            ->where('id', '=', $sessionID)
+            ->update(['data' => $sessionData]);
+    }
+
     public function getSessionData($sessionID)
     {
         if($sessionData = DB::table('session')->where('id', '=', $sessionID)->first())
