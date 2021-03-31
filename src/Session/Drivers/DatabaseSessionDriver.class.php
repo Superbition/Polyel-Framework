@@ -78,6 +78,16 @@ class DatabaseSessionDriver implements SessionDriver
         });
     }
 
+    public function collisionCheckID($sessionID)
+    {
+        if(DB::table('session')->where('id', '=', $sessionID)->first())
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     public function saveSessionData($sessionID, $sessionData)
     {
         $sessionData = json_encode($sessionData, $this->jsonEncodeOptions, 1024);
