@@ -41,6 +41,17 @@ class DatabaseSessionDriver implements SessionDriver
         return true;
     }
 
+    public function updateSession($sessionID, $request)
+    {
+        $sessionData = $this->getSessionData($sessionID);
+
+        $sessionData['ip_addr'] = $request->clientIP;
+        $sessionData['user_agent'] = $request->userAgent;
+        $sessionData['last_active'] = date("Y-m-d H:i:s");
+
+        $this->saveSessionData($sessionID, $sessionData);
+    }
+
     public function saveSessionData($sessionID, $sessionData)
     {
         $sessionData = json_encode($sessionData, $this->jsonEncodeOptions, 1024);
