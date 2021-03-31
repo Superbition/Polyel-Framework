@@ -88,6 +88,20 @@ class DatabaseSessionDriver implements SessionDriver
         return false;
     }
 
+    public function createNewSession($sessionID, $request)
+    {
+        $sessionData = [
+            'id' => $sessionID,
+            'user_id' => null,
+            'ip_addr' => $request->clientIP,
+            'user_agent' => $request->userAgent,
+            'last_active' => date("Y-m-d H:i:s"),
+            'data' => '{}',
+        ];
+
+        DB::table('session')->insert($sessionData);
+    }
+
     public function saveSessionData($sessionID, $sessionData)
     {
         $sessionData = json_encode($sessionData, $this->jsonEncodeOptions, 1024);
