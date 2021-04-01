@@ -84,7 +84,7 @@ class DatabaseSessionDriver implements SessionDriver
 
     public function collisionCheckID($sessionID)
     {
-        if(DB::table('session')->where('id', '=', $sessionID)->first())
+        if(DB::table('session')->where('id', '=', $sessionID)->first() === null)
         {
             return true;
         }
