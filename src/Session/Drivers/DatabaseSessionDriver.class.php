@@ -136,6 +136,7 @@ class DatabaseSessionDriver implements SessionDriver
                 ->delete();
         }
 
+        // TODO: Review this feature of destroying a cookie here
         if($destroyCookie)
         {
             $sessionCookie = [

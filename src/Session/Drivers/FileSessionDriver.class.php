@@ -144,6 +144,7 @@ class FileSessionDriver implements SessionDriver
             unlink(realpath($this->sessionFileStorage . $sessionID));
         }
 
+        // TODO: Review this feature of destroying a cookie here
         if($destroyCookie)
         {
             $sessionCookie = [
@@ -157,6 +158,7 @@ class FileSessionDriver implements SessionDriver
                 $sameSite = 'None',
             ];
 
+            // TODO: review this method of queuing a cookie
             Cookie::queue(...$sessionCookie);
         }
     }
