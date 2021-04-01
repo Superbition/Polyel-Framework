@@ -153,4 +153,16 @@ class DatabaseSessionDriver implements SessionDriver
             Cookie::queue(...$sessionCookie);
         }
     }
+
+    public function clear($sessionID)
+    {
+        $sessionData = $this->getSessionData($sessionID);
+
+        if(exists($sessionData))
+        {
+            $sessionData['data'] = null;
+
+            $this->saveSessionData($sessionID, $sessionData);
+        }
+    }
 }
