@@ -108,11 +108,19 @@ class DatabaseSessionDriver implements SessionDriver
 
     public function saveSessionData($sessionID, $sessionData)
     {
-        $sessionData = json_encode($sessionData, $this->jsonEncodeOptions, 1024);
+        // Encode the data as JSON again before updating in the database
+        $sessionData['data'] = json_encode($sessionData['data'], $this->jsonEncodeOptions, 1024);
 
+        // Update the session row in the DB with new values and with the data column encoded as JSON
         DB::table('session')
             ->where('id', '=', $sessionID)
-            ->update(['data' => $sessionData]);
+            ->update([
+                'user_id' => $sessionData['user_id'],
+                'ip_addr' => $sessionData['ip_addr'],
+                'user_agent' => $sessionData['user_agent'],
+                'last_active' => $sessionData['last_active'],
+                'data' => $sessionData['data'],
+            ]);
     }
 
     public function getSessionData($sessionID)
