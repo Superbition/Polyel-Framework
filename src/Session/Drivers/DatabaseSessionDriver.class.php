@@ -47,12 +47,15 @@ class DatabaseSessionDriver implements SessionDriver
 
     public function updateSession($sessionID, $request)
     {
+        // To update the session we need the current session data so it doesn't get overwritten
         $sessionData = $this->getSessionData($sessionID);
 
+        // Update session data which could have changed between requests and when the session was last active
         $sessionData['ip_addr'] = $request->clientIP;
         $sessionData['user_agent'] = $request->userAgent;
         $sessionData['last_active'] = date("Y-m-d H:i:s");
 
+        // Re-save the updated session data
         $this->saveSessionData($sessionID, $sessionData);
     }
 
@@ -60,6 +63,7 @@ class DatabaseSessionDriver implements SessionDriver
     {
         go(function()
         {
+            // Operate only by 100 sessions at a time from the DB...
             DB::table('session')->orderBy('id')->chunk(100, function($sessions) {
 
                 $lifetime = config('session.lifetime');
@@ -84,11 +88,13 @@ class DatabaseSessionDriver implements SessionDriver
 
     public function collisionCheckID($sessionID)
     {
+        // If no ID already exists we should get a null value back
         if(DB::table('session')->where('id', '=', $sessionID)->first() === null)
         {
             return true;
         }
 
+        // A collision check has failed
         return false;
     }
 
@@ -125,6 +131,7 @@ class DatabaseSessionDriver implements SessionDriver
 
     public function getSessionData($sessionID)
     {
+        // Check to see if we have a valid session first
         if($sessionData = DB::table('session')->select('*')->where('id', '=', $sessionID)->first())
         {
             // Decode the session data from JSON to a PHP array
@@ -133,11 +140,13 @@ class DatabaseSessionDriver implements SessionDriver
             return $sessionData;
         }
 
+        // No session was found
         return null;
     }
 
     public function destroySession($sessionID, $destroyCookie = true)
     {
+        // To destroy a session, it needs to already exist and be valid
         if($this->isValid($sessionID))
         {
             DB::table('session')
@@ -168,6 +177,7 @@ class DatabaseSessionDriver implements SessionDriver
     {
         $sessionData = $this->getSessionData($sessionID);
 
+        // If session data exists, clear the data column by setting it to null
         if(exists($sessionData))
         {
             $sessionData['data'] = null;
