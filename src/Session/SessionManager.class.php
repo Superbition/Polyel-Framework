@@ -10,6 +10,8 @@ class SessionManager
 {
     private $driver;
 
+    private string $driverType;
+
     private $availableDrivers;
 
     private $gcStarted = false;
@@ -26,6 +28,9 @@ class SessionManager
     {
         if(array_key_exists($driver, $this->availableDrivers))
         {
+            // Save the type of driver that is going to be used
+            $this->driverType = $driver;
+
             $driver = $this->availableDrivers[$driver];
             $this->driver = Polyel::resolveClass($driver);
         }
