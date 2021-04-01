@@ -127,7 +127,8 @@ class DatabaseSessionDriver implements SessionDriver
     {
         if($sessionData = DB::table('session')->select('*')->where('id', '=', $sessionID)->first())
         {
-            // TODO: Check if need to decode JSON here
+            // Decode the session data from JSON to a PHP array
+            $sessionData['data'] = json_decode($sessionData['data'], true, 1024, $this->jsonDecodeOptions);
 
             return $sessionData;
         }
