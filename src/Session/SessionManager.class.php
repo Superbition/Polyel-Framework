@@ -84,7 +84,12 @@ class SessionManager
 
     public function regenerateSession($request, $response)
     {
-        $prefix = config('session.prefix');
+        $prefix = null;
+        if($this->driverType === 'file')
+        {
+            // The session prefix is only used when using the file session driver
+            $prefix = config('session.prefix');
+        }
 
         do {
 
