@@ -8,9 +8,9 @@ abstract class Email
 
     protected string $message;
 
-    abstract protected function setSubject();
+    abstract public function setSubject();
 
-    abstract protected function setMessage();
+    abstract public function setMessage();
 
     protected function subject(string $subject)
     {
