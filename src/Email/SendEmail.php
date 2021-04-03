@@ -10,6 +10,10 @@ class SendEmail
 
     private string $from = '';
 
+    private array $ccs = [];
+
+    private array $bccs = [];
+
     public function __construct(EmailManager $emailManager)
     {
         $this->emailManager = $emailManager;
@@ -29,6 +33,20 @@ class SendEmail
         return $this;
     }
 
+    public function cc(string $cc)
+    {
+        $this->ccs[] = $cc;
+
+        return $this;
+    }
+
+    public function bcc(string $bcc)
+    {
+        $this->bccs[] = $bcc;
+
+        return $this;
+    }
+
     public function send(Email $email)
     {
         $email
@@ -41,6 +59,8 @@ class SendEmail
             $this->emailManager->send(
                 $this->to,
                 $this->from,
+                $this->ccs,
+                $this->bccs,
                 $email
             );
         });

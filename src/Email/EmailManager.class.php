@@ -57,7 +57,7 @@ class EmailManager
         return $mailer;
     }
 
-    public function send(string $to, string $from, Email $email)
+    public function send(string $to, string $from, array $ccs, array $bccs, Email $email)
     {
         if(empty($from))
         {
@@ -74,6 +74,16 @@ class EmailManager
         $mailer->setFrom($mailer->Username, $email->fromName);
 
         $mailer->addAddress($to);
+
+        foreach($ccs as $cc)
+        {
+            $mailer->addCC($cc);
+        }
+
+        foreach($bccs as $bcc)
+        {
+            $mailer->addBCC($bcc);
+        }
 
         $mailer->isHTML($email->usingHTML);
 
