@@ -25,6 +25,7 @@
     "ext-json": "*",
     "ext-mbstring": "*",
     "ext-openssl": "*",
-    "nesbot/carbon": "^2.16"
+    "nesbot/carbon": "^2.16",
+    "phpmailer/phpmailer": "^6.2"
   }
 }
