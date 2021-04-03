@@ -4,11 +4,11 @@ namespace Polyel\Email;
 
 abstract class Email
 {
-    protected string $fromName;
+    public string $fromName;
 
-    protected string $subject;
+    public string $subject;
 
-    protected string $message;
+    public string $message;
 
     abstract public function setFromName();
 
