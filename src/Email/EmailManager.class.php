@@ -75,7 +75,7 @@ class EmailManager
 
         $mailer->addAddress($to);
 
-        $mailer->isHTML(true);
+        $mailer->isHTML($email->usingHTML);
 
         $mailer->Subject = $email->subject;
 

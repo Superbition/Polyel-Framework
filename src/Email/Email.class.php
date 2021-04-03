@@ -10,6 +10,8 @@ abstract class Email
 
     public string $message;
 
+    public bool $usingHTML = false;
+
     abstract public function setFromName();
 
     abstract public function setSubject();
