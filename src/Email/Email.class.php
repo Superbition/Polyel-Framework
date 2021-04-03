@@ -38,4 +38,13 @@ abstract class Email
 
         return $this;
     }
+
+    protected function html(string $message)
+    {
+        $this->message = $message;
+
+        $this->usingHTML = true;
+
+        return $this;
+    }
 }
