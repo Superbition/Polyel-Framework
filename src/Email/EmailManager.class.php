@@ -25,9 +25,12 @@ class EmailManager
 
     private function setMailerEncryption(string $from, $mailer)
     {
-        //$mailer->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $encryptionTypes = [
+            'starttls' => PHPMailer::ENCRYPTION_STARTTLS,
+            'smtps' => PHPMailer::ENCRYPTION_SMTPS,
+        ];
 
-        $mailer->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+        $mailer->SMTPSecure = $encryptionTypes[config("email.senders.$from.encryption")];
 
         return $mailer;
     }
