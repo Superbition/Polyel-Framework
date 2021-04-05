@@ -49,13 +49,13 @@ class SendEmail
 
     public function send(Email $email)
     {
-        $email
-            ->setFromName()
-            ->setSubject()
-            ->setMessage();
-
         defer(function() use ($email)
         {
+            $email
+                ->setFromName()
+                ->setSubject()
+                ->setMessage();
+
             $this->emailManager->send(
                 $this->to,
                 $this->from,
