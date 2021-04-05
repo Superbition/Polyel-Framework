@@ -17,7 +17,7 @@ class Kernel
 
     public function __construct(ApplicationLoader $applicationLoader, ServiceManager $serviceManager, ConsoleApplication $console)
     {
-        $applicationLoader->loadOnly(['elements', 'services']);
+        $applicationLoader->loadOnly(['elements', 'services', 'emails']);
 
         $serviceManager->processServiceSuppliers(true);
 

@@ -19,6 +19,7 @@ class ApplicationLoader
         $this->loadServices();
         $this->loadMiddleware();
         $this->loadControllers();
+        $this->loadEmailClasses();
     }
 
     public function loadOnly(array $inclusions)
@@ -41,6 +42,11 @@ class ApplicationLoader
         if(in_array('controllers', $inclusions, true))
         {
             $this->loadControllers();
+        }
+
+        if(in_array('emails', $inclusions, true))
+        {
+            $this->loadEmailClasses();
         }
     }
 
@@ -78,6 +84,11 @@ class ApplicationLoader
     private function loadElementLogicClasses()
     {
         $this->loadDirectory(APP_DIR . '/app/View/Elements/');
+    }
+
+    private function loadEmailClasses()
+    {
+        $this->loadDirectory(APP_DIR . '/app/Email/');
     }
 
     public function loadThirdPartyPackages()
