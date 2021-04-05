@@ -10,6 +10,8 @@ class SessionManager
 {
     private $driver;
 
+    private string $driverType;
+
     private $availableDrivers;
 
     private $gcStarted = false;
@@ -17,7 +19,8 @@ class SessionManager
     public function __construct()
     {
         $this->availableDrivers = [
-          'file' => Polyel\Session\Drivers\FileSessionDriver::class,
+            'file' => Polyel\Session\Drivers\FileSessionDriver::class,
+            'database' => Polyel\Session\Drivers\DatabaseSessionDriver::class,
         ];
     }
 
@@ -25,6 +28,9 @@ class SessionManager
     {
         if(array_key_exists($driver, $this->availableDrivers))
         {
+            // Save the type of driver that is going to be used
+            $this->driverType = $driver;
+
             $driver = $this->availableDrivers[$driver];
             $this->driver = Polyel::resolveClass($driver);
         }
@@ -78,7 +84,12 @@ class SessionManager
 
     public function regenerateSession($request, $response)
     {
-        $prefix = config('session.prefix');
+        $prefix = null;
+        if($this->driverType === 'file')
+        {
+            // The session prefix is only used when using the file session driver
+            $prefix = config('session.prefix');
+        }
 
         do {
 
