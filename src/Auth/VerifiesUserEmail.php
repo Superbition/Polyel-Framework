@@ -15,7 +15,7 @@ trait VerifiesUserEmail
             return false;
         }
 
-        $emailVerifiedAt = DB::table('users')->where('id', '=', $userId)->value('email_verified_at');
+        $emailVerifiedAt = DB::table('user')->where('id', '=', $userId)->value('email_verified_at');
 
         if(!is_null($emailVerifiedAt))
         {
@@ -34,7 +34,7 @@ trait VerifiesUserEmail
             return false;
         }
 
-        DB::table('users')->where('id', '=', $userId)->update([
+        DB::table('user')->where('id', '=', $userId)->update([
            'email_verified_at' => date("Y-m-d H:i:s"),
         ]);
 
