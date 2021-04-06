@@ -1,5 +1,30 @@
 # Release Notes for the Polyel Framework
 
+## [v0.7.0 (2021-04-06)](https://github.com/Superbition/Polyel-Framework/releases/tag/v0.7.0)
+
+### Added
+
+- Support for using a database as a session store. Better for performance and scale over the file session driver.
+  Requires use of a new table called `session` and will contain session data within a JSON column. The Polyel
+  Skeleton has been updated with new changes within the `session.php` config. (#35)
+
+- The `SessionManager` will now save the driver type that is selected in a class property.
+
+- Added a new Polyel Email Service which is a wrapper based around PHPMailer and makes it easy to send reusable emails
+  in a Polyel application. Email sending uses a Swoole coroutine, so the request is not affected by this blocking
+  operation. (#36)
+  
+- Because of the new addition for the email service, all the auth system TODOs for sending an email verification and
+  password reset have been implemented.
+
+### Changed
+
+- Inside the `session.php` config, the option `prefix` is now only used when the `file` driver is selected. This is
+  because the new database session driver does not need to use a prefix because a primary key is used for the session
+  ID.
+  
+- The auth system `VerifiesUserEmail` has been changed to use non-plural DB table names.
+
 ## [v0.6.3 (2021-03-27)](https://github.com/Superbition/Polyel-Framework/releases/tag/v0.6.3)
 
 ### Fixed
