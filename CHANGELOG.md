@@ -10,11 +10,11 @@
 
 - The `SessionManager` will now save the driver type that is selected in a class property.
 
-- Added a new Polyel Email Service which is a wrapper based around PHPMailer and makes it easy to send reusable emails
-  in a Polyel application. Email sending uses a Swoole coroutine, so the request is not affected by this blocking
-  operation. (#36)
+- Added a new Polyel Email Service which is a wrapper based around [PHPMailer](https://github.com/PHPMailer/PHPMailer) 
+  and makes it easy to send reusable emails in a Polyel application. Email sending uses a Swoole coroutine, so the 
+  request is not affected by this blocking operation. (#36)
   
-- Because of the new addition for the email service, all the auth system TODOs for sending an email verification and
+- Because of the new addition of the email service, all the auth system TODOs for sending an email verification and
   password reset have been implemented.
 
 ### Changed
@@ -23,7 +23,7 @@
   because the new database session driver does not need to use a prefix because a primary key is used for the session
   ID.
   
-- The auth system `VerifiesUserEmail` has been changed to use non-plural DB table names.
+- The auth system trait `VerifiesUserEmail` has been changed to use non-plural DB table names.
 
 ## [v0.6.3 (2021-03-27)](https://github.com/Superbition/Polyel-Framework/releases/tag/v0.6.3)
 
