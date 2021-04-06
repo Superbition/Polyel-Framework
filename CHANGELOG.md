@@ -12,7 +12,7 @@
 
 - Added a new Polyel Email Service which is a wrapper based around [PHPMailer](https://github.com/PHPMailer/PHPMailer) 
   and makes it easy to send reusable emails in a Polyel application. Email sending uses a Swoole coroutine, so the 
-  request is not affected by this blocking operation. (#36)
+  request is not affected by this blocking operation. A new `email.php` config file has been added to the skeleton. (#36)
   
 - Because of the new addition of the email service, all the auth system TODOs for sending an email verification and
   password reset have been implemented.
