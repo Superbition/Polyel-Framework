@@ -2,6 +2,8 @@
 
 namespace Polyel\Auth;
 
+use App\Email\VerificationEmail;
+use Polyel\Email\Facade\SendEmail;
 use Polyel\Encryption\Facade\Crypt;
 
 trait SendsVerificationEmail
@@ -10,7 +12,7 @@ trait SendsVerificationEmail
      * Sends a verification email which can be used to
      * validated a user against an active email based on a signed URL.
      */
-    public function sendVerificationEmail($to)
+    public function sendVerificationEmail($name, $to)
     {
         $id = $this->auth->userId();
 
@@ -18,7 +20,9 @@ trait SendsVerificationEmail
         {
             $url = $this->verificationUrl($id, $to);
 
-            // TODO: Actually send verification email here and if the email was successful being sent
+            SendEmail::to($to)->send(new VerificationEmail($name, $url));
+
+            return true;
         }
 
         return false;

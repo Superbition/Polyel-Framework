@@ -4,7 +4,9 @@ namespace Polyel\Auth\Controller;
 
 use Polyel\Http\Request;
 use Polyel\Database\Facade\DB;
+use App\Email\PasswordResetEmail;
 use Polyel\Auth\Drivers\Database;
+use Polyel\Email\Facade\SendEmail;
 
 trait AuthForgotPassword
 {
@@ -26,6 +28,7 @@ trait AuthForgotPassword
             // Create as unique password reset token, 64 bytes turns into a 128 hex string
             $resetToken = bin2hex(random_bytes(64));
 
+            $name = $user->get('username');
             $email = $user->get('email');
 
             $resetConfig = $this->getPasswordResetConfig();
@@ -49,7 +52,7 @@ trait AuthForgotPassword
                'created_at' => date("Y-m-d H:i:s"),
             ]);
 
-            // TODO: Send reset email here
+            SendEmail::to($email)->send(new PasswordResetEmail($name, '/password/reset/' . $resetToken));
         }
 
         return redirect($this->redirectTo)->withFlash(

@@ -104,9 +104,12 @@ trait AuthVerifyEmail
             return redirect($this->redirectTo)->withFlash('success', 'Your email has already been verified');
         }
 
-        if($this->sendVerificationEmail($this->auth->user()->get('email')) === false)
+        if($this->sendVerificationEmail($this->auth->user()->get('username'), $this->auth->user()->get('email')) === false)
         {
-            // TODO: Send back why the email failed to send
+            return redirect('/email/verify')->withFlash(
+                'error',
+                'A verification email could not be sent, it failed to send, please try again'
+            );
         }
 
         return redirect('/email/verify')->withFlash(
