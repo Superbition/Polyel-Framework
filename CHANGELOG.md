@@ -1,5 +1,15 @@
 # Release Notes for the Polyel Framework
 
+## [v0.7.1 (2021-04-08)](https://github.com/Superbition/Polyel-Framework/releases/tag/v0.7.1)
+
+### Changed
+
+- Session prefix now defaults to an empty string instead of `null` internally
+
+### Fixed
+
+- Fixed an infinite loop, causing the request to hang when the database session driver is selected
+
 ## [v0.7.0 (2021-04-06)](https://github.com/Superbition/Polyel-Framework/releases/tag/v0.7.0)
 
 ### Added
