@@ -89,7 +89,7 @@ class DatabaseSessionDriver implements SessionDriver
     public function collisionCheckID($sessionID)
     {
         // If no ID already exists we should get a null value back
-        if(DB::table('session')->where('id', '=', $sessionID)->first() === null)
+        if(DB::table('session')->where('id', '=', $sessionID)->first() !== null)
         {
             return true;
         }
