@@ -1,5 +1,13 @@
 # Release Notes for the Polyel Framework
 
+## [v0.7.2 (2021-05-05)](https://github.com/Superbition/Polyel-Framework/releases/tag/v0.7.2)
+
+### Changed
+
+- Changed the session cookie to use `Lax` for the SameSite attribute instead of `Strict`. Before when the session
+  cookie used `Strict`, if links were clicked externally for an app, the cookie gets blocked and thus, an invalid
+  session is created and the user is then logged out
+
 ## [v0.7.1 (2021-04-08)](https://github.com/Superbition/Polyel-Framework/releases/tag/v0.7.1)
 
 ### Changed
