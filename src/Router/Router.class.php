@@ -182,7 +182,7 @@ class Router
                 $domain = config('session.domain'),
                 $secure = config('session.secure'),
                 $httpOnly = false,
-                $sameSite = 'Strict',
+                $sameSite = 'Lax',
             ];
 
             // The CSRF cookie can be used to allow JavaScript requests to make valid HTTP requests with a CSRF token
