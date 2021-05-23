@@ -1,5 +1,12 @@
 # Release Notes for the Polyel Framework
 
+## [v0.8.0 (2021-05-23)](https://github.com/Superbition/Polyel-Framework/releases/tag/v0.8.0)
+
+## Changed
+
+- Polyel will now only use the UTC timezone to generate datetime stamps, for now this is forced, but a configuration may
+  be introduced in the future but UTC is a good standard to follow for storing dates in web applications.
+
 ## [v0.7.2 (2021-05-05)](https://github.com/Superbition/Polyel-Framework/releases/tag/v0.7.2)
 
 ### Changed
