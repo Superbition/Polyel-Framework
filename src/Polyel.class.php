@@ -4,7 +4,7 @@ use Polyel\Container\Container;
 
 class Polyel
 {
-    private const version = '0.7.2';
+    private const version = '0.8.0';
 
     private static Polyel\Container\Container $container;
 
