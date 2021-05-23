@@ -18,6 +18,9 @@ require "autoloader.php";
 
 echo "Bootstrap process started...\n\n";
 
+// Set the default timezone to always use UTC
+date_default_timezone_set('UTC');
+
 $startingDirectory = new RecursiveDirectoryIterator(__DIR__ . "/src/");
 $pathIterator = new RecursiveIteratorIterator($startingDirectory);
 
