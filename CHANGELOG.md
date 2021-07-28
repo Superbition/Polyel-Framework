@@ -1,6 +1,6 @@
 # Release Notes for the Polyel Framework
 
-## [v0.9.0 (2021-07-28)](https://github.com/Superbition/Polyel-Framework/releases/tag/v0.9.0)
+## [v0.8.1 (2021-07-28)](https://github.com/Superbition/Polyel-Framework/releases/tag/v0.8.1)
 
 ### Changed
 
