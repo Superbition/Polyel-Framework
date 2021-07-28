@@ -87,8 +87,12 @@ class Container
     // Recursively checks for class dependencies, resolves them and creates class instances.
     private function checkForDependencies($classToResolve, $returnClassOnly = false)
     {
-        // Return when the class already exists inside the container
-        if($this->get($classToResolve))
+        /*
+         * Return when the class already exists inside the container.
+         * But allow new classes to be created again and returned without
+         * them being duplicated inside the container.
+         */
+        if($returnClassOnly === false && $this->get($classToResolve))
         {
             // Stops classes being overwritten again if called to be resolved
             return;
