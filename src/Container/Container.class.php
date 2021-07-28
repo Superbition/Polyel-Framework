@@ -95,7 +95,7 @@ class Container
         if($returnClassOnly === false && $this->get($classToResolve))
         {
             // Stops classes being overwritten again if called to be resolved
-            return;
+            return true;
         }
 
         // Using Reflection, load the class up...
