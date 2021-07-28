@@ -1,5 +1,19 @@
 # Release Notes for the Polyel Framework
 
+## [v0.9.0 (2021-07-28)](https://github.com/Superbition/Polyel-Framework/releases/tag/v0.9.0)
+
+### Changed
+
+- Some internal code formatting and changed a missing return type for a function inside the dependency container
+
+### Fixed
+
+- Fixed an issue where creating a new class from the main DI container would return `null` because, the function that
+  resolved class dependencies won't resolve a new one if the class already exists within the main container array.
+  This is a problem when you call `Polyel::new(...)` and want a new class instance which doesn't get stored in the
+  main container. Usually this is not a problem, but it fails to create a new class if it already exists. The solution
+  was to allow new classes to be created no matter what if the parameter `$returnClassOnly` is set to `true`.
+
 ## [v0.8.0 (2021-05-23)](https://github.com/Superbition/Polyel-Framework/releases/tag/v0.8.0)
 
 ## Changed
