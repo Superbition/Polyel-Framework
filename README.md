@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/23347020/143878056-979c521f-aa64-4e21-b522-9591e38a1fd6.png" alt="Voltis Logo" width="280" align="centre"/>
+  <img src="https://user-images.githubusercontent.com/23347020/144221360-47c253cc-a348-4588-81c2-c199b580d0e5.png" alt="Voltis Logo" width="280" align="centre"/>
 </p>
 
 <br/>
