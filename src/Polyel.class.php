@@ -21,7 +21,7 @@ class Polyel
         self::$server = $server;
     }
 
-    public static function task($data)
+    public static function task(&$data)
     {
         self::$server->task($data);
     }
