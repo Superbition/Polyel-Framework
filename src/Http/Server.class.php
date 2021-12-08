@@ -80,9 +80,12 @@ class Server
             SWOOLE_PROCESS
         );
 
+        Polyel::setServer($this->server);
+
         echo "Setting up the HTTP server configuration\n";
         $this->server->set([
             'worker_num' => swoole_cpu_num(),
+            'task_worker_num' => 1,
             'package_max_length' => config("server.maxUploadSize"),
             'document_root' => config("server.publicRoot"),
             'enable_static_handler' => true,
@@ -130,6 +133,19 @@ class Server
             );
 
             $response->send($HttpResponse);
+        });
+
+        /*
+         * Currently the Swoole task worker system is only used
+         * to offload email transmission because SMTP connections that
+         * use STARTTLS do not work under coroutines and the TCP hook.
+         *
+         * So this is the workaround for now until further releases.
+         */
+        $this->server->on('Task', function($server, $taskId, $reactorId, $email)
+        {
+            // Task system is only used to send emails...
+            $email->send();
         });
 
         $this->server->on("WorkerStop", function($server, $workerId)

@@ -6,11 +6,24 @@ class Polyel
 {
     private const version = '0.8.1';
 
+    // Used to access the HTTP server object
+    private static $server;
+
     private static Polyel\Container\Container $container;
 
     public static function version()
     {
         return self::version;
+    }
+
+    public static function setServer($server)
+    {
+        self::$server = $server;
+    }
+
+    public static function task(&$data)
+    {
+        self::$server->task($data);
     }
 
     public static function createContainer($baseClass)
