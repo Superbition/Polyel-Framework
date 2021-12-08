@@ -132,6 +132,19 @@ class Server
             $response->send($HttpResponse);
         });
 
+        /*
+         * Currently the Swoole task worker system is only used
+         * to offload email transmission because SMTP connections that
+         * use STARTTLS do not work under coroutines and the TCP hook.
+         *
+         * So this is the workaround for now until further releases.
+         */
+        $this->server->on('Task', function($server, $taskId, $reactorId, $email)
+        {
+            // Task system is only used to send emails...
+            $email->send();
+        });
+
         $this->server->on("WorkerStop", function($server, $workerId)
         {
             $this->databaseManager->closeWorkerPool();
