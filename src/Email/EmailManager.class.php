@@ -2,6 +2,7 @@
 
 namespace Polyel\Email;
 
+use Polyel;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -91,6 +92,6 @@ class EmailManager
 
         $mailer->Body = $email->message;
 
-        $mailer->send();
+        Polyel::task($mailer);
     }
 }
