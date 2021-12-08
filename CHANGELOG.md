@@ -1,5 +1,18 @@
 # Release Notes for the Polyel Framework
 
+## [v0.8.2 (2021-12-08)](https://github.com/Superbition/Polyel-Framework/releases/tag/v0.8.2)
+
+[Bakup.io](https://bakup.io) is now an official sponsor of this project.
+
+### Added
+
+- New project logo in the README - Preparation for new project name change in the future.
+
+### Fixed
+
+- Email transmission fatal error when sending with SMTP and STARTTLS connections. The mailer was failing to send when
+used within a coroutine context and the TCP hook enabled. No application side changes required for the fix.
+
 ## [v0.8.1 (2021-07-28)](https://github.com/Superbition/Polyel-Framework/releases/tag/v0.8.1)
 
 ### Changed
