@@ -80,6 +80,8 @@ class Server
             SWOOLE_PROCESS
         );
 
+        Polyel::setServer($this->server);
+
         echo "Setting up the HTTP server configuration\n";
         $this->server->set([
             'worker_num' => swoole_cpu_num(),
