@@ -86,6 +86,7 @@ class Server
         $this->server->set([
             'worker_num' => swoole_cpu_num(),
             'task_worker_num' => 1,
+            'task_enable_coroutine' => false,
             'package_max_length' => config("server.maxUploadSize"),
             'document_root' => config("server.publicRoot"),
             'enable_static_handler' => true,
