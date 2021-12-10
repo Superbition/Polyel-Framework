@@ -98,7 +98,19 @@ class Server
     {
         $this->server->on("WorkerStart", function($server, $workerId)
         {
-            $this->databaseManager->createWorkerPool();
+            // Task worker processes share the same on start event as normal workers
+            if($server->taskworker === false)
+            {
+                /*
+                 * We only want to setup a DB connection pool for
+                 * a normal worker process, not a task worker.
+                 *
+                 * Plus coroutines are disabled inside a task worker
+                 * so calling this would cause a fatal error of a
+                 * coroutine being used when they are not turned on.
+                 */
+                $this->databaseManager->createWorkerPool();
+            }
         });
 
         $this->server->on("start", function($server)
