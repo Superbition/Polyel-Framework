@@ -4,7 +4,7 @@ use Polyel\Container\Container;
 
 class Polyel
 {
-    private const version = '0.8.2';
+    private const version = '0.8.3';
 
     // Used to access the HTTP server object
     private static $server;
