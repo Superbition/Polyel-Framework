@@ -1,5 +1,13 @@
 # Release Notes for the Polyel Framework
 
+## [v0.8.3 (2021-12-10)](https://github.com/Superbition/Polyel-Framework/releases/tag/v0.8.3)
+
+### Fixed
+
+- Fixed a fatal error due to coroutines being used within a task worker, when coroutines were not available. This was 
+  related to how emails are sent within the framework. Email transmission uses a task worker to send emails 
+  synchronously. This fix does not require any change on the application side.
+
 ## [v0.8.2 (2021-12-08)](https://github.com/Superbition/Polyel-Framework/releases/tag/v0.8.2)
 
 [Bakup.io](https://bakup.io) is now an official sponsor of this project.
